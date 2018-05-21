@@ -13,4 +13,6 @@ Description: An interface for Open Trip Planner <http://www.opentripplanner.org/
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Imports:
+    checkmate
 RoxygenNote: 6.0.1
