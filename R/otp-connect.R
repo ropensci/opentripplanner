@@ -23,10 +23,10 @@
 
 #' @export
 otp_connect <- function(hostname = "localhost",
-                   router = "default",
-                   port = 8080,
-                   ssl = FALSE,
-                   check = TRUE)
+                        router = "default",
+                        port = 8080,
+                        ssl = FALSE,
+                        check = TRUE)
 {
   # argument checks
 
@@ -46,7 +46,7 @@ otp_connect <- function(hostname = "localhost",
   )
 
   # Set the name for the class
-  class(otpcon) <- append(class(otpcon),"otpconnect")
+  class(otpcon) <- append(class(otpcon), "otpconnect")
 
 
   # If check then confirm router is queryable
@@ -59,7 +59,7 @@ otp_connect <- function(hostname = "localhost",
       stop("Router ", make_url(otpcon),  " does not exist")
     }
   } else {
-  return(otpcon)
+    return(otpcon)
   }
 }
 
@@ -72,8 +72,11 @@ make_url <- function(x)
 
 make_url.default <- function(x)
 {
-  warning("make_url does not know how to handle objects of class ",
-        class(x), ", and can only be used on the class otpconnect")
+  warning(
+    "make_url does not know how to handle objects of class ",
+    class(x),
+    ", and can only be used on the class otpconnect"
+  )
   return(NULL)
 }
 
@@ -99,8 +102,11 @@ check_router <- function(x)
 
 check_router.default <- function(x)
 {
-  warning("check_router does not know how to handle objects of class ",
-          class(x), ", and can only be used on the class otpconnect")
+  warning(
+    "check_router does not know how to handle objects of class ",
+    class(x),
+    ", and can only be used on the class otpconnect"
+  )
   return(NULL)
 }
 
