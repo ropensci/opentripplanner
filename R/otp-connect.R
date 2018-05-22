@@ -1,14 +1,17 @@
 #' Set up and confirm a connection to an OTP instance.
 #'
-#' Defines the parameters required to connect to a router on an OTP instance and
-#' confirms that the instance is queryable.
+#' Defines the parameters required to connect to a router on an OTP instance and,
+#' if required, confirms that the instance and router are queryable.
 #'
 #' @param hostname A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
 #'     Optional, default is "localhost".
 #' @param router A string, e.g. "UK2018". Optional, default is "default".
 #' @param port A positive integer. Optional, default is 8080.
-#' @param ssl A logical value, indicates whether to use https. Optional, default is FALSE.
-#' @return Returns an S3 object of class otpconnect.
+#' @param ssl Logical, indicates whether to use https. Optional, default is FALSE.
+#' @param check Logical. If TRUE connection object is only returned if OTP
+#'     instance and router are confirmed reachable. Optional, default is TRUE.
+#' @return Returns an S3 object of class otpconnect. If \code{check} is TRUE
+#'     and the router is not reachable the object is not returned.
 #' @examples
 #' otpcon <- otp_connect()
 #' otpcon <- otp_connect(router = "UK2018",
@@ -22,7 +25,8 @@
 otp_connect <- function(hostname = "localhost",
                    router = "default",
                    port = 8080,
-                   ssl = FALSE)
+                   ssl = FALSE,
+                   check = TRUE)
 {
   # argument checks
 
@@ -31,6 +35,7 @@ otp_connect <- function(hostname = "localhost",
   checkmate::assert_string(router, add = coll)
   checkmate::assert_int(port, lower = 1, add = coll)
   checkmate::assert_logical(ssl, add = coll)
+  checkmate::assert_logical(check, add = coll)
   checkmate::reportAssertions(coll)
 
   otpcon <- list(
@@ -40,9 +45,22 @@ otp_connect <- function(hostname = "localhost",
     ssl = ssl
   )
 
-  ## Set the name for the class
+  # Set the name for the class
   class(otpcon) <- append(class(otpcon),"otpconnect")
+
+
+  # If check then confirm router is queryable
+
+  if (isTRUE(check)) {
+    if (check_router(otpcon) == 200) {
+      message("Router ", make_url(otpcon), " exists")
+      return(otpcon)
+    } else {
+      stop("Router ", make_url(otpcon),  " does not exist")
+    }
+  } else {
   return(otpcon)
+  }
 }
 
 # otpconnect class method to generate baseurl
@@ -54,8 +72,8 @@ make_url <- function(x)
 
 make_url.default <- function(x)
 {
-  warning(paste0("make_url does not know how to handle objects of class ",
-        class(x), ", and can only be used on the class otpconnect"))
+  warning("make_url does not know how to handle objects of class ",
+        class(x), ", and can only be used on the class otpconnect")
   return(NULL)
 }
 
@@ -72,4 +90,22 @@ make_url.otpconnect <- function(x)
   return(url)
 }
 
+# otpconnect method to check if router exists
 
+check_router <- function(x)
+{
+  UseMethod("check_router", x)
+}
+
+check_router.default <- function(x)
+{
+  warning("check_router does not know how to handle objects of class ",
+          class(x), ", and can only be used on the class otpconnect")
+  return(NULL)
+}
+
+check_router.otpconnect <- function(x)
+{
+  check <- httr::GET(make_url(x))
+  return(check$status_code)
+}
