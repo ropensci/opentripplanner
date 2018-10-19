@@ -26,9 +26,9 @@
 #'
 #' The function will accept any file name for the .jar file, but it must be the only .jar file in that directory
 #' OTP can support multiple routers (e.g. different regions), each router must have its own sub-directory in the graphs directory
-#' @examples
+#' @examples \dontrun{
 #' log = otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
-#'
+#'}
 #' @export
 otp_build_graph <- function(otp = NULL,
                             dir = NULL,
@@ -85,8 +85,8 @@ otp_build_graph <- function(otp = NULL,
 #' @param router A character vector for the name of the routers, must match with contents of dir, default "current"
 #' Only a single router is currently supported
 #' @param port A positive integer. Optional, default is 8080.
-#' @param secure_port A positive integer. Optional, default is 8081.
-#' @param analyist Logical. Should the analyist features be loaded? Default FALSE
+#' @param securePort A positive integer. Optional, default is 8081.
+#' @param analyst Logical. Should the analyist features be loaded? Default FALSE
 #' @param wait Logical, Should R wait until OTP has loaded before running next line of code, default TRUE
 #' @return
 #' This function does not return a value to R.
@@ -100,9 +100,10 @@ otp_build_graph <- function(otp = NULL,
 #'   /current - A sub-directory with the name of the OTP router used in 'router' variaible
 #'     graph.obj  OTP graph
 #'
-#' @examples
+#' @examples \dontrun{
 #' otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data")
 #' otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5, analyst = TRUE)
+#' }
 #' @export
 otp_setup <- function(otp = NULL,
                       dir = NULL,
@@ -218,6 +219,7 @@ otp_stop <- function()
 #' @param dir A character string path to a folder containing the necessary files, see details
 #' @param router A character string for the name of the router, must match with contents of dir, default "current"
 #' @param graph Logical, check for graph, default = FALSE
+#' @param otp Path to otp.jar
 #'
 otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
 {

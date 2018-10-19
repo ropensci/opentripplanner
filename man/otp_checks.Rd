@@ -7,6 +7,8 @@
 otp_checks(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
 }
 \arguments{
+\item{otp}{Path to otp.jar}
+
 \item{dir}{A character string path to a folder containing the necessary files, see details}
 
 \item{router}{A character string for the name of the router, must match with contents of dir, default "current"}

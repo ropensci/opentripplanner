@@ -43,6 +43,7 @@ The function will accept any file name for the .jar file, but it must be the onl
 OTP can support multiple routers (e.g. different regions), each router must have its own sub-directory in the graphs directory
 }
 \examples{
+\dontrun{
 log = otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
-
+}
 }
