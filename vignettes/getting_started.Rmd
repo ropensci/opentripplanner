@@ -43,13 +43,16 @@ We will build an example graph for Greater Manchester using the data provided in
 path_otp <- "C:/otp"
 
 # or on max/linux
-path_otp <- "~/programs"
+path_otp <- "~/programs/otp.jar"
 path_otp <- normalizePath(path_otp)
-dest <- file.path(path_otp, "otp.jar")
 
 # Path to the sample data
-path_data <- system.file("extdata", package="opentripplanner")
+
+path_data <- getwd() # assuming your data is here
 # Build a graph and save the logs
+download.file("https://github.com/marcusyoung/opentripplanner/releases/download/0.0.1/demo-graph.zip",
+              "demo-graph.zip")
+unzip("demo-graph.zip")
 log <- otp_build_graph(otp = path_otp, dir = path_data) 
 ```
 
