@@ -32,3 +32,13 @@ Install the package with **devtools** as follows:
 # install.packages("devtools")
 devtools::install_github("marcusyoung/opentripplanner")
 ```
+
+## Tests 
+
+Tests only run on machines that have the environment variable `I_have_OTP` with the value `TRUE`.
+You can add this with `usethis::edit_r_environ()`.
+
+```{r}
+Sys.getenv("I_have_OTP")
+```
+
