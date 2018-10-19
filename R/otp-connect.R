@@ -12,7 +12,7 @@
 #'     instance and router are confirmed reachable. Optional, default is TRUE.
 #' @return Returns an S3 object of class otpconnect. If \code{check} is TRUE
 #'     and the router is not reachable the object is not returned.
-#' @examples \dontrun{
+#' @examples
 #' otpcon <- otp_connect()
 #' otpcon <- otp_connect(router = "UK2018",
 #'                       ssl = TRUE)
@@ -20,7 +20,7 @@
 #'                       router = "UK2018",
 #'                       port = 8888,
 #'                       ssl = TRUE)
-#' }
+
 #' @export
 otp_connect <- function(hostname = "localhost",
                         router = "default",
@@ -112,6 +112,11 @@ check_router.default <- function(x)
 
 check_router.otpconnect <- function(x)
 {
-  check <- httr::GET(make_url(x))
-  return(check$status_code)
+  check <- try(httr::GET(make_url(x)), silent = T)
+  if(class(check) == "try-error"){
+    return(check[1])
+  }else{
+    return(check$status_code)
+  }
+
 }
