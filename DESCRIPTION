@@ -15,7 +15,13 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     checkmate,
-    httr
+    httr,
+    sf,
+    gepaf,
+    dplyr,
+    geosphere,
+    jsonlite,
+    pbapply
 RoxygenNote: 6.1.0
 Suggests: 
     testthat,

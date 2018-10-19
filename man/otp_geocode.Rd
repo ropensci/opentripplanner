@@ -29,5 +29,7 @@ Returns a data.frame of SF POINTS or Coordinates of all the locations that match
 Geocoding converts a named place, such as a steet name into a lat/long pair.
 }
 \examples{
+\dontrun{
 locations <- otp_geocode(otpcon, "High Street")
+}
 }

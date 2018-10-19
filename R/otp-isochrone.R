@@ -12,9 +12,10 @@
 #' @param cutoffSec Numeric vector, number of seconds to define the break points of each Isochrone
 #' @return
 #' Returns a data.frame of SF POLYGONS
-#' @examples
+#' @examples \dontrun{
 #' isochrone1 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346))
 #' isochrone2 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346), mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
+#' }
 #' @detials Isochrones are maps of equal travel time,
 #' for a given location a map is produced shoing how long it takes to reach
 #' each location.

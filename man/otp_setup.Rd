@@ -19,11 +19,11 @@ Only a single router is currently supported}
 
 \item{port}{A positive integer. Optional, default is 8080.}
 
+\item{securePort}{A positive integer. Optional, default is 8081.}
+
+\item{analyst}{Logical. Should the analyist features be loaded? Default FALSE}
+
 \item{wait}{Logical, Should R wait until OTP has loaded before running next line of code, default TRUE}
-
-\item{secure_port}{A positive integer. Optional, default is 8081.}
-
-\item{analyist}{Logical. Should the analyist features be loaded? Default FALSE}
 }
 \value{
 This function does not return a value to R.
@@ -38,6 +38,8 @@ This function sets up a local instance of OTP, for remote versions see documenta
 The function assumes you have run otp_build_graph()
 }
 \examples{
+\dontrun{
 otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data")
 otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5, analyst = TRUE)
+}
 }

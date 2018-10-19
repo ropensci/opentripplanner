@@ -3,3 +3,13 @@
 language: R
 sudo: false
 cache: packages
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
+    packages:
+      - libudunits2-dev
+      - libgdal-dev
+      - libgeos-dev
+      - libproj-dev
