@@ -1,0 +1,137 @@
+---
+title: "Dummies Guide"
+author: "Malcolm Morgan"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Introduction
+
+This vignette is to provide guidance for people who are completely unfamiliar with Open Trip Planner and/or R.  It assumes no prior-knowledge.  If you are familiar with R and/or OTP then you may find the Getting Started vignette more useful.
+
+## What is this package for, and what is a package anyway?
+
+The Open Trip Planner for R package makes it easier for R and Open Trip Planner to communicate.
+
+### What is Open Trip Planner?
+
+OpenTripPlanner (OTP) is a free, open-source, and cross-platform multi-modal route planner written in JAVA.  It is like having your own private version of Google Maps.
+
+You can find a lot more information about OTP at:
+
+* http://www.opentripplanner.org/
+* https://wiki.openstreetmap.org/wiki/OpenTripPlanner
+
+### What is R?
+
+R is a programming language and free software environment for statistical computing and graphics.  R has many capabilities for analysing data and writing software, but in this context, its ability to produce and analyse spatial data and maps is most relevant.
+
+You can find a lot more information about R at:
+
+* https://www.r-project.org/ 
+* https://en.wikipedia.org/wiki/R_(programming_language) 
+
+### What is an R package?
+
+An R package is a small piece of software that extends the basic capabilities of R. It is a bit like how a new phone can do some things out of the box (make phone calls, send email) but you have to install apps to add extra abilities.
+
+### Why would I want to use Open Trip Planner for R?
+
+OTP can be used to run public route finding services such as https://ride.trimet.org but it can also be run on your own private computer or server. If you want, analyse a transport network OTP is a very useful and tool. However, OTP is, as the name suggests, a Trip Planner, not analytical software.  So, while OTP can find the fastest route from A to B or find all the places that are within a 20-minute walk of C, it cannot answer a question like “how many people live within 10-minutes of a park?”  This is where R can help.  R can process multiple spatial datasets such a population densities and park locations, but does not have a built-in journey planner. 
+
+This package allows you to use the trip planning power of OTP with the analytical might of R.
+
+## What do I need to get started?
+
+You will need to install some software to use OTP and R.
+
+### To use OTP
+
+* Download free Java 8 from https://www.java.com/en/download/ and install Java. You will need the correct version for your operating system.
+* Download the .shaded.jar OTP  file from https://repo1.maven.org/maven2/org/opentripplanner/otp/ at time of writing the latest version of OTP is version 1.3 so you would want to get https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar 
+
+For more information and advanced options, see http://docs.opentripplanner.org/en/latest/Getting-OTP/ 
+
+For now just keep the .jar file somewhere where you can find it, we will use it later.
+
+### To Use R
+
+* Download free R software https://cran.r-project.org/mirrors.html selecting your country (or nearest available country)
+* We strongly recommend you also download and install RStudio https://www.rstudio.com/products/rstudio/download/ that has a free version for personal use.
+
+A video tutorial for installing R and RStudio 
+
+* On Mac https://www.youtube.com/watch?v=cX532N_XLIs 
+* On Windows https://www.youtube.com/watch?v=9-RrkJQQYqY 
+
+### Learning R
+
+If you have never used R before there a lots of free tutorials to get you started, such as:
+* https://www.datacamp.com/courses/free-introduction-to-r
+* http://www.r-tutor.com/r-introduction
+
+### Getting the OTP for R package
+Once you have R and RStudio installed open RStudio. There are two version of an R package the public release on CRAN and the development version on GitHub.
+
+#### Getting the public CRAN version
+**OTP for R is not yet available on CRAN, we are working towards a CRAN release soon.**
+
+To get the latest release of OTP for R you will need to run the following lines of code.
+
+```{r, eval = FALSE}
+install.packages("opentripplanner")
+```
+When installing the OTP for R package, R will also install any other packages that are required. 
+
+#### Getting the development version
+
+The development version is a work in progress and may contain untested or incomplete features. **It is not recommended for beginners.** 
+To get the latest development version you will need to run the following lines of code.
+
+```{r, eval = FALSE}
+install.packages("devtools")
+devtools::install_github("marcusyoung/opentripplanner")
+```
+This code will install a package called “devtools” and then use that package to install OTP for R from github. When installing the OTP for R package, R will also install any other packages that are required.
+
+#### Starting the OTP for R Package
+
+Once the package has been installed you will need to activate it by running this line of code.
+```{r}
+library(opentripplanner)
+```
+
+## Next Steps
+
+Now that you have installed Open Trip Planner for R got to the Getting Started vignette, to find how to create a graph and use it to plan trips. You might also intrested in:
+
+### Getting Data for OTP
+
+To plan a trip OTP need data about the location, such as where the roads are, what is the public transport timetable etc.
+
+#### Road Map Data
+
+OTP uses road maps from the Open Street Map (OSM) https://www.openstreetmap.org in the .pbf format. OSM is a free map that anybody can edit. You can download all of part of the OSM from https://download.geofabrik.de/.
+
+This package comes with some sample data for Greater Manchester https://download.geofabrik.de/europe/great-britain/england/greater-manchester.html
+
+#### Public Transport Timetables
+
+OTP can use public transport timetable data in the GFTS format. You can find GTFS data for many regions at https://transit.land/ 
+
+#### Elevation Data
+
+You can add terrain infromation to your routes, especially useful for walking and cycling using GeoTIFF images. You can find world wide elevation data at https://www2.jpl.nasa.gov/srtm/ .
+
+
+
+
+
+
+
+
