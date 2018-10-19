@@ -1,10 +1,10 @@
 ---
-title: "Getting Started"
-author: "Marcus Young, modified by Malcolm Morgan"
+title: "opentripplanner: getting started"
+author: "Marcus Young, modified by Malcolm Morgan and Robin Lovelace"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{opentripplanner-get-started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,17 +18,24 @@ A major advantage of running your own multi-modal route planner is the ability t
 
 ## Supporting materials
 
-You will need to download the latest version of the OTP from https://repo1.maven.org/maven2/org/opentripplanner/otp/ 
+You will need to download the latest version of the OTP from https://repo1.maven.org/maven2/org/opentripplanner/otp/ , which can be done as follows:
+
+```{r, eval=FALSE}
+# download file (may want to do this manually)
+url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
+download.file(url = url_otp, destfile = "~/programs/otp.jar")
+```
 
 OTP requires Java 8 https://www.java.com/en/download/ 
 
 If you are unfarmialr with R and Open Tripe Planner see the Dummies Guide vignette incuded with this package.
 
+
 ## Building an OTP Graph
 
 We will build an example graph for Greater Manchester using the data provided in the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. 
 
-```{r eval = FALSE}
+```{r eval=FALSE}
 # Install Java 8
 # Download and save the latest version of OTP
 
@@ -39,9 +46,6 @@ path_otp <- "C:/otp"
 path_otp <- "~/programs"
 path_otp <- normalizePath(path_otp)
 dest <- file.path(path_otp, "otp.jar")
-
-# download file (may want to do this manually)
-download.file("https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar", dest)
 
 # Path to the sample data
 path_data <- system.file("extdata", package="opentripplanner")
@@ -62,7 +66,7 @@ Our first task is to create the folder and file structure expected by OTP. This 
 Create a router called 'current', and include the GTFS and OSM files for the road network and current transit schedules for Greater Manchester, along with `router-config.json`, as shown below:
 
 
-```{r, engine = 'bash', eval = FALSE}
+```{r, engine='bash', eval=FALSE}
 /otp                         # Your top folder for story all OTP data
   /graphs                     
      /current                 # Sub folder with the name or the router
@@ -94,7 +98,7 @@ It should only take a minute or two for OTP to load the graph and start the Griz
 You can also access the web interface using the URL: [http://localhost:8080](http://localhost:8080). **Note:** The web interface does not work correctly in Internet Explorer - use Firefox or Chrome. You can now zoom into the Manchester area and request a route by setting an origin and a destination directly on the map (by right clicking your mouse) and you can specify travel dates, times and modes using the 'Trip Options' window (see Figure \ref{fig:otpgui}). You can change the background map from the layer stack icon at the top right.
 
 ```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:otpgui}OTP Web GUI"}
-knitr::include_graphics("images/otpwebgui.png")
+knitr::include_graphics("images/otpwebgui.jpg")
 ```
 
 

@@ -4,7 +4,7 @@ author: "Marcus Young, modified by Malcolm Morganr"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{opentripplanner-advanced}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,7 +17,7 @@ The vignette introduces some of the more advanced features of OTP, and gives som
 
 For this vingnette we will use the same data as the `getting_started` vingette. If you have not yet created the example graph you can set it up with the following commands. If you are using non-default settings see the `getting_started` vingette for full details.
 
-```{r eval = FALSE}
+```{r eval =FALSE}
 library(opentripplanner)
 # Path to a folder containing the OTP.jar file, change to where you saved the file.
 path_otp <- "C:/otp"
@@ -33,7 +33,7 @@ otpcon <- otp_connect()
 
 Now that we have a working instance of OTP, we'll use it to generate some travel-time isochrones. We are interested in visualising how long it takes to access Manchester Airport using public transport from different parts of Greater Manchester. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
 
-```{r eval = FALSE}
+```{r eval=FALSE}
 airport_current  <- otp_isochrone(otpcon = otpcon,
             fromPlace = c(53.36367, -2.27190), # latlong of Manchester Airport
             mode = c("WALK","TRANSIT"),
@@ -44,7 +44,7 @@ airport_current$minutes = airport_current$time / 60 # Convert back to minutes
 
 We can visualise the isochrones on a map using the `tmap` package.
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 library(tmap)                       # Load the tmap package
 tmap_mode("view")                   # Set tmap to interative viewing
 map <- tm_shape(airport_current) +  # Build the map
@@ -58,8 +58,8 @@ map                                 # Plot the map
 
 You should see a map like this.
 
-```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:otpgui}Isochrones from Manchester Airport"}
-knitr::include_graphics("images/isochrone.png")
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:otpgui}Isochrones from Manchester Airport"}
+knitr::include_graphics("images/isochrone.jpg")
 ```
 
 ## Batch Routing
@@ -70,7 +70,7 @@ To do this we will be using the `otp_route_batch` function.
 
 We'll start by importing the sample data `gm-lsoa-centroids.Rds` 
 
-```{r, eval = TRUE}
+```{r, eval=FALSE}
 lsoa <- readRDS(system.file("data/gm-lsoa-centroids.Rds", package="opentripplanner"))
 head(lsoa)
 ```
@@ -78,7 +78,7 @@ head(lsoa)
 `otp_plan_batch` requires the fromPlace and the toPlace to each be 2 x m matricies wher each row is a latitute/longditude pair.
 
 
-```{r, eval = TRUE}
+```{r, eval=FALSE}
 toPlace <- matrix(rep(c(53.36367, -2.27190),nrow(lsoa)), ncol = 2, byrow = TRUE)
 head(toPlace)
 fromPlace <- matrix(c(lsoa$lat,lsoa$lng), ncol = 2, byrow = FALSE)
@@ -87,7 +87,7 @@ head(fromPlace)
 
 Now we can use the `otp_plan_batch` to find the routes
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 routes <- otp_plan_batch(otpcon = otpcon,
                          fromPlace = fromPlace,
                          toPlace = toPlace)
@@ -102,7 +102,7 @@ You can plot the routes using `tmap`
 
 If you do plot all the routes it should look something like this:
 
-```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Manchester Airport"}
-knitr::include_graphics("images/routes_to_airport.png")
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Manchester Airport"}
+knitr::include_graphics("images/routes_to_airport.jpg")
 ```
 

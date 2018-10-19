@@ -17,4 +17,8 @@ Imports:
     checkmate,
     httr
 RoxygenNote: 6.1.0
-Suggests: testthat
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
