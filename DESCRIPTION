@@ -16,5 +16,5 @@ LazyData: true
 Imports:
     checkmate,
     httr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests: testthat
