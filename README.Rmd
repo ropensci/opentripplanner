@@ -21,7 +21,9 @@ The goal of Open Trip Planner for R is to provide a simple R interface to Open T
 
 ## Installation - Open Trip Planner
 
-To use Open Trip Planner for R you will need a running instance of OTP. A basic tutorial on setting up OTP is available at http://docs.opentripplanner.org/en/latest/Basic-Tutorial/, and an intermediate tutorial complete with sample data is available at https://github.com/marcusyoung/otp-tutorial. 
+To use Open Trip Planner for R you will need a running instance of OTP. A basic tutorial on setting up OTP is available at http://docs.opentripplanner.org/en/latest/Basic-Tutorial/, and an intermediate tutorial complete with sample data is available at https://github.com/marcusyoung/otp-tutorial.
+
+Instructons for installing OTP on Linux can be found in the [`getting-started` vignette](https://github.com/ITSLeeds/opentripplanner/blob/master/vignettes/getting_started.Rmd).
 
 
 ## Installation - R Package

@@ -17,6 +17,10 @@ A basic tutorial on setting up OTP is available at
 intermediate tutorial complete with sample data is available at
 <https://github.com/marcusyoung/otp-tutorial>.
 
+Instructons for installing OTP on Linux can be found in the
+[`getting-started`
+vignette](https://github.com/ITSLeeds/opentripplanner/blob/master/vignettes/getting_started.Rmd).
+
 ## Installation - R Package
 
 Install the package with **devtools** as follows:
