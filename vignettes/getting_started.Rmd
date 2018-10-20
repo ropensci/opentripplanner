@@ -16,9 +16,18 @@ multi-agency public transport routing through imported GTFS feeds. It can also a
 
 A major advantage of running your own multi-modal route planner is the ability to carry out analysis using amended transport data. Services such as as Google Maps or TransportAPI are based on current public transport schedules and the existing road network. OTP enables you to modify transit schedules and/or make changes to the underlying street network. By editing a local copy of OSM, you can model the effects of opening new roads, closing roads, or imposing other restrictions. You can also look back in time. For example, you might want to examine the effect of reductions in rural bus services on accessibility of health facilities. To do this you would need a network with bus schedules as they were in previous years.
 
-## Supporting materials
+## Installation
 
-You will need to download the latest version of the OTP from https://repo1.maven.org/maven2/org/opentripplanner/otp/ , which can be done as follows:
+The following commands will install and attach the package:
+
+```{r, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("marcusyoung/opentripplanner")
+library(opentripplanner)
+```
+
+Before you can use the package, you should set-up the OpenTripPlanner Java program.
+You will need to download the latest version of OTP from https://repo1.maven.org/maven2/org/opentripplanner/otp/ , which can be done as follows (this downloads the file into a folder called `programs` in your home directory on Linux/Mac):
 
 ```{r, eval=FALSE}
 # download file (may want to do this manually)
@@ -26,7 +35,8 @@ url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3
 download.file(url = url_otp, destfile = "~/programs/otp.jar")
 ```
 
-OTP requires Java 8 https://www.java.com/en/download/ . If possible the 64Bit version of Java is preferable, especially if you want to use OTP over large areas. 
+OTP requires Java 8 https://www.java.com/en/download/ . If possible the 64Bit version of Java is preferable, especially if you want to use OTP over large areas.
+To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343).
 
 If you are unfarmialr with R and Open Tripe Planner see the Dummies Guide vignette incuded with this package.
 
