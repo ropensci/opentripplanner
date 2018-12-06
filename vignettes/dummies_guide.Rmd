@@ -108,7 +108,10 @@ library(opentripplanner)
 
 ## Next Steps
 
-Now that you have installed Open Trip Planner for R got to the Getting Started vignette, to find how to create a graph and use it to plan trips. You might also intrested in:
+Now that you have installed Open Trip Planner for R go to the Getting Started vignette, to find how to create a graph and use it to plan trips. 
+Some sample data for the Isle of Wight is provided on the GitHub page for this package https://github.com/ITSLeeds/opentripplanner/releases/tag/0.1
+
+You might also intrested in:
 
 ### Getting Data for OTP
 
@@ -118,7 +121,7 @@ To plan a trip OTP need data about the location, such as where the roads are, wh
 
 OTP uses road maps from the Open Street Map (OSM) https://www.openstreetmap.org in the .pbf format. OSM is a free map that anybody can edit. You can download all of part of the OSM from https://download.geofabrik.de/.
 
-This package comes with some sample data for Greater Manchester https://download.geofabrik.de/europe/great-britain/england/greater-manchester.html
+
 
 #### Public Transport Timetables
 
