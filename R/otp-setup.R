@@ -151,9 +151,10 @@ otp_setup <- function(otp = NULL,
 
 
   # Check for errors
-  if(grepl("ERROR",set_up[2])){
+  if(grepl("ERROR", set_up[2], ignore.case = T)){
     message("Failed to start OTP with message:")
     message(set_up[2])
+    stop()
   }
 
   message(paste0(Sys.time()," OTP is loading and may take a while to be useable"))
