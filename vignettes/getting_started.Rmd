@@ -43,14 +43,15 @@ If you are unfarmialr with R and Open Tripe Planner see the Dummies Guide vignet
 
 ## Building an OTP Graph
 
-We will build an example graph for Greater Manchester using the data provided in the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. 
+We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. 
+
 
 ```{r eval=FALSE}
 # Install Java 8
 # Download and save the latest version of OTP
 
 # Path to a folder containing the OTP.jar file, change to where you saved the file.
-path_otp <- "C:/otp"
+path_otp <- "C:/otp/otp-1.3.0-shaded.jar"
 
 # or on max/linux
 path_otp <- "~/programs/otp.jar"
@@ -58,10 +59,13 @@ path_otp <- normalizePath(path_otp)
 
 # Path to the sample data
 
-path_data <- getwd() # assuming your data is here
+path_data <- getwd() # find the current working directory
+dir.create("graphs") # create a folder structure for the data
+dir.create("graphs/current")
 # Build a graph and save the logs
-download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip")
-unzip("isle-of-wight-demo.zip")
+download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip", 
+              destfile = "isle-of-wight-demo.zip")
+unzip("isle-of-wight-demo.zip", exdir = "graphs/current")
 log <- otp_build_graph(otp = path_otp, dir = path_data) 
 ```
 
@@ -79,7 +83,7 @@ Create a router called 'current', and include the GTFS and OSM files for the roa
 
 
 ```{r, engine='bash', eval=FALSE}
-/otp                         # Your top folder for story all OTP data
+/otp                         # Your top folder for storing all OTP data
   /graphs                     
      /current                 # Sub folder with the name or the router
          osm.pbf              # Required OSM road map
@@ -137,7 +141,7 @@ otpcon <- otp_connect(hostname =  "localhost", router = "current", port = 8801)
 Now we can use R to get a route from the OTP. OTP accepts lattitute and longitude cooridantes for a `fromPlace` (start of the jounrey) and `toPlace` (end of journey).
 
 ```{r, eval = FALSE}
-route <- otp_plan(otpcon, fromPlace = c(53.48478, -2.29786), toPlace = c(53.46680, -2.21169))
+route <- otp_plan(otpcon, fromPlace = c(50.64590, -1.17502), toPlace = c(50.72266, -1.15339))
 ```
 
 If you have the `tmap` package installed you can view the route using.
