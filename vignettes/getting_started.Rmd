@@ -22,7 +22,7 @@ The following commands will install and attach the package:
 
 ```{r, eval=FALSE}
 # install.packages("devtools")
-devtools::install_github("marcusyoung/opentripplanner")
+devtools::install_github("ITSLeeds/opentripplanner")
 library(opentripplanner)
 ```
 
@@ -60,9 +60,8 @@ path_otp <- normalizePath(path_otp)
 
 path_data <- getwd() # assuming your data is here
 # Build a graph and save the logs
-download.file("https://github.com/marcusyoung/opentripplanner/releases/download/0.0.1/demo-graph.zip",
-              "demo-graph.zip")
-unzip("demo-graph.zip")
+download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip")
+unzip("isle-of-wight-demo.zip")
 log <- otp_build_graph(otp = path_otp, dir = path_data) 
 ```
 
