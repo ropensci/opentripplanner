@@ -252,6 +252,11 @@ otp_json2sf <- function(obj, full_elevation = FALSE) {
   legs$endTime <- as.POSIXct(legs$endTime / 1000 , origin = '1970-01-01', tz = "GMT")
 
   itineraries$legs <- NULL
+
+  # Extract Fare Info and discard for now
+  fare <- itineraries$fare
+  itineraries$fare <- NULL
+
   itineraries <- itineraries[legs$route_option,]
   itineraries <- dplyr::bind_cols(itineraries,legs)
 
