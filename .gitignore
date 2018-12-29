@@ -5,3 +5,4 @@ inst/doc
 demo-graph.zip
 graphs
 vignettes/isle-of-wight-demo.zip
+*.gpkg

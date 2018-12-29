@@ -38,7 +38,7 @@ Isochrones requires the analyst extension to OTP.
 ferry_current  <- otp_isochrone(otpcon = otpcon,
             fromPlace = c(50.732429, -1.159494), # latlong of Ryde ferry
             mode = c("WALK","TRANSIT"),
-            maxWalkDistance = 1000,
+            maxWalkDistance = 2000,
             date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")),
             cutoffSec = c(15, 30, 45, 60, 75, 90) * 60 ) # Cut offs in seconds
 ferry_current$minutes = ferry_current$time / 60 # Convert back to minutes
@@ -67,32 +67,32 @@ knitr::include_graphics("images/isochrone.jpg")
 
 ## Batch Routing
 
-In this final part of the tutorial, we are going to automate querying the OTP API to generate large quantities of route data - potentially for many thousands of origin:destination pairs. In this example, we will gather data on accessing Manchester Airport using public transport for each of the LSOAs in Greater Manchester.
+In this final part of the tutorial, we are going to automate querying the OTP API to generate large quantities of route data - potentially for many thousands of origin:destination pairs. In this example, we will gather data on travel times between each of the LSOAs in on the Isle of White and the Rye Ferry.
 
 To do this we will be using the `otp_route_batch` function.
 
-We'll start by importing the sample data `gm-lsoa-centroids.Rds` 
+We'll start by importing the sample data
 
 ```{r, eval=FALSE}
-lsoa <- readRDS(system.file("data/gm-lsoa-centroids.Rds", package="opentripplanner"))
+download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg", 
+              destfile = "centroids.gpkg", mode="wb")
+lsoa <- st_read("centroids.gpkg")
 head(lsoa)
 ```
 
-`otp_plan_batch` requires the fromPlace and the toPlace to each be 2 x m matricies wher each row is a latitute/longditude pair.
+`otp_plan_batch` requires the fromPlace and the toPlace to each be either 2 x m matricies where each row is a latitute/longditude pair, or a SF data.frame of only POINTS. The number of rows in fromPlace and toPlace must be the same. So we will repete the coordinates for the Rye Ferry for each LSOA point.
 
 
 ```{r, eval=FALSE}
-toPlace <- matrix(rep(c(53.36367, -2.27190),nrow(lsoa)), ncol = 2, byrow = TRUE)
+toPlace <- matrix(rep(c(50.732429, -1.159494),nrow(lsoa)), ncol = 2, byrow = TRUE)
 head(toPlace)
-fromPlace <- matrix(c(lsoa$lat,lsoa$lng), ncol = 2, byrow = FALSE)
-head(fromPlace)
 ```
 
 Now we can use the `otp_plan_batch` to find the routes
 
 ```{r, eval=FALSE}
 routes <- otp_plan_batch(otpcon = otpcon,
-                         fromPlace = fromPlace,
+                         fromPlace = lsoa,
                          toPlace = toPlace)
 ```
 
@@ -101,11 +101,9 @@ You may get some error message returned as OTP is unable to find some of the rou
 
 You can plot the routes using `tmap` 
 
-**Note: you may find that plotting so many routes overloads your computer** 
-
 If you do plot all the routes it should look something like this:
 
-```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Manchester Airport"}
-knitr::include_graphics("images/routes_to_airport.jpg")
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Rye Ferry"}
+knitr::include_graphics("images/routes_to_ferry.jpg")
 ```
 

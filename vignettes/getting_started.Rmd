@@ -61,7 +61,7 @@ dir.create("graphs") # create a folder structure for the data
 dir.create("graphs/default")
 # Download example data
 download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip", 
-              destfile = "isle-of-wight-demo.zip")
+              destfile = "isle-of-wight-demo.zip", mode="wb")
 unzip("isle-of-wight-demo.zip", exdir = "graphs/default")
 unlink("isle-of-wight-demo.zip")
 # Run the OTP and Build a graph object
