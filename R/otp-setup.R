@@ -59,7 +59,7 @@ otp_build_graph <- function(otp = NULL,
   set_up <- try(system(text, intern = TRUE))
 
   # Check for errors
-  if(grepl("ERROR",set_up, ignore.case = T) ){
+  if(any(grepl("ERROR",set_up, ignore.case = T)) & length(set_up) < 10 ){
     message("Failed to build graph with message:")
     message(set_up)
   }else{
