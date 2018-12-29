@@ -42,7 +42,7 @@ otp_isochrone <- function(otpcon = NA,
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m/%d/%Y")
-  time <- format(date_time, '%I:%M:%S')
+  time <- format(date_time, '%H:%M:%S')
   checkmate::assert_numeric(cutoffSec, lower =  0)
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(as.character(arriveBy))
@@ -80,7 +80,7 @@ otp_isochrone <- function(otpcon = NA,
   }else{
     # parse to sf
     response = sf::st_read(text, quiet = T)
-    response$id = seq(1:nrow(response))
+    response$id = seq(1,nrow(response))
     return(response)
   }
 

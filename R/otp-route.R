@@ -54,7 +54,7 @@ otp_plan <- function(otpcon = NA,
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m/%d/%Y")
-  time <- format(date_time, '%I:%M:%S')
+  time <- format(date_time, '%H:%M:%S')
   #time <- tolower(time)
 
   if(arriveBy){
