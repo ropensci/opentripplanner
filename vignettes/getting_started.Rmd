@@ -39,7 +39,7 @@ path_otp <- "~/programs/otp.jar" # On Linux
 path_otp <- "C:/Users/Public/otp.jar" # On Windows
 
 url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
-download.file(url = url_otp, destfile = path_otp )
+download.file(url = url_otp, destfile = path_otp, mode="wb")
 ```
 
 ## Building an OTP Graph
