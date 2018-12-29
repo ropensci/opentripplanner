@@ -21,6 +21,26 @@ otp_plan_batch <- function(otpcon = NA,
     message("otpcon is not a valid otpconnect object")
     stop()
   }
+  if("sf" %in% class(fromPlace)){
+    if(all(sf::st_geometry_type(fromPlace) == "POINT")){
+      fromPlace <- sf::st_coordinates(fromPlace)
+      fromPlace <- fromPlace[,c(2,1)]
+    }else{
+      message("fromPlace contains non-POINT geometry")
+      stop()
+    }
+  }
+
+  if("sf" %in% class(toPlace)){
+    if(all(sf::st_geometry_type(toPlace) == "POINT")){
+      toPlace <- sf::st_coordinates(toPlace)
+      toPlace <- toPlace[,c(2,1)]
+    }else{
+      message("toPlace contains non-POINT geometry")
+      stop()
+    }
+  }
+
   if(class(fromPlace) != "matrix" | ncol(fromPlace) != 2){
     message("fromPlace is not a valid matrix of latitude, longitude pairs")
     stop()
