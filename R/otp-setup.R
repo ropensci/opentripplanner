@@ -7,7 +7,7 @@
 #' @param otp A character string, path to the OTP .jar file
 #' @param dir A character string, path to a directory containing the necessary files, see details
 #' @param memory A positive integer. Amount of memory to assign to the OTP in GB, default is 2
-#' @param router A character string for the name of the router, must match with contents of dir, default "current"
+#' @param router A character string for the name of the router, must match with contents of dir, default "default"
 #' @param analyst Logical, should analyst feature be built, default FALSE
 #' @return
 #' Returns and log messages produced by OTP, and will return the message "Graph built" if successful
@@ -19,7 +19,7 @@
 #'
 #' /graphs - A sub-directory
 #'
-#'   /current - A sub-directory with the name of the OTP router used in 'router' variable
+#'   /default - A sub-directory with the name of the OTP router used in 'router' variable
 #'
 #'     osm.pbf - Required, pbf file containing the Open Street Map
 #'
@@ -38,7 +38,7 @@
 otp_build_graph <- function(otp = NULL,
                             dir = NULL,
                             memory = 2,
-                            router = "current",
+                            router = "default",
                             analyst = FALSE)
 {
   # Run Checks
@@ -87,7 +87,7 @@ otp_build_graph <- function(otp = NULL,
 #' @param otp A character string, path to the OTP .jar file
 #' @param dir A character string, path to a directory containing the necessary files, see details
 #' @param memory A positive integer. Amount of memory to assign to the OTP in GB, default is 2
-#' @param router A character vector for the name of the routers, must match with contents of dir, default "current"
+#' @param router A character vector for the name of the routers, must match with contents of dir, default "default"
 #' Only a single router is currently supported
 #' @param port A positive integer. Optional, default is 8080.
 #' @param securePort A positive integer. Optional, default is 8081.
@@ -104,7 +104,7 @@ otp_build_graph <- function(otp = NULL,
 #'
 #' /graphs - A sub-directory
 #'
-#'   /current - A sub-directory with the name of the OTP router used in 'router' variable
+#'   /default - A sub-directory with the name of the OTP router used in 'router' variable
 #'
 #'     graph.obj  OTP graph
 #'
@@ -116,7 +116,7 @@ otp_build_graph <- function(otp = NULL,
 otp_setup <- function(otp = NULL,
                       dir = NULL,
                       memory = 2,
-                      router = "current",
+                      router = "default",
                       port = 8080,
                       securePort = 8081,
                       analyst = FALSE,
@@ -226,7 +226,7 @@ otp_stop <- function()
 #' Checks to run before setting up the OTP
 #'
 #' @param dir A character string path to a folder containing the necessary files, see details
-#' @param router A character string for the name of the router, must match with contents of dir, default "current"
+#' @param router A character string for the name of the router, must match with contents of dir, default "default"
 #' @param graph Logical, check for graph, default = FALSE
 #' @param otp Path to otp.jar
 #'
