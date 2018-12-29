@@ -10,6 +10,7 @@
 #' @param walkReluctance Numeric passed to OTP
 #' @param transferPenalty Numeric passed to OTP
 #' @param minTransferTime Numeric passed to OTP
+#' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
 #'
 #' @export
@@ -41,6 +42,7 @@ otp_plan <- function(otpcon = NA,
            walkReluctance = 2,
            transferPenalty = 0,
            minTransferTime = 0,
+           numItineraries = 3,
            full_elevation = FALSE)
 {
   # Check Valid Inputs
@@ -55,6 +57,10 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m/%d/%Y")
   time <- format(date_time, '%H:%M:%S')
+  checkmate::assert_numeric(maxWalkDistance, lower = 0, len = 1)
+  checkmate::assert_numeric(walkReluctance, lower = 0, len = 1)
+  checkmate::assert_numeric(transferPenalty, lower = 0, len = 1)
+  checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
   #time <- tolower(time)
 
   if(arriveBy){

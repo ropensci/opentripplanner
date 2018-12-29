@@ -7,7 +7,7 @@
 otp_plan(otpcon = NA, fromPlace = NA, toPlace = NA, mode = "CAR",
   date_time = Sys.time(), arriveBy = FALSE, maxWalkDistance = 1000,
   walkReluctance = 2, transferPenalty = 0, minTransferTime = 0,
-  full_elevation = FALSE)
+  numItineraries = 3, full_elevation = FALSE)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
@@ -29,6 +29,8 @@ otp_plan(otpcon = NA, fromPlace = NA, toPlace = NA, mode = "CAR",
 \item{transferPenalty}{Numeric passed to OTP}
 
 \item{minTransferTime}{Numeric passed to OTP}
+
+\item{numItineraries}{The maximum number of possible itineraries to return}
 
 \item{full_elevation}{Logical, should the full elevation profile be returned, default FALSE}
 }
