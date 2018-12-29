@@ -16,9 +16,11 @@
 #' isochrone1 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346))
 #' isochrone2 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346), mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
 #' }
-#' @detials Isochrones are maps of equal travel time,
-#' for a given location a map is produced shoing how long it takes to reach
+#' @details Isochrones are maps of equal travel time,
+#' for a given location a map is produced showing how long it takes to reach
 #' each location.
+#' 
+#' This feature is known to not work correctly with any mode other than TRANSIT.
 #' @export
 otp_isochrone <- function(otpcon = NA,
                      fromPlace = NA,

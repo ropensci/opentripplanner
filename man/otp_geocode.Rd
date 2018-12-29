@@ -2,7 +2,7 @@
 % Please edit documentation in R/otp-geocode.R
 \name{otp_geocode}
 \alias{otp_geocode}
-\title{Use OTP Geocoder to find a location}
+\title{Use OTP Geo-coder to find a location}
 \usage{
 otp_geocode(otpcon = NA, query = NA, autocomplete = FALSE,
   stops = TRUE, clusters = FALSE, corners = TRUE, type = "SF")
@@ -26,7 +26,7 @@ otp_geocode(otpcon = NA, query = NA, autocomplete = FALSE,
 Returns a data.frame of SF POINTS or Coordinates of all the locations that match `query`
 }
 \description{
-Geocoding converts a named place, such as a steet name into a lat/long pair.
+Geo-coding converts a named place, such as a street name into a lat/lng pair.
 }
 \examples{
 \dontrun{

@@ -13,11 +13,14 @@ otp_plan_batch(otpcon = NA, fromPlace = NA, toPlace = NA, ...)
 
 \item{toPlace}{Numeric matrix of two columns, Latitude/Longitude pairs}
 
-\item{...}{Other variaibles passed to otp_plan}
+\item{...}{Other variables passed to otp_plan}
 }
 \value{
 Returns a data.frame of SF POLYLINES
 }
 \description{
 Get multiple routes from the OTP
+}
+\details{
+This function is a batch version of otp_plan() and is useful if you want to produce many routes at once.
 }

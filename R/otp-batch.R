@@ -3,12 +3,12 @@
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param fromPlace Numeric matrix of two columns, Latitude/Longitude pairs
 #' @param toPlace Numeric matrix of two columns, Latitude/Longitude pairs
-#' @param ... Other variaibles passed to otp_plan
+#' @param ... Other variables passed to otp_plan
 #' @return
 #' Returns a data.frame of SF POLYLINES
 #' @export
 #'
-#' @detials
+#' @details
 #' This function is a batch version of otp_plan() and is useful if you want to produce many routes at once.
 #'
 otp_plan_batch <- function(otpcon = NA,
@@ -40,7 +40,7 @@ otp_plan_batch <- function(otpcon = NA,
     if(max(toPlace[,1]) <= 90 & min(toPlace[,1]) >= -90 &  max(toPlace[,2]) <= 180 & min(toPlace[,2]) >= -180){
 
     }else{
-      message("toPlace coordinates excced valid values +/- 90 and +/- 180 degrees")
+      message("toPlace coordinates exceed valid values +/- 90 and +/- 180 degrees")
       stop()
     }
 
@@ -91,7 +91,7 @@ otp_plan_batch <- function(otpcon = NA,
   sf::st_crs(results_routes) <- 4326
 
   if(length(results_errors) > 1){
-    message("Some errors occured")
+    message("Some errors occurred")
     print(results_errors)
   }
   return(results_routes)

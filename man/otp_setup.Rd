@@ -21,13 +21,14 @@ Only a single router is currently supported}
 
 \item{securePort}{A positive integer. Optional, default is 8081.}
 
-\item{analyst}{Logical. Should the analyist features be loaded? Default FALSE}
+\item{analyst}{Logical. Should the analyst features be loaded? Default FALSE}
 
 \item{wait}{Logical, Should R wait until OTP has loaded before running next line of code, default TRUE}
 }
 \value{
 This function does not return a value to R.
-If wait is TRUE R will wait until OTP is running (maximum of 5 minutes)
+If wait is TRUE R will wait until OTP is running (maximum of 5 minutes).
+After 5 minutes (or if wait is FALSE) the function will return R to your control, but the OTP will keep loading.
 }
 \description{
 OTP is run in Java and requires Java commands to be typed into the command line.

@@ -26,7 +26,7 @@ Returns an S3 object of class otpconnect. If \code{check} is TRUE
 }
 \description{
 Defines the parameters required to connect to a router on an OTP instance and,
-if required, confirms that the instance and router are queryable.
+if required, confirms that the instance and router are query-able.
 }
 \examples{
 \dontrun{

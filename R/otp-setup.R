@@ -8,9 +8,9 @@
 #' @param dir A character string, path to a directory containing the necessary files, see details
 #' @param memory A positive integer. Amount of memory to assign to the OTP in GB, default is 2
 #' @param router A character string for the name of the router, must match with contents of dir, default "current"
-#' @param analyst Logial, should analyst feature be built, default FALSE
+#' @param analyst Logical, should analyst feature be built, default FALSE
 #' @return
-#' Returns and log messages produced by OTP, and will return the message "Graph built" if sucessfull
+#' Returns and log messages produced by OTP, and will return the message "Graph built" if successful
 #' @details
 #' The OTP .jar file can be downloaded from https://repo1.maven.org/maven2/org/opentripplanner/otp/
 #'
@@ -18,10 +18,15 @@
 #' specified by the dir variable.
 #'
 #' /graphs - A sub-directory
-#'   /current - A sub-directory with the name of the OTP router used in 'router' variaible
+#'
+#'   /current - A sub-directory with the name of the OTP router used in 'router' variable
+#'
 #'     osm.pbf - Required, pbf file containing the Open Street Map
-#'     router-config.json - Required, json file containing configations settings for the OTP
+#'
+#'     router-config.json - Required, json file containing configurations settings for the OTP
+#'
 #'     gtfs.zip - Optional, and number of GTFS files with transit timetables
+#'
 #'     terrain.tif - Optional, GeoTiff image of terrain map
 #'
 #' The function will accept any file name for the .jar file, but it must be the only .jar file in that directory
@@ -86,18 +91,21 @@ otp_build_graph <- function(otp = NULL,
 #' Only a single router is currently supported
 #' @param port A positive integer. Optional, default is 8080.
 #' @param securePort A positive integer. Optional, default is 8081.
-#' @param analyst Logical. Should the analyist features be loaded? Default FALSE
+#' @param analyst Logical. Should the analyst features be loaded? Default FALSE
 #' @param wait Logical, Should R wait until OTP has loaded before running next line of code, default TRUE
 #' @return
 #' This function does not return a value to R.
-#' If wait is TRUE R will wait until OTP is running (maximum of 5 minutes)
+#' If wait is TRUE R will wait until OTP is running (maximum of 5 minutes).
+#' After 5 minutes (or if wait is FALSE) the function will return R to your control, but the OTP will keep loading.
 #' @detials
 #'
-#' #' To run an OTP graph must have been created using otp_build-grah and the following files to be in the directory
+#' To run an OTP graph must have been created using otp_build_graph and the following files to be in the directory
 #' specified by the dir variable.
 #'
 #' /graphs - A sub-directory
-#'   /current - A sub-directory with the name of the OTP router used in 'router' variaible
+#'
+#'   /current - A sub-directory with the name of the OTP router used in 'router' variable
+#'
 #'     graph.obj  OTP graph
 #'
 #' @examples \dontrun{
@@ -231,7 +239,7 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
 
   # Check we have correct verrsion of Java
   if(checkmate::testOS("linux")) {
-    message("You're on linux, java version check not yet supported")
+    message("You're on Linux, Java version check not yet supported")
   }else if(checkmate::testOS("windows")){
     java_version <- try(system("java -version", intern = TRUE))
     if(class(java_version) == "try-error"){
@@ -252,9 +260,9 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
       }
     }
   }else if(checkmate::testOS("mac")){
-    message("You're on Mac, java version check not yet supported")
+    message("You're on Mac, Java version check not yet supported")
   }else{
-    message("You're on and unknow OS, java version check not yet supported")
+    message("You're on and unknown OS, Java version check not yet supported")
   }
 
   # Check that the graph exists

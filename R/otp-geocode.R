@@ -1,6 +1,6 @@
-#'  Use OTP Geocoder to find a location
+#'  Use OTP Geo-coder to find a location
 #'
-#'  Geocoding converts a named place, such as a steet name into a lat/long pair.
+#'  Geo-coding converts a named place, such as a street name into a lat/lng pair.
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param query Character, The query string we want to geocode

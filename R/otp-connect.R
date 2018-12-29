@@ -1,7 +1,7 @@
 #' Set up and confirm a connection to an OTP instance.
 #'
 #' Defines the parameters required to connect to a router on an OTP instance and,
-#' if required, confirms that the instance and router are queryable.
+#' if required, confirms that the instance and router are query-able.
 #'
 #' @param hostname A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
 #'     Optional, default is "localhost".
