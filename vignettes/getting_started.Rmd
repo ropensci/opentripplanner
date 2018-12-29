@@ -36,7 +36,7 @@ You will need to download the latest version of OTP from https://repo1.maven.org
 ```{r, eval=FALSE}
 # download file (may want to do this manually)
 path_otp <- "~/programs/otp.jar" # On Linux
-path_otp <- "C:/Users/Public/Downloads/otp.jar" # On Windows
+path_otp <- "C:/Users/Public/otp.jar" # On Windows
 
 url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
 download.file(url = url_otp, destfile = path_otp )
@@ -56,14 +56,15 @@ We will build an example graph for the Isle of Wight using some example data pro
 # path_otp <- "C:/Users/Public/Downloads/otp.jar" # On Windows
 
 # Path to the sample data
-
 path_data <- getwd() # find the current working directory
 dir.create("graphs") # create a folder structure for the data
 dir.create("graphs/current")
-# Build a graph and save the logs
+# Download example data
 download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip", 
               destfile = "isle-of-wight-demo.zip")
 unzip("isle-of-wight-demo.zip", exdir = "graphs/current")
+unlink("isle-of-wight-demo.zip")
+# Run the OTP and Build a graph object
 log <- otp_build_graph(otp = path_otp, dir = path_data) 
 ```
 
