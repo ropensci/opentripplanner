@@ -20,11 +20,10 @@ For this vingnette we will use the same data as the `getting_started` vingette. 
 ```{r eval =FALSE}
 library(opentripplanner)
 # Path to a folder containing the OTP.jar file, change to where you saved the file.
-path_otp <- "C:/otp"
-
-path_data <- system.file("extdata", package="opentripplanner")
+path_otp <- "C:/Users/Public/otp.jar"
+path_data <- getwd() # find the current working directory
 log <- otp_build_graph(otp = path_otp, dir = path_data)
-otp_setup(otp = path_otp, dir = path_data, memory = 1.5)
+otp_setup(otp = path_otp, dir = path_data, analyst = T)
 otpcon <- otp_connect()
 
 ```
@@ -33,10 +32,14 @@ otpcon <- otp_connect()
 
 Now that we have a working instance of OTP, we'll use it to generate some travel-time isochrones. We are interested in visualising how long it takes to access Ryde ferry using public transport from different parts of the island. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
 
+Isochrones requires the analyst extension to OTP. 
+
 ```{r eval=FALSE}
 ferry_current  <- otp_isochrone(otpcon = otpcon,
-            fromPlace = c(50.73276, -1.15751), # latlong of Manchester Airport
+            fromPlace = c(50.732429, -1.159494), # latlong of Ryde ferry
             mode = c("WALK","TRANSIT"),
+            maxWalkDistance = 1000,
+            date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")),
             cutoffSec = c(15, 30, 45, 60, 75, 90) * 60 ) # Cut offs in seconds
 ferry_current$minutes = ferry_current$time / 60 # Convert back to minutes
 
