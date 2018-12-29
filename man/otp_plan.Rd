@@ -5,7 +5,7 @@
 \title{Get the geometry of a route from the OTP}
 \usage{
 otp_plan(otpcon = NA, fromPlace = NA, toPlace = NA, mode = "CAR",
-  date_time = Sys.time(), arriveBy = FALSE, maxWalkDistance = 800,
+  date_time = Sys.time(), arriveBy = FALSE, maxWalkDistance = 1000,
   walkReluctance = 2, transferPenalty = 0, minTransferTime = 0,
   full_elevation = FALSE)
 }
