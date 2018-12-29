@@ -15,7 +15,7 @@
 #' @examples \dontrun{
 #' locations <- otp_geocode(otpcon, "High Street")
 #' }
-#' @detials
+#' @details
 #' OTP will return a maximum of 10 results
 #'
 #' @export

@@ -4,7 +4,7 @@
 \alias{otp_setup}
 \title{Set up an OTP instance.}
 \usage{
-otp_setup(otp = NULL, dir = NULL, memory = 2, router = "current",
+otp_setup(otp = NULL, dir = NULL, memory = 2, router = "default",
   port = 8080, securePort = 8081, analyst = FALSE, wait = TRUE)
 }
 \arguments{
@@ -14,7 +14,7 @@ otp_setup(otp = NULL, dir = NULL, memory = 2, router = "current",
 
 \item{memory}{A positive integer. Amount of memory to assign to the OTP in GB, default is 2}
 
-\item{router}{A character vector for the name of the routers, must match with contents of dir, default "current"
+\item{router}{A character vector for the name of the routers, must match with contents of dir, default "default"
 Only a single router is currently supported}
 
 \item{port}{A positive integer. Optional, default is 8080.}
@@ -37,6 +37,17 @@ This function sets up a local instance of OTP, for remote versions see documenta
 }
 \details{
 The function assumes you have run otp_build_graph()
+
+
+
+To run an OTP graph must have been created using otp_build_graph and the following files to be in the directory
+specified by the dir variable.
+
+/graphs - A sub-directory
+
+  /default - A sub-directory with the name of the OTP router used in 'router' variable
+
+    graph.obj  OTP graph
 }
 \examples{
 \dontrun{

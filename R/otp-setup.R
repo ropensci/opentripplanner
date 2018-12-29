@@ -97,7 +97,7 @@ otp_build_graph <- function(otp = NULL,
 #' This function does not return a value to R.
 #' If wait is TRUE R will wait until OTP is running (maximum of 5 minutes).
 #' After 5 minutes (or if wait is FALSE) the function will return R to your control, but the OTP will keep loading.
-#' @detials
+#' @details
 #'
 #' To run an OTP graph must have been created using otp_build_graph and the following files to be in the directory
 #' specified by the dir variable.

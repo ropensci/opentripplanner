@@ -11,7 +11,7 @@ otp_checks(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
 
 \item{dir}{A character string path to a folder containing the necessary files, see details}
 
-\item{router}{A character string for the name of the router, must match with contents of dir, default "current"}
+\item{router}{A character string for the name of the router, must match with contents of dir, default "default"}
 
 \item{graph}{Logical, check for graph, default = FALSE}
 }

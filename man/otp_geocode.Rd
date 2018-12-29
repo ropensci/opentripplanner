@@ -28,6 +28,9 @@ Returns a data.frame of SF POINTS or Coordinates of all the locations that match
 \description{
 Geo-coding converts a named place, such as a street name into a lat/lng pair.
 }
+\details{
+OTP will return a maximum of 10 results
+}
 \examples{
 \dontrun{
 locations <- otp_geocode(otpcon, "High Street")
