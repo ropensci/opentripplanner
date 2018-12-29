@@ -59,6 +59,8 @@ For more information and advanced options, see http://docs.opentripplanner.org/e
 
 For now just keep the .jar file somewhere where you can find it, we will use it later.
 
+To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343).
+
 ### To Use R
 
 * Download free R software https://cran.r-project.org/mirrors.html selecting your country (or nearest available country)

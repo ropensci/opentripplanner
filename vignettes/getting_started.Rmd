@@ -31,8 +31,11 @@ You will need to download the latest version of OTP from https://repo1.maven.org
 
 ```{r, eval=FALSE}
 # download file (may want to do this manually)
+path_otp = "~/programs/otp.jar" # On Linux
+path_otp = "C:/Users/Public/Downloads/otp.jar" # On Windows
+
 url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
-download.file(url = url_otp, destfile = "~/programs/otp.jar")
+download.file(url = url_otp, destfile = path_otp )
 ```
 
 OTP requires Java 8 https://www.java.com/en/download/ . If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
