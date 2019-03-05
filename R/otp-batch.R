@@ -3,6 +3,7 @@
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param fromPlace Numeric matrix of two columns, Latitude/Longitude pairs
 #' @param toPlace Numeric matrix of two columns, Latitude/Longitude pairs
+#' @param ncores numeric, number of cores to use in parallel processing, default is 1
 #' @param ... Other variables passed to otp_plan
 #' @return
 #' Returns a data.frame of SF POLYLINES
@@ -12,9 +13,10 @@
 #' This function is a batch version of otp_plan() and is useful if you want to produce many routes at once.
 #'
 otp_plan_batch <- function(otpcon = NA,
-                     fromPlace = NA,
-                     toPlace = NA,
-                     ...)
+                            fromPlace = NA,
+                            toPlace = NA,
+                            ncores = 1,
+                            ...)
 {
   # Check Valid Inputs
   if(!"otpconnect" %in% class(otpcon)){
@@ -81,14 +83,35 @@ otp_plan_batch <- function(otpcon = NA,
     return(res)
   }
 
+  if(ncores > 1){
+    cl = parallel::makeCluster(ncores)
+    parallel::clusterExport(cl = cl,
+                            varlist = c("otpcon","fromPlace","toPlace"),
+                            envir = environment())
+    parallel::clusterEvalQ(cl, {
+      library(opentripplanner)
+    })
+    results <- pbapply::pblapply(seq(1,nrow(fromPlace)),
+                                 get_resutls,
+                                 otpcon = otpcon,
+                                 fromPlace = fromPlace,
+                                 toPlace = toPlace,
+                                 ... = ...,
+                                 cl = cl
+    )
+    parallel::stopCluster(cl)
+    rm(cl)
 
-  results <- pbapply::pblapply(seq(1,nrow(fromPlace)),
-                               get_resutls,
-                               otpcon = otpcon,
-                               fromPlace = fromPlace,
-                               toPlace = toPlace,
-                               ... = ...
-                               )
+  }else{
+    results <- pbapply::pblapply(seq(1,nrow(fromPlace)),
+                                 get_resutls,
+                                 otpcon = otpcon,
+                                 fromPlace = fromPlace,
+                                 toPlace = toPlace,
+                                 ... = ...
+    )
+  }
+
 
 
   results_class <- sapply(results,function(x){"sf" %in% class(x)})

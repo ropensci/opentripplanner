@@ -4,7 +4,8 @@
 \alias{otp_plan_batch}
 \title{Get multiple routes from the OTP}
 \usage{
-otp_plan_batch(otpcon = NA, fromPlace = NA, toPlace = NA, ...)
+otp_plan_batch(otpcon = NA, fromPlace = NA, toPlace = NA,
+  ncores = 1, ...)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
@@ -12,6 +13,8 @@ otp_plan_batch(otpcon = NA, fromPlace = NA, toPlace = NA, ...)
 \item{fromPlace}{Numeric matrix of two columns, Latitude/Longitude pairs}
 
 \item{toPlace}{Numeric matrix of two columns, Latitude/Longitude pairs}
+
+\item{ncores}{numeric, number of cores to use in parallel processing, default is 1}
 
 \item{...}{Other variables passed to otp_plan}
 }

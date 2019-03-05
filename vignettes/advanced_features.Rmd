@@ -1,6 +1,6 @@
 ---
 title: "Advanced Features"
-author: "Marcus Young, modified by Malcolm Morganr"
+author: "Malcolm Morgan"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -11,11 +11,11 @@ vignette: >
 
 ## Introduction
 
-The vignette introduces some of the more advanced features of OTP, and gives some examples of the types of anlaysis that are possible when using OTP and R togther.
+The vignette introduces some of the more advanced features of OTP and gives some examples of the types of analysis that are possible when using OTP and R together.
 
 ### Recap
 
-For this vingnette we will use the same data as the `getting_started` vingette. If you have not yet created the example graph you can set it up with the following commands. If you are using non-default settings see the `getting_started` vingette for full details.
+For this vignette, we will use the same data as the `getting_started` vignette. If you have not yet created the example graph you can set it up with the following commands. If you are using non-default settings see the `getting_started` vignette for full details.
 
 ```{r eval =FALSE}
 library(opentripplanner)
@@ -61,13 +61,13 @@ map                                 # Plot the map
 
 You should see a map like this.
 
-```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:otpgui}Isochrones from Manchester Airport"}
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:otpgui}Isochrones from Ryde ferry"}
 knitr::include_graphics("images/isochrone.jpg")
 ```
 
 ## Batch Routing
 
-In this final part of the tutorial, we are going to automate querying the OTP API to generate large quantities of route data - potentially for many thousands of origin:destination pairs. In this example, we will gather data on travel times between each of the LSOAs in on the Isle of White and the Rye Ferry.
+In this final part of the tutorial, we are going to automate querying the OTP API to generate large quantities of route data - potentially for many thousands of origin: destination pairs. In this example, we will gather data on travel times between each of the LSOAs in on the Isle of White and the Rye Ferry.
 
 To do this we will be using the `otp_route_batch` function.
 
@@ -76,11 +76,11 @@ We'll start by importing the sample data
 ```{r, eval=FALSE}
 download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg", 
               destfile = "centroids.gpkg", mode="wb")
-lsoa <- st_read("centroids.gpkg")
+lsoa <- sf::st_read("centroids.gpkg")
 head(lsoa)
 ```
 
-`otp_plan_batch` requires the fromPlace and the toPlace to each be either 2 x m matricies where each row is a latitute/longditude pair, or a SF data.frame of only POINTS. The number of rows in fromPlace and toPlace must be the same. So we will repete the coordinates for the Rye Ferry for each LSOA point.
+`otp_plan_batch` requires the fromPlace and the toPlace to each be either 2 x m matrices where each row is a latitude/longitude pair or an SF data.frame of only POINTS. The number of rows in fromPlace and toPlace must be the same. So we will repeat the coordinates for the Rye Ferry for each LSOA point.
 
 
 ```{r, eval=FALSE}
