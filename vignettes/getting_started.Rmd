@@ -48,13 +48,6 @@ We will build an example graph for the Isle of Wight using some example data pro
 
 
 ```{r eval=FALSE}
-# Install Java 8
-# Download and save the latest version of OTP
-
-# Path to a folder containing the OTP.jar file, change to where you saved the file.
-# path_otp <- "~/programs/otp.jar" # On Linux
-# path_otp <- "C:/Users/Public/Downloads/otp.jar" # On Windows
-
 # Path to the sample data
 path_data <- getwd() # find the current working directory
 dir.create("graphs") # create a folder structure for the data
