@@ -17,7 +17,7 @@ Imports:
     checkmate,
     httr,
     sf,
-    gepaf,
+    googlePolylines,
     dplyr,
     geosphere,
     jsonlite,
