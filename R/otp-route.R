@@ -131,7 +131,7 @@ polyline2linestring <- function(line, elevation = NULL){
     }else{
       elevation <-elevation[order(elevation$distance),]
       # Calculate the length of each segment
-      dist <-sapply(seq(1,nrow(line)-1),function(x){geosphere::distm(line[x,], line[x+1,], fun = geosphere::distHaversine)})
+      dist <- geosphere::distHaversine(line[seq(1,nrow(line)-1),], line[seq(2,nrow(line)),])
       dist <- cumsum(dist)
       vals <- findInterval(dist, elevation$distance)
       vals[vals == 0] = 1L
