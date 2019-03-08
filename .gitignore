@@ -4,5 +4,6 @@ inst/doc
 .RData
 demo-graph.zip
 graphs
+lucene
 vignettes/isle-of-wight-demo.zip
 *.gpkg
