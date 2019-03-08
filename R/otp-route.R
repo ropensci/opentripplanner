@@ -122,7 +122,7 @@ otp_plan <- function(otpcon = NA,
 
 polyline2linestring <- function(line, elevation = NULL){
   #line <- gepaf::decodePolyline(line)
-  line <- googlePolylines::decode(string)[[1]] # much faster
+  line <- googlePolylines::decode(line)[[1]] # much faster
   line <- as.matrix(line[,2:1])
   if(exists("elevation")){
     # Some modes don't have elevation e.g TRANSIT, check for this
