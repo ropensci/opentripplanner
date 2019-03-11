@@ -136,6 +136,8 @@ otp_plan_batch <- function(otpcon = NA,
 
   if(length(results_errors) > 1){
     message("Some errors occurred")
+    # Simplify Error Message
+    results_errors <- sapply(results_errors, function(x){paste0("Error: ",x$errorId," from ",x$fromPlace," to ",x$toPlace," ",x$errorMessage)})
     print(results_errors)
   }
   return(results_routes)
