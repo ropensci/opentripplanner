@@ -181,7 +181,7 @@ otp_setup <- function(otp = NULL,
 
       if("otpconnect" %in% class(otpcon)){
         message(paste0(Sys.time()," OTP is ready to use Go to localhost:",port," in your browser to view the OTP"))
-        browseURL(paste0(ifelse(otpcon$ssl,"https://","http://"),"localhost:",port))
+        utils::browseURL(paste0(ifelse(otpcon$ssl,"https://","http://"),"localhost:",port))
         break
       }else{
         if(i < 10){

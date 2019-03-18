@@ -36,6 +36,8 @@ otp_plan_internal(otpcon = NA, fromPlace = NA, toPlace = NA,
 \item{numItineraries}{The maximum number of possible itineraries to return}
 
 \item{full_elevation}{Logical, should the full elevation profile be returned, default FALSE}
+
+\item{get_geometry}{logical, should geometry be returned}
 }
 \description{
 Get the geometry of a route from the OTP

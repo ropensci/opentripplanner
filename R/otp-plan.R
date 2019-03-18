@@ -108,20 +108,6 @@ otp_plan <- function(otpcon = NA,
     }
   }
 
-  get_results <- function(x,otpcon, fromPlace, toPlace,
-                          ... = ...){
-    res <- otp_plan_internal(otpcon = otpcon,
-                    fromPlace = fromPlace[x,],
-                    toPlace = toPlace[x,],
-                    ... = ...)
-
-    if("data.frame" %in% class(imp)){
-      res$fromPlace = paste(fromPlace[x,],collapse = ",")
-      res$toPlace = paste(toPlace[x,],collapse = ",")
-    }
-    return(res)
-  }
-
   if(ncores > 1){
     cl = parallel::makeCluster(ncores)
     parallel::clusterExport(cl = cl,
@@ -132,7 +118,7 @@ otp_plan <- function(otpcon = NA,
     })
     pbapply::pboptions(use_lb=TRUE)
     results <- pbapply::pblapply(seq(1,nrow(fromPlace)),
-                                 get_results,
+                                 otp_get_results,
                                  otpcon = otpcon,
                                  fromPlace = fromPlace,
                                  toPlace = toPlace,
@@ -154,7 +140,7 @@ otp_plan <- function(otpcon = NA,
 
   }else{
     results <- pbapply::pblapply(seq(1,nrow(fromPlace)),
-                                 get_results,
+                                 otp_get_results,
                                  otpcon = otpcon,
                                  fromPlace = fromPlace,
                                  toPlace = toPlace,
@@ -209,6 +195,32 @@ otp_plan <- function(otpcon = NA,
   return(results_routes)
 }
 
+#' Get OTP results
+#'
+#' helper function for otp_plan
+#'
+#' @param x numeric
+#' @param otpcon otpcon
+#' @param fromPlace fromplace
+#' @param toPlace toPlace
+#' @param ... all other variaibles
+#'
+otp_get_results <- function(x,otpcon, fromPlace, toPlace,
+                        ... = ...){
+  res <- otp_plan_internal(otpcon = otpcon,
+                           fromPlace = fromPlace[x,],
+                           toPlace = toPlace[x,],
+                           ... = ...)
+
+  if("data.frame" %in% class(res)){
+    res$fromPlace = paste(fromPlace[x,],collapse = ",")
+    res$toPlace = paste(toPlace[x,],collapse = ",")
+  }
+  return(res)
+}
+
+
+
 #' Clean Batch Inputs
 #'
 #' Clean numeric, SF, or matrix prior to routing
@@ -259,7 +271,7 @@ otp_clean_input <- function(imp, imp_name){
 #' @param minTransferTime Numeric passed to OTP
 #' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
-#'
+#' @param get_geometry logical, should geometry be returned
 #'
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -334,6 +346,7 @@ otp_plan_internal <- function(otpcon = NA,
 #'
 #' @param obj Object from the OTP API to process
 #' @param full_elevation logical should the full elevation profile be returned (if available)
+#' @param get_geometry logical, should geometry be returned
 
 otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
   requestParameters <- obj$requestParameters

@@ -77,7 +77,7 @@ otp_geocode <- function(otpcon = NA,
       response = sf::st_as_sf(asjson, coords = c("lng","lat"), remove = remove)
       return(response)
     }else{
-      return(ajson)
+      return(asjson)
     }
 
   }

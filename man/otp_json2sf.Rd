@@ -10,6 +10,8 @@ otp_json2sf(obj, full_elevation = FALSE, get_geometry = TRUE)
 \item{obj}{Object from the OTP API to process}
 
 \item{full_elevation}{logical should the full elevation profile be returned (if available)}
+
+\item{get_geometry}{logical, should geometry be returned}
 }
 \description{
 Convert output from Open Trip Planner into sf object
