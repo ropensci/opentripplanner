@@ -28,13 +28,13 @@ otp_geocode <- function(otpcon = NA,
                         type = "SF")
 {
   # Validate Inputs
-  checkmate::assert_class(otpcon,"otpconnect")
+  checkmate::assert_class(otpcon, "otpconnect")
   checkmate::assert_character(query)
   checkmate::assert_logical(autocomplete)
   checkmate::assert_logical(stops)
   checkmate::assert_logical(clusters)
   checkmate::assert_logical(corners)
-  checkmate::assert_choice(type, choices = c("SF","Coordinates","Both"))
+  checkmate::assert_choice(type, choices = c("SF", "Coordinates", "Both"))
 
 
   autocomplete <- tolower(as.character(autocomplete))
@@ -44,7 +44,7 @@ otp_geocode <- function(otpcon = NA,
 
   # Construct URL
   routerUrl <- make_url(otpcon)
-  routerUrl <- paste0(routerUrl,"/geocode")
+  routerUrl <- paste0(routerUrl, "/geocode")
 
   querylist <- list(
     query = query,
@@ -54,8 +54,7 @@ otp_geocode <- function(otpcon = NA,
     corners = corners
   )
 
-  req <- httr::GET(
-    routerUrl,
+  req <- httr::GET(routerUrl,
     query = querylist
   )
 

@@ -130,10 +130,10 @@ otpcon <- otp_connect(hostname =  "localhost", router = "default", port = 8801)
 
 ## Getting a route from the OTP
 
-Now we can use R to get a route from the OTP. OTP accepts latitude and longitude coordinates for a `fromPlace` (start of the journey) and `toPlace` (end of the journey).
+Now we can use R to get a route from the OTP. OTP accepts pairs of longitude/latitude coordinates for a `fromPlace` (start of the journey) and `toPlace` (end of the journey).
 
 ```{r, eval = FALSE}
-route <- otp_plan(otpcon, fromPlace = c(50.64590, -1.17502), toPlace = c(50.72266, -1.15339))
+route <- otp_plan(otpcon, fromPlace = c(-1.17502, 50.64590), toPlace = c(-1.15339, 50.72266))
 ```
 
 If you have the `tmap` package installed you can view the route using.

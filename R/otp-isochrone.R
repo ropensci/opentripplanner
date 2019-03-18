@@ -1,7 +1,7 @@
 #' Get the Isochrones from a location
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
-#' @param fromPlace Numeric vector, Latitude/Longitude pair, e.g. `c(51.529258,-0.134649)`
+#' @param fromPlace Numeric vector, Longitude/Latitude pair, e.g. `c(-0.134649, 51.529258,)`
 #' @param mode Character vector of modes of travel valid values TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR
 #' @param date_time POSIXct, a date and time, defaults to current date and time
 #' @param arriveBy Logical, Whether the trip should depart or arrive at the specified date and time, default FALSE
@@ -13,13 +13,14 @@
 #' @return
 #' Returns a data.frame of SF POLYGONS
 #' @examples \dontrun{
-#' isochrone1 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346))
-#' isochrone2 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346), mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
+#' isochrone1 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292))
+#' isochrone2 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292),
+#'                             mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
 #' }
 #' @details Isochrones are maps of equal travel time,
 #' for a given location a map is produced showing how long it takes to reach
 #' each location.
-#' 
+#'
 #' This feature is known to not work correctly with any mode other than TRANSIT.
 #' @export
 otp_isochrone <- function(otpcon = NA,
@@ -36,6 +37,7 @@ otp_isochrone <- function(otpcon = NA,
   # Check Valid Inputs
   checkmate::assert_class(otpcon,"otpconnect")
   checkmate::assert_numeric(fromPlace, lower =  -180, upper = 180, len = 2)
+  fromPlace <- fromPlace[2:1]
   fromPlace <- paste(fromPlace, collapse = ",")
   mode <- toupper(mode)
   checkmate::assert_subset(mode, choices = c("TRANSIT","WALK","BICYCLE","CAR","BUS","RAIL"), empty.ok = F)

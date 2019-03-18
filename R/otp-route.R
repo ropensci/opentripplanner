@@ -1,5 +1,7 @@
 #' Get the geometry of a route from the OTP
 #'
+#' THe old otp_plan now depeciated
+#'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param fromPlace Numeric vector, Latitude/Longitude pair, e.g. `c(51.529258,-0.134649)`
 #' @param toPlace Numeric vector, Latitude/Longitude pair, e.g. `c(51.506383,-0.088780,)`
@@ -32,7 +34,7 @@
 #' first and second are returned from OTP, while distance is the cumulative distance along the
 #' route and is derived from First.
 #'
-otp_plan <- function(otpcon = NA,
+otp_plan_old <- function(otpcon = NA,
            fromPlace = NA,
            toPlace = NA,
            mode = "CAR",
@@ -45,6 +47,7 @@ otp_plan <- function(otpcon = NA,
            numItineraries = 3,
            full_elevation = FALSE)
 {
+  message("This is the old version and is depreciated")
   # Check Valid Inputs
   checkmate::assert_class(otpcon,"otpconnect")
   checkmate::assert_numeric(fromPlace, lower =  -180, upper = 180, len = 2)
@@ -111,164 +114,151 @@ otp_plan <- function(otpcon = NA,
 }
 
 
-#' Convert Google Encoded Polyline and elevation data into sf object
+#' Get multiple routes from the OTP
 #'
-#' OTP returns the 2d route as a polyline bean and the elevation profile as vector of numbers
-#' But the number of points for each is not the same, as 2D line only has a point at change of directions
-#' While elevation is regally spaced. If elevation is supplied the correct heights are matched
+#' This fucntion is depreciated in favor of the new otp_plan which can do both single and batch routes
 #'
-#' @param line character - polyline
-#' @param elevation numeric - vector of elevations
-
-polyline2linestring <- function(line, elevation = NULL){
-  #line <- gepaf::decodePolyline(line)
-  line <- googlePolylines::decode(line)[[1]] # much faster
-  line <- as.matrix(line[,2:1])
-  if(exists("elevation")){
-    # Some modes don't have elevation e.g TRANSIT, check for this
-    if(all(is.na(elevation))){
-      ele <- rep(0,nrow(line))
+#' @param otpcon OTP connection object produced by otp_connect()
+#' @param fromPlace Numeric matrix of two columns, Latitude/Longitude pairs
+#' @param toPlace Numeric matrix of two columns, Latitude/Longitude pairs
+#' @param ncores numeric, number of cores to use in parallel processing, default is 1
+#' @param ... Other variables passed to otp_plan
+#' @return
+#' Returns a data.frame of SF POLYLINES
+#' @export
+#'
+#' @details
+#' This function is a batch version of otp_plan() and is useful if you want to produce many routes at once.
+#'
+otp_plan_batch <- function(otpcon = NA,
+                           fromPlace = NA,
+                           toPlace = NA,
+                           ncores = 1,
+                           ...)
+{
+  warning("otp_plan_batch is depreciated, see otp_plan")
+  # Check Valid Inputs
+  if(!"otpconnect" %in% class(otpcon)){
+    message("otpcon is not a valid otpconnect object")
+    stop()
+  }
+  if("sf" %in% class(fromPlace)){
+    if(all(sf::st_geometry_type(fromPlace) == "POINT")){
+      fromPlace <- sf::st_coordinates(fromPlace)
+      fromPlace <- fromPlace[,c(2,1)]
     }else{
-      elevation <-elevation[order(elevation$distance),]
-      # Calculate the length of each segment
-      dist <- geosphere::distHaversine(line[seq(1,nrow(line)-1),], line[seq(2,nrow(line)),])
-      dist <- cumsum(dist)
-      vals <- findInterval(dist, elevation$distance)
-      vals[vals == 0] = 1L
-      ele <- elevation$second[c(1,vals)]
+      message("fromPlace contains non-POINT geometry")
+      stop()
     }
-    linestring3D <- cbind(line, ele)
-    linestring3D <- sf::st_linestring(linestring3D, dim = "XYZ")
-    return(linestring3D)
+  }
+
+  if("sf" %in% class(toPlace)){
+    if(all(sf::st_geometry_type(toPlace) == "POINT")){
+      toPlace <- sf::st_coordinates(toPlace)
+      toPlace <- toPlace[,c(2,1)]
+    }else{
+      message("toPlace contains non-POINT geometry")
+      stop()
+    }
+  }
+
+  if(class(fromPlace) != "matrix" | ncol(fromPlace) != 2){
+    message("fromPlace is not a valid matrix of latitude, longitude pairs")
+    stop()
   }else{
-    linestring <- sf::st_linestring(line)
-    return(linestring)
-  }
+    if(max(fromPlace[,1]) <= 90 & min(fromPlace[,1]) >= -90 &  max(fromPlace[,2]) <= 180 & min(fromPlace[,2]) >= -180){
 
-}
-
-#' Correct the elevation distances
-#'
-#' OTP returns elevation as a distance along the leg, resetting to 0 at each leg
-#' but we need the distance along the total route. so calculate this
-#' @param dists numeric from the elevation first column
-
-correct_distances <- function(dists){
-  res <- list()
-  rebase <- 0
-  for(k in seq(1,length(dists))){
-    if(k == 1){
-      dists_k <- dists[k]
-      res[[k]] <- dists_k
     }else{
-      dists_k <- dists[k]
-      res_km1 <- res[[k-1]]
-      if(dists_k == 0){
-        rebase <- rebase +  dists[k-1]
-        res[[k]] <- dists_k + rebase
-      }else{
-        res[[k]] <- dists_k + rebase
-      }
+      message("fromPlace coordinates excced valid values +/- 90 and +/- 180 degrees")
+      stop()
     }
-    #message(paste0("k = ",k," original value = ",dists_k," rebase = ",rebase," new value = ",res[[k]]))
+
   }
+  if(class(toPlace) != "matrix" | ncol(toPlace) != 2){
+    message("toPlace is not a valid matrix of latitude, longitude pairs")
+    stop()
+  }else{
+    if(max(toPlace[,1]) <= 90 & min(toPlace[,1]) >= -90 &  max(toPlace[,2]) <= 180 & min(toPlace[,2]) >= -180){
 
-  res <- unlist(res)
-  return(res)
-}
-
-
-
-#' Convert output from Open Trip Planner into sf object
-#'
-#' @param obj Object from the OTP API to process
-#' @param full_elevation logical should the full elevation profile be returned (if available)
-
-otp_json2sf <- function(obj, full_elevation = FALSE) {
-  requestParameters <- obj$requestParameters
-  plan <- obj$plan
-  debugOutput <- obj$debugOutput
-
-  itineraries <- plan$itineraries
-
-  itineraries$startTime <- as.POSIXct(itineraries$startTime / 1000 , origin = '1970-01-01', tz = "GMT")
-  itineraries$endTime <- as.POSIXct(itineraries$endTime / 1000 , origin = '1970-01-01', tz = "GMT")
-
-
-  legs <- list()
-  #Loop over itineraries
-  for(i in seq(1,nrow(itineraries))){
-    leg <- itineraries$legs[[i]]
-    # split into parts
-    vars <- leg
-    vars$from <- NULL
-    vars$to <- NULL
-    vars$steps <- NULL
-    vars$legGeometry <- NULL
-
-    # Extract geometry
-    legGeometry <- leg$legGeometry$points
-
-    # Check for Elevations
-    steps <- leg$steps
-    elevation <- lapply(seq(1,length(legGeometry)), function(x){leg$steps[[x]]$elevation})
-    if(sum(lengths(elevation))>0){
-      # We have Elevation Data
-      # Extract the elevation values
-      elevation <- lapply(seq(1,length(legGeometry)), function(x){dplyr::bind_rows(elevation[[x]])})
-      elevation <- lapply(seq(1,length(legGeometry)), function(x){if(nrow(elevation[[x]]) == 0){NA}else{elevation[[x]] }})
-      # the x coordinate of elevation reset at each leg, correct for this
-      for(l in seq(1,length(elevation))){
-        if(!all(is.na(elevation[[l]]))){
-          elevation[[l]]$distance <- correct_distances(elevation[[l]]$first)
-        }
-      }
-      # process the lines into sf objects
-      lines <- list()
-      for(j in seq(1,length(legGeometry))){
-        lines[[j]] <- polyline2linestring(line = legGeometry[j], elevation = elevation[[j]])
-      }
     }else{
-      lines <- polyline2linestring(legGeometry)
+      message("toPlace coordinates exceed valid values +/- 90 and +/- 180 degrees")
+      stop()
     }
 
-    lines <- sf::st_sfc(lines, crs = 4326)
-
-    vars$geometry <- lines
-    vars <- sf::st_sf(vars)
-    vars$route_option <- i
-
-    #Add full elevation if required
-    if(full_elevation){
-      vars$elevation <- elevation
-    }
-
-    #return to list
-    legs[[i]] <- vars
   }
 
-  legs <- legs[!is.na(legs)]
-  suppressWarnings(legs <- dplyr::bind_rows(legs))
-  #rebuild the sf object
-  legs <- as.data.frame(legs)
-  legs$geometry <- sf::st_sfc(legs$geometry)
-  legs <- sf::st_sf(legs)
-  sf::st_crs(legs) <- 4326
+  if(nrow(fromPlace) != nrow(fromPlace)){
+    message("Number of fromPlaces and toPlaces do not match")
+    stop()
+  }
 
-  legs$startTime <- as.POSIXct(legs$startTime / 1000 , origin = '1970-01-01', tz = "GMT")
-  legs$endTime <- as.POSIXct(legs$endTime / 1000 , origin = '1970-01-01', tz = "GMT")
+  get_resutls <- function(x,otpcon, fromPlace, toPlace, ...){
+    res <- otp_plan_old(otpcon = otpcon,
+                    fromPlace = fromPlace[x,],
+                    toPlace = toPlace[x,],
+                    ... )
+    res$fromPlace = paste(fromPlace[x,],collapse = ",")
+    res$toPlace = paste(toPlace[x,],collapse = ",")
+    return(res)
+  }
 
-  itineraries$legs <- NULL
+  if(ncores > 1){
+    cl = parallel::makeCluster(ncores)
+    parallel::clusterExport(cl = cl,
+                            varlist = c("otpcon","fromPlace","toPlace"),
+                            envir = environment())
+    parallel::clusterEvalQ(cl, {
+      library(opentripplanner)
+    })
+    pbapply::pboptions(use_lb=TRUE)
+    results <- pbapply::pblapply(seq(1,nrow(fromPlace)),
+                                 get_resutls,
+                                 otpcon = otpcon,
+                                 fromPlace = fromPlace,
+                                 toPlace = toPlace,
+                                 ... = ...,
+                                 cl = cl
+    )
+    parallel::stopCluster(cl)
+    rm(cl)
 
-  # Extract Fare Info and discard for now
-  fare <- itineraries$fare
-  itineraries$fare <- NULL
+  }else{
+    results <- pbapply::pblapply(seq(1,nrow(fromPlace)),
+                                 get_resutls,
+                                 otpcon = otpcon,
+                                 fromPlace = fromPlace,
+                                 toPlace = toPlace,
+                                 ... = ...
+    )
+  }
 
-  itineraries <- itineraries[legs$route_option,]
-  itineraries <- dplyr::bind_cols(itineraries,legs)
 
-  itineraries <- sf::st_as_sf(itineraries)
-  sf::st_crs(itineraries) <- 4326
 
-  return(itineraries)
+  results_class <- sapply(results,function(x){"sf" %in% class(x)})
+  if(all(results_class)){
+    results_routes <- results[results_class]
+    results_errors <- NA
+  }else if(all(!results_class)){
+    results_routes <- NA
+    results_errors <- results[!results_class]
+  }else{
+    results_routes <- results[results_class]
+    results_errors <- results[!results_class]
+  }
+
+  # Bind together
+  suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
+  results_routes <- as.data.frame(results_routes)
+  results_routes$geometry <- sf::st_sfc(results_routes$geometry)
+  results_routes <- sf::st_sf(results_routes)
+  sf::st_crs(results_routes) <- 4326
+
+  if(length(results_errors) > 1){
+    message("Some errors occurred")
+    # Simplify Error Message
+    results_errors <- sapply(results_errors, function(x){paste0("Error: ",x$errorId," from ",x$fromPlace," to ",x$toPlace," ",x$errorMessage)})
+    print(results_errors)
+  }
+  return(results_routes)
 }
+

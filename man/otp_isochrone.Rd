@@ -12,7 +12,7 @@ otp_isochrone(otpcon = NA, fromPlace = NA, mode = "TRANSIT",
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
-\item{fromPlace}{Numeric vector, Latitude/Longitude pair, e.g. `c(51.529258,-0.134649)`}
+\item{fromPlace}{Numeric vector, Longitude/Latitude pair, e.g. `c(-0.134649, 51.529258,)`}
 
 \item{mode}{Character vector of modes of travel valid values TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR}
 
@@ -45,7 +45,8 @@ This feature is known to not work correctly with any mode other than TRANSIT.
 }
 \examples{
 \dontrun{
-isochrone1 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346))
-isochrone2 <- otp_isochrone(otpcon, fromPlace = c(51.5292,-0.1346), mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
+isochrone1 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292))
+isochrone2 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292),
+                            mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
 }
 }
