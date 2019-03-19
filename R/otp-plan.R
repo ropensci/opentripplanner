@@ -187,7 +187,7 @@ otp_plan <- function(otpcon = NA,
   }
 
 
-  if(length(results_errors) > 0){
+  if(!all(class(results_errors) == "logical")){
     message("Some errors occurred")
     results_errors <- unlist(results_errors)
     print(results_errors)
