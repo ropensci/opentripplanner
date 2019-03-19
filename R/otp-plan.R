@@ -248,7 +248,7 @@ otp_clean_input <- function(imp, imp_name){
     checkmate::assert_matrix(imp, any.missing = F, min.rows = 1, min.cols = 2, max.cols = 2, null.ok = F)
     checkmate::assert_numeric(imp[,1], lower =  -180, upper = 180)
     checkmate::assert_numeric(imp[,2], lower =  -90, upper = 90)
-    imp <- imp[,2:1] # Switch round lng/lat to lat/lng for OTP
+    imp[] <- imp[,2:1] # Switch round lng/lat to lat/lng for OTP
     return(imp)
   }
   # Otherwise stop as invalid input
