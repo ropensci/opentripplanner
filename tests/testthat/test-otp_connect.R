@@ -35,8 +35,8 @@ test_that("can do multiple routes", {
   skip_no_otp()
   otpcon <- otp_connect()
   lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
-  toPlace <- lsoa[1:5,]
-  fromPlace <- lsoa[1:5,]
+  toPlace = lsoa[1:10,]
+  fromPlace = lsoa[11:20,]
   routes <- otp_plan(otpcon = otpcon,
                      fromPlace = fromPlace,
                      toPlace = toPlace)
