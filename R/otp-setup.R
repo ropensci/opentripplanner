@@ -236,7 +236,7 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
   # Check we have correct verrsion of Java
   if(checkmate::testOS("linux")) {
     message("You're on Linux, Java version check not yet supported")
-  }else if(checkmate::testOS("windows")){
+  }else if(checkmate::testOS("windows") | checkmate::testOS("mac")){
     java_version <- try(system("java -version", intern = TRUE))
     if(class(java_version) == "try-error"){
       warning("R was unable to detect a version of Java")
@@ -255,8 +255,6 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
         stop()
       }
     }
-  }else if(checkmate::testOS("mac")){
-    message("You're on Mac, Java version check not yet supported")
   }else{
     message("You're on and unknown OS, Java version check not yet supported")
   }
