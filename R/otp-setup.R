@@ -132,7 +132,7 @@ otp_setup <- function(otp = NULL,
     message("You're on linux, this function is not yet supported")
     stop()
 
-  }else if(checkmate::testOS("windows")){
+  }else if(checkmate::testOS("windows") | checkmate::testOS("mac")){
 
     text <- paste0('java -Xmx',memory,'G -jar "',
                    otp,
@@ -146,10 +146,6 @@ otp_setup <- function(otp = NULL,
     }
     set_up <- try(system(text, intern = FALSE, wait = FALSE))
 
-
-  }else if(checkmate::testOS("mac")){
-    message("You're on Mac, this function is not yet supported")
-    stop()
 
   }else{
     message("You're on and unknow OS, this function is not yet supported")
