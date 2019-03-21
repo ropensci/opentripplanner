@@ -5,9 +5,9 @@ skip_no_otp <- function() {
     skip("Not running full test.")
 }
 test_that("default object is created and make_url method works", {
+  skip_no_otp()
   otpcon <- otp_connect(check = FALSE)
   expect_is(otpcon, "otpconnect")
-  skip_no_otp()
   expect_match(make_url(otpcon), "http://localhost:8080/otp/routers/default")
 })
 
@@ -24,15 +24,22 @@ test_that("correct message when check is TRUE and router exists", {
   expect_message(otp_connect(), "Router http://localhost:8080/otp/routers/default exists")
 })
 
-
-test_that("object is not returned when check is TRUE and router does not exist", {
-  #otpcon <- otp_connect(router = "test")
-  skip_no_otp()
-  expect_false(exists("otpcon"))
-})
-
 test_that("correct error when check is TRUE and router does not exist", {
   skip_no_otp()
   expect_error(otp_connect(router = "test"), "Router http://localhost:8080/otp/routers/test does not exist")
 })
 
+context("Test the multiple routes")
+
+test_that("can do multiple routes", {
+  skip_no_otp()
+  otpcon <- otp_connect()
+  lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
+  toPlace <- lsoa[1:5,]
+  fromPlace <- lsoa[1:5,]
+  routes <- otp_plan(otpcon = otpcon,
+                     fromPlace = fromPlace,
+                     toPlace = toPlace)
+
+  expect_is(routes, "sf")
+})
