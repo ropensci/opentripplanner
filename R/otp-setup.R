@@ -233,30 +233,25 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
   checkmate::assertDirectoryExists(dir)
   checkmate::assertDirectoryExists(paste0(dir,"/graphs/",router))
 
+  # TODO: test on Linux
   # Check we have correct verrsion of Java
-  if(checkmate::testOS("linux")) {
-    message("You're on Linux, Java version check not yet supported")
-  }else if(checkmate::testOS("windows") | checkmate::testOS("mac")){
-    java_version <- try(system("java -version", intern = TRUE))
-    if(class(java_version) == "try-error"){
-      warning("R was unable to detect a version of Java")
-      stop()
-    }else{
-      java_version <- java_version[1]
-      java_version <- strsplit(java_version,"\"")[[1]][2]
-      java_version <- strsplit(java_version,"\\.")[[1]][1:2]
-      java_version <- as.numeric(paste0(java_version[1],".",java_version[2]))
-      if(is.na(java_version)){
-        warning("OTP requires Java version 8 ")
-        stop()
-      }
-      if(java_version < 1.8 | java_version >= 1.9){
-        warning("OTP requires Java version 8 ")
-        stop()
-      }
-    }
+  java_version <- try(system("java -version", intern = TRUE))
+  if(class(java_version) == "try-error"){
+    warning("R was unable to detect a version of Java")
+    stop()
   }else{
-    message("You're on and unknown OS, Java version check not yet supported")
+    java_version <- java_version[1]
+    java_version <- strsplit(java_version,"\"")[[1]][2]
+    java_version <- strsplit(java_version,"\\.")[[1]][1:2]
+    java_version <- as.numeric(paste0(java_version[1],".",java_version[2]))
+    if(is.na(java_version)){
+      warning("OTP requires Java version 8 ")
+      stop()
+    }
+    if(java_version < 1.8 | java_version >= 1.9){
+      warning("OTP requires Java version 8 ")
+      stop()
+    }
   }
 
   # Check that the graph exists
