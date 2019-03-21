@@ -186,6 +186,12 @@ otp_make_config <- function(type){
 
     routingDefaults <- rep(list(NULL), times = length(routingDefaults_names))
     names(routingDefaults) <- routingDefaults_names
+    routingDefaults[["bikeSpeed"]] <- 5
+
+
+
+
+
     config[["routingDefaults"]] <- routingDefaults
 
     config[["timeout"]] <- NULL
