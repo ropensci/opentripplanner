@@ -36,7 +36,7 @@ Isochrones requires the analyst extension to OTP.
 
 ```{r eval=FALSE}
 ferry_current  <- otp_isochrone(otpcon = otpcon,
-            fromPlace = c(50.732429, -1.159494), # latlong of Ryde ferry
+            fromPlace = c(-1.159494, 50.732429), # lng/lat of Ryde ferry
             mode = c("WALK","TRANSIT"),
             maxWalkDistance = 2000,
             date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")),
