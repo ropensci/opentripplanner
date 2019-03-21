@@ -132,7 +132,7 @@ otp_setup <- function(otp = NULL,
     message("You're on linux, this function is not yet supported")
     stop()
 
-  }else if(checkmate::testOS("windows")){
+  }else if(checkmate::testOS("windows") | checkmate::testOS("mac")){
 
     text <- paste0('java -Xmx',memory,'G -jar "',
                    otp,
@@ -146,10 +146,6 @@ otp_setup <- function(otp = NULL,
     }
     set_up <- try(system(text, intern = FALSE, wait = FALSE))
 
-
-  }else if(checkmate::testOS("mac")){
-    message("You're on Mac, this function is not yet supported")
-    stop()
 
   }else{
     message("You're on and unknow OS, this function is not yet supported")
@@ -237,32 +233,25 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
   checkmate::assertDirectoryExists(dir)
   checkmate::assertDirectoryExists(paste0(dir,"/graphs/",router))
 
+  # TODO: test on Linux
   # Check we have correct verrsion of Java
-  if(checkmate::testOS("linux")) {
-    message("You're on Linux, Java version check not yet supported")
-  }else if(checkmate::testOS("windows")){
-    java_version <- try(system("java -version", intern = TRUE))
-    if(class(java_version) == "try-error"){
-      warning("R was unable to detect a version of Java")
-      stop()
-    }else{
-      java_version <- java_version[1]
-      java_version <- strsplit(java_version,"\"")[[1]][2]
-      java_version <- strsplit(java_version,"\\.")[[1]][1:2]
-      java_version <- as.numeric(paste0(java_version[1],".",java_version[2]))
-      if(is.na(java_version)){
-        warning("OTP requires Java version 8 ")
-        stop()
-      }
-      if(java_version < 1.8 | java_version >= 1.9){
-        warning("OTP requires Java version 8 ")
-        stop()
-      }
-    }
-  }else if(checkmate::testOS("mac")){
-    message("You're on Mac, Java version check not yet supported")
+  java_version <- try(system("java -version", intern = TRUE))
+  if(class(java_version) == "try-error"){
+    warning("R was unable to detect a version of Java")
+    stop()
   }else{
-    message("You're on and unknown OS, Java version check not yet supported")
+    java_version <- java_version[1]
+    java_version <- strsplit(java_version,"\"")[[1]][2]
+    java_version <- strsplit(java_version,"\\.")[[1]][1:2]
+    java_version <- as.numeric(paste0(java_version[1],".",java_version[2]))
+    if(is.na(java_version)){
+      warning("OTP requires Java version 8 ")
+      stop()
+    }
+    if(java_version < 1.8 | java_version >= 1.9){
+      warning("OTP requires Java version 8 ")
+      stop()
+    }
   }
 
   # Check that the graph exists
