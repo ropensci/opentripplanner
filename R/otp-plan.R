@@ -98,10 +98,10 @@ otp_plan <- function(otpcon = NA,
   nrtp <- nrow(toPlace)
   if(nrfp != nrtp){
     if(nrfp > nrtp & nrtp == 1){
-      nrtp <- toPlace[rep(1, times = nrfp),]
+      toPlace <- toPlace[rep(1, times = nrfp),]
       warning("repeating toPlace to match length of fromPlace")
     }else if(nrtp > nrfp & nrfp == 1){
-      nrfp <- fromPlace[rep(1, times = nrtp),]
+      fromPlace <- fromPlace[rep(1, times = nrtp),]
       warning("repeating fromPlace to match length of toPlace")
     }else{
       stop("Number of fromPlaces and toPlaces do not match")
