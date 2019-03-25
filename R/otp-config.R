@@ -49,7 +49,7 @@ otp_list_clean <- function(.data, fun = function(x){length(x) == 0L}) {
 #' Checks if the list of OTP configiration options is valid
 #'
 #' @param config A named list made/modified from `otp_make_config()`
-#' @type type of config file
+#' @param type type of config file
 #'
 #' @details
 #'
