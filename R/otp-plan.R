@@ -205,6 +205,7 @@ otp_plan <- function(otpcon = NA,
 #' @param toPlace toPlace
 #' @param ... all other variaibles
 #'
+#' @noRd
 otp_get_results <- function(x,otpcon, fromPlace, toPlace,
                         ... = ...){
   res <- otp_plan_internal(otpcon = otpcon,
@@ -228,6 +229,8 @@ otp_get_results <- function(x,otpcon, fromPlace, toPlace,
 #' @param imp fromPlace or toPlace input
 #' @param imp_name name of input
 #'
+#' @noRd
+
 otp_clean_input <- function(imp, imp_name){
   # For single point inputs
   if(all(class(imp) == "numeric")){
@@ -278,8 +281,8 @@ otp_clean_input <- function(imp, imp_name){
 #' (a leg is defined by a change in mode). For transit more than one route option may be returned
 #' and is indicated by the route_option column.
 #'
-#'
-#'
+#' @noRd
+
 otp_plan_internal <- function(otpcon = NA,
                      fromPlace = NA,
                      toPlace = NA,
@@ -347,6 +350,8 @@ otp_plan_internal <- function(otpcon = NA,
 #' @param obj Object from the OTP API to process
 #' @param full_elevation logical should the full elevation profile be returned (if available)
 #' @param get_geometry logical, should geometry be returned
+#'
+#' @noRd
 
 otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
   requestParameters <- obj$requestParameters
@@ -450,6 +455,7 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
 #' OTP returns elevation as a distance along the leg, resetting to 0 at each leg
 #' but we need the distance along the total route. so calculate this
 #' @param dists numeric from the elevation first column
+#' @noRd
 
 correct_distances <- function(dists){
   res <- list()
@@ -482,6 +488,7 @@ correct_distances <- function(dists){
 #'
 #' @param line character - polyline
 #' @param elevation numeric - vector of elevations
+#' @noRd
 
 polyline2linestring <- function(line, elevation = NULL){
   line <- googlePolylines::decode(line)[[1]]
