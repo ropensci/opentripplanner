@@ -111,3 +111,11 @@ If you do plot all the routes it should look something like this:
 ```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Rye Ferry"}
 knitr::include_graphics("images/routes_to_ferry.jpg")
 ```
+
+## Geo-coding
+
+OTP has a built in geo-coder to allow you to search for places by names.
+```{r, eval=FALSE}
+stations <- otp_geocode(otpcon = otpcon, query = "station")
+```
+
