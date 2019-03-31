@@ -1,5 +1,5 @@
 ---
-title: "Dummies Guide"
+title: "Prerequisites"
 author: "Malcolm Morgan"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -12,7 +12,7 @@ vignette: >
 
 ## Introduction
 
-This vignette is to provide guidance for people who are completely unfamiliar with Open Trip Planner and/or R.  It assumes no prior-knowledge.  If you are familiar with R and/or OTP then you may find the Getting Started vignette more useful.
+This vignette is to provide guidance for people who are completely unfamiliar with Open Trip Planner and/or R.  It assumes no prior-knowledge.  If you are familiar with R and/or OTP then you may find the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html) more useful.
 
 ## What is this package for, and what is a package anyway?
 
@@ -52,12 +52,9 @@ You will need to install some software to use OTP and R.
 
 ### To use OTP
 
-* Download free Java 8 from https://www.java.com/en/download/ and install Java. You will need the correct version for your operating system.
-* Download the .shaded.jar OTP  file from https://repo1.maven.org/maven2/org/opentripplanner/otp/ at time of writing the latest version of OTP is version 1.3 so you would want to get https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar 
+* Download free Java 8 from https://www.java.com/en/download/ and install Java. You will need the correct version for your operating system. If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
 
-For more information and advanced options, see http://docs.opentripplanner.org/en/latest/Getting-OTP/ 
-
-For now just keep the .jar file somewhere where you can find it, we will use it later.
+**Note** OTP does not work with later version of Java such as Java 11.
 
 To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343).
 
@@ -77,40 +74,11 @@ If you have never used R before there a lots of free tutorials to get you starte
 * https://www.datacamp.com/courses/free-introduction-to-r
 * http://www.r-tutor.com/r-introduction
 
-### Getting the OTP for R package
-Once you have R and RStudio installed open RStudio. There are two version of an R package the public release on CRAN and the development version on GitHub.
 
-#### Getting the public CRAN version
-**OTP for R is not yet available on CRAN, we are working towards a CRAN release soon.**
-
-To get the latest release of OTP for R you will need to run the following lines of code.
-
-```{r, eval = FALSE}
-install.packages("opentripplanner")
-```
-When installing the OTP for R package, R will also install any other packages that are required. 
-
-#### Getting the development version
-
-The development version is a work in progress and may contain untested or incomplete features. **It is not recommended for beginners.** 
-To get the latest development version you will need to run the following lines of code.
-
-```{r, eval = FALSE}
-install.packages("devtools")
-devtools::install_github("ITSleeds/opentripplanner")
-```
-This code will install a package called “devtools” and then use that package to install OTP for R from github. When installing the OTP for R package, R will also install any other packages that are required.
-
-#### Starting the OTP for R Package
-
-Once the package has been installed you will need to activate it by running this line of code.
-```{r}
-library(opentripplanner)
-```
 
 ## Next Steps
 
-Now that you have installed Open Trip Planner for R go to the Getting Started vignette, to find how to create a graph and use it to plan trips. 
+Now that you have installed Java and R go to the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), to find how to install the package, create a graph, and use it to plan trips. 
 Some sample data for the Isle of Wight is provided on the GitHub page for this package https://github.com/ITSLeeds/opentripplanner/releases/tag/0.1
 
 You might also intrested in:

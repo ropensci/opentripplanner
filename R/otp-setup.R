@@ -225,7 +225,8 @@ otp_stop <- function()
 #' @param router A character string for the name of the router, must match with contents of dir, default "default"
 #' @param graph Logical, check for graph, default = FALSE
 #' @param otp Path to otp.jar
-#'
+#' @noRd
+
 otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE)
 {
   # Checks

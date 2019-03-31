@@ -1,38 +1,242 @@
+#' Write config object as json file
+#'
+#' @description
+#' Takes a config list produced by `otp_make_config()` and saves it as json file for OTP
+#'
+#' @param config A named list made/modified from `otp_make_config()`
+#' @param dir Path to folder where data for OTP is to be stored
+#' @param router name of the router, default is "default"
+#'
+#' @seealso
+#' `otp_make_config()`
+#'
+#' @export
+
 otp_write_config <- function(config,
                              dir = NULL,
                              router = "default"){
-  checkmate::assert_list(config, any.missing = FALSE, names = "unique", null.ok = FALSE)
-  att <- attributes(config)$config_type
-  checkmate::assert_subset(att, choices = c("otp","build","router"), empty.ok = F)
+  # Validate and Clean
+  otp_validate_config(config)
+  config <- otp_list_clean(config)
 
-  # Remove NULL Values
-  list.clean <- function(.data, fun = function(x){length(x) == 0L}) {
-    .data <- lapply(.data, function(.item) {
-        if (is.list(.item))
-          list.clean(.item, fun) else .item
-      })
-    setmembers <- `[<-`
-    setmembers(.data, vapply(.data, fun, logical(1L)), NULL)
+  type = attributes(config)$config_type
+  # Convert to JSON
+  config <- jsonlite::toJSON(config, pretty = TRUE, null = "null", na = "null")
+  jsonlite::write_json(config, paste0(dir,"/",router,"/graphs/",type,".json"))
+}
+
+#' Remove NULL values from list
+#' Modified from https://www.rdocumentation.org/packages/rlist/versions/0.4.6.1/topics/list.clean
+#'
+#' @param .data list
+#' @param fun function
+#'
+#' @noRd
+
+otp_list_clean <- function(.data, fun = function(x){length(x) == 0L}) {
+  .data <- lapply(.data, function(.item) {
+    if (is.list(.item))
+      otp_list_clean(.item, fun) else .item
+  })
+  setmembers <- `[<-`
+  setmembers(.data, vapply(.data, fun, logical(1L)), NULL)
+}
+
+
+
+#' Validate Config Object
+#' @description
+#' Checks if the list of OTP configiration options is valid
+#'
+#' @param config A named list made/modified from `otp_make_config()`
+#' @param type type of config file
+#'
+#' @details
+#'
+#' Performs basic validity checks on class, max/min values etc as appropiate, some of
+#' more compex parameters are not checked. For more details see:
+#'
+#' http://docs.opentripplanner.org/en/latest/Configuration
+#' http://dev.opentripplanner.org/javadoc/1.3.0/org/opentripplanner/routing/core/RoutingRequest.html
+#'
+#' @export
+
+otp_validate_config <- function(config, type = attributes(config)$config_type){
+  #checkmate::assert_list(config, any.missing = FALSE, names = "unique", null.ok = FALSE)
+  checkmate::assert_subset(type, choices = c("otp","build","router"), empty.ok = F)
+
+  if(type == "router"){
+    # Logical
+    checkmate::assert_logical(config$routingDefaults$allowBikeRental,       len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$arriveBy,              len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$batch,                 len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$compactLegsByReversedSearch,     len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$disableAlertFiltering,           len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$disableRemainingWeightHeuristic, len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$driveOnRight,          len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$geoidElevation,        len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$ignoreRealtimeUpdates, len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$kissAndRide,           len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$longDistance,          len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$maxTransfers,          len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$onlyTransitTrips,      len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$parkAndRide,           len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$reverseOptimizeOnTheFly,        len = 1, null.ok = T)
+    checkmate::assert_logical(config$routingDefaults$reverseOptimizing,     len = 1, null.ok = T)
+
+    # Integer
+    checkmate::assert_integer(config$routingDefaults$alightSlack,           len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeBoardCost,         len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeSwitchCost,        len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeSwitchTime,        len = 1, null.ok = T, lower = 0)
+    checkmate::assert_integer(config$routingDefaults$carDropoffTime,        len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$elevatorBoardCost,     len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeParkAndRide,       len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeParkCost,          len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeParkTime,          len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeRentalDropoffCost, len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeRentalDropoffTime, len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeRentalPickupCost,  len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeRentalPickupTime,  len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$bikeWalkingOptions,    len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$elevatorBoardTime,     len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$elevatorHopCost,       len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$elevatorHopTime,       len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$maxPreTransitTime,     len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$MIN_SIMILARITY,        len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$nonpreferredTransferPenalty,    len = 1, null.ok = T)
+    checkmate::assert_integer(config$routingDefaults$numItineraries,        len = 1, null.ok = T, lower = 1)
+    checkmate::assert_integer(config$routingDefaults$otherThanPreferredRoutesPenalty,len = 1, null.ok = T)
+
+    # Character
+    checkmate::assert_character(config$routingDefaults$bannedAgencies,               null.ok = T)
+    checkmate::assert_character(config$routingDefaults$bannedRoutes,                 null.ok = T)
+    checkmate::assert_character(config$routingDefaults$bannedStops,                  null.ok = T)
+    checkmate::assert_character(config$routingDefaults$bannedStopsHard,              null.ok = T)
+    checkmate::assert_character(config$routingDefaults$bannedTrips,                  null.ok = T)
+    checkmate::assert_character(config$routingDefaults$boardSlack,                   null.ok = T)
+    checkmate::assert_character(config$routingDefaults$preferredAgencies,            null.ok = T)
+    checkmate::assert_character(config$routingDefaults$preferredRoutes,              null.ok = T)
+
+    # Numeric
+    checkmate::assert_numeric(config$routingDefaults$bikeSpeed,            len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$carSpeed,             len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$clampInitialWait,     len = 1, null.ok = T)
+    checkmate::assert_numeric(config$routingDefaults$carAccelerationSpeed, len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$carDecelerationSpeed, len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$maxHours,             len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$maxSlope,             len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$maxTransferWalkDistance,       len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$maxWalkDistance,      len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$routingDefaults$maxWeight,            len = 1, null.ok = T)
+    checkmate::assert_numeric(config$routingDefaults$preTransitOverageRate,len = 1, null.ok = T)
+    checkmate::assert_numeric(config$routingDefaults$preTransitPenalty,    len = 1, null.ok = T)
+
+
+
+    foo <- c(
+    "routerId",                # The router ID -- internal ID to switch between router implementation (or graphs)
+    "showIntermediateStops",   # Whether the planner should return intermediate stops lists for transit legs.
+    "softPreTransitLimiting",
+    "softWalkLimiting",
+    "softWalkOverageRate",
+    "softWalkPenalty",
+    "stairsReluctance",        # Used instead of walk reluctance for stairs
+    "startingTransitStopId",   # A transit stop that this trip must start from
+    "startingTransitTripId",   # A trip where this trip must start from (depart-onboard routing)
+    "to",                      # The end location
+    "transferPenalty",         # An extra penalty added on transfers (i.e.
+    "transferSlack",           # A global minimum transfer time (in seconds) that specifies the minimum amount of time that must pass between exiting one transit vehicle and boarding another.
+    "traversalCostModel",      # The model that computes turn/traversal costs.
+    "triangleSafetyFactor",    # For the bike triangle, how important safety is
+    "triangleSlopeFactor",     # For the bike triangle, how important slope is
+    "triangleTimeFactor",      # For the bike triangle, how important time is.
+    "turnReluctance",          # Multiplicative factor on expected turning time.
+    "unpreferredAgencies",     # Set of unpreferred agencies for given user.
+    "unpreferredRoutes",       # Set of unpreferred routes for given user.
+    "useBikeRentalAvailabilityInformation",    # Whether or not bike rental availability information will be used to plan bike rental trips
+    "useRequestedDateTimeInMaxHours",    # Whether maxHours limit should consider wait/idle time between the itinerary and the requested arrive/depart time.
+    "useTraffic",              # Should traffic congestion be considered when driving?
+    "useUnpreferredRoutesPenalty",    # Penalty added for using every unpreferred route.
+    "waitAtBeginningFactor",   # How much less bad is waiting at the beginning of the trip (replaces waitReluctance on the first boarding)
+    "waitReluctance",          # How much worse is waiting for a transit vehicle than being on a transit vehicle, as a multiplier.
+    "walkBoardCost",           # This prevents unnecessary transfers by adding a cost for boarding a vehicle.
+    "walkingBike",
+    "walkReluctance",          # A multiplier for how bad walking is, compared to being in transit for equal lengths of time.
+    "walkSpeed",               # max walk/bike speed along streets, in meters per second
+    "wheelchairAccessible",    # Whether the trip must be wheelchair accessible.
+    "worstTime"
+    )
+
+    # Not Checked
+    #"dateTime",                # The epoch date/time that the trip should depart (or arrive, for requests where arriveBy is true)
+    #"dominanceFunction",       # The function that compares paths converging on the same vertex to decide which ones continue to be explored.
+    #"extensions",              # Extensions to the trip planner will require additional traversal options beyond the default set.
+    #"intermediatePlaces",      # An ordered list of intermediate locations to be visited.
+    #"locale",
+    #"modes",                   # The set of TraverseModes that a user is willing to use.
+    #"optimize",                # The set of characteristics that the user wants to optimize for -- defaults to QUICK, or optimize for transit time.
+    #"rctx",                    # The routing context used to actually carry out this search.
+
+
+  }else if(type == "build"){
+    # logical
+    checkmate::assert_logical(config$transit,                   len = 1, null.ok = T)
+    checkmate::assert_logical(config$streets,                   len = 1, null.ok = T)
+    checkmate::assert_logical(config$embedRouterConfig,         len = 1, null.ok = T)
+    checkmate::assert_logical(config$areaVisibility,            len = 1, null.ok = T)
+    checkmate::assert_logical(config$staticParkAndRide,         len = 1, null.ok = T)
+    checkmate::assert_logical(config$htmlAnnotations,           len = 1, null.ok = T)
+    checkmate::assert_logical(config$useTransfersTxt,           len = 1, null.ok = T)
+    checkmate::assert_logical(config$parentStopLinking,         len = 1, null.ok = T)
+    checkmate::assert_logical(config$stationTransfers,          len = 1, null.ok = T)
+    checkmate::assert_logical(config$platformEntriesLinking,    len = 1, null.ok = T)
+    checkmate::assert_logical(config$matchBusRoutesToStreets,   len = 1, null.ok = T)
+    checkmate::assert_logical(config$fetchElevationUS,          len = 1, null.ok = T)
+    checkmate::assert_logical(config$staticBikeRental,          len = 1, null.ok = T)
+    checkmate::assert_logical(config$staticBikeParkAndRide,     len = 1, null.ok = T)
+    checkmate::assert_logical(config$banDiscouragedWalking,     len = 1, null.ok = T)
+    checkmate::assert_logical(config$banDiscouragedBiking,      len = 1, null.ok = T)
+    checkmate::assert_logical(config$extraEdgesStopPlatformLink,len = 1, null.ok = T)
+
+    # Interger
+    checkmate::assert_integer(config$maxHtmlAnnotationsPerFile, len = 1, null.ok = T, lower = 1)
+    checkmate::assert_integer(config$maxInterlineDistance,      len = 1, null.ok = T, lower = 1)
+    checkmate::assert_integer(config$islandWithStopsMaxSize,    len = 1, null.ok = T, lower = 1)
+    checkmate::assert_integer(config$islandWithoutStopsMaxSize, len = 1, null.ok = T, lower = 1)
+
+    # Numeric
+    checkmate::assert_numeric(config$elevationUnitMultiplier,   len = 1, null.ok = T)
+    checkmate::assert_numeric(config$subwayAccessTime,          len = 1, null.ok = T, lower = 0)
+    checkmate::assert_numeric(config$maxTransferDistance,       len = 1, null.ok = T, lower = 0)
+
+    # Character
+    checkmate::assert_subset(config$osmWayPropertySet, empty.ok = T, choices = c("default","norway"))
+    checkmate::assert_subset(config$stopClusterMode,   empty.ok = T, choices = c("proximity","parentStation"))
+
+  }else if(type == "otp"){
+    otp_validate_config(config, type = "build")
+    otp_validate_config(config, type = "router")
+  }else{
+    message("No checks performed")
   }
 
-  # Convert to JSON
-  config <- list.clean(config)
-  config <- jsonlite::toJSON(config, pretty = TRUE, null = "null", na = "null")
-  jsonlite::write_json(config, paste0(dir,"/",router,"/graphs/",att,".json"))
 }
 
-otp_validate_config <- function(config,
-                             dir = NULL,
-                             router = "default"){
-  checkmate::assert_list(config, any.missing = FALSE, names = "unique", null.ok = FALSE)
-  att <- attributes(config)$config_type
-  checkmate::assert_subset(att, choices = c("otp","build","router"), empty.ok = F)
+#' Make Config Object
+#' @description
+#' OTP can be configured using three json files `otp-config.json`, `build-config.json`,
+#' and `router-config.json`. This function creates a named list for each config file and
+#' populates the defaults values.
+#'
+#' @param type Which type of config file to create, "otp", "build", "router"
+#'
+#' @details
+#'
+#' For more details see:
+#' http://docs.opentripplanner.org/en/latest/Configuration
+#' @export
 
-  jsonlite::toJSON(config, pretty = TRUE, null = "null", na = "null")
-  jsonlite::write_json(config, paste0(dir,"/",router,"/graphs/",att,".json"))
-}
-
-#' Make the built in config files
 otp_make_config <- function(type){
   checkmate::assert_subset(type, choices = c("otp","build","router"), empty.ok = F)
 
@@ -55,13 +259,16 @@ otp_make_config <- function(type){
     config[c("htmlAnnotations","useTransfersTxt","parentStopLinking","stationTransfers","platformEntriesLinking",
              "matchBusRoutesToStreets","fetchElevationUS","staticBikeRental","staticBikeParkAndRide","banDiscouragedWalking",
              "banDiscouragedBiking","extraEdgesStopPlatformLink")] <- FALSE
+
+    # Interger
+    config[["maxHtmlAnnotationsPerFile"]] <- 1000L
+    config[["maxInterlineDistance"]] <- 200L
+    config[["islandWithStopsMaxSize"]] <- 5L
+    config[["islandWithoutStopsMaxSize"]] <- 40L
+
     # Numeric
     config[["elevationUnitMultiplier"]] <- 1
     config[["subwayAccessTime"]] <- 2
-    config[["islandWithStopsMaxSize"]] <- 5
-    config[["islandWithoutStopsMaxSize"]] <- 40
-    config[["maxInterlineDistance"]] <- 200
-    config[["maxHtmlAnnotationsPerFile"]] <- 1000
     config[["maxTransferDistance"]] <- 2000
 
     # Character
@@ -187,9 +394,11 @@ otp_make_config <- function(type){
     routingDefaults <- rep(list(NULL), times = length(routingDefaults_names))
     names(routingDefaults) <- routingDefaults_names
     routingDefaults[["bikeSpeed"]] <- 5
-
-
-
+    routingDefaults[["bikeSwitchCost"]] <- 0L
+    routingDefaults[["bikeSwitchTime"]] <- 0L
+    routingDefaults[["clampInitialWait"]] <- -1
+    routingDefaults[["walkReluctance"]] <- 2
+    routingDefaults[["walkSpeed"]] <- 1.34
 
 
     config[["routingDefaults"]] <- routingDefaults
