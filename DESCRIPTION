@@ -10,6 +10,7 @@ Authors@R: c(
     person("Layik", "Hama",     email = "layik.hama@gmail.com",  role = "ctb",
       comment = c(ORCID = "0000-0003-1912-4890"))
     )
+Maintainer: Malcolm Morgan
 Description: An R interface for Open Trip Planner <http://www.opentripplanner.org/>.
     OpenTripPlanner (OTP) is an open source platform for multi-modal and multi-agency
     journey planning written in Java. OTP provides a REST API which Open Trip Planner
