@@ -11,14 +11,14 @@ vignette: >
 
 ## Introduction
 
-This tutorial is an introduction to OpenTripPlanner (OTP) - an open-source and cross-platform multi-modal route planner written in JAVA. It uses imported Open Street Map (OSM) data for routing on the street and path network and supports
+This vignette is an introduction to OpenTripPlanner (OTP) - an open-source and cross-platform multi-modal route planner written in JAVA. It uses imported Open Street Map (OSM) data for routing on the street and path network and supports
 multi-agency public transport routing through imported GTFS feeds. It can also apply a digital elevation model to the OSM street network, allowing, for example, cycle-friendly routes to be requested. OTP has a web front-end that can be used by end-users and a sophisticated routing API.
 
 A major advantage of running your own multi-modal route planner is the ability to carry out analysis using amended transport data. Services such as Google Maps or TransportAPI are based on current public transport schedules and the existing road network. OTP enables you to modify transit schedules and/or make changes to the underlying street network. By editing a local copy of OSM, you can model the effects of opening new roads, closing roads, or imposing other restrictions. You can also look back in time. For example, you might want to examine the effect of reductions in rural bus services on the accessibility of health facilities. To do this you would need a network with bus schedules as they were in previous years.
 
 ## Prerequisites
 
-You will need to have installed R, RStudio, and Java 8.  If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas. If you are unfamiliar with R, Java, and Open Trip Planner see the Dummies Guide vignette included with this package.
+You will need to have installed R, RStudio, and Java 8. For more details on the software required see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html) included with this package.
 
 ## Installation
 
@@ -31,20 +31,24 @@ library(opentripplanner)
 ```
 
 Before you can use the package, you should set-up the OpenTripPlanner Java program.
-You will need to download the latest version of OTP from https://repo1.maven.org/maven2/org/opentripplanner/otp/ , which can be done as follows (this downloads the file into a folder called `programs` in your home directory on Linux/Mac):
+You will need to download the latest version of OTP from https://repo1.maven.org/maven2/org/opentripplanner/otp/ , at time of writing the latest version of OTP is version 1.3 so you would want to get https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar 
+
+The following code downloads the file into a folder called `programs` in your home directory on Linux/Mac or to the Public folder on Windows:
 
 ```{r, eval=FALSE}
 # download file (may want to do this manually)
-path_otp <- "~/programs/otp.jar" # On Linux
+path_otp <- "~/programs/otp.jar" # On Linux/Mac
 path_otp <- "C:/Users/Public/otp.jar" # On Windows
 
 url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
 download.file(url = url_otp, destfile = path_otp, mode="wb")
 ```
 
+For more information and advanced options, see http://docs.opentripplanner.org/en/latest/Getting-OTP/ 
+
 ## Building an OTP Graph
 
-We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. 
+We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. First we will download the sample data and put it in the folder structure that OTP expects.
 
 
 ```{r eval=FALSE}
@@ -57,11 +61,13 @@ download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1
               destfile = "isle-of-wight-demo.zip", mode="wb")
 unzip("isle-of-wight-demo.zip", exdir = "graphs/default")
 unlink("isle-of-wight-demo.zip")
+```
+Now we can build the graph. This code will create a new file `Graph.obj` that will be saved in the location defined by `path_data`. 
+
+```{r eval=FALSE}
 # Run the OTP and Build a graph object
 log <- otp_build_graph(otp = path_otp, dir = path_data) 
 ```
-
-This code will create a new file `Graph.obj` that will be saved in the location defined by `path_data`. 
 
 ### Building your own OTP Graph
 
@@ -77,9 +83,10 @@ Create a router called 'default', and include the GTFS and OSM files for the roa
 ```{r, engine='bash', eval=FALSE}
 / otp                         # Your top folder for storing all OTP data
   /graphs                     
-     /default                 # Subfolder with the name or the router
+     /default                 # Subfolder with the name of the router
          osm.pbf              # Required OSM road map
-         router-config.json   # Required config file
+         router-config.json   # Optional config file
+         build-config.json    # Optional config file
          gtfs.zip             # Optional GTFS data
          dem.tif              # Optional Elevation data
          
@@ -89,7 +96,7 @@ Create a router called 'default', and include the GTFS and OSM files for the roa
 
 ## Launch OTP and load the graph
 
-The next step is to start up your OTP server, running the router called 'default'. OTP will load the graph you created into memory and you will then be able to plan multi-modal routes using the web interface. From the `otp` directory, run the following command:
+The next step is to start up your OTP server, running the router called 'default'. OTP will load the graph you created into memory and you will then be able to plan multi-modal routes using the web interface. Run the following command:
 
 ```{r, eval = FALSE}
 otp_setup(otp = path_otp, dir = path_data)
@@ -145,11 +152,11 @@ tmap_mode("view")         # Set tmap to interative viewing
 qtm(sf::st_zm(route))     # Plot the route on a map
 ```
 
-Notice the use of `sf::st_zm(route)` this is because `tmap` does not currently support XYZ coordinates
+Notice the use of `sf::st_zm(route)` this is because `tmap` does not currently support XYZ coordinates.
 
 ## Stopping the OTP
 
-As the OTP is running in JAVA it will conitune to run after you close R.
+As the OTP is running in Java it will conitune to run after you close R.
 
 You can stop the OTP running using the command. **NOTE: This will stop all running JAVA applications!**
 

@@ -15,7 +15,7 @@ The vignette introduces some of the more advanced features of OTP and gives some
 
 ### Recap
 
-For this vignette, we will use the same data as the `getting_started` vignette. If you have not yet created the example graph you can set it up with the following commands. If you are using non-default settings see the `getting_started` vignette for full details.
+For this vignette, we will use the same data as the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html) vignette. If you have not yet created the example graph you can set it up with the following commands. If you are using non-default settings see the Getting Started vignette for full details.
 
 ```{r eval =FALSE}
 library(opentripplanner)
@@ -28,9 +28,61 @@ otpcon <- otp_connect()
 
 ```
 
+## Batch Routing
+
+The `otp_plan()` function can produce multiple routes at once. In this example, we will gather data on travel times between each of the [LSOAs](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography) on the Isle of White and the [Ryde Ferry](https://www.wightlink.co.uk/go/isle-of-wight-ferry-routes-destinations/) .
+
+`otp_plan()` accepts three types of input for the `fromPlace` and `toPlace`: a numeric longitude/latitude pair; a 2 x m matrix where each row is a longitude/latitude pair; or an SF data.frame of only POINTS. The number of `fromPlace` and `toPlace` must be the same or equal one (in which case `otp_plan()` will repeat the single location to match the length of the longer locations.
+
+We'll start by importing the locations of the LSOA points.
+
+```{r, eval=FALSE}
+lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
+head(lsoa)
+```
+
+Then we will define our desitnation as the Ryde Ferry:
+
+```{r, eval=FALSE}
+toPlace <- c(-1.159494,50.732429)
+```
+
+Now we can use the `otp_plan()` to find the routes
+
+```{r, eval=FALSE}
+routes <- otp_plan(otpcon = otpcon,
+                    fromPlace = lsoa,
+                    toPlace = toPlace)
+```
+
+**Note** `otp_plan()` supports multi-core processing via the `ncores` input. Runnin on `ncores = 2` provides around 35% performance boost. However, you are unlikely to get a significant improvement (on typical computers) using more than 3 cores, as you will overload OTP.
+
+You may get some error message returned as OTP is unable to find some of the routes. The `otp_plan()` will skip over errors and return all the routes it can get. It will then print out any error messages. You will have also noticed the handy progress bar.
+
+You can plot the routes using `tmap` 
+
+If you do plot all the routes it should look something like this:
+
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Rye Ferry"}
+knitr::include_graphics("images/routes_to_ferry.jpg")
+```
+
+### All to All routing
+
+It is sometimes useful to find the route between every possible orign and desitantion for example when producing an OD matrix. If you wished to route from every LSOA to every other LSOA point this can easily be done by repeating the points. 
+
+```{r, eval=FALSE}
+toPlace   = lsoa[rep(1:nrow(lsoa), times = nrow(lsoa)),]
+fromPlace = lsoa[rep(1:nrow(lsoa), each  = nrow(lsoa)),]
+```
+
+**Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case 89 points results in 89 x 89 = 7921 routes, this will take a while.
+
+For and OD matrix you may only be intrested in the total travel time and not require the route geometry. By setting `get_geometry = FALSE` in `otp_plan()` R will just return the meta-data and discard the geometry. This is slightly faster than when using `get_geometry = TRUE` and uses less memory.
+
 ## Isochrones
 
-Now that we have a working instance of OTP, we'll use it to generate some travel-time isochrones. We are interested in visualising how long it takes to access Ryde ferry using public transport from different parts of the island. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
+Isochones a lines of equal time. Suppose we are interested in visualising how long it takes to access Ryde ferry using public transport from different parts of the island. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
 
 Isochrones requires the analyst extension to OTP. 
 
@@ -65,52 +117,6 @@ You should see a map like this.
 knitr::include_graphics("images/isochrone.jpg")
 ```
 
-## Batch Routing
-
-In this final part of the tutorial, we are going to automate querying the OTP API to generate large quantities of route data - potentially for many thousands of origin: destination pairs. In this example, we will gather data on travel times between each of the LSOAs in on the Isle of White and the Rye Ferry.
-
-To do this we will be using the `otp_route` function.
-
-We'll start by importing the sample data
-
-```{r, eval=FALSE}
-lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
-head(lsoa)
-```
-
-`otp_plan` accepts three types of input for the `fromPlace` and `toPlace`: a numeric longitude/latitude pair; a 2 x m matrix where each row is a longitude/latitude pair; or an SF data.frame of only POINTS. The number of `fromPlace` and `toPlace` must be the same or equal one (in which case `otp_plan` will repeat the single location to match the length of the longer locations.
-
-
-```{r, eval=FALSE}
-toPlace <- c(-1.159494,50.732429)
-```
-
-Alternatively, if you wished to route from every LSOA to every LSOA point this can easily be done by repeating the points. **Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case 89 points results in 89 x 89 = 7921 routes, this will take a while.
-
-```{r, eval=FALSE}
-toPlace   = lsoa[rep(1:nrow(lsoa), times = nrow(lsoa)),]
-fromPlace = lsoa[rep(1:nrow(lsoa), each  = nrow(lsoa)),]
-```
-
-Now we can use the `otp_plan` to find the routes
-
-```{r, eval=FALSE}
-routes <- otp_plan(otpcon = otpcon,
-                    fromPlace = lsoa,
-                    toPlace = toPlace)
-```
-
-**Note** `otp_plan` supports multi-core processing via the `ncores` input. Runnin on `ncores = 2` provides around 35% performance boost. However, you are unlikely to get a significant improvement (on typical computers) using more than 3 cores, as you will overload OTP.
-
-You may get some error message returned as OTP is unable to find some of the routes. The `otp_plan` will skip over errors and return all the routes it can get. It will then print out any error messages. You will have also noticed the handy progress bar.
-
-You can plot the routes using `tmap` 
-
-If you do plot all the routes it should look something like this:
-
-```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Rye Ferry"}
-knitr::include_graphics("images/routes_to_ferry.jpg")
-```
 
 ## Geo-coding
 
