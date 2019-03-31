@@ -84,8 +84,6 @@ For and OD matrix you may only be intrested in the total travel time and not req
 
 Isochones a lines of equal time. Suppose we are interested in visualising how long it takes to access Ryde ferry using public transport from different parts of the island. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
 
-Isochrones requires the analyst extension to OTP. 
-
 ```{r eval=FALSE}
 ferry_current  <- otp_isochrone(otpcon = otpcon,
             fromPlace = c(-1.159494, 50.732429), # lng/lat of Ryde ferry
@@ -123,5 +121,36 @@ knitr::include_graphics("images/isochrone.jpg")
 OTP has a built in geo-coder to allow you to search for places by names.
 ```{r, eval=FALSE}
 stations <- otp_geocode(otpcon = otpcon, query = "station")
+head(stations)
 ```
+
+## Debug Layers
+
+For troubleshooting routing issues, you can visualise the traversal permissions of street edges, the bike safety of edges, and how transit stops are linked to streets. For these additional debug layers to be available, add `?debug_layers=true` to the URL, like this:  [http://localhost:8080?debug_layers=true](http://localhost:8080?debug_layers=true). The extra layers will be listed in the layer stack menu. 
+
+You can read more about the different debug layers in the official OTP documentation: [http://docs.opentripplanner.org/en/latest/Troubleshooting-Routing/#debug-layers](http://docs.opentripplanner.org/en/latest/Troubleshooting-Routing/#debug-layers).
+
+## Configuring Open Trip Planner
+
+How OTP works can be configures using json files. `build-config.json` is used during graph building (i.e. `otp_build_graph()`). While `router-config.json` is used during setup (i.e. `otp_setup()`). These files must be saved with the rest of your data and each router can have a unique configuration.
+
+To help configure OTP there are several useful functions. `otp_make_config()` makes a default config object and fills it with default values. It is simply a named list, so you can eaily modify the values. `otp_validate_config()` does basic checks on a config object  to make sure it is valid. Finally `otp_write_config()` exports the config object as a properly formatted json file.
+
+A simple example of chaing the default walking speed.
+
+```{r, eval=FALSE}
+router_config <- otp_make_config("router")     # Make a config object
+router_config$routingDefaults$walkSpeed        # Currently 1.34 m/s
+router_config$routingDefaults$walkSpeed <- 1.5 # Increase the walking speed
+otp_validate_config(router_config)             # Check the new config is valid
+otp_write_config(router_config,                # Save the config file
+                 dir = data_path,
+                 router = "default")
+
+```
+
+There is much more information about configuring Open Trip Planner at https://opentripplanner.readthedocs.io/en/latest/Configuration/ 
+
+
+
 

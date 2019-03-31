@@ -62,7 +62,7 @@ otp_list_clean <- function(.data, fun = function(x){length(x) == 0L}) {
 #' @export
 
 otp_validate_config <- function(config, type = attributes(config)$config_type){
-  checkmate::assert_list(config, any.missing = FALSE, names = "unique", null.ok = FALSE)
+  #checkmate::assert_list(config, any.missing = FALSE, names = "unique", null.ok = FALSE)
   checkmate::assert_subset(type, choices = c("otp","build","router"), empty.ok = F)
 
   if(type == "router"){
