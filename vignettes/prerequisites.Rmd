@@ -12,16 +12,16 @@ vignette: >
 
 ## Introduction
 
-This vignette provides guidance for people who new to Open Trip Planner (OTP).  It assumes some prior-knowledge of R (see An Introduction to R [online](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, or introductory tutorials such as DataCamp's [free](https://www.datacamp.com/courses/free-introduction-to-r) Introduction to R course.
+This vignette provides guidance for people who new to OpenTripPlanner (OTP).  It assumes some prior-knowledge of R (see An Introduction to R [online](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, or introductory tutorials such as DataCamp's [free](https://www.datacamp.com/courses/free-introduction-to-r) Introduction to R course.
 After you have R and OTP installed, and have become familiar with them, we recommend working through [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
 
 ## What is this package for, and what is a package anyway?
 
-The `opentripplanner` R package makes it easier for R and Open Trip Planner to communicate.
+The `opentripplanner` R package makes it easier for R and OpenTripPlanner to communicate.
 Specifically, it allows you to do use R to control OTP and use it as a local routing service.
 For more on local versus remote routing services, see the Transportation chapter in [Geocomputation with R](https://geocompr.robinlovelace.net/transport.html).
 
-### What is Open Trip Planner?
+### What is OpenTripPlanner?
 
 OpenTripPlanner (OTP) is a free, open-source, and cross-platform multi-modal route planner written in JAVA.  It is like having your own private version of Google Maps.
 
@@ -43,7 +43,7 @@ You can find a lot more information about R at:
 
 An R package is a small piece of software that extends the basic capabilities of R. It is a bit like how a new phone can do some things out of the box (make phone calls, send email) but you have to install apps to add extra abilities.
 
-### Why would I want to use Open Trip Planner for R?
+### Why would I want to use OpenTripPlanner for R?
 
 OTP can be used to run public route finding services such as https://ride.trimet.org but it can also be run on your own private computer or server. If you want to analyse a transport network OTP is a very useful tool. However, OTP is, as the name suggests, a Trip Planner, not analytical software.  So, while OTP can find the fastest route from A to B or find all the places that are within a 20-minute walk of C, it cannot answer a question like “how many people live within 10-minutes of a park?”  This is where R can help.  R can process multiple spatial datasets such a population densities and park locations, but does not have a built-in journey planner. 
 

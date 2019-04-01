@@ -15,9 +15,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Open Trip Planner for R
+# OpenTripPlanner for R
 
-The goal of Open Trip Planner for R is to provide a simple R interface to [Open Trip Planner (OTP)](https://www.opentripplanner.org/). The OTP is a multimodal trip planning service. OTP is written in Java, and you will need both Java and R to use this package.
+The goal of OpenTripPlanner for R is to provide a simple R interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/). The OTP is a multimodal trip planning service. OTP is written in Java, and you will need both Java and R to use this package.
 
 This package can be used to interface with a remote instance of OTP (e.g. a website) or help you set up and manage a local version of OTP for private use. For more information on what OTP is, see the [Prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
 
@@ -25,9 +25,9 @@ Basic setup and routing functions are outlined in the [getting started vignette]
 
 ## Installation
 
-### Open Trip Planner
+### OpenTripPlanner
 
-To use Open Trip Planner on your local computer you will need to install Java 8 and download the latest version of OTP. Instructions on installing Java and setting up OTP can be found in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
+To use OpenTripPlanner on your local computer you will need to install Java 8 and download the latest version of OTP. Instructions on installing Java and setting up OTP can be found in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
 
 ### R Package
 

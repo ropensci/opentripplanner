@@ -368,7 +368,7 @@ otp_plan_internal <- function(otpcon = NA,
 }
 
 
-#' Convert output from Open Trip Planner into sf object
+#' Convert output from OpenTripPlanner into sf object
 #'
 #' @param obj Object from the OTP API to process
 #' @param full_elevation logical should the full elevation profile be returned (if available)

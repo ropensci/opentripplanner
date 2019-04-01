@@ -1,5 +1,5 @@
 ---
-title: 'opentripplanner: R interface to the Open Trip Planner'
+title: 'opentripplanner: R interface to the OpenTripPlanner'
 authors:
 - affiliation: 1
   name: Malcolm Morgan
