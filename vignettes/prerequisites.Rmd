@@ -12,11 +12,14 @@ vignette: >
 
 ## Introduction
 
-This vignette is to provide guidance for people who are completely unfamiliar with Open Trip Planner and/or R.  It assumes no prior-knowledge.  If you are familiar with R and/or OTP then you may find the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html) more useful.
+This vignette provides guidance for people who new to Open Trip Planner (OTP).  It assumes some prior-knowledge of R (see An Introduction to R [online](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, or introductory tutorials such as DataCamp's [free](https://www.datacamp.com/courses/free-introduction-to-r) Introduction to R course.
+After you have R and OTP installed, and have become familiar with them, we recommend working through [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
 
 ## What is this package for, and what is a package anyway?
 
-The Open Trip Planner for R package makes it easier for R and Open Trip Planner to communicate.
+The `opentripplanner` R package makes it easier for R and Open Trip Planner to communicate.
+Specifically, it allows you to do use R to control OTP and use it as a local routing service.
+For more on local versus remote routing services, see the Transportation chapter in [Geocomputation with R](https://geocompr.robinlovelace.net/transport.html).
 
 ### What is Open Trip Planner?
 
