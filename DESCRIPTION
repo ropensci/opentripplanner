@@ -2,7 +2,8 @@ Package: opentripplanner
 Title: Open Trip Planner for R
 Version: 0.0.1.0000
 Authors@R: c(
-    person("Marcus", "Young",   email = "M.A.Young@soton.ac.uk", role = c("aut", "cre")),
+    person("Marcus", "Young",   email = "M.A.Young@soton.ac.uk", role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0003-4627-1116")),
     person("Malcolm", "Morgan", email = "m.morgan1@leeds.ac.uk", role = c("aut"), 
       comment = c(ORCID = "0000-0002-9488-9183")),
     person("Robin", "Lovelace", email = "rob00x@gmail.com",      role = "ctb",

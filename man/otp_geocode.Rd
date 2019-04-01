@@ -36,3 +36,8 @@ OTP will return a maximum of 10 results
 locations <- otp_geocode(otpcon, "High Street")
 }
 }
+\seealso{
+Other routing: \code{\link{otp_isochrone}},
+  \code{\link{otp_plan}}
+}
+\concept{routing}

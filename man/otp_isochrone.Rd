@@ -31,7 +31,7 @@ otp_isochrone(otpcon = NA, fromPlace = NA, mode = "TRANSIT",
 \item{cutoffSec}{Numeric vector, number of seconds to define the break points of each Isochrone}
 }
 \value{
-Returns a data.frame of SF POLYGONS
+Returns a SF data.frame of POLYGONs
 }
 \description{
 Get the Isochrones from a location
@@ -45,8 +45,15 @@ This feature is known to not work correctly with any mode other than TRANSIT.
 }
 \examples{
 \dontrun{
-isochrone1 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292))
-isochrone2 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292),
-                            mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
+isochrone1 <- otp_isochrone(otpcon, fromPlace = c(-0.1346, 51.5292))
+isochrone2 <- otp_isochrone(otpcon,
+  fromPlace = c(-0.1346, 51.5292),
+  mode = c("WALK", "TRANSIT"), cutoffSec = c(600, 1200, 1800)
+)
 }
 }
+\seealso{
+Other routing: \code{\link{otp_geocode}},
+  \code{\link{otp_plan}}
+}
+\concept{routing}

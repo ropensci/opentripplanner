@@ -57,7 +57,7 @@ routes <- otp_plan(otpcon = otpcon,
 
 **Note** `otp_plan()` supports multi-core processing via the `ncores` input. Runnin on `ncores = 2` provides around 35% performance boost. However, you are unlikely to get a significant improvement (on typical computers) using more than 3 cores, as you will overload OTP.
 
-You may get some error message returned as OTP is unable to find some of the routes. The `otp_plan()` will skip over errors and return all the routes it can get. It will then print out any error messages. You will have also noticed the handy progress bar.
+You may get some error message returned as OTP is unable to find some of the routes. The `otp_plan()` will skip over errors and return all the routes it can get. It will then return any error messages. You will have also noticed the handy progress bar.
 
 You can plot the routes using `tmap` 
 

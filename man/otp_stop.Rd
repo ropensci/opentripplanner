@@ -6,6 +6,9 @@
 \usage{
 otp_stop()
 }
+\value{
+This function return a message but no object
+}
 \description{
 OTP is run in Java and requires Java commands to be typed into the command line.
 The function allows the parameters to be defined in R and automatically passed to Java.
@@ -14,3 +17,15 @@ This function stops an already running OTP instance
 \details{
 The function assumes you have run otp_setup()
 }
+\examples{
+\dontrun{
+otp_stop()
+This will force Java to close, Press [enter] to continue, [escape] to abort
+}
+
+}
+\seealso{
+Other setup: \code{\link{otp_build_graph}},
+  \code{\link{otp_setup}}
+}
+\concept{setup}

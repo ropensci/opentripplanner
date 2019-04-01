@@ -1,8 +1,9 @@
 context("Test the otp_connect function")
 
 skip_no_otp <- function() {
-  if(!identical(Sys.getenv("I_have_OTP"), "TRUE"))
+  if (!identical(Sys.getenv("I_have_OTP"), "TRUE")) {
     skip("Not running full test.")
+  }
 }
 test_that("default object is created and make_url method works", {
   skip_no_otp()
@@ -35,11 +36,13 @@ test_that("can do multiple routes", {
   skip_no_otp()
   otpcon <- otp_connect()
   lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
-  toPlace = lsoa[1:10,]
-  fromPlace = lsoa[11:20,]
-  routes <- otp_plan(otpcon = otpcon,
-                     fromPlace = fromPlace,
-                     toPlace = toPlace)
+  toPlace <- lsoa[1:10, ]
+  fromPlace <- lsoa[11:20, ]
+  routes <- otp_plan(
+    otpcon = otpcon,
+    fromPlace = fromPlace,
+    toPlace = toPlace
+  )
 
   expect_is(routes, "sf")
 })

@@ -9,10 +9,11 @@
 #' @param clusters Logical, Search for clusters by their name, default FALSE
 #' @param corners Logical, Search for street corners using at least one of the street names, default TRUE
 #' @param type Character, How should results be returned can be "SF" or "Coordinates" or "Both", Default "SF"
-#'
+#' @family routing
 #' @return
 #' Returns a data.frame of SF POINTS or Coordinates of all the locations that match `query`
-#' @examples \dontrun{
+#' @examples
+#' \dontrun{
 #' locations <- otp_geocode(otpcon, "High Street")
 #' }
 #' @details
@@ -25,8 +26,7 @@ otp_geocode <- function(otpcon = NA,
                         stops = TRUE,
                         clusters = FALSE,
                         corners = TRUE,
-                        type = "SF")
-{
+                        type = "SF") {
   # Validate Inputs
   checkmate::assert_class(otpcon, "otpconnect")
   checkmate::assert_character(query)
@@ -61,26 +61,25 @@ otp_geocode <- function(otpcon = NA,
   # convert response content into text
   text <- httr::content(req, as = "text", encoding = "UTF-8")
 
-  if(nchar(text) == 2){
-    warning(paste0("Failed to find '",query,"'"))
+  if (nchar(text) == 2) {
+    warning(paste0("Failed to find '", query, "'"))
     return(NA)
-  }else{
+  } else {
     # parse text to json
     asjson <- jsonlite::fromJSON(text)
     # parse to sf
-    if(type %in% c("SF","Both")){
-      if(type == "SF"){
+    if (type %in% c("SF", "Both")) {
+      if (type == "SF") {
         remove <- TRUE
-      }else{
+      } else {
         remove <- FALSE
       }
-      response = sf::st_as_sf(asjson, coords = c("lng","lat"), remove = remove)
+      response <- sf::st_as_sf(asjson,
+                               coords = c("lng", "lat"),
+                               remove = remove)
       return(response)
-    }else{
+    } else {
       return(asjson)
     }
-
   }
-
 }
-

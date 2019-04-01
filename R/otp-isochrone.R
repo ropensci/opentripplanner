@@ -10,12 +10,16 @@
 #' @param transferPenalty Numeric passed to OTP
 #' @param minTransferTime Numeric passed to OTP
 #' @param cutoffSec Numeric vector, number of seconds to define the break points of each Isochrone
+#' @family routing
 #' @return
-#' Returns a data.frame of SF POLYGONS
-#' @examples \dontrun{
-#' isochrone1 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292))
-#' isochrone2 <- otp_isochrone(otpcon, fromPlace = c(-0.1346,51.5292),
-#'                             mode = c("WALK","TRANSIT"), cutoffSec = c(600,1200,1800))
+#' Returns a SF data.frame of POLYGONs
+#' @examples
+#' \dontrun{
+#' isochrone1 <- otp_isochrone(otpcon, fromPlace = c(-0.1346, 51.5292))
+#' isochrone2 <- otp_isochrone(otpcon,
+#'   fromPlace = c(-0.1346, 51.5292),
+#'   mode = c("WALK", "TRANSIT"), cutoffSec = c(600, 1200, 1800)
+#' )
 #' }
 #' @details Isochrones are maps of equal travel time,
 #' for a given location a map is produced showing how long it takes to reach
@@ -24,34 +28,36 @@
 #' This feature is known to not work correctly with any mode other than TRANSIT.
 #' @export
 otp_isochrone <- function(otpcon = NA,
-                     fromPlace = NA,
-                     mode = "TRANSIT",
-                     date_time = Sys.time(),
-                     arriveBy = FALSE,
-                     maxWalkDistance = 800,
-                     walkReluctance = 5,
-                     transferPenalty = 0,
-                     minTransferTime = 600,
-                     cutoffSec = c(600,1200,1800,2400, 3000, 3600))
-{
+                          fromPlace = NA,
+                          mode = "TRANSIT",
+                          date_time = Sys.time(),
+                          arriveBy = FALSE,
+                          maxWalkDistance = 800,
+                          walkReluctance = 5,
+                          transferPenalty = 0,
+                          minTransferTime = 600,
+                          cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600)) {
   # Check Valid Inputs
-  checkmate::assert_class(otpcon,"otpconnect")
-  checkmate::assert_numeric(fromPlace, lower =  -180, upper = 180, len = 2)
+  checkmate::assert_class(otpcon, "otpconnect")
+  checkmate::assert_numeric(fromPlace, lower = -180, upper = 180, len = 2)
   fromPlace <- fromPlace[2:1]
   fromPlace <- paste(fromPlace, collapse = ",")
   mode <- toupper(mode)
-  checkmate::assert_subset(mode, choices = c("TRANSIT","WALK","BICYCLE","CAR","BUS","RAIL"), empty.ok = F)
+  checkmate::assert_subset(mode,
+                           choices = c("TRANSIT", "WALK", "BICYCLE",
+                                       "CAR", "BUS", "RAIL"),
+                           empty.ok = F)
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m-%d-%Y")
-  time <- tolower(format(date_time, '%I:%M%p'))
-  checkmate::assert_numeric(cutoffSec, lower =  0)
+  time <- tolower(format(date_time, "%I:%M%p"))
+  checkmate::assert_numeric(cutoffSec, lower = 0)
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(as.character(arriveBy))
 
   # Construct URL
   routerUrl <- make_url(otpcon)
-  routerUrl <- paste0(routerUrl,"/isochrone")
+  routerUrl <- paste0(routerUrl, "/isochrone")
 
   query <- list(
     fromPlace = fromPlace,
@@ -64,9 +70,9 @@ otp_isochrone <- function(otpcon = NA,
     transferPenalty = transferPenalty,
     minTransferTime = minTransferTime
   )
-  cutoffSec <-  as.list(cutoffSec)
-  names(cutoffSec) = rep("cutoffSec",length(cutoffSec))
-  query <- c(query,cutoffSec)
+  cutoffSec <- as.list(cutoffSec)
+  names(cutoffSec) <- rep("cutoffSec", length(cutoffSec))
+  query <- c(query, cutoffSec)
 
   req <- httr::GET(
     routerUrl,
@@ -76,15 +82,13 @@ otp_isochrone <- function(otpcon = NA,
   # convert response content into text
   text <- httr::content(req, as = "text", encoding = "UTF-8")
 
-  if(nchar(text) < 200){
+  if (nchar(text) < 200) {
     warning("Failed to get isochrone, returning error message")
     return(text)
-  }else{
+  } else {
     # parse to sf
-    response = sf::st_read(text, quiet = T)
-    response$id = seq(1,nrow(response))
+    response <- sf::st_read(text, quiet = T)
+    response$id <- seq(1, nrow(response))
     return(response)
   }
-
 }
-

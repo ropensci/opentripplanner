@@ -31,11 +31,16 @@ if required, confirms that the instance and router are query-able.
 \examples{
 \dontrun{
 otpcon <- otp_connect()
-otpcon <- otp_connect(router = "UK2018",
-                      ssl = TRUE)
-otpcon <- otp_connect(hostname = "ec2.us-west-2.compute.amazonaws.com",
-                      router = "UK2018",
-                      port = 8888,
-                      ssl = TRUE)
+otpcon <- otp_connect(
+  router = "UK2018",
+  ssl = TRUE
+)
+otpcon <- otp_connect(
+  hostname = "ec2.us-west-2.compute.amazonaws.com",
+  router = "UK2018",
+  port = 8888,
+  ssl = TRUE
+)
 }
 }
+\concept{connect}

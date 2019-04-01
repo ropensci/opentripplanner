@@ -49,6 +49,11 @@ OTP can support multiple routers (e.g. different regions), each router must have
 }
 \examples{
 \dontrun{
-log = otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
+log <- otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
 }
 }
+\seealso{
+Other setup: \code{\link{otp_setup}},
+  \code{\link{otp_stop}}
+}
+\concept{setup}
