@@ -18,7 +18,7 @@ A major advantage of running your own multi-modal route planner is the ability t
 
 ## Prerequisites
 
-You will need to have installed R, RStudio, and Java 8. For more details on the software required see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html) included with this package.
+You will need to have installed R, RStudio, and Java 8. For more details on the software required see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html) included with this package.
 
 ## Installation
 
