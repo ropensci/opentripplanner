@@ -8,6 +8,8 @@ otp_validate_config(config, type = attributes(config)$config_type)
 }
 \arguments{
 \item{config}{A named list made/modified from `otp_make_config()`}
+
+\item{type}{type of config file}
 }
 \description{
 Checks if the list of OTP configiration options is valid
