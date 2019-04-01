@@ -76,9 +76,12 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_class(otpcon, "otpconnect")
   mode <- toupper(mode)
   checkmate::assert_subset(mode,
-                           choices = c("TRANSIT", "WALK", "BICYCLE",
-                                       "CAR", "BUS", "RAIL"),
-                           empty.ok = F)
+    choices = c(
+      "TRANSIT", "WALK", "BICYCLE",
+      "CAR", "BUS", "RAIL"
+    ),
+    empty.ok = F
+  )
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m-%d-%Y")
@@ -260,19 +263,22 @@ otp_clean_input <- function(imp, imp_name) {
   # For matrix inputs
   if (all(class(imp) == "matrix")) {
     checkmate::assert_matrix(imp,
-                             any.missing = F,
-                             min.rows = 1,
-                             min.cols = 2,
-                             max.cols = 2,
-                             null.ok = F)
+      any.missing = F,
+      min.rows = 1,
+      min.cols = 2,
+      max.cols = 2,
+      null.ok = F
+    )
     checkmate::assert_numeric(imp[, 1], lower = -180, upper = 180)
     checkmate::assert_numeric(imp[, 2], lower = -90, upper = 90)
     imp[] <- imp[, 2:1] # Switch round lng/lat to lat/lng for OTP
     return(imp)
   }
   # Otherwise stop as invalid input
-  stop(paste0(imp_name,
-              " is not in a valid format"))
+  stop(paste0(
+    imp_name,
+    " is not in a valid format"
+  ))
 }
 
 
@@ -378,9 +384,11 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
   itineraries <- plan$itineraries
 
   itineraries$startTime <- as.POSIXct(itineraries$startTime / 1000,
-                                      origin = "1970-01-01", tz = "GMT")
+    origin = "1970-01-01", tz = "GMT"
+  )
   itineraries$endTime <- as.POSIXct(itineraries$endTime / 1000,
-                                    origin = "1970-01-01", tz = "GMT")
+    origin = "1970-01-01", tz = "GMT"
+  )
 
 
   legs <- list()
@@ -425,8 +433,10 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
         # process the lines into sf objects
         lines <- list()
         for (j in seq(1, length(legGeometry))) {
-          lines[[j]] <- polyline2linestring(line = legGeometry[j],
-                                            elevation = elevation[[j]])
+          lines[[j]] <- polyline2linestring(
+            line = legGeometry[j],
+            elevation = elevation[[j]]
+          )
         }
       } else {
         lines <- polyline2linestring(legGeometry)
@@ -461,9 +471,11 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
   }
 
   legs$startTime <- as.POSIXct(legs$startTime / 1000,
-                               origin = "1970-01-01", tz = "GMT")
+    origin = "1970-01-01", tz = "GMT"
+  )
   legs$endTime <- as.POSIXct(legs$endTime / 1000,
-                             origin = "1970-01-01", tz = "GMT")
+    origin = "1970-01-01", tz = "GMT"
+  )
 
   itineraries$legs <- NULL
 
@@ -534,8 +546,10 @@ polyline2linestring <- function(line, elevation = NULL) {
     } else {
       elevation <- elevation[order(elevation$distance), ]
       # Calculate the length of each segment
-      dist <- geosphere::distHaversine(line[seq(1, nrow(line) - 1), ],
-                                       line[seq(2, nrow(line)), ])
+      dist <- geosphere::distHaversine(
+        line[seq(1, nrow(line) - 1), ],
+        line[seq(2, nrow(line)), ]
+      )
       dist <- cumsum(dist)
       vals <- findInterval(dist, elevation$distance)
       vals[vals == 0] <- 1L

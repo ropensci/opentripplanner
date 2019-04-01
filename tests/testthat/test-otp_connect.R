@@ -5,12 +5,7 @@ skip_no_otp <- function() {
     skip("Not running full test.")
   }
 }
-test_that("default object is created and make_url method works", {
-  skip_no_otp()
-  otpcon <- otp_connect(check = FALSE)
-  expect_is(otpcon, "otpconnect")
-  expect_match(make_url(otpcon), "http://localhost:8080/otp/routers/default")
-})
+
 
 # the following tests require an OTP instance at http://localhost:8080/otp with "default" router
 

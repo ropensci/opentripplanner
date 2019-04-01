@@ -44,9 +44,12 @@ otp_isochrone <- function(otpcon = NA,
   fromPlace <- paste(fromPlace, collapse = ",")
   mode <- toupper(mode)
   checkmate::assert_subset(mode,
-                           choices = c("TRANSIT", "WALK", "BICYCLE",
-                                       "CAR", "BUS", "RAIL"),
-                           empty.ok = F)
+    choices = c(
+      "TRANSIT", "WALK", "BICYCLE",
+      "CAR", "BUS", "RAIL"
+    ),
+    empty.ok = F
+  )
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m-%d-%Y")

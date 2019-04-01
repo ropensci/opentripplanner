@@ -20,21 +20,21 @@
 #' OTP will return a maximum of 10 results
 #'
 #' @export
-otp_geocode <- function(otpcon = NA,
-                        query = NA,
+otp_geocode <- function(otpcon = NULL,
+                        query = NULL,
                         autocomplete = FALSE,
                         stops = TRUE,
                         clusters = FALSE,
                         corners = TRUE,
                         type = "SF") {
   # Validate Inputs
-  checkmate::assert_class(otpcon, "otpconnect")
-  checkmate::assert_character(query)
-  checkmate::assert_logical(autocomplete)
-  checkmate::assert_logical(stops)
-  checkmate::assert_logical(clusters)
-  checkmate::assert_logical(corners)
-  checkmate::assert_choice(type, choices = c("SF", "Coordinates", "Both"))
+  checkmate::assert_class(otpcon, "otpconnect", null.ok = FALSE)
+  checkmate::assert_character(query, null.ok = FALSE, len = 1, min.chars = 1, any.missing = FALSE)
+  checkmate::assert_logical(autocomplete, null.ok = FALSE)
+  checkmate::assert_logical(stops, null.ok = FALSE)
+  checkmate::assert_logical(clusters, null.ok = FALSE)
+  checkmate::assert_logical(corners, null.ok = FALSE)
+  checkmate::assert_choice(type, choices = c("SF", "Coordinates", "Both"), null.ok = FALSE)
 
 
   autocomplete <- tolower(as.character(autocomplete))
@@ -75,8 +75,9 @@ otp_geocode <- function(otpcon = NA,
         remove <- FALSE
       }
       response <- sf::st_as_sf(asjson,
-                               coords = c("lng", "lat"),
-                               remove = remove)
+        coords = c("lng", "lat"),
+        remove = remove
+      )
       return(response)
     } else {
       return(asjson)

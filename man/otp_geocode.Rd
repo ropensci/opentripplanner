@@ -4,7 +4,7 @@
 \alias{otp_geocode}
 \title{Use OTP Geo-coder to find a location}
 \usage{
-otp_geocode(otpcon = NA, query = NA, autocomplete = FALSE,
+otp_geocode(otpcon = NULL, query = NULL, autocomplete = FALSE,
   stops = TRUE, clusters = FALSE, corners = TRUE, type = "SF")
 }
 \arguments{

@@ -156,12 +156,16 @@ otp_setup <- function(otp = NULL,
 
   # Check for errors
   if (grepl("ERROR", set_up[2], ignore.case = TRUE)) {
-    stop(paste0("Failed to start OTP with message: ",
-                set_up[2]))
+    stop(paste0(
+      "Failed to start OTP with message: ",
+      set_up[2]
+    ))
   }
 
-  message(paste0(Sys.time(),
-                 " OTP is loading and may take a while to be useable"))
+  message(paste0(
+    Sys.time(),
+    " OTP is loading and may take a while to be useable"
+  ))
 
   if (wait) {
     Sys.sleep(30)
@@ -178,10 +182,12 @@ otp_setup <- function(otp = NULL,
       ), silent = TRUE)
 
       if ("otpconnect" %in% class(otpcon)) {
-        message(paste0(Sys.time(),
-                       " OTP is ready to use Go to localhost:",
-                       port,
-                       " in your browser to view the OTP"))
+        message(paste0(
+          Sys.time(),
+          " OTP is ready to use Go to localhost:",
+          port,
+          " in your browser to view the OTP"
+        ))
         utils::browseURL(paste0(ifelse(otpcon$ssl, "https://", "http://"), "localhost:", port))
         break
       } else {
@@ -205,11 +211,6 @@ otp_setup <- function(otp = NULL,
 #' The function assumes you have run otp_setup()
 #' @return This function return a message but no object
 #' @family setup
-#' @examples
-#' \dontrun{
-#' otp_stop()
-#' This will force Java to close, Press [enter] to continue, [escape] to abort
-#' }
 #'
 #' @export
 otp_stop <- function() {

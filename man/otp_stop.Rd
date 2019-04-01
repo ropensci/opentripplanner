@@ -17,13 +17,6 @@ This function stops an already running OTP instance
 \details{
 The function assumes you have run otp_setup()
 }
-\examples{
-\dontrun{
-otp_stop()
-This will force Java to close, Press [enter] to continue, [escape] to abort
-}
-
-}
 \seealso{
 Other setup: \code{\link{otp_build_graph}},
   \code{\link{otp_setup}}
