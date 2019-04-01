@@ -1,7 +1,5 @@
 
-[![Travis build status](https://travis-ci.org/ITSLeeds/opentripplanner.svg?branch=master)](https://travis-ci.org/ITSLeeds/opentripplanner)
-
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Travis build status](https://travis-ci.org/ITSLeeds/opentripplanner.svg?branch=master)](https://travis-ci.org/ITSLeeds/opentripplanner) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Coverage status](https://codecov.io/gh/ITSLeeds/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/github/ITSLeeds/opentripplanner?branch=master)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 Open Trip Planner for R
@@ -14,15 +12,13 @@ This package can be used to interface with a remote instance of OTP (e.g. a webs
 Basic setup and routing functions are outlined in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), while advanced fucntionality such as batch routing, isochones, and customised setup is described in the [advanced features vignette](https://itsleeds.github.io/opentripplanner/articles/advanced_features.html)
 
 Installation
-============
+------------
 
-Open Trip Planner
------------------
+### Open Trip Planner
 
 To use Open Trip Planner on your local computer you will need to install Java 8 and download the latest version of OTP. Instructions on installing Java and setting up OTP can be found in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
 
-R Package
----------
+### R Package
 
 Install the package with **devtools** as follows:
 
@@ -31,8 +27,8 @@ install.packages("devtools") # If you do not already have the devtools package
 devtools::install_github("ITSleeds/opentripplanner")
 ```
 
-use
-===
+Usage
+-----
 
 The package contains three groups of functions:
 
@@ -54,16 +50,26 @@ Functions for retrieving data from OTP:
 Results are returned as [sf objects](https://cran.r-project.org/web/packages/sf/index.html)
 
 Tests
-=====
+-----
 
 As this package does not work without a working connection to OTP, tests only run on machines that have the environment variable `I_have_OTP` with the value `TRUE`. You can add this with `usethis::edit_r_environ()`.
 
 ``` r
 Sys.getenv("I_have_OTP")
-#> [1] "FALSE"
+#> [1] ""
 ```
 
+Acknowledgement
+---------------
+
+This package was built off the [tutorial by Marcus Young](https://github.com/marcusyoung/otp-tutorial)
+
+Contribution
+------------
+
+Please note that the `opentripplanner` project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
+
 Package Status
-==============
+--------------
 
 This package is part of ongoing research at the University of Leeds, it is provided "as is" and is likely to be updated and changed without warning to meet the research needs of the University. It is our intention to bring a stable version to CRAN as soon as possible.
