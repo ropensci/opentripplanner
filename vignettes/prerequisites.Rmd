@@ -12,8 +12,8 @@ vignette: >
 
 ## Introduction
 
-This vignette provides guidance for people who new to OpenTripPlanner (OTP).  It assumes some prior-knowledge of R (see An Introduction to R [online](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, or introductory tutorials such as DataCamp's [free](https://www.datacamp.com/courses/free-introduction-to-r) Introduction to R course.
-After you have R and OTP installed, and have become familiar with them, we recommend working through [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
+This vignette provides guidance for people who new to OpenTripPlanner (OTP) and R.
+After you have R and OTP installed, and have become familiar with them (e.g. by reading this vignettee), we recommend working through [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
 
 ## What is this package for, and what is a package anyway?
 
@@ -23,9 +23,9 @@ For more on local versus remote routing services, see the Transportation chapter
 
 ### What is OpenTripPlanner?
 
-OpenTripPlanner (OTP) is a free, open-source, and cross-platform multi-modal route planner written in JAVA.  It is like having your own private version of Google Maps.
+OTP is a free, open-source, and cross-platform multi-modal route planner written in JAVA.  It is like having your own private version of Google Maps.
 
-You can find a lot more information about OTP at:
+Learn more about OTP at:
 
 * http://www.opentripplanner.org/
 * https://wiki.openstreetmap.org/wiki/OpenTripPlanner
@@ -38,6 +38,8 @@ You can find a lot more information about R at:
 
 * https://www.r-project.org/ 
 * https://en.wikipedia.org/wiki/R_(programming_language) 
+
+To get started with R, see An Introduction to R [online](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, or introductory tutorials such as DataCamp's [free](https://www.datacamp.com/courses/free-introduction-to-r) Introduction to R course.
 
 ### What is an R package?
 
@@ -52,14 +54,6 @@ This package allows you to use the trip planning power of OTP with the analytica
 ## What do I need to get started?
 
 You will need to install some software to use OTP and R.
-
-### To use OTP
-
-* Download free Java 8 from https://www.java.com/en/download/ and install Java. You will need the correct version for your operating system. If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
-
-**Note** OTP does not work with later version of Java such as Java 11.
-
-To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343).
 
 ### To Use R
 
@@ -78,6 +72,41 @@ If you have never used R before there a lots of free tutorials to get you starte
 * http://www.r-tutor.com/r-introduction
 
 
+### To use OTP
+
+* Download free Java 8 from https://www.java.com/en/download/ and install Java. You will need the correct version for your operating system. If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
+
+**Note** OTP does not work with later version of Java such as Java 11.
+
+To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343) and on [StackOverflow](https://askubuntu.com/questions/740757/switch-between-multiple-java-versions).
+
+As outlined  8 can be installed with the following commands on Ubuntu:
+
+```{r, engine='bash'}
+sudo apt-add-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java8-installer
+```
+
+
+
+
+
+You can also compile the latest version of OTP from source with the following commands:
+
+```{r, engine='bash'}
+sudo apt-get install openjdk-8-jdk maven git
+mkdir git
+cd git
+git clone git@github.com:opentripplanner/OpenTripPlanner.git
+cd OpenTripPlanner
+mvn clean package
+```
+
+
+## Check the installation
+
+To check if the 
 
 ## Next Steps
 

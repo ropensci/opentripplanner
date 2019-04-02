@@ -62,6 +62,7 @@ download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1
 unzip("isle-of-wight-demo.zip", exdir = "graphs/default")
 unlink("isle-of-wight-demo.zip")
 ```
+
 Now we can build the graph. This code will create a new file `Graph.obj` that will be saved in the location defined by `path_data`. 
 
 ```{r eval=FALSE}

@@ -246,7 +246,7 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
 
   # TODO: test on Linux
   # Check we have correct verrsion of Java
-  java_version <- try(system("java -version", intern = TRUE))
+  try(java_version <- system2("java", "-version", stdout = TRUE, stderr = TRUE))
   if (class(java_version) == "try-error") {
     warning("R was unable to detect a version of Java")
     stop()
