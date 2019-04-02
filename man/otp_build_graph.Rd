@@ -5,7 +5,7 @@
 \title{Build an OTP Graph}
 \usage{
 otp_build_graph(otp = NULL, dir = NULL, memory = 2,
-  router = "default", analyst = FALSE, compiled = FALSE)
+  router = "default", analyst = FALSE)
 }
 \arguments{
 \item{otp}{A character string, path to the OTP .jar file}

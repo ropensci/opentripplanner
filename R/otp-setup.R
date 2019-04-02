@@ -42,8 +42,7 @@ otp_build_graph <- function(otp = NULL,
                             dir = NULL,
                             memory = 2,
                             router = "default",
-                            analyst = FALSE,
-                            compiled = FALSE) {
+                            analyst = FALSE) {
 
   # Run Checks
   otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
