@@ -17,8 +17,6 @@ otp_build_graph(otp = NULL, dir = NULL, memory = 2,
 \item{router}{A character string for the name of the router, must match with contents of dir, default "default"}
 
 \item{analyst}{Logical, should analyst feature be built, default FALSE}
-
-\item{compiled}{Using a compiled system install of OTP? False by default.}
 }
 \value{
 Returns and log messages produced by OTP, and will return the message "Graph built" if successful

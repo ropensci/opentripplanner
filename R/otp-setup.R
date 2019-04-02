@@ -10,7 +10,6 @@
 #' @param memory A positive integer. Amount of memory to assign to the OTP in GB, default is 2
 #' @param router A character string for the name of the router, must match with contents of dir, default "default"
 #' @param analyst Logical, should analyst feature be built, default FALSE
-#' @param compiled Using a compiled system install of OTP? False by default.
 #' @return
 #' Returns and log messages produced by OTP, and will return the message "Graph built" if successful
 #' @details
@@ -46,35 +45,21 @@ otp_build_graph <- function(otp = NULL,
                             analyst = FALSE,
                             compiled = FALSE) {
 
-  if(!grepl(pattern = "jar", x = otp)) {
-    compiled = TRUE
-  }
   # Run Checks
   otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
   message("Basic checks completed, building graph, this may take a few minutes")
 
-  # Set up OTP
-  if(compiled) {
-    text <- paste0(
-      otp,
-      " --build ",
-      dir,
-      "/graphs/",
-      router
-    )
-  } else {
-    text <- paste0(
-      "java -Xmx",
-      memory,
-      'G -jar "',
-      otp,
-      '" --build "',
-      dir,
-      "/graphs/",
-      router,
-      '"'
-    )
-  }
+  text <- paste0(
+    "java -Xmx",
+    memory,
+    'G -jar "',
+    otp,
+    '" --build "',
+    dir,
+    "/graphs/",
+    router,
+    '"'
+  )
 
   if (analyst) {
     text <- paste0(text, " --analyst")
