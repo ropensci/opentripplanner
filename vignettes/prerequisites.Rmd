@@ -82,7 +82,7 @@ To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorne
 
 As outlined  8 can be installed with the following commands on Ubuntu:
 
-```{r, engine='bash'}
+```{r, engine='bash', eval=FALSE}
 sudo apt-add-repository ppa:webupd8team/java
 sudo apt-get update
 sudo apt-get install oracle-java8-installer

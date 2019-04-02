@@ -18,7 +18,7 @@ otp_build_graph(otp = NULL, dir = NULL, memory = 2,
 
 \item{analyst}{Logical, should analyst feature be built, default FALSE}
 
-\item{compiles}{Using a compiled system install of OTP? False by default.}
+\item{compiled}{Using a compiled system install of OTP? False by default.}
 }
 \value{
 Returns and log messages produced by OTP, and will return the message "Graph built" if successful
