@@ -205,17 +205,22 @@ otp_setup <- function(otp = NULL,
 #' OTP is run in Java and requires Java commands to be typed into the command line.
 #' The function allows the parameters to be defined in R and automatically passed to Java.
 #' This function stops an already running OTP instance
+#' @param warn Logical, should you get a warning message
+#'
 #' @details
 #' The function assumes you have run otp_setup()
 #' @return This function return a message but no object
 #' @family setup
 #'
 #' @export
-otp_stop <- function() {
+otp_stop <- function(warn = TRUE) {
+  if (warn) {
+    readline(prompt = "This will force Java to close, Press [enter] to continue, [escape] to abort")
+  }
+
   if (checkmate::testOS("linux")) {
     message("You're on linux, this function is not yet supported")
   } else if (checkmate::testOS("windows")) {
-    readline(prompt = "This will force Java to close, Press [enter] to continue, [escape] to abort")
     system("Taskkill /IM java.exe /F", intern = TRUE)
   } else if (checkmate::testOS("mac")) {
     message("You're on Mac, this function is not yet supported")

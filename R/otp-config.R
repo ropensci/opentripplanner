@@ -16,13 +16,13 @@ otp_write_config <- function(config,
                              dir = NULL,
                              router = "default") {
   # Validate and Clean
+  type <- attributes(config)$config_type
   otp_validate_config(config)
   config <- otp_list_clean(config)
 
-  type <- attributes(config)$config_type
   # Convert to JSON
   config <- jsonlite::toJSON(config, pretty = TRUE, null = "null", na = "null")
-  jsonlite::write_json(config, paste0(dir, "/", router, "/graphs/", type, ".json"))
+  jsonlite::write_json(config, file.path(dir, "graphs", router, paste0(type, "-config.json")))
 }
 
 #' Remove NULL values from list
@@ -222,6 +222,7 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
   } else {
     message("No checks performed")
   }
+  return(TRUE)
 }
 
 #' Make Config Object
@@ -242,7 +243,10 @@ otp_make_config <- function(type) {
   checkmate::assert_subset(type, choices = c("otp", "build", "router"), empty.ok = F)
 
   if (type == "otp") {
+    config_router <- otp_make_config("router")
+    config_build <- otp_make_config("build")
 
+    config <- c(config_router, config_build)
 
   } else if (type == "build") {
     config_names <- c(

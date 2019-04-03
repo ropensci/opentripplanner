@@ -4,7 +4,10 @@
 \alias{otp_stop}
 \title{Stop and OTP Instance}
 \usage{
-otp_stop()
+otp_stop(warn = TRUE)
+}
+\arguments{
+\item{warn}{Logical, should you get a warning message}
 }
 \value{
 This function return a message but no object
