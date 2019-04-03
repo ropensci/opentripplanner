@@ -15,6 +15,10 @@ path_otp <- file.path(path_data, "otp.jar")
 test_that("default object is created and make_url method works", {
   expect_is(otpcon, "otpconnect")
   expect_match(make_url(otpcon), "http://localhost:8080/otp/routers/default")
+  # warnings
+  x <- structure(as.list(1:2), class = "myclass")
+  expect_warning(make_url(x))
+  expect_warning(check_router(x))
 })
 
 test_that("can't build graph without opt", {
