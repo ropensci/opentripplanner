@@ -106,7 +106,7 @@ otp_stop()
 
 ## Getting Data for OTP
 
-To use OTP on your local computer you will  need data about your location of intrest, such as where the roads are, what is the public transport timetable etc.
+To use OTP on your local computer you will  need data about your location of interest, such as where the roads are, what is the public transport timetable etc.
 
 ### Road Map Data
 
@@ -114,7 +114,7 @@ OTP uses road maps from the [Open Street Map (OSM)](https://www.openstreetmap.or
 
 ### Public Transport Timetables
 
-OTP can use public transport timetable data in the [GFTS format](https://developers.google.com/transit/gtfs/). You can find GTFS data for many regions at  [transitland](https://transit.land/).
+OTP can use public transport timetable data in the [GTFS format](https://developers.google.com/transit/gtfs/). You can find GTFS data for many regions at  [transitland](https://transit.land/).
 
 ### Elevation Data
 

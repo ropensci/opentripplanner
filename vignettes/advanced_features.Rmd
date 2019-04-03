@@ -41,7 +41,7 @@ lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/downlo
 head(lsoa)
 ```
 
-Then we will define our desitnation as the Ryde Ferry:
+Then we will define our destination as the Ryde Ferry:
 
 ```{r, eval=FALSE}
 toPlace <- c(-1.159494,50.732429)

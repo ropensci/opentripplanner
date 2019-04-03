@@ -51,15 +51,15 @@ otp_list_clean <- function(.data, fun = function(x) {
 
 #' Validate Config Object
 #' @description
-#' Checks if the list of OTP configiration options is valid
+#' Checks if the list of OTP configuration options is valid
 #'
 #' @param config A named list made/modified from `otp_make_config()`
 #' @param type type of config file
 #'
 #' @details
 #'
-#' Performs basic validity checks on class, max/min values etc as appropiate, some of
-#' more compex parameters are not checked. For more details see:
+#' Performs basic validity checks on class, max/min values etc as appropriate, some of
+#' more complex parameters are not checked. For more details see:
 #'
 #' http://docs.opentripplanner.org/en/latest/Configuration
 #' http://dev.opentripplanner.org/javadoc/1.3.0/org/opentripplanner/routing/core/RoutingRequest.html

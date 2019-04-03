@@ -33,7 +33,7 @@ library(opentripplanner)
 Before you can use the package, you should set-up the OpenTripPlanner Java program.
 You will need to download the latest version of OTP from https://repo1.maven.org/maven2/org/opentripplanner/otp/ , at time of writing the latest version of OTP is version 1.3 so you would want to get https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar 
 
-The following code downloads the file into a tempoary folder called `OTP` you may wish to change this to keep your resutls after closing R:
+The following code downloads the file into a temporary folder called `OTP` you may wish to change this to keep your results after closing R:
 
 ```{r, eval=FALSE}
 # download file (may want to do this manually)
