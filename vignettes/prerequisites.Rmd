@@ -80,41 +80,7 @@ If you have never used R before there a lots of free tutorials to get you starte
 
 To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343) and on [StackOverflow](https://askubuntu.com/questions/740757/switch-between-multiple-java-versions).
 
-As outlined  8 can be installed with the following commands on Ubuntu:
-
-```{r, engine='bash', eval=FALSE}
-sudo apt-add-repository ppa:webupd8team/java
-sudo apt-get update
-sudo apt-get install oracle-java8-installer
-```
-
-You can also compile the latest version of OTP from source with the following commands:
-
-```{r, engine='bash', eval=FALSE}
-sudo apt-get install openjdk-8-jdk maven git
-mkdir git
-cd git
-git clone git@github.com:opentripplanner/OpenTripPlanner.git
-cd OpenTripPlanner
-mvn clean package
-chmod +x otp
-# sudo cp -Rv target otp /usr/bin/
-```
-
-The penultimate line ensures the `otp` script, which calls OpenTripPlanner, is executable.
-The final line makes `otp` available to the system path: it should work from any directory.
-Check the process has worked by executing the following command, which should generate of the type shown below:
-
-```
-./otp --help
-OpenTripPlanner 1.4.0-SNAPSHOT 135671945eeab2a8fd1cd285fbda8349540cdc34
-Usage: java -Xmx[several]G -jar otp.jar [options] Files for graph build.
-  Options:
-        --analyst
-       Enable OTP Analyst extensions.
-       Default: false
-```
-
+You can also compile the latest version of OTP from source, as outlined at [docs.opentripplanner.org/](http://docs.opentripplanner.org/en/latest/Getting-OTP/).
 
 ## Check the installation
 
