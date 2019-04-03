@@ -12,17 +12,20 @@ vignette: >
 
 ## Introduction
 
-This vignette is to provide guidance for people who are completely unfamiliar with Open Trip Planner and/or R.  It assumes no prior-knowledge.  If you are familiar with R and/or OTP then you may find the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html) more useful.
+This vignette provides guidance for people who new to OpenTripPlanner (OTP) and R.
+After you have R and OTP installed, and have become familiar with them (e.g. by reading this vignettee), we recommend working through [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
 
 ## What is this package for, and what is a package anyway?
 
-The Open Trip Planner for R package makes it easier for R and Open Trip Planner to communicate.
+The `opentripplanner` R package makes it easier for R and OpenTripPlanner to communicate.
+Specifically, it allows you to do use R to control OTP and use it as a local routing service.
+For more on local versus remote routing services, see the Transportation chapter in [Geocomputation with R](https://geocompr.robinlovelace.net/transport.html).
 
-### What is Open Trip Planner?
+### What is OpenTripPlanner?
 
-OpenTripPlanner (OTP) is a free, open-source, and cross-platform multi-modal route planner written in JAVA.  It is like having your own private version of Google Maps.
+OTP is a free, open-source, and cross-platform multi-modal route planner written in JAVA.  It is like having your own private version of Google Maps.
 
-You can find a lot more information about OTP at:
+Learn more about OTP at:
 
 * http://www.opentripplanner.org/
 * https://wiki.openstreetmap.org/wiki/OpenTripPlanner
@@ -36,11 +39,13 @@ You can find a lot more information about R at:
 * https://www.r-project.org/ 
 * https://en.wikipedia.org/wiki/R_(programming_language) 
 
+To get started with R, see An Introduction to R [online](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, or introductory tutorials such as DataCamp's [free](https://www.datacamp.com/courses/free-introduction-to-r) Introduction to R course.
+
 ### What is an R package?
 
 An R package is a small piece of software that extends the basic capabilities of R. It is a bit like how a new phone can do some things out of the box (make phone calls, send email) but you have to install apps to add extra abilities.
 
-### Why would I want to use Open Trip Planner for R?
+### Why would I want to use OpenTripPlanner for R?
 
 OTP can be used to run public route finding services such as https://ride.trimet.org but it can also be run on your own private computer or server. If you want to analyse a transport network OTP is a very useful tool. However, OTP is, as the name suggests, a Trip Planner, not analytical software.  So, while OTP can find the fastest route from A to B or find all the places that are within a 20-minute walk of C, it cannot answer a question like “how many people live within 10-minutes of a park?”  This is where R can help.  R can process multiple spatial datasets such a population densities and park locations, but does not have a built-in journey planner. 
 
@@ -49,14 +54,6 @@ This package allows you to use the trip planning power of OTP with the analytica
 ## What do I need to get started?
 
 You will need to install some software to use OTP and R.
-
-### To use OTP
-
-* Download free Java 8 from https://www.java.com/en/download/ and install Java. You will need the correct version for your operating system. If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
-
-**Note** OTP does not work with later version of Java such as Java 11.
-
-To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343).
 
 ### To Use R
 
@@ -74,6 +71,36 @@ If you have never used R before there a lots of free tutorials to get you starte
 * https://www.datacamp.com/courses/free-introduction-to-r
 * http://www.r-tutor.com/r-introduction
 
+
+### To use OTP
+
+* Download free Java 8 from https://www.java.com/en/download/ and install Java. You will need the correct version for your operating system. If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
+
+**Note** OTP does not work with later version of Java such as Java 11.
+
+To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorner](https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343) and on [StackOverflow](https://askubuntu.com/questions/740757/switch-between-multiple-java-versions).
+
+You can also compile the latest version of OTP from source, as outlined at [docs.opentripplanner.org/](http://docs.opentripplanner.org/en/latest/Getting-OTP/).
+
+## Check the installation
+
+To check if the installation has worked, run the following lines of code:
+
+```{r, eval=FALSE}
+library(opentripplanner)
+path_otp <- "otp" # for system install
+# path_otp <- "~/programs/otp.jar" # for local java file
+path_data <- getwd()
+dir.create("graphs")
+dir.create("graphs/default")
+download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip", 
+              destfile = "isle-of-wight-demo.zip", mode="wb")
+unzip("isle-of-wight-demo.zip", exdir = "graphs/default")
+unlink("isle-of-wight-demo.zip")
+log <- otp_build_graph(otp = path_otp, dir = path_data) 
+otp_setup(otp = path_otp, dir = path_data)
+otp_stop()
+```
 
 
 ## Next Steps

@@ -43,11 +43,11 @@ otp_build_graph <- function(otp = NULL,
                             memory = 2,
                             router = "default",
                             analyst = FALSE) {
+
   # Run Checks
   otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
   message("Basic checks completed, building graph, this may take a few minutes")
 
-  # Set up OTP
   text <- paste0(
     "java -Xmx",
     memory,
@@ -63,7 +63,6 @@ otp_build_graph <- function(otp = NULL,
   if (analyst) {
     text <- paste0(text, " --analyst")
   }
-
 
   set_up <- try(system(text, intern = TRUE))
 
@@ -132,8 +131,7 @@ otp_setup <- function(otp = NULL,
 
   # Set up OTP
   if (checkmate::testOS("linux")) {
-    message("You're on linux, this function is not yet supported")
-    stop()
+    message("You're on linux, well done")
   } else if (checkmate::testOS("windows") | checkmate::testOS("mac")) {
     text <- paste0(
       "java -Xmx", memory, 'G -jar "',
@@ -240,13 +238,13 @@ otp_stop <- function() {
 
 otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
   # Checks
-  checkmate::assertFileExists(otp, extension = "jar")
+  # checkmate::assertFileExists(otp, extension = "jar")
   checkmate::assertDirectoryExists(dir)
   checkmate::assertDirectoryExists(paste0(dir, "/graphs/", router))
 
   # TODO: test on Linux
   # Check we have correct verrsion of Java
-  java_version <- try(system("java -version", intern = TRUE))
+  try(java_version <- system2("java", "-version", stdout = TRUE, stderr = TRUE))
   if (class(java_version) == "try-error") {
     warning("R was unable to detect a version of Java")
     stop()
