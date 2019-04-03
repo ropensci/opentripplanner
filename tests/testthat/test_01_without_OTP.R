@@ -22,9 +22,7 @@ test_that("can't build graph without opt", {
 })
 
 test_that("can't setup without opt", {
-  expect_error(otp_setup(otp = path_otp, dir = path_data),
-    regexp = "failed: File does not exist:"
-  )
+  expect_error(otp_setup(otp = path_otp, dir = path_data))
 })
 
 test_that("otp_plan input validation", {

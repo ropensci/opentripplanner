@@ -45,7 +45,7 @@ test_that("can get lsoa points", {
 
 context("Test the otp_build_graph function")
 
-test_that("We can build and otp graph", {
+test_that("We can build an otp graph", {
   skip_no_otp()
   log <- otp_build_graph(otp = path_otp, dir = path_data)
   expect_true(file.exists(file.path(path_data, "graphs", "default", "Graph.obj")))

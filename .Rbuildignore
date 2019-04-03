@@ -4,3 +4,6 @@
 ^\.travis\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^CODE_OF_CONDUCT\.md$
+^extras/
+^paper\.md$

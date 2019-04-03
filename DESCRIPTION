@@ -17,7 +17,7 @@ Description: An R interface for OpenTripPlanner <http://www.opentripplanner.org/
     journey planning written in Java. OTP provides a REST API which OpenTripPlanner
     for R uses to connect to OTP.
 Language: EN-GB
-License: GPL-3
+License: file LICENSE
 URL: https://github.com/ITSLeeds/opentripplanner, https://itsleeds.github.io/opentripplanner/
 BugReports: https://github.com/ITSLeeds/opentripplanner/issues
 Encoding: UTF-8
