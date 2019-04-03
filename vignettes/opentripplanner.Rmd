@@ -14,11 +14,11 @@ vignette: >
 This vignette is an introduction to OpenTripPlanner (OTP) - an open-source and cross-platform multi-modal route planner written in JAVA. It uses imported Open Street Map (OSM) data for routing on the street and path network and supports
 multi-agency public transport routing through imported GTFS feeds. It can also apply a digital elevation model to the OSM street network, allowing, for example, cycle-friendly routes to be requested. OTP has a web front-end that can be used by end-users and a sophisticated routing API.
 
-A major advantage of running your own multi-modal route planner is the ability to carry out analysis using amended transport data. Services such as Google Maps or TransportAPI are based on current public transport schedules and the existing road network. OTP enables you to modify transit schedules and/or make changes to the underlying street network. By editing a local copy of OSM, you can model the effects of opening new roads, closing roads, or imposing other restrictions. You can also look back in time. For example, you might want to examine the effect of reductions in rural bus services on the accessibility of health facilities. To do this you would need a network with bus schedules as they were in previous years.
+A major advantage of running your own multi-modal route planner is the ability to carry out analysis using amended transport data. Services such as Google Maps or TransportAPI are based on current public transport schedules and the existing road network. OTP enables you to modify transit schedules and/or make changes to the underlying street network. By editing a local copy of OSM, you can model the effects of opening new roads, closing roads or imposing other restrictions. You can also look back in time. For example, you might want to examine the effect of reductions in rural bus services on the accessibility of health facilities. To do this you would need a network with bus schedules as they were in previous years.
 
 ## Prerequisites
 
-You will need to have installed R, RStudio, and Java 8. For more details on the software required see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html) included with this package.
+You will need to have installed R, RStudio, and Java 8. For more details on the required software see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html) included with this package.
 
 ## Installation
 
@@ -48,7 +48,7 @@ For more information and advanced options, see http://docs.opentripplanner.org/e
 
 ## Building an OTP Graph
 
-We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. First we will download the sample data and put it in the folder structure that OTP expects.
+We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. First, we will download the sample data and put it in the folder structure that OTP expects.
 
 
 ```{r eval=FALSE}
@@ -127,7 +127,7 @@ otpcon <- otp_connect()
 
 The connection is created and tested, a message will be returned saying if the connection exists or not. 
 
-If you have not used the default settings, such as a different `port` you can speficy those settings in `otp_connect()`
+If you have not used the default settings, such as a different `port` you can specify those settings in `otp_connect()`
 
 ```{r, eval = FALSE}
 otpcon <- otp_connect(hostname =  "localhost", router = "default", port = 8801)
@@ -156,7 +156,7 @@ Notice the use of `sf::st_zm(route)` this is because `tmap` does not currently s
 
 ## Stopping the OTP
 
-As the OTP is running in Java it will conitune to run after you close R.
+As the OTP is running in Java it will continue to run after you close R.
 
 You can stop the OTP running using the command. **NOTE: This will stop all running JAVA applications!**
 

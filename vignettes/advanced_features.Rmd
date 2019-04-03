@@ -55,7 +55,7 @@ routes <- otp_plan(otpcon = otpcon,
                     toPlace = toPlace)
 ```
 
-**Note** `otp_plan()` supports multi-core processing via the `ncores` input. Runnin on `ncores = 2` provides around 35% performance boost. However, you are unlikely to get a significant improvement (on typical computers) using more than 3 cores, as you will overload OTP.
+**Note** `otp_plan()` supports multi-core processing via the `ncores` input. Running on `ncores = 2` provides around 35% performance boost. However, you are unlikely to get a significant improvement (on typical computers) using more than 3 cores, as you will overload OTP.
 
 You may get some error message returned as OTP is unable to find some of the routes. The `otp_plan()` will skip over errors and return all the routes it can get. It will then return any error messages. You will have also noticed the handy progress bar.
 
@@ -69,20 +69,20 @@ knitr::include_graphics("images/routes_to_ferry.jpg")
 
 ### All to All routing
 
-It is sometimes useful to find the route between every possible orign and desitantion for example when producing an OD matrix. If you wished to route from every LSOA to every other LSOA point this can easily be done by repeating the points. 
+It is sometimes useful to find the route between every possible origin and destination for example when producing an OD matrix. If you wished to route from every LSOA to every other LSOA point this can easily be done by repeating the points. 
 
 ```{r, eval=FALSE}
 toPlace   = lsoa[rep(1:nrow(lsoa), times = nrow(lsoa)),]
 fromPlace = lsoa[rep(1:nrow(lsoa), each  = nrow(lsoa)),]
 ```
 
-**Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case 89 points results in 89 x 89 = 7921 routes, this will take a while.
+**Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case, 89 points results in 89 x 89 = 7921 routes, this will take a while.
 
-For and OD matrix you may only be intrested in the total travel time and not require the route geometry. By setting `get_geometry = FALSE` in `otp_plan()` R will just return the meta-data and discard the geometry. This is slightly faster than when using `get_geometry = TRUE` and uses less memory.
+For an OD matrix, you may only be interested in the total travel time and not require the route geometry. By setting `get_geometry = FALSE` in `otp_plan()` R will just return the meta-data and discard the geometry. This is slightly faster than when using `get_geometry = TRUE` and uses less memory.
 
 ## Isochrones
 
-Isochones a lines of equal time. Suppose we are interested in visualising how long it takes to access Ryde ferry using public transport from different parts of the island. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
+Isochrones are lines of equal time. Suppose we are interested in visualising how long it takes to access Ryde ferry using public transport from different parts of the island. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
 
 ```{r eval=FALSE}
 ferry_current  <- otp_isochrone(otpcon = otpcon,
@@ -132,11 +132,11 @@ You can read more about the different debug layers in the official OTP documenta
 
 ## Configuring OpenTripPlanner
 
-How OTP works can be configures using json files. `build-config.json` is used during graph building (i.e. `otp_build_graph()`). While `router-config.json` is used during setup (i.e. `otp_setup()`). These files must be saved with the rest of your data and each router can have a unique configuration.
+How OTP works can be configured using JSON files. `build-config.json` is used during graph building (i.e. `otp_build_graph()`). While `router-config.json` is used during setup (i.e. `otp_setup()`). These files must be saved with the rest of your data and each router can have a unique configuration.
 
-To help configure OTP there are several useful functions. `otp_make_config()` makes a default config object and fills it with default values. It is simply a named list, so you can eaily modify the values. `otp_validate_config()` does basic checks on a config object  to make sure it is valid. Finally `otp_write_config()` exports the config object as a properly formatted json file.
+To help configure OTP there are several useful functions. `otp_make_config()` makes a default config object and fills it with default values. It is simply a named list, so you can easily modify the values. `otp_validate_config()` does basic checks on a config object to make sure it is valid. Finally `otp_write_config()` exports the config object as a properly formatted JSON file.
 
-A simple example of chaing the default walking speed.
+A simple example of changing the default walking speed.
 
 ```{r, eval=FALSE}
 router_config <- otp_make_config("router")     # Make a config object
@@ -150,7 +150,3 @@ otp_write_config(router_config,                # Save the config file
 ```
 
 There is much more information about configuring OpenTripPlanner at https://opentripplanner.readthedocs.io/en/latest/Configuration/ 
-
-
-
-
