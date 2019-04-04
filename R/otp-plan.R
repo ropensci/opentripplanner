@@ -539,7 +539,7 @@ correct_distances <- function(dists) {
 polyline2linestring <- function(line, elevation = NULL) {
   line <- googlePolylines::decode(line)[[1]]
   line <- as.matrix(line[, 2:1])
-  if (exists("elevation")) {
+  if (!is.null(elevation)) {
     # Some modes don't have elevation e.g TRANSIT, check for this
     if (all(is.na(elevation))) {
       ele <- rep(0, nrow(line))
