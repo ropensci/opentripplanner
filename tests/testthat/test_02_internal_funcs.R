@@ -5,7 +5,7 @@ context("Test internal functions")
 context("Test internal functions from otp-config.R")
 
 test_that("test otp_list_clean", {
-  ll <- list("foo","bar",NULL)
+  ll <- list("foo", "bar", NULL)
   ll <- otp_list_clean(ll)
   expect_is(ll, "list")
   expect_true(length(ll) == 2)
@@ -15,29 +15,28 @@ test_that("test otp_list_clean", {
 context("Test internal functions from otp-plan.R")
 
 test_that("test otp_clean_input", {
-  expect_error(otp_clean_input(c(181,2)), regexp = "is not <= 180")
-  expect_error(otp_clean_input(c(-181,2)), regexp = "is not >= -180")
-  expect_error(otp_clean_input(c(0,91)), regexp = "is not <= 90")
-  expect_error(otp_clean_input(c(0,-91)), regexp = "is not <= 90")
+  expect_error(otp_clean_input(c(181, 2)), regexp = "is not <= 180")
+  expect_error(otp_clean_input(c(-181, 2)), regexp = "is not >= -180")
+  expect_error(otp_clean_input(c(0, 91)), regexp = "is not <= 90")
+  expect_error(otp_clean_input(c(0, -91)), regexp = "is not >= -90")
   expect_error(otp_clean_input(1), regexp = " Must have length 2")
-  expect_error(otp_clean_input("1","2"), regexp = "is not in a valid format")
+  expect_error(otp_clean_input("1", "2"), regexp = "is not in a valid format")
 
-  r1 <- otp_clean_input(c(1,2))
+  r1 <- otp_clean_input(c(1, 2))
   expect_is(r1, "matrix")
   expect_true(nrow(r1) == 1)
-  expect_true(ncol(r1) == 1)
+  expect_true(ncol(r1) == 2)
 
-  r2 <- otp_clean_input(matrix(c(1,2,3,4), ncol = 2))
+  r2 <- otp_clean_input(matrix(c(1, 2, 3, 4), ncol = 2))
   expect_is(r2, "matrix")
   expect_true(nrow(r2) == 2)
   expect_true(ncol(r2) == 2)
 
-  r3 <- sf::st_as_sf(data.frame(id = 1, geometry = sf::st_sfc(sf::st_point( c(1,1)))))
+  r3 <- sf::st_as_sf(data.frame(id = 1, geometry = sf::st_sfc(sf::st_point(c(1, 1)))))
   r3 <- otp_clean_input(r3)
   expect_is(r3, "matrix")
   expect_true(nrow(r3) == 1)
   expect_true(ncol(r3) == 2)
-
 })
 
 test_that("test otp_json2sf", {
@@ -45,16 +44,19 @@ test_that("test otp_json2sf", {
 })
 
 test_that("test correct_distances", {
-  r1 <- correct_distances(c(0,1,2,3,0,1,2))
+  r1 <- correct_distances(c(0, 1, 2, 3, 0, 1, 2))
   expect_identical(r1, c(0, 1, 2, 3, 3, 4, 5))
 })
 
 test_that("test polyline2linestring", {
   r1 <- polyline2linestring("_p~iF~ps|U_ulLnnqC_mqNvxq`@")
-  t1 <-  sf::st_linestring(matrix(c(-120.2, 38.5,
-                                    -120.95, 40.7,
-                                    -126.453, 43.252),
-                                  ncol = 2, byrow = TRUE))
+  t1 <- sf::st_linestring(matrix(c(
+    -120.2, 38.5,
+    -120.95, 40.7,
+    -126.453, 43.252
+  ),
+  ncol = 2, byrow = TRUE
+  ))
   # Out by millionths of a degree
   r1 <- sf::st_coordinates(r1)
   t1 <- sf::st_coordinates(t1)
@@ -65,17 +67,24 @@ test_that("test polyline2linestring", {
   attributes(t1) <- NULL
   attributes(r1) <- NULL
 
-  expect_identical(r1,t1)
+  expect_identical(r1, t1)
 
   # Check with Geometries
-  r2 <- polyline2linestring("_p~iF~ps|U_ulLnnqC_mqNvxq`@",
-                            data.frame(first = c(0, 5, 8),
-                                       second = c(3,7,10),
-                                       distance = c(0, 250000, 530000)))
-  t2 <-  sf::st_linestring(matrix(c(-120.2, 38.5, 3,
-                                    -120.95, 40.7, 7,
-                                    -126.453, 43.252, 10),
-                                  ncol = 3, byrow = TRUE))
+  r2 <- polyline2linestring(
+    "_p~iF~ps|U_ulLnnqC_mqNvxq`@",
+    data.frame(
+      first = c(0, 5, 8),
+      second = c(3, 7, 10),
+      distance = c(0, 250000, 530000)
+    )
+  )
+  t2 <- sf::st_linestring(matrix(c(
+    -120.2, 38.5, 3,
+    -120.95, 40.7, 7,
+    -126.453, 43.252, 10
+  ),
+  ncol = 3, byrow = TRUE
+  ))
   # Out by millionths of a degree
   r2 <- sf::st_coordinates(r2)
   t2 <- sf::st_coordinates(t2)
@@ -86,10 +95,5 @@ test_that("test polyline2linestring", {
   attributes(t2) <- NULL
   attributes(r2) <- NULL
 
-  expect_identical(r2,t2)
+  expect_identical(r2, t2)
 })
-
-
-
-
-

@@ -28,7 +28,7 @@ Imports:
     sf,
     googlePolylines,
     dplyr,
-    geosphere,
+    geodist,
     jsonlite,
     pbapply
 RoxygenNote: 6.1.1

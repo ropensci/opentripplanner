@@ -181,8 +181,7 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
       "optimize",
       "rctx"
     )
-    message(paste0("The folloing values where not checked: ",paste(not_checked, collapse = ", ")))
-
+    message(paste0("The folloing values where not checked: ", paste(not_checked, collapse = ", ")))
   } else if (type == "build") {
     # logical
     checkmate::assert_logical(config$transit, len = 1, null.ok = TRUE)
@@ -248,7 +247,6 @@ otp_make_config <- function(type) {
     config_build <- otp_make_config("build")
 
     config <- c(config_router, config_build)
-
   } else if (type == "build") {
     config_names <- c(
       "htmlAnnotations", "transit", "useTransfersTxt", "parentStopLinking", "stationTransfers",

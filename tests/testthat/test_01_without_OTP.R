@@ -1,10 +1,10 @@
 # This tests will run without OTP setup.
 context("Test function without an OTP connection")
-#make sure no OTP
+# make sure no OTP
 foo <- suppressWarnings(otp_stop(FALSE))
 rm(foo)
 
-#setup empy files
+# setup empy files
 otpcon <- otp_connect(check = FALSE)
 dir.create(file.path(tempdir(), "otp"))
 dir.create(file.path(tempdir(), "otp", "graphs"))
@@ -75,16 +75,16 @@ test_that("otp_make_config tests", {
   expect_true(otp_validate_config(config_build))
   expect_true(otp_validate_config(config_otp))
 
-  dir.create(file.path(tempdir(),"graphs"))
-  dir.create(file.path(tempdir(),"graphs","default"))
+  dir.create(file.path(tempdir(), "graphs"))
+  dir.create(file.path(tempdir(), "graphs", "default"))
 
   otp_write_config(config_router, dir = tempdir())
   otp_write_config(config_build, dir = tempdir())
   otp_write_config(config_otp, dir = tempdir())
 
-  expect_true(file.exists(file.path(tempdir(),"graphs","default","router-config.json")))
-  expect_true(file.exists(file.path(tempdir(),"graphs","default","build-config.json")))
-  expect_true(file.exists(file.path(tempdir(),"graphs","default","otp-config.json")))
+  expect_true(file.exists(file.path(tempdir(), "graphs", "default", "router-config.json")))
+  expect_true(file.exists(file.path(tempdir(), "graphs", "default", "build-config.json")))
+  expect_true(file.exists(file.path(tempdir(), "graphs", "default", "otp-config.json")))
 })
 
 test_that("otp_stop tests", {
