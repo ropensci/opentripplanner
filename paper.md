@@ -7,6 +7,12 @@ authors:
 - affiliation: 2
   name: Marcus Young
   orcid: 0000-0003-4627-1116
+- affiliation: 1
+  name: Robin Lovelace
+  orcid: 0000-0001-5679-6536
+- affiliation: 1
+  name: Layik Hama
+  orcid: 0000-0003-1912-4890
 date: "01 Apr 2019"
 output:
   html_document: default
