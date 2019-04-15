@@ -20,8 +20,15 @@ This function stops an already running OTP instance
 \details{
 The function assumes you have run otp_setup()
 }
+\examples{
+\dontrun{
+otp_stop()
+}
+}
 \seealso{
 Other setup: \code{\link{otp_build_graph}},
-  \code{\link{otp_setup}}
+  \code{\link{otp_make_config}}, \code{\link{otp_setup}},
+  \code{\link{otp_validate_config}},
+  \code{\link{otp_write_config}}
 }
 \concept{setup}

@@ -21,3 +21,15 @@ more complex parameters are not checked. For more details see:
 http://docs.opentripplanner.org/en/latest/Configuration
 http://dev.opentripplanner.org/javadoc/1.3.0/org/opentripplanner/routing/core/RoutingRequest.html
 }
+\examples{
+\dontrun{
+conf <- otp_make_config("build")
+otp_validate_config(conf)
+}
+}
+\seealso{
+Other setup: \code{\link{otp_build_graph}},
+  \code{\link{otp_make_config}}, \code{\link{otp_setup}},
+  \code{\link{otp_stop}}, \code{\link{otp_write_config}}
+}
+\concept{setup}

@@ -62,12 +62,14 @@
 #' otpcon <- otp_connect()
 #' otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1))
 #' otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
-#'          mode = c("WALK","TRANSIT"))
+#'   mode = c("WALK", "TRANSIT")
+#' )
 #' otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
-#'          mode = "BICYCLE", arriveBy = TRUE,
-#'          date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")))
+#'   mode = "BICYCLE", arriveBy = TRUE,
+#'   date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M"))
+#' )
 #' }
-
+#' 
 otp_plan <- function(otpcon = NA,
                      fromPlace = NA,
                      toPlace = NA,
@@ -90,7 +92,7 @@ otp_plan <- function(otpcon = NA,
       "TRANSIT", "WALK", "BICYCLE",
       "CAR", "BUS", "RAIL"
     ),
-    empty.ok = F
+    empty.ok = FALSE
   )
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
@@ -259,7 +261,7 @@ otp_clean_input <- function(imp, imp_name) {
   # For single point inputs
   if (all(class(imp) == "numeric")) {
     checkmate::assert_numeric(imp, len = 2)
-    imp <- matrix(imp, nrow = 1, byrow = T)
+    imp <- matrix(imp, nrow = 1, byrow = TRUE)
   }
   # For SF inputs
   if ("sf" %in% class(imp)) {
@@ -277,7 +279,7 @@ otp_clean_input <- function(imp, imp_name) {
       min.rows = 1,
       min.cols = 2,
       max.cols = 2,
-      null.ok = F
+      null.ok = FALSE
     )
     checkmate::assert_numeric(imp[, 1], lower = -180, upper = 180)
     checkmate::assert_numeric(imp[, 2], lower = -90, upper = 90)

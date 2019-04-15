@@ -19,16 +19,16 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Marcus Young \email{M.A.Young@soton.ac.uk} (0000-0003-4627-1116)
+\strong{Maintainer}: Malcolm Morgan \email{m.morgan1@leeds.ac.uk} (0000-0002-9488-9183)
 
 Authors:
 \itemize{
-  \item Malcolm Morgan \email{m.morgan1@leeds.ac.uk} (0000-0002-9488-9183)
+  \item Marcus Young \email{M.A.Young@soton.ac.uk} (0000-0003-4627-1116)
+  \item Robin Lovelace \email{rob00x@gmail.com} (0000-0001-5679-6536)
 }
 
 Other contributors:
 \itemize{
-  \item Robin Lovelace \email{rob00x@gmail.com} (0000-0001-5679-6536) [contributor]
   \item Layik Hama \email{layik.hama@gmail.com} (0000-0003-1912-4890) [contributor]
 }
 

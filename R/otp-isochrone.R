@@ -48,7 +48,7 @@ otp_isochrone <- function(otpcon = NA,
       "TRANSIT", "WALK", "BICYCLE",
       "CAR", "BUS", "RAIL"
     ),
-    empty.ok = F
+    empty.ok = FALSE
   )
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
@@ -90,7 +90,7 @@ otp_isochrone <- function(otpcon = NA,
     return(text)
   } else {
     # parse to sf
-    response <- sf::st_read(text, quiet = T)
+    response <- sf::st_read(text, quiet = TRUE)
     response$id <- seq(1, nrow(response))
     return(response)
   }

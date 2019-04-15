@@ -139,7 +139,7 @@ check_router.default <- function(x) {
 #' @noRd
 #'
 check_router.otpconnect <- function(x) {
-  check <- try(httr::GET(make_url(x)), silent = T)
+  check <- try(httr::GET(make_url(x)), silent = TRUE)
   if (class(check) == "try-error") {
     return(check[1])
   } else {

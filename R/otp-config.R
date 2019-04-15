@@ -24,7 +24,11 @@ otp_write_config <- function(config,
 
   # Convert to JSON
   config <- jsonlite::toJSON(config, pretty = TRUE, null = "null", na = "null")
-  jsonlite::write_json(config, file.path(dir, "graphs", router, paste0(type, "-config.json")))
+  jsonlite::write_json(config,
+                       file.path(dir,
+                                 "graphs",
+                                 router,
+                                 paste0(type, "-config.json")))
 }
 
 #' Remove NULL values from list
@@ -240,18 +244,17 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
 #' @param type Which type of config file to create, "otp", "build", "router"
 #' @family setup
 #' @details
+#' For more details see:
+#' http://docs.opentripplanner.org/en/latest/Configuration
 #' @examples
 #' \dontrun{
 #' conf <- otp_make_config("build")
 #' conf <- otp_make_config("router")
 #' }
-#' For more details see:
-#' http://docs.opentripplanner.org/en/latest/Configuration
-#' otp_validate_config
 #' @export
 
 otp_make_config <- function(type) {
-  checkmate::assert_subset(type, choices = c("otp", "build", "router"), empty.ok = F)
+  checkmate::assert_subset(type, choices = c("otp", "build", "router"), empty.ok = FALSE)
 
   if (type == "otp") {
     config_router <- otp_make_config("router")

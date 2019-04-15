@@ -16,6 +16,15 @@ otp_write_config(config, dir = NULL, router = "default")
 \description{
 Takes a config list produced by `otp_make_config()` and saves it as json file for OTP
 }
-\seealso{
-`otp_make_config()`
+\examples{
+\dontrun{
+conf <- otp_make_config("build")
+otp_write_config(conf, dir = "C:/otp")
 }
+}
+\seealso{
+Other setup: \code{\link{otp_build_graph}},
+  \code{\link{otp_make_config}}, \code{\link{otp_setup}},
+  \code{\link{otp_stop}}, \code{\link{otp_validate_config}}
+}
+\concept{setup}
