@@ -83,27 +83,6 @@ To install Java 8 on Linux, we recommend instructions at [medium.com/coderscorne
 
 You can also compile the latest version of OTP from source, as outlined at [docs.opentripplanner.org/](http://docs.opentripplanner.org/en/latest/Getting-OTP/).
 
-## Check the installation
-
-To check if the installation has worked, run the following lines of code:
-
-```{r, eval=FALSE}
-library(opentripplanner)
-path_otp <- "otp" # for system install
-# path_otp <- "~/programs/otp.jar" # for local java file
-path_data <- getwd()
-dir.create("graphs")
-dir.create("graphs/default")
-download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip", 
-              destfile = "isle-of-wight-demo.zip", mode="wb")
-unzip("isle-of-wight-demo.zip", exdir = "graphs/default")
-unlink("isle-of-wight-demo.zip")
-log <- otp_build_graph(otp = path_otp, dir = path_data) 
-otp_setup(otp = path_otp, dir = path_data)
-otp_stop()
-```
-
-
 ## Getting Data for OTP
 
 To use OTP on your local computer you will  need data about your location of interest, such as where the roads are, what is the public transport timetable etc.
@@ -118,7 +97,7 @@ OTP can use public transport timetable data in the [GTFS format](https://develop
 
 ### Elevation Data
 
-You can add terrain information to your routes, especially useful for walking and cycling using GeoTIFF images. You can find worldwide elevation data at https://www2.jpl.nasa.gov/srtm/.
+You can add terrain information to your routes, especially useful for walking and cycling using GeoTIFF images. You can find worldwide elevation data from [NASA](https://www2.jpl.nasa.gov/srtm/).
 
 
 ## Next Steps

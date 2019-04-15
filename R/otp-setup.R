@@ -211,7 +211,10 @@ otp_setup <- function(otp = NULL,
 #' The function assumes you have run otp_setup()
 #' @return This function return a message but no object
 #' @family setup
-#'
+#' @examples
+#' \dontrun{
+#' otp_stop()
+#' }
 #' @export
 otp_stop <- function(warn = TRUE) {
   if (warn) {

@@ -6,10 +6,12 @@
 #' @param config A named list made/modified from `otp_make_config()`
 #' @param dir Path to folder where data for OTP is to be stored
 #' @param router name of the router, default is "default"
-#'
-#' @seealso
-#' `otp_make_config()`
-#'
+#' @family setup
+#' @examples
+#' \dontrun{
+#' conf <- otp_make_config("build")
+#' otp_write_config(conf, dir = "C:/otp")
+#' }
 #' @export
 
 otp_write_config <- function(config,
@@ -55,7 +57,7 @@ otp_list_clean <- function(.data, fun = function(x) {
 #'
 #' @param config A named list made/modified from `otp_make_config()`
 #' @param type type of config file
-#'
+#' @family setup
 #' @details
 #'
 #' Performs basic validity checks on class, max/min values etc as appropriate, some of
@@ -63,7 +65,11 @@ otp_list_clean <- function(.data, fun = function(x) {
 #'
 #' http://docs.opentripplanner.org/en/latest/Configuration
 #' http://dev.opentripplanner.org/javadoc/1.3.0/org/opentripplanner/routing/core/RoutingRequest.html
-#'
+#' @examples
+#' \dontrun{
+#' conf <- otp_make_config("build")
+#' otp_validate_config(conf)
+#' }
 #' @export
 
 otp_validate_config <- function(config, type = attributes(config)$config_type) {
@@ -232,11 +238,16 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
 #' populates the defaults values.
 #'
 #' @param type Which type of config file to create, "otp", "build", "router"
-#'
+#' @family setup
 #' @details
-#'
+#' @examples
+#' \dontrun{
+#' conf <- otp_make_config("build")
+#' conf <- otp_make_config("router")
+#' }
 #' For more details see:
 #' http://docs.opentripplanner.org/en/latest/Configuration
+#' otp_validate_config
 #' @export
 
 otp_make_config <- function(type) {

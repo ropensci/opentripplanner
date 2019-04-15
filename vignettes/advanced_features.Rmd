@@ -20,8 +20,9 @@ For this vignette, we will use the same data as the [Getting Started vignette](h
 ```{r eval =FALSE}
 library(opentripplanner)
 # Path to a folder containing the OTP.jar file, change to where you saved the file.
-path_otp <- "C:/Users/Public/otp.jar"
-path_data <- getwd() # find the current working directory
+path_data <- file.path(tempdir(),"OTP")
+path_otp <- file.path(path_data,"otp.jar")
+# Build Graph and start OTP
 log <- otp_build_graph(otp = path_otp, dir = path_data)
 otp_setup(otp = path_otp, dir = path_data, analyst = T)
 otpcon <- otp_connect()
@@ -63,7 +64,7 @@ You can plot the routes using `tmap`
 
 If you do plot all the routes it should look something like this:
 
-```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Rye Ferry"}
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:route2airport}Driving Routes to Ryde Ferry"}
 knitr::include_graphics("images/routes_to_ferry.jpg")
 ```
 
