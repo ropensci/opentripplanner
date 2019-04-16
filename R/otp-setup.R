@@ -130,9 +130,7 @@ otp_setup <- function(otp = NULL,
 
 
   # Set up OTP
-  if (checkmate::testOS("linux")) {
-    message("You're on linux, well done")
-  } else if (checkmate::testOS("windows") | checkmate::testOS("mac")) {
+  if (checkmate::testOS("windows") | checkmate::testOS("mac") | checkmate::testOS("linux")) {
     text <- paste0(
       "java -Xmx", memory, 'G -jar "',
       otp,

@@ -37,11 +37,12 @@ The following code downloads the file into a temporary folder called `OTP` you m
 
 ```{r, eval=FALSE}
 # download file (may want to do this manually)
-dir.create(file.path(tempdir(),"OTP"))
-path_data <- file.path(tempdir(),"OTP")
-path_otp <- file.path(path_data,"otp.jar")
-url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
-download.file(url = url_otp, destfile = path_otp, mode="wb")
+dir.create(file.path(tempdir(), "OTP"))
+path_data <- file.path(tempdir(), "OTP")
+path_otp <- file.path(path_data, "otp.jar")
+url_otp <-
+  "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
+download.file(url = url_otp, destfile = path_otp, mode = "wb")
 ```
 
 For more information and advanced options, see http://docs.opentripplanner.org/en/latest/Getting-OTP/ 
