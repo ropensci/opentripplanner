@@ -219,12 +219,20 @@ otp_stop <- function(warn = TRUE) {
     readline(prompt = "This will force Java to close, Press [enter] to continue, [escape] to abort")
   }
 
-  if (checkmate::testOS("linux")) {
-    message("You're on linux, this function is not yet supported")
+  if (checkmate::testOS("linux" | checkmate::testOS("mac"))) {
+    message("The following Java instances have been found:")
+    system("ps -A |grep java")
+    kill_all <- utils::askYesNo("Kill all of them?")
+    if(kill_all) {
+      system("pkill -9 java")
+    } else {
+      message("Kill the instances manually, e.g. with:\n",
+               "kill -9 PID\n",
+              "where PID is the id of the Java instance"
+              )
+    }
   } else if (checkmate::testOS("windows")) {
     system("Taskkill /IM java.exe /F", intern = TRUE)
-  } else if (checkmate::testOS("mac")) {
-    message("You're on Mac, this function is not yet supported")
   } else {
     message("You're on and unknow OS, this function is not yet supported")
   }
