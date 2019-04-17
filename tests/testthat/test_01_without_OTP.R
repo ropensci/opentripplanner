@@ -42,6 +42,41 @@ test_that("otp_plan input validation", {
   ),
   regexp = "Failed to connect to localhost port 8080: Connection refused"
   )
+  expect_error(otp_plan(otpcon,
+                        fromPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+                        toPlace = matrix(c(1, 1, 2, 2, 3, 3), ncol = 2)
+  ),
+  regexp = "Number of fromPlaces and toPlaces do not match"
+  )
+  expect_error(otp_plan(otpcon,
+                        toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+                        fromPlace = matrix(c(1, 1), ncol = 2)
+  ),
+  regexp = "Failed to connect to localhost port 8080: Connection refused"
+  )
+  expect_error(otp_plan(otpcon,
+                        fromPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+                        toPlace = matrix(c(1, 1), ncol = 2)
+  ),
+  regexp = "Failed to connect to localhost port 8080: Connection refused"
+  )
+  # ncore
+  expect_error(otp_plan(otpcon,
+                        fromPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+                        toPlace = matrix(c(1, 1), ncol = 2),
+                        ncore = 2
+  ),
+  regexp = "Failed to connect to localhost port 8080: Connection refused"
+  )
+  # linestring
+  ls <- sf::st_as_sf(data.frame(id = 1,
+                                geom = sf::st_sfc(sf::st_linestring(rbind(c(0,0),c(1,1),c(2,1))))))
+  expect_error(otp_plan(otpcon,
+                        fromPlace = ls,
+                        toPlace = matrix(c(1, 1), ncol = 2)
+  ),
+  regexp = "contains non-POINT geometry"
+  )
 })
 
 test_that("otp_geocode input validation", {
