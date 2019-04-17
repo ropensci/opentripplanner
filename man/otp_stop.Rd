@@ -4,7 +4,7 @@
 \alias{otp_stop}
 \title{Stop and OTP Instance}
 \usage{
-otp_stop(warn = TRUE)
+otp_stop(warn = TRUE, kill_all = TRUE)
 }
 \arguments{
 \item{warn}{Logical, should you get a warning message}

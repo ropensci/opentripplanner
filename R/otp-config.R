@@ -24,11 +24,15 @@ otp_write_config <- function(config,
 
   # Convert to JSON
   config <- jsonlite::toJSON(config, pretty = TRUE, null = "null", na = "null")
-  jsonlite::write_json(config,
-                       file.path(dir,
-                                 "graphs",
-                                 router,
-                                 paste0(type, "-config.json")))
+  jsonlite::write_json(
+    config,
+    file.path(
+      dir,
+      "graphs",
+      router,
+      paste0(type, "-config.json")
+    )
+  )
 }
 
 #' Remove NULL values from list

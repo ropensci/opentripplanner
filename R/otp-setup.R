@@ -223,17 +223,18 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
   if (checkmate::testOS("linux") | checkmate::testOS("mac")) {
     message("The following Java instances have been found:")
     system("ps -A |grep java")
-    if(!kill_all) {
+    if (!kill_all) {
       kill_all <- utils::askYesNo("Kill all of them?")
     }
 
-    if(kill_all) {
+    if (kill_all) {
       system("pkill -9 java")
     } else {
-      message("Kill the instances manually, e.g. with:\n",
-               "kill -9 PID\n",
-              "where PID is the id of the Java instance"
-              )
+      message(
+        "Kill the instances manually, e.g. with:\n",
+        "kill -9 PID\n",
+        "where PID is the id of the Java instance"
+      )
     }
   } else if (checkmate::testOS("windows")) {
     system("Taskkill /IM java.exe /F", intern = TRUE)
