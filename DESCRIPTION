@@ -24,17 +24,17 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     checkmate,
-    httr,
-    sf,
-    googlePolylines,
     dplyr,
     geodist,
+    googlePolylines,
+    httr,
     jsonlite,
-    pbapply
+    pbapply,
+    sf
 RoxygenNote: 6.1.1
 Suggests: 
-    testthat,
+    covr,
     knitr,
     rmarkdown,
-    covr
+    testthat
 VignetteBuilder: knitr
