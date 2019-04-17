@@ -1,8 +1,8 @@
 # This tests will run without OTP setup.
 context("Test function without an OTP connection")
 # make sure no OTP
-foo <- suppressWarnings(otp_stop(FALSE))
-rm(foo)
+# foo <- suppressWarnings(otp_stop(warn = FALSE))
+# rm(foo)
 
 # setup empy files
 otpcon <- otp_connect(check = FALSE)

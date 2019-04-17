@@ -8,6 +8,8 @@ otp_stop(warn = TRUE)
 }
 \arguments{
 \item{warn}{Logical, should you get a warning message}
+
+\item{kill_all}{Logical, should all Java instances be killed?}
 }
 \value{
 This function return a message but no object
@@ -22,7 +24,7 @@ The function assumes you have run otp_setup()
 }
 \examples{
 \dontrun{
-otp_stop()
+otp_stop(kill_all = FALSE)
 }
 }
 \seealso{

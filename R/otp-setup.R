@@ -204,6 +204,7 @@ otp_setup <- function(otp = NULL,
 #' The function allows the parameters to be defined in R and automatically passed to Java.
 #' This function stops an already running OTP instance
 #' @param warn Logical, should you get a warning message
+#' @param kill_all Logical, should all Java instances be killed?
 #'
 #' @details
 #' The function assumes you have run otp_setup()
@@ -211,7 +212,7 @@ otp_setup <- function(otp = NULL,
 #' @family setup
 #' @examples
 #' \dontrun{
-#' otp_stop()
+#' otp_stop(kill_all = FALSE)
 #' }
 #' @export
 otp_stop <- function(warn = TRUE) {
@@ -222,7 +223,10 @@ otp_stop <- function(warn = TRUE) {
   if (checkmate::testOS("linux" | checkmate::testOS("mac"))) {
     message("The following Java instances have been found:")
     system("ps -A |grep java")
-    kill_all <- utils::askYesNo("Kill all of them?")
+    if(!kill_all) {
+      kill_all <- utils::askYesNo("Kill all of them?")
+    }
+
     if(kill_all) {
       system("pkill -9 java")
     } else {
