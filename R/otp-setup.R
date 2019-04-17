@@ -215,12 +215,12 @@ otp_setup <- function(otp = NULL,
 #' otp_stop(kill_all = FALSE)
 #' }
 #' @export
-otp_stop <- function(warn = TRUE) {
+otp_stop <- function(warn = TRUE, kill_all = TRUE) {
   if (warn) {
     readline(prompt = "This will force Java to close, Press [enter] to continue, [escape] to abort")
   }
 
-  if (checkmate::testOS("linux" | checkmate::testOS("mac"))) {
+  if (checkmate::testOS("linux") | checkmate::testOS("mac")) {
     message("The following Java instances have been found:")
     system("ps -A |grep java")
     if(!kill_all) {
