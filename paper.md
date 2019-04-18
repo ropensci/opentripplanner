@@ -28,7 +28,7 @@ affiliations:
 - index: 1
   name: Institute for Transport Studies, University of Leeds, UK
 - index: 2
-  name: Southampton University, UK
+  name: Transportation Research Group, University of Southampton, UK
 bibliography: paper.bib
 ---
 
@@ -43,20 +43,20 @@ citr::tidy_bib_file(rmd_file = "paper.md", messy_bibliography = "paper.bib")
 
 **opentripplanner** provides functions that enable multi-modal routing in R.
 It provides an interface to the OpenTripPlanner (OTP) Java routing service, which allows calculation of routes on large transport networks, locally or via calls to a remote server.
-The package contains three groups of functions for: (1) setting up and managing of a local instance of OTP; (2) connecting to OTP locally or remotely; and (3) sending requests to the OTP API and importing the results and convert them into appropriate classes for further analysis.
+The package contains three groups of functions for: (1) setting up and managing a local instance of OTP; (2) connecting to OTP locally or remotely; and (3) sending requests to the OTP API and importing the results and converting them into appropriate classes for further analysis.
 
 # Motivation
 
 Routing, the process of calculating paths between points in geographic space that follow a transport network, is a fundamental part of transport planning and vital to solving many real-world transport problems.
-The outputs of a routing service, which can calculate many routes over a large area, comprising of coordinates and other data representing a movement that is in some way 'optimal', based on a range of criteria (that the user should understand and be able to change).
+The outputs of a routing service, which can calculate many routes over a large area, comprise of coordinates and other data representing a movement that is in some way 'optimal', based on a range of criteria (that the user should understand and be able to change).
 Routing services such as that provided by Google Maps are a well-known and increasingly vital component of personal travel planning for many people [@bast_fast_2010].
 Less well-known, but perhaps equally important, is that routing services are also key to understanding aggregate travel patterns and guiding policy and commercial decisions [@giusti_new_2018].
 To meet this need for route planning capabilities a wide range of both proprietary and open source tools have been created.
 
 # Functionality
 
-The [OpenTripPlanner](https://www.opentripplanner.org/) (OTP) is written in Java and designed to work with [Open Street Map](https://www.openstreetmap.org) (OSM) data for road-based modes (Car, Bike, Walking) and [General Transit Feed Specification]( https://developers.google.com/transit/gtfs/) (GTFS) data for public transit (Bus, Train, Metro).
-OTP is unusual among open source routing tools in its ability to account for a wide range of modes of travel e.g. bicycle hire, and support for complex multi-stage multi-modal journeys such as park and ride. 
+[OpenTripPlanner](https://www.opentripplanner.org/) (OTP) is written in Java and designed to work with [Open Street Map](https://www.openstreetmap.org) (OSM) data for road-based modes (Car, Bike, Walking) and [General Transit Feed Specification]( https://developers.google.com/transit/gtfs/) (GTFS) data for public transit (Bus, Train, Metro).
+OTP is unusual among open source routing tools in its ability to account for a wide range of modes of travel, e.g. bicycle hire, and support for complex multi-stage multi-modal journeys such as park and ride. 
 However, OTP’s primary purpose is to support public facing websites such as TriMet thus its analytical capabilities are limited.
 Conversely, the R language is well suited to statistical and spatial analysis but has no route planning capabilities.
 
@@ -68,7 +68,7 @@ The package also supports multi-core operation to take advantage of OTP’s mult
 Results are returned in the widely use [SF data.frame]( https://cran.r-project.org/web/packages/sf/index.html) format.
 Although performance is dependant on the size of the map being routed over, it is typical to achieve more than 10 routes per second.
 
-The package has been developed from an [original tutorial]( https://github.com/marcusyoung/otp-tutorial/raw/master/intro-otp.pdf) into a package as part of research at [Centre for Research into Energy Demand Solutions]( https://www.creds.ac.uk/) and the [Institute of Transport Studies](https://environment.leeds.ac.uk/transport).
+The package has been developed from a set of R functions that formed part of an intermediate-level [OTP tutorial](https://github.com/marcusyoung/otp-tutorial/raw/master/intro-otp.pdf) as part of research at [Centre for Research into Energy Demand Solutions]( https://www.creds.ac.uk/) and the [Institute of Transport Studies](https://environment.leeds.ac.uk/transport).
 
 # Reproducible demonstration
 
@@ -78,7 +78,7 @@ First, download the data and OTP.
 
 ```{r, eval=FALSE}
 library(opentripplanner)
-# Download the OTP
+# Download OTP
 dir.create(file.path(tempdir(), "OTP"))
 path_data <- file.path(tempdir(), "OTP")
 path_otp <- file.path(path_data, "otp.jar")
