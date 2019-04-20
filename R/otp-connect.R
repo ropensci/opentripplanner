@@ -12,22 +12,27 @@
 #'     instance and router are confirmed reachable. Optional, default is TRUE.
 #' @return Returns an S3 object of class otpconnect. If \code{check} is TRUE
 #'     and the router is not reachable the object is not returned.
-#' @examples \dontrun{
+#' @family connect
+#' @examples
+#' \dontrun{
 #' otpcon <- otp_connect()
-#' otpcon <- otp_connect(router = "UK2018",
-#'                       ssl = TRUE)
-#' otpcon <- otp_connect(hostname = "ec2.us-west-2.compute.amazonaws.com",
-#'                       router = "UK2018",
-#'                       port = 8888,
-#'                       ssl = TRUE)
+#' otpcon <- otp_connect(
+#'   router = "UK2018",
+#'   ssl = TRUE
+#' )
+#' otpcon <- otp_connect(
+#'   hostname = "ec2.us-west-2.compute.amazonaws.com",
+#'   router = "UK2018",
+#'   port = 8888,
+#'   ssl = TRUE
+#' )
 #' }
 #' @export
 otp_connect <- function(hostname = "localhost",
                         router = "default",
                         port = 8080,
                         ssl = FALSE,
-                        check = TRUE)
-{
+                        check = TRUE) {
   # argument checks
 
   coll <- checkmate::makeAssertCollection()
@@ -56,7 +61,7 @@ otp_connect <- function(hostname = "localhost",
       message("Router ", make_url(otpcon), " exists")
       return(otpcon)
     } else {
-      stop("Router ", make_url(otpcon),  " does not exist")
+      stop("Router ", make_url(otpcon), " does not exist")
     }
   } else {
     return(otpcon)
@@ -65,13 +70,21 @@ otp_connect <- function(hostname = "localhost",
 
 # otpconnect class method to generate baseurl
 
-make_url <- function(x)
-{
+#' Make URL
+#' @param x otpcon
+#' @family internal
+#' @noRd
+#'
+make_url <- function(x) {
   UseMethod("make_url", x)
 }
 
-make_url.default <- function(x)
-{
+#' Make URL.defualt
+#' @param x otpcon
+#' @family internal
+#' @noRd
+#'
+make_url.default <- function(x) {
   warning(
     "make_url does not know how to handle objects of class ",
     class(x),
@@ -80,28 +93,38 @@ make_url.default <- function(x)
   return(NULL)
 }
 
-make_url.otpconnect <- function(x)
-{
+#' Make URL.optcon
+#' @param x otpcon
+#' @family internal
+#' @noRd
+#'
+make_url.otpconnect <- function(x) {
   url <- paste0(
-    ifelse(isTRUE(x$ssl), 'https://', 'http://'),
+    ifelse(isTRUE(x$ssl), "https://", "http://"),
     x$hostname,
-    ':',
+    ":",
     x$port,
-    '/otp/routers/',
+    "/otp/routers/",
     x$router
   )
   return(url)
 }
 
-# otpconnect method to check if router exists
-
-check_router <- function(x)
-{
+#' otpconnect method to check if router exists
+#' @param x otpcon
+#' @family internal
+#' @noRd
+#'
+check_router <- function(x) {
   UseMethod("check_router", x)
 }
 
-check_router.default <- function(x)
-{
+#' otpconnect method to check if router exists (default)
+#' @param x otpcon
+#' @family internal
+#' @noRd
+#'
+check_router.default <- function(x) {
   warning(
     "check_router does not know how to handle objects of class ",
     class(x),
@@ -110,13 +133,16 @@ check_router.default <- function(x)
   return(NULL)
 }
 
-check_router.otpconnect <- function(x)
-{
-  check <- try(httr::GET(make_url(x)), silent = T)
-  if(class(check) == "try-error"){
+#' otpconnect method to check if router exists (otpcon)
+#' @param x otpcon
+#' @family internal
+#' @noRd
+#'
+check_router.otpconnect <- function(x) {
+  check <- try(httr::GET(make_url(x)), silent = TRUE)
+  if (class(check) == "try-error") {
     return(check[1])
-  }else{
+  } else {
     return(check$status_code)
   }
-
 }

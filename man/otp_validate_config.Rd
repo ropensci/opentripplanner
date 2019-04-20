@@ -12,12 +12,24 @@ otp_validate_config(config, type = attributes(config)$config_type)
 \item{type}{type of config file}
 }
 \description{
-Checks if the list of OTP configiration options is valid
+Checks if the list of OTP configuration options is valid
 }
 \details{
-Performs basic validity checks on class, max/min values etc as appropiate, some of
-more compex parameters are not checked. For more details see:
+Performs basic validity checks on class, max/min values etc as appropriate, some of
+more complex parameters are not checked. For more details see:
 
 http://docs.opentripplanner.org/en/latest/Configuration
 http://dev.opentripplanner.org/javadoc/1.3.0/org/opentripplanner/routing/core/RoutingRequest.html
 }
+\examples{
+\dontrun{
+conf <- otp_make_config("build")
+otp_validate_config(conf)
+}
+}
+\seealso{
+Other setup: \code{\link{otp_build_graph}},
+  \code{\link{otp_make_config}}, \code{\link{otp_setup}},
+  \code{\link{otp_stop}}, \code{\link{otp_write_config}}
+}
+\concept{setup}

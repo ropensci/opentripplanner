@@ -34,12 +34,10 @@ After 5 minutes (or if wait is FALSE) the function will return R to your control
 OTP is run in Java and requires Java commands to be typed into the command line.
 The function allows the parameters to be defined in R and automatically passed to Java.
 This function sets up a local instance of OTP, for remote versions see documentation.
+
+The function assumes you have run otp_build_graph()
 }
 \details{
-The function assumes you have run otp_build_graph()
-
-
-
 To run an OTP graph must have been created using otp_build_graph and the following files to be in the directory
 specified by the dir variable.
 
@@ -55,3 +53,10 @@ otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data")
 otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5, analyst = TRUE)
 }
 }
+\seealso{
+Other setup: \code{\link{otp_build_graph}},
+  \code{\link{otp_make_config}}, \code{\link{otp_stop}},
+  \code{\link{otp_validate_config}},
+  \code{\link{otp_write_config}}
+}
+\concept{setup}

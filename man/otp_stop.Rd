@@ -4,7 +4,15 @@
 \alias{otp_stop}
 \title{Stop and OTP Instance}
 \usage{
-otp_stop()
+otp_stop(warn = TRUE, kill_all = TRUE)
+}
+\arguments{
+\item{warn}{Logical, should you get a warning message}
+
+\item{kill_all}{Logical, should all Java instances be killed?}
+}
+\value{
+This function return a message but no object
 }
 \description{
 OTP is run in Java and requires Java commands to be typed into the command line.
@@ -14,3 +22,15 @@ This function stops an already running OTP instance
 \details{
 The function assumes you have run otp_setup()
 }
+\examples{
+\dontrun{
+otp_stop(kill_all = FALSE)
+}
+}
+\seealso{
+Other setup: \code{\link{otp_build_graph}},
+  \code{\link{otp_make_config}}, \code{\link{otp_setup}},
+  \code{\link{otp_validate_config}},
+  \code{\link{otp_write_config}}
+}
+\concept{setup}

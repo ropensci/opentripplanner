@@ -43,6 +43,9 @@ date and time, default FALSE}
 
 \item{ncores}{Numeric, number of cores to use when batch processing, default 1, see details}
 }
+\value{
+Returns an SF data.frame of LINESTRINGs
+}
 \description{
 This is the main routing function for OTP and can find single or multiple routes between
 `fromPlace` and `toPlace`.
@@ -78,3 +81,22 @@ The `get_geometry` provides the option to not return the route geometry, and jus
 meta-data (e.g. journey time). This may be useful when creating an Origin:Destination matrix
 and also provides a small performance boost by reduced processing of geometries.
 }
+\examples{
+\dontrun{
+otpcon <- otp_connect()
+otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1))
+otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
+  mode = c("WALK", "TRANSIT")
+)
+otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
+  mode = "BICYCLE", arriveBy = TRUE,
+  date_time = as.POSIXct(strptime("2018-06-03 13:30", "\%Y-\%m-\%d \%H:\%M"))
+)
+}
+
+}
+\seealso{
+Other routing: \code{\link{otp_geocode}},
+  \code{\link{otp_isochrone}}
+}
+\concept{routing}

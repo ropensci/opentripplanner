@@ -1,34 +1,40 @@
 Package: opentripplanner
-Title: Open Trip Planner for R
-Version: 0.0.1.0000
+Title: OpenTripPlanner for R
+Version: 0.1.0.0000
 Authors@R: c(
-    person("Marcus", "Young",   email = "M.A.Young@soton.ac.uk", role = c("aut", "cre")),
-    person("Malcolm", "Morgan", email = "m.morgan1@leeds.ac.uk", role = c("aut"), 
+    person("Marcus", "Young",   email = "M.A.Young@soton.ac.uk", role = c("aut"),
+      comment = c(ORCID = "0000-0003-4627-1116")),
+    person("Malcolm", "Morgan", email = "m.morgan1@leeds.ac.uk", role = c("aut","cre"), 
       comment = c(ORCID = "0000-0002-9488-9183")),
-    person("Robin", "Lovelace", email = "rob00x@gmail.com",      role = "ctb",
+    person("Robin", "Lovelace", email = "rob00x@gmail.com",      role = "aut",
       comment = c(ORCID = "0000-0001-5679-6536")),
     person("Layik", "Hama",     email = "layik.hama@gmail.com",  role = "ctb",
       comment = c(ORCID = "0000-0003-1912-4890"))
     )
-Description: An R interface for Open Trip Planner <http://www.opentripplanner.org/>.
+Maintainer: Malcolm Morgan <m.morgan1@leeds.ac.uk>
+Description: An R interface for OpenTripPlanner <http://www.opentripplanner.org/>.
     OpenTripPlanner (OTP) is an open source platform for multi-modal and multi-agency
-    journey planning written in Java. OTP provides a REST API which Open Trip Planner
+    journey planning written in Java. OTP provides a REST API which OpenTripPlanner
     for R uses to connect to OTP.
-License: GPL-3
+Language: EN-GB
+License: file LICENSE
+URL: https://github.com/ITSLeeds/opentripplanner, https://itsleeds.github.io/opentripplanner/
+BugReports: https://github.com/ITSLeeds/opentripplanner/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
     checkmate,
-    httr,
-    sf,
-    googlePolylines,
     dplyr,
-    geosphere,
+    geodist,
+    googlePolylines,
+    httr,
     jsonlite,
-    pbapply
+    pbapply,
+    sf
 RoxygenNote: 6.1.1
 Suggests: 
-    testthat,
+    covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
