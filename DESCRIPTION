@@ -31,7 +31,6 @@ Imports:
     jsonlite,
     pbapply,
     sf
-Remotes: hypertidy/geodist    
 RoxygenNote: 6.1.1
 Suggests: 
     covr,
