@@ -4,11 +4,11 @@
 \alias{otp_plan}
 \title{Get get a route or routes from the OTP}
 \usage{
-otp_plan(otpcon = NA, fromPlace = NA, toPlace = NA, mode = "CAR",
-  date_time = Sys.time(), arriveBy = FALSE, maxWalkDistance = 1000,
-  walkReluctance = 2, transferPenalty = 0, minTransferTime = 0,
-  numItineraries = 3, full_elevation = FALSE, get_geometry = TRUE,
-  ncores = 1)
+otp_plan(otpcon = NA, fromPlace = NA, toPlace = NA, fromID = NULL,
+  toID = NULL, mode = "CAR", date_time = Sys.time(),
+  arriveBy = FALSE, maxWalkDistance = 1000, walkReluctance = 2,
+  transferPenalty = 0, minTransferTime = 0, numItineraries = 3,
+  full_elevation = FALSE, get_geometry = TRUE, ncores = 1)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
@@ -18,6 +18,10 @@ or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS}
 
 \item{toPlace}{Numeric vector, Longitude/Latitude pair, e.g. `c(-0.088780,51.506383)`,
 or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS}
+
+\item{fromID}{character vector same length as fromPlace}
+
+\item{toID}{character vector same length as toPlace}
 
 \item{mode}{Character vector of modes of travel valid values TRANSIT, WALK,
 BICYCLE, CAR, BUS, RAIL, default CAR}

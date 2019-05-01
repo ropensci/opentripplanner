@@ -9,6 +9,8 @@
 #' or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS
 #' @param toPlace Numeric vector, Longitude/Latitude pair, e.g. `c(-0.088780,51.506383)`,
 #' or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS
+#' @param fromID character vector same length as fromPlace
+#' @param toID character vector same length as toPlace
 #' @param mode Character vector of modes of travel valid values TRANSIT, WALK,
 #' BICYCLE, CAR, BUS, RAIL, default CAR
 #' @param date_time POSIXct, a date and time, defaults to current date and time
@@ -69,10 +71,12 @@
 #'   date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M"))
 #' )
 #' }
-#' 
+#'
 otp_plan <- function(otpcon = NA,
                      fromPlace = NA,
                      toPlace = NA,
+                     fromID = NULL,
+                     toID = NULL,
                      mode = "CAR",
                      date_time = Sys.time(),
                      arriveBy = FALSE,
@@ -102,6 +106,8 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_numeric(walkReluctance, lower = 0, len = 1)
   checkmate::assert_numeric(transferPenalty, lower = 0, len = 1)
   checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
+  checkmate::assert_character(fromID, null.ok = TRUE)
+  checkmate::assert_character(toID, null.ok = TRUE)
 
   if (arriveBy) {
     arriveBy <- "true"
@@ -113,26 +119,46 @@ otp_plan <- function(otpcon = NA,
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
   toPlace <- otp_clean_input(toPlace, "toPlace")
 
+  if(!is.null(fromID)){
+    if(length(fromID) != nrow(fromPlace)){
+      stop("The length of fromID and fromPlace are not the same")
+    }
+  }
+
+  if(!is.null(toID)){
+    if(length(toID) != nrow(toPlace)){
+      stop("The length of toID and toPlace are not the same")
+    }
+  }
+
   # Make sure number of fromPlace or toPlace match
   nrfp <- nrow(fromPlace)
   nrtp <- nrow(toPlace)
   if (nrfp != nrtp) {
     if (nrfp > nrtp & nrtp == 1) {
       toPlace <- toPlace[rep(1, times = nrfp), ]
+      if(!is.null(toID)){
+        toID <- toID[rep(1, times = nrfp), ]
+      }
       warning("repeating toPlace to match length of fromPlace")
     } else if (nrtp > nrfp & nrfp == 1) {
       fromPlace <- fromPlace[rep(1, times = nrtp), ]
+      if(!is.null(fromID)){
+        fromID <- fromID[rep(1, times = nrtp), ]
+      }
       warning("repeating fromPlace to match length of toPlace")
     } else {
       stop("Number of fromPlaces and toPlaces do not match")
     }
   }
 
+
+
   if (ncores > 1) {
     cl <- parallel::makeCluster(ncores)
     parallel::clusterExport(
       cl = cl,
-      varlist = c("otpcon", "fromPlace", "toPlace"),
+      varlist = c("otpcon", "fromPlace", "toPlace","fromID","toID"),
       envir = environment()
     )
     parallel::clusterEvalQ(cl, {
@@ -144,6 +170,8 @@ otp_plan <- function(otpcon = NA,
       otpcon = otpcon,
       fromPlace = fromPlace,
       toPlace = toPlace,
+      fromID = fromID,
+      toID = toID,
       mode = mode,
       date = date,
       time = time,
@@ -165,6 +193,8 @@ otp_plan <- function(otpcon = NA,
       otpcon = otpcon,
       fromPlace = fromPlace,
       toPlace = toPlace,
+      fromID = fromID,
+      toID = toID,
       mode = mode,
       date = date,
       time = time,
@@ -227,22 +257,26 @@ otp_plan <- function(otpcon = NA,
 #' @param otpcon otpcon
 #' @param fromPlace fromplace
 #' @param toPlace toPlace
+#' @param fromID fromID
+#' @param toID toID
 #' @param ... all other variaibles
 #'
 #' @noRd
-otp_get_results <- function(x, otpcon, fromPlace, toPlace,
+otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ... = ...) {
   res <- otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
     toPlace = toPlace[x, ],
+    fromID = fromID[x],
+    toID = toID[x],
     ... = ...
   )
 
-  if ("data.frame" %in% class(res)) {
-    res$fromPlace <- paste(fromPlace[x, ], collapse = ",")
-    res$toPlace <- paste(toPlace[x, ], collapse = ",")
-  }
+  # if ("data.frame" %in% class(res)) {
+  #   res$fromPlace <- paste(fromPlace[x, ], collapse = ",")
+  #   res$toPlace <- paste(toPlace[x, ], collapse = ",")
+  # }
   return(res)
 }
 
@@ -299,6 +333,8 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param fromPlace Numeric vector, Latitude/Longitude pair, e.g. `c(51.529258,-0.134649)`
 #' @param toPlace Numeric vector, Latitude/Longitude pair, e.g. `c(51.506383,-0.088780,)`
+#' @param fromID fromID
+#' @param toID toID
 #' @param mode Character vector of modes of travel valid values TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR
 #' @param date date
 #' @param time time
@@ -321,6 +357,8 @@ otp_clean_input <- function(imp, imp_name) {
 otp_plan_internal <- function(otpcon = NA,
                               fromPlace = NA,
                               toPlace = NA,
+                              fromID = NULL,
+                              toID = NULL,
                               mode = "CAR",
                               date = date,
                               time = time,
@@ -338,7 +376,6 @@ otp_plan_internal <- function(otpcon = NA,
   routerUrl <- make_url(otpcon)
   routerUrl <- paste0(routerUrl, "/plan")
 
-  # Prep Inputs
   fromPlace <- paste(fromPlace, collapse = ",")
   toPlace <- paste(toPlace, collapse = ",")
 
@@ -366,6 +403,17 @@ otp_plan_internal <- function(otpcon = NA,
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
     response <- otp_json2sf(asjson, full_elevation, get_geometry)
+    # Add Ids
+    if(is.null(fromID)){
+      response$fromPlace <- fromPlace
+    }else{
+      response$fromPlace <- fromID
+    }
+    if(is.null(toID)){
+      response$toPlace <- toPlace
+    }else{
+      response$toPlace <- toID
+    }
     return(response)
   } else {
     # there is an error - return the error code and message
