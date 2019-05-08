@@ -211,9 +211,9 @@ otp_plan <- function(otpcon = NA,
 
 
 
-  results_class <- vapply(results, function(x) {
+  results_class <- unlist(lapply(results, function(x) {
     "data.frame" %in% class(x)
-  })
+  }))
   if (all(results_class)) {
     results_routes <- results[results_class]
     results_errors <- NA
@@ -227,9 +227,9 @@ otp_plan <- function(otpcon = NA,
 
   # Bind together
   if (!all(class(results_routes) == "logical")) {
-    if (any(vapply(results, function(x) {
+    if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
-    }))) {
+    })))) {
       suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
       results_routes <- as.data.frame(results_routes)
       results_routes$geometry <- sf::st_sfc(results_routes$geometry)
