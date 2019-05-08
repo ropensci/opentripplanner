@@ -130,7 +130,9 @@ otp_setup <- function(otp = NULL,
 
 
   # Set up OTP
-  if (checkmate::testOS("windows") | checkmate::testOS("mac") | checkmate::testOS("linux")) {
+  if (checkmate::testOS("windows") |
+      checkmate::testOS("mac") |
+      checkmate::testOS("linux")) {
     text <- paste0(
       "java -Xmx", memory, 'G -jar "',
       otp,
@@ -184,13 +186,16 @@ otp_setup <- function(otp = NULL,
           port,
           " in your browser to view the OTP"
         ))
-        utils::browseURL(paste0(ifelse(otpcon$ssl, "https://", "http://"), "localhost:", port))
+        utils::browseURL(paste0(ifelse(otpcon$ssl,
+                                       "https://", "http://"),
+                                "localhost:", port))
         break
       } else {
         if (i < 10) {
           Sys.sleep(30)
         } else {
-          message(paste0(Sys.time(), " OTP is taking an unusually long time to load, releasing R to your control"))
+          message(paste0(Sys.time(),
+                         " OTP is taking an unusually long time to load, releasing R to your control"))
         }
       }
     }

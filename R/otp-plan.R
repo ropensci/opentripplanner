@@ -119,14 +119,14 @@ otp_plan <- function(otpcon = NA,
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
   toPlace <- otp_clean_input(toPlace, "toPlace")
 
-  if(!is.null(fromID)){
-    if(length(fromID) != nrow(fromPlace)){
+  if (!is.null(fromID)) {
+    if (length(fromID) != nrow(fromPlace)) {
       stop("The length of fromID and fromPlace are not the same")
     }
   }
 
-  if(!is.null(toID)){
-    if(length(toID) != nrow(toPlace)){
+  if (!is.null(toID)) {
+    if (length(toID) != nrow(toPlace)) {
       stop("The length of toID and toPlace are not the same")
     }
   }
@@ -137,13 +137,13 @@ otp_plan <- function(otpcon = NA,
   if (nrfp != nrtp) {
     if (nrfp > nrtp & nrtp == 1) {
       toPlace <- toPlace[rep(1, times = nrfp), ]
-      if(!is.null(toID)){
+      if (!is.null(toID)) {
         toID <- toID[rep(1, times = nrfp), ]
       }
       warning("repeating toPlace to match length of fromPlace")
     } else if (nrtp > nrfp & nrfp == 1) {
       fromPlace <- fromPlace[rep(1, times = nrtp), ]
-      if(!is.null(fromID)){
+      if (!is.null(fromID)) {
         fromID <- fromID[rep(1, times = nrtp), ]
       }
       warning("repeating fromPlace to match length of toPlace")
@@ -158,7 +158,7 @@ otp_plan <- function(otpcon = NA,
     cl <- parallel::makeCluster(ncores)
     parallel::clusterExport(
       cl = cl,
-      varlist = c("otpcon", "fromPlace", "toPlace","fromID","toID"),
+      varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
       envir = environment()
     )
     parallel::clusterEvalQ(cl, {
@@ -211,7 +211,7 @@ otp_plan <- function(otpcon = NA,
 
 
 
-  results_class <- sapply(results, function(x) {
+  results_class <- vapply(results, function(x) {
     "data.frame" %in% class(x)
   })
   if (all(results_class)) {
@@ -227,7 +227,7 @@ otp_plan <- function(otpcon = NA,
 
   # Bind together
   if (!all(class(results_routes) == "logical")) {
-    if (any(sapply(results, function(x) {
+    if (any(vapply(results, function(x) {
       "sf" %in% class(x)
     }))) {
       suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
@@ -309,7 +309,7 @@ otp_clean_input <- function(imp, imp_name) {
   # For matrix inputs
   if (all(class(imp) == "matrix")) {
     checkmate::assert_matrix(imp,
-      any.missing = F,
+      any.missing = FALSE,
       min.rows = 1,
       min.cols = 2,
       max.cols = 2,
@@ -404,14 +404,14 @@ otp_plan_internal <- function(otpcon = NA,
   if (is.null(asjson$error$id)) {
     response <- otp_json2sf(asjson, full_elevation, get_geometry)
     # Add Ids
-    if(is.null(fromID)){
+    if (is.null(fromID)) {
       response$fromPlace <- fromPlace
-    }else{
+    } else {
       response$fromPlace <- fromID
     }
-    if(is.null(toID)){
+    if (is.null(toID)) {
       response$toPlace <- toPlace
-    }else{
+    } else {
       response$toPlace <- toID
     }
     return(response)

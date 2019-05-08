@@ -29,12 +29,16 @@ otp_geocode <- function(otpcon = NULL,
                         type = "SF") {
   # Validate Inputs
   checkmate::assert_class(otpcon, "otpconnect", null.ok = FALSE)
-  checkmate::assert_character(query, null.ok = FALSE, len = 1, min.chars = 1, any.missing = FALSE)
+  checkmate::assert_character(query,
+                              null.ok = FALSE, len = 1,
+                              min.chars = 1, any.missing = FALSE)
   checkmate::assert_logical(autocomplete, null.ok = FALSE)
   checkmate::assert_logical(stops, null.ok = FALSE)
   checkmate::assert_logical(clusters, null.ok = FALSE)
   checkmate::assert_logical(corners, null.ok = FALSE)
-  checkmate::assert_choice(type, choices = c("SF", "Coordinates", "Both"), null.ok = FALSE)
+  checkmate::assert_choice(type,
+                           choices = c("SF", "Coordinates", "Both"),
+                           null.ok = FALSE)
 
 
   autocomplete <- tolower(as.character(autocomplete))
