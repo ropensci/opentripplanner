@@ -37,7 +37,8 @@ test_that("download otp", {
   expect_true(file.exists(file.path(path_otp)))
 })
 
-lsoa <- sf::read_sf("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
+download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg", "centroids.gpkg")
+lsoa <- sf::read_sf("centroids.gpkg")
 test_that("can get lsoa points", {
   expect_is(lsoa, "sf")
   expect_true(nrow(lsoa) == 89)
