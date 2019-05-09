@@ -40,9 +40,8 @@ The following code downloads the file into a temporary folder called `OTP` you m
 dir.create(file.path(tempdir(), "OTP"))
 path_data <- file.path(tempdir(), "OTP")
 path_otp <- file.path(path_data, "otp.jar")
-url_otp <-
-  "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
-download.file(url = url_otp, destfile = path_otp, mode = "wb")
+u <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
+download.file(url = u, destfile = path_otp, mode = "wb")
 ```
 
 For more information and advanced options, see http://docs.opentripplanner.org/en/latest/Getting-OTP/ 
@@ -79,7 +78,6 @@ An OTP graph specifies every location in the region covered and how to travel be
 Our first task is to create the folder and file structure expected by OTP. This is a base directory called `otp` which contains a sub-directory called `graphs`. Directories created under `graphs` are known as OTP routers and contain all the files required to build a graph. A single OTP instance can host several routers, for example covering different regions. 
 
 Create a router called 'default', and include the GTFS and OSM files for the road network and default transit schedules for the railway on the Isle of Wight, along with `router-config.json`, as shown below:
-
 
 ```{r, engine='bash', eval=FALSE}
 / otp                         # Your top folder for storing all OTP data

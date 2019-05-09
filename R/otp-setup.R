@@ -216,7 +216,7 @@ otp_setup <- function(otp = NULL,
 #' }
 #' @export
 otp_stop <- function(warn = TRUE, kill_all = TRUE) {
-  if (warn) {
+  if (warn && interactive()) {
     readline(prompt = "This will force Java to close, Press [enter] to continue, [escape] to abort")
   }
 
@@ -228,7 +228,7 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
     }
 
     if (kill_all) {
-      system("pkill -9 java")
+      system("pkill -9 java", intern = TRUE)
     } else {
       message(
         "Kill the instances manually, e.g. with:\n",

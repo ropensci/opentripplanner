@@ -183,5 +183,5 @@ test_that("geocode coords", {
 test_that("otp_stop", {
   skip_no_otp()
   foo <- otp_stop(FALSE)
-  expect_true(grepl("SUCCESS", foo))
+  expect_true(ifelse(checkmate::test_os(os = "windows"), grepl("SUCCESS", foo), length(foo) == 0))
 })
