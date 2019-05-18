@@ -89,7 +89,8 @@ test_that("correct message when check is TRUE and router exists", {
 
 test_that("correct error when check is TRUE and router does not exist", {
   skip_no_otp()
-  expect_error(otp_connect(router = "test"), "Router http://localhost:8080/otp/routers/test does not exist")
+  expect_error(otp_connect(router = "test"),
+               "Router http://localhost:8080/otp/routers/test does not exist")
 })
 
 if (identical(Sys.getenv("I_have_OTP"), "TRUE")) {
@@ -186,7 +187,8 @@ test_that("basic geocode", {
 
 test_that("geocode coords", {
   skip_no_otp()
-  stations <- otp_geocode(otpcon = otpcon, query = "station", type = "Coordinates")
+  stations <- otp_geocode(otpcon = otpcon,
+                          query = "station", type = "Coordinates")
   expect_is(stations, "data.frame")
   expect_true(nrow(stations) == 10)
 })

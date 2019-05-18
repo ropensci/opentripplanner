@@ -277,7 +277,8 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
       "optimize",
       "rctx"
     )
-    message(paste0("The folloing values where not checked: ", paste(not_checked, collapse = ", ")))
+    message(paste0("The folloing values where not checked: ",
+                   paste(not_checked, collapse = ", ")))
   } else if (type == "build") {
     # logical
     checkmate::assert_logical(config$transit,
