@@ -188,5 +188,10 @@ test_that("geocode coords", {
 test_that("otp_stop", {
   skip_no_otp()
   foo <- otp_stop(FALSE)
-  expect_true(grepl("SUCCESS", foo))
+  if(checkmate::check_os("windows")){
+    expect_true(grepl("SUCCESS", foo))
+  }else{
+    expect_true(grepl("The following Java instances have been found", foo))
+  }
+
 })
