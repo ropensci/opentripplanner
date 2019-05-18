@@ -65,7 +65,7 @@ Conversely, the R language is well suited to statistical and spatial analysis bu
 The OpenTripPlanner for R package aims to bridge the gap between OTP and R by supplying simple ways for R to connect to OTP either on a local machine or on a remote server, via OTP’s API.
 The package has been designed to ease bulk routing by allowing the input of multiple origins and destinations as two column matrices of longitude-latitude pairs.
 The package also supports multi-core operation to take advantage of OTP’s multicore functionality.
-Results are returned in the widely use [SF data.frame]( https://cran.r-project.org/web/packages/sf/index.html) format.
+Results are returned in the widely used [SF data.frame]( https://cran.r-project.org/web/packages/sf/index.html) format.
 Although performance is dependant on the size of the map being routed over, it is typical to achieve more than 10 routes per second.
 
 The package has been developed from a set of R functions that formed part of an intermediate-level [OTP tutorial](https://github.com/marcusyoung/otp-tutorial/raw/master/intro-otp.pdf) as part of research at [Centre for Research into Energy Demand Solutions]( https://www.creds.ac.uk/) and the [Institute of Transport Studies](https://environment.leeds.ac.uk/transport).

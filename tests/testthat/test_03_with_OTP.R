@@ -21,6 +21,7 @@ test_that("download example data", {
   unzip(file.path(path_data, "isle-of-wight-demo.zip"),
     exdir = file.path(path_data, "graphs", "default")
   )
+
   expect_true(file.exists(file.path(
     path_data, "graphs", "default", "isle-of-wight.osm.pbf")))
   expect_true(file.exists(file.path(
@@ -31,6 +32,7 @@ test_that("download example data", {
     path_data, "graphs", "default", "IOW_DEM.tif")))
   expect_true(file.exists(file.path(
     path_data, "graphs", "default", "router-config.json")))
+
   unlink(file.path(path_data, "isle-of-wight-demo.zip"))
   expect_true(!file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
 })
