@@ -420,7 +420,7 @@ otp_plan_internal <- function(otpcon = NA,
     response <- paste0(
       "Error: ", asjson$error$id,
       " from ", asjson$`requestParameters`$fromPlace,
-      " to ", asjson$`requestParameters`$toPlac,
+      " to ", asjson$`requestParameters`$toPlace,
       " ", asjson$error$msg
     )
     return(response)

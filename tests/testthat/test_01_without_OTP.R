@@ -21,6 +21,10 @@ test_that("default object is created and make_url method works", {
   expect_warning(check_router(x))
 })
 
+test_that("can't connect to non-existant router", {
+  expect_error(otp_connect(router = "bananas"))
+})
+
 test_that("can't build graph without opt", {
   expect_error(otp_build_graph(otp = path_otp))
 })
@@ -125,6 +129,7 @@ test_that("otp_make_config tests", {
     tempdir(), "graphs", "default", "build-config.json")))
   expect_true(file.exists(file.path(
     tempdir(), "graphs", "default", "otp-config.json")))
+
 })
 
 test_that("otp_stop tests", {

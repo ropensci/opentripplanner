@@ -345,8 +345,6 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
   } else if (type == "otp") {
     otp_validate_config(config, type = "build")
     otp_validate_config(config, type = "router")
-  } else {
-    message("No checks performed")
   }
   return(TRUE)
 }
@@ -566,8 +564,6 @@ otp_make_config <- function(type) {
 
     config[["boardTimes"]] <- boardTimes
     config[["updaters"]] <- NULL
-  } else {
-    config <- NULL
   }
 
   att <- list(type)

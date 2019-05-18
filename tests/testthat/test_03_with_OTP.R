@@ -176,6 +176,13 @@ test_that("basic isochrone", {
   expect_true(nrow(ferry_current) == 6)
 })
 
+test_that("nonsence isochrone", {
+  skip_no_otp()
+  expect_warning(otp_isochrone(
+    otpcon = otpcon,
+    fromPlace = c(-5, 5)))
+})
+
 context("Test the otp_geocode function")
 
 test_that("basic geocode", {
@@ -195,7 +202,21 @@ test_that("geocode coords", {
   expect_true(nrow(stations) == 10)
 })
 
+test_that("geocode both", {
+  skip_no_otp()
+  stations <- otp_geocode(otpcon = otpcon,
+                          query = "station", type = "Both")
+  expect_is(stations, "sf")
+  expect_true(nrow(stations) == 10)
+})
 
+test_that("geocode nonsence", {
+  skip_no_otp()
+  expect_warning(otp_geocode(otpcon = otpcon,
+                          query = "bananas"))
+
+
+})
 # Stop otp
 test_that("otp_stop", {
   skip_no_otp()
