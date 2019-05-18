@@ -331,13 +331,16 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
     checkmate::assert_numeric(config$subwayAccessTime,
                               len = 1, null.ok = TRUE, lower = 0)
     checkmate::assert_numeric(config$maxTransferDistance,
-                              len = 1, null.ok = TRUE, lower = 0)
+                              len = 1, null.ok = TRUE,
+                              lower = 0)
 
     # Character
     checkmate::assert_subset(config$osmWayPropertySet,
-                             empty.ok = TRUE, choices = c("default", "norway"))
+                             empty.ok = TRUE,
+                             choices = c("default", "norway"))
     checkmate::assert_subset(config$stopClusterMode,
-                             empty.ok = TRUE, choices = c("proximity", "parentStation"))
+                             empty.ok = TRUE,
+                             choices = c("proximity", "parentStation"))
   } else if (type == "otp") {
     otp_validate_config(config, type = "build")
     otp_validate_config(config, type = "router")

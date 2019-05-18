@@ -195,7 +195,7 @@ otp_setup <- function(otp = NULL,
           Sys.sleep(30)
         } else {
           message(paste0(Sys.time(),
-                         " OTP is taking an unusually long time to load, releasing R to your control"))
+          " OTP is taking an unusually long time to load, releasing R to your control"))
         }
       }
     }
@@ -222,7 +222,8 @@ otp_setup <- function(otp = NULL,
 #' @export
 otp_stop <- function(warn = TRUE, kill_all = TRUE) {
   if (warn) {
-    readline(prompt = "This will force Java to close, Press [enter] to continue, [escape] to abort")
+    readline(prompt =
+    "This will force Java to close, Press [enter] to continue, [escape] to abort")
   }
 
   if (checkmate::testOS("linux") | checkmate::testOS("mac")) {
