@@ -21,11 +21,18 @@ test_that("download example data", {
   unzip(file.path(path_data, "isle-of-wight-demo.zip"),
     exdir = file.path(path_data, "graphs", "default")
   )
-  expect_true(file.exists(file.path(path_data, "graphs", "default", "isle-of-wight.osm.pbf")))
-  expect_true(file.exists(file.path(path_data, "graphs", "default", "iow-rail-gtfs.zip")))
-  expect_true(file.exists(file.path(path_data, "graphs", "default", "iow-bus-gtfs.zip")))
-  expect_true(file.exists(file.path(path_data, "graphs", "default", "IOW_DEM.tif")))
-  expect_true(file.exists(file.path(path_data, "graphs", "default", "router-config.json")))
+
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "isle-of-wight.osm.pbf")))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "iow-rail-gtfs.zip")))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "iow-bus-gtfs.zip")))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "IOW_DEM.tif")))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "router-config.json")))
+
   unlink(file.path(path_data, "isle-of-wight-demo.zip"))
   expect_true(!file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
 })
@@ -33,7 +40,10 @@ test_that("download example data", {
 path_otp <- file.path(path_data, "otp.jar")
 test_that("download otp", {
   url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
-  download.file(url = url_otp, destfile = file.path(path_data, "otp.jar"), mode = "wb", quiet = TRUE)
+  download.file(url = url_otp,
+                destfile = file.path(path_data, "otp.jar"),
+                mode = "wb",
+                quiet = TRUE)
   expect_true(file.exists(file.path(path_otp)))
 })
 
@@ -49,7 +59,10 @@ context("Test the otp_build_graph function")
 test_that("We can build an otp graph", {
   skip_no_otp()
   log <- otp_build_graph(otp = path_otp, dir = path_data)
-  expect_true(file.exists(file.path(path_data, "graphs", "default", "Graph.obj")))
+  expect_true(file.exists(file.path(path_data,
+                                    "graphs",
+                                    "default",
+                                    "Graph.obj")))
 })
 
 context("Test the otp_setup function")
@@ -72,12 +85,14 @@ test_that("object returned when check is TRUE and router exists", {
 
 test_that("correct message when check is TRUE and router exists", {
   skip_no_otp()
-  expect_message(otp_connect(), "Router http://localhost:8080/otp/routers/default exists")
+  expect_message(otp_connect(),
+                 "Router http://localhost:8080/otp/routers/default exists")
 })
 
 test_that("correct error when check is TRUE and router does not exist", {
   skip_no_otp()
-  expect_error(otp_connect(router = "test"), "Router http://localhost:8080/otp/routers/test does not exist")
+  expect_error(otp_connect(router = "test"),
+               "Router http://localhost:8080/otp/routers/test does not exist")
 })
 
 if (identical(Sys.getenv("I_have_OTP"), "TRUE")) {
@@ -165,7 +180,8 @@ context("Test the otp_geocode function")
 
 test_that("basic geocode", {
   skip_no_otp()
-  stations <- otp_geocode(otpcon = otpcon, query = "station")
+  stations <- otp_geocode(otpcon = otpcon,
+                          query = "station")
   expect_is(stations, "sf")
   expect_true(nrow(stations) == 10)
 })
@@ -173,7 +189,8 @@ test_that("basic geocode", {
 
 test_that("geocode coords", {
   skip_no_otp()
-  stations <- otp_geocode(otpcon = otpcon, query = "station", type = "Coordinates")
+  stations <- otp_geocode(otpcon = otpcon,
+                          query = "station", type = "Coordinates")
   expect_is(stations, "data.frame")
   expect_true(nrow(stations) == 10)
 })
@@ -183,5 +200,10 @@ test_that("geocode coords", {
 test_that("otp_stop", {
   skip_no_otp()
   foo <- otp_stop(FALSE)
-  expect_true(ifelse(checkmate::test_os(os = "windows"), grepl("SUCCESS", foo), length(foo) == 0))
+  if(checkmate::check_os("windows")){
+    expect_true(grepl("SUCCESS", foo))
+  }else{
+    expect_true(grepl("The following Java instances have been found", foo))
+  }
+
 })

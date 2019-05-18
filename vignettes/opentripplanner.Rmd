@@ -12,7 +12,9 @@ vignette: >
 ## Introduction
 
 This vignette is an introduction to OpenTripPlanner (OTP) - an open-source and cross-platform multi-modal route planner written in JAVA. It uses imported Open Street Map (OSM) data for routing on the street and path network and supports
-multi-agency public transport routing through imported GTFS feeds. It can also apply a digital elevation model to the OSM street network, allowing, for example, cycle-friendly routes to be requested. OTP has a web front-end that can be used by end-users and a sophisticated routing API.
+multi-agency public transport routing through imported  [General Transit Feed Specification](https://developers.google.com/transit/gtfs/) (GTFS) feeds. It can also apply a digital elevation model to the OSM street network, allowing, for example, cycle-friendly routes to be requested. OTP has a web front-end that can be used by end-users and a sophisticated routing API.
+
+OTP works worldwide as long as there is OSM map coverage in the area. Support for transit timetables and elevation calculations are dependant on the available data. For more information on getting data see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html)
 
 A major advantage of running your own multi-modal route planner is the ability to carry out analysis using amended transport data. Services such as Google Maps or TransportAPI are based on current public transport schedules and the existing road network. OTP enables you to modify transit schedules and/or make changes to the underlying street network. By editing a local copy of OSM, you can model the effects of opening new roads, closing roads or imposing other restrictions. You can also look back in time. For example, you might want to examine the effect of reductions in rural bus services on the accessibility of health facilities. To do this you would need a network with bus schedules as they were in previous years.
 
