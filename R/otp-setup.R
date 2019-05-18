@@ -221,7 +221,7 @@ otp_setup <- function(otp = NULL,
 #' }
 #' @export
 otp_stop <- function(warn = TRUE, kill_all = TRUE) {
-  if (warn) {
+  if (warn && interactive()) {
     readline(prompt =
     "This will force Java to close, Press [enter] to continue, [escape] to abort")
   }
