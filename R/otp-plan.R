@@ -391,7 +391,8 @@ otp_plan_internal <- function(otpcon = NA,
       walkReluctance = walkReluctance,
       arriveBy = arriveBy,
       transferPenalty = transferPenalty,
-      minTransferTime = minTransferTime
+      minTransferTime = minTransferTime,
+      numItineraries = numItineraries
     )
   )
 
