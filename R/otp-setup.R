@@ -263,35 +263,34 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
 
 otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
   # Checks
-  # checkmate::assertFileExists(otp, extension = "jar")
+  checkmate::assertFileExists(otp, extension = "jar")
   checkmate::assertDirectoryExists(dir)
   checkmate::assertDirectoryExists(paste0(dir, "/graphs/", router))
 
-  # TODO: test on Linux
   # Check we have correct verrsion of Java
-  try(java_version <- system2("java", "-version", stdout = TRUE, stderr = TRUE))
+  java_version <- try(system2("java", "-version", stdout = TRUE, stderr = TRUE))
   if (class(java_version) == "try-error") {
-    warning("R was unable to detect a version of Java")
-    stop()
+    stop("R was unable to detect a version of Java")
   } else {
     java_version <- java_version[1]
     java_version <- strsplit(java_version, "\"")[[1]][2]
     java_version <- strsplit(java_version, "\\.")[[1]][1:2]
     java_version <- as.numeric(paste0(java_version[1], ".", java_version[2]))
     if (is.na(java_version)) {
-      warning("OTP requires Java version 8 ")
-      stop()
+      stop("OTP requires Java version 8 ")
     }
     if (java_version < 1.8 | java_version >= 1.9) {
-      warning("OTP requires Java version 8 ")
-      stop()
+      stop("OTP requires Java version 8 ")
     }
   }
 
-  # Check that the graph exists
+  # Check that the graph exists, and is over 5KB
   if (graph) {
     checkmate::assertFileExists(paste0(dir, "/graphs/", router, "/Graph.obj"))
+    size <- file.info(paste0(dir, "/graphs/", router, "/Graph.obj"))
+    size <- size$size
+    if(size < 5000){
+      warning("Graph.obj exists but is very small, the build process may have failed")
+    }
   }
-
-  ### End of Checks
 }
