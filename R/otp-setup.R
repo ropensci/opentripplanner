@@ -195,7 +195,7 @@ otp_setup <- function(otp = NULL,
           Sys.sleep(30)
         } else {
           message(paste0(Sys.time(),
-          " OTP is taking an unusually long time to load, releasing R to your control"))
+          " OTP is taking an unusually long time to load, releasing R to your control, OTP will continue in the background"))
         }
       }
     }
