@@ -53,7 +53,39 @@ This package allows you to use the trip planning power of OTP with the analytica
 
 ## What do I need to get started?
 
-You will need to install some software to use OTP and R.
+You will need a modern computer and to install some software to use OTP and R on your local computer.
+
+### Hardware
+
+Running your own trip planners is computationally expensive an so the best results will be had on a modern desktop computer. This package comes with some demonstration data for the Isle of Wight, which as a very small area will run on most modern computers.
+
+**Recommended Hardware**
+
+* Modern CPU (2010 or later)
+* 64 Bit Operating System (Windows/Mac/Linux)
+* 8+ GB RAM
+* 64 GB+ Hard Disk
+
+**Minimum Hardware**
+
+* 32 Bit Operating System (Windows/Mac/Linux)
+* 2 GB RAM
+
+OTP requires at least 1 GB of space to run the demonstration dataset, but by default will request 2 GB. On low-end machines, it is necessary to change the default memory allocations and minimise memory use by other programmes. 
+
+For larger areas OTP will need more memory. An approximite guide to memeory use is:
+
+* 2 GB - Small Town / Region
+* 4 GB - Large Town / City
+* 8 GB - Region / Very Large City
+* 20 GB - Country
+* 50 GB - Continent
+
+OTP is optimised for city-scale routing and performance will degrade with larger areas, although OTP is used successfully with several small European Countries e.g. the Netherlands.
+
+**Note** If you use a 32 Bit version of Java the maximum amount of memory that can be used by OTP is 4 GB.
+
+
 
 ### To Use R
 
