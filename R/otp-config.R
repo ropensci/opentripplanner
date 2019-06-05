@@ -23,7 +23,6 @@ otp_write_config <- function(config,
   config <- otp_list_clean(config)
 
   # Convert to JSON
-  config <- jsonlite::toJSON(config, pretty = TRUE, null = "null", na = "null")
   jsonlite::write_json(
     config,
     file.path(
@@ -31,7 +30,10 @@ otp_write_config <- function(config,
       "graphs",
       router,
       paste0(type, "-config.json")
-    )
+    ),
+    pretty = TRUE,
+    null = "null",
+    na = "null"
   )
 }
 
