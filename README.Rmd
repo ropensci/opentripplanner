@@ -20,21 +20,21 @@ knitr::opts_chunk$set(
 
 The goal of OpenTripPlanner for R is to provide a simple R interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/). The OTP is a multimodal trip planning service written in Java. For more information on what OTP is, see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
 
-This package can be used to interface with a remote instance of OTP (e.g. a website) or help you set up and manage a local version of OTP for private use.  Basic setup and routing functions are outlined in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), while advanced functionality such as batch routing, isochrones, and customised setup is described in the [advanced features vignette](https://itsleeds.github.io/opentripplanner/articles/advanced_features.html)
+This package can be used to interface with a remote instance of OTP (e.g. a website) or help you set up and manage a local version of OTP for private use.  Basic setup and routing functions are outlined in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), while advanced functionality such as batch routing, isochrones, and customised setup is described in the [advanced features vignette](https://itsleeds.github.io/opentripplanner/articles/advanced_features.html).
 
 ## Installation
 
 ### OpenTripPlanner
 
-To use OpenTripPlanner on your local computer you will need to install Java 8 and download the latest version of OTP. Instructions on installing Java and setting up OTP can be found in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
+To use OpenTripPlanner on your local computer you will need to install Java 8 and download the latest version of OTP. Instructions on installing Java and setting up OTP can be found in the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
 
 ### R Package
 
-Install the package with **devtools** as follows:
+Install the package with **remotes** as follows:
 
 ```{r install, eval=FALSE}
-install.packages("devtools") # If you do not already have the devtools package
-devtools::install_github("ITSleeds/opentripplanner")
+install.packages("remotes") # If you do not already have the remotes package
+remotes::install_github("ITSleeds/opentripplanner")
 ```
 
 ## Usage
@@ -69,11 +69,11 @@ Sys.getenv("I_have_OTP")
 
 ## Acknowledgement
 
-This package was built off the [tutorial by Marcus Young](https://github.com/marcusyoung/otp-tutorial) 
+This package was built off the [tutorial by Marcus Young](https://github.com/marcusyoung/otp-tutorial).
 
 ## Contribution
 
-Please note that the `opentripplanner` project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
+Please note that the `opentripplanner` project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms. Bug reports and comments are welcome as Github [Issues](https://github.com/ITSLeeds/opentripplanner/issues) and code submissions as [Pull Requests](https://github.com/ITSLeeds/opentripplanner/pulls).
 
 
 ## Package Status
