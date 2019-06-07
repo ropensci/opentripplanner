@@ -8,9 +8,9 @@
 #' @param router name of the router, default is "default"
 #' @family setup
 #' @examples
-#' \dontrun{
+#' {
 #' conf <- otp_make_config("build")
-#' otp_write_config(conf, dir = "C:/otp")
+#' otp_write_config(conf, dir = temp.dir())
 #' }
 #' @export
 
@@ -363,7 +363,7 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
 #' For more details see:
 #' http://docs.opentripplanner.org/en/latest/Configuration
 #' @examples
-#' \dontrun{
+#' {
 #' conf <- otp_make_config("build")
 #' conf <- otp_make_config("router")
 #' }
