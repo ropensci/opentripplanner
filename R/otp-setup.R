@@ -7,7 +7,7 @@
 #'
 #' @param otp A character string, path to the OTP .jar file
 #' @param dir A character string, path to a directory containing the necessary files, see details
-#' @param memory A positive integer. Amount of memory to assign to the OTP in GB, default is 2
+#' @param memory A positive integer. Amount of memory to assign to the OTP in MB, default is 2048
 #' @param router A character string for the name of the router, must match with contents of dir, default "default"
 #' @param analyst Logical, should analyst feature be built, default FALSE
 #' @return
@@ -40,18 +40,23 @@
 #' @export
 otp_build_graph <- function(otp = NULL,
                             dir = NULL,
-                            memory = 2,
+                            memory = 2048,
                             router = "default",
                             analyst = FALSE) {
 
   # Run Checks
-  otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
-  message("Basic checks completed, building graph, this may take a few minutes")
+  checkmate::assert_numeric(memory, lower = 500)
+  check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
+  if(!check){
+    stop()
+  }
+  message(paste0(Sys.time(),
+                 " Basic checks completed, building graph, this may take a few minutes"))
 
   text <- paste0(
     "java -Xmx",
     memory,
-    'G -jar "',
+    'M -jar "',
     otp,
     '" --build "',
     dir,
@@ -68,10 +73,10 @@ otp_build_graph <- function(otp = NULL,
 
   # Check for errors
   if (any(grepl("ERROR", set_up, ignore.case = TRUE)) & length(set_up) < 10) {
-    message("Failed to build graph with message:")
+    message(paste0(Sys.time()," Failed to build graph with message:"))
     message(set_up)
   } else {
-    message("Graph built")
+    message(paste0(Sys.time()," Graph built"))
   }
   return(set_up)
 }
@@ -87,7 +92,7 @@ otp_build_graph <- function(otp = NULL,
 #' The function assumes you have run otp_build_graph()
 #' @param otp A character string, path to the OTP .jar file
 #' @param dir A character string, path to a directory containing the necessary files, see details
-#' @param memory A positive integer. Amount of memory to assign to the OTP in GB, default is 2
+#' @param memory A positive integer. Amount of memory to assign to the OTP in MB, default is 2048
 #' @param router A character vector for the name of the routers, must match with contents of dir, default "default"
 #' Only a single router is currently supported
 #' @param port A positive integer. Optional, default is 8080.
@@ -113,20 +118,24 @@ otp_build_graph <- function(otp = NULL,
 #' @examples
 #' \dontrun{
 #' otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data")
-#' otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5, analyst = TRUE)
+#' otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5000, analyst = TRUE)
 #' }
 #' @export
 otp_setup <- function(otp = NULL,
                       dir = NULL,
-                      memory = 2,
+                      memory = 2048,
                       router = "default",
                       port = 8080,
                       securePort = 8081,
                       analyst = FALSE,
                       wait = TRUE) {
   # Run Checks
-  otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
-  memory <- floor(memory) # Can't have fractions of GB
+  check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
+  if(!check){
+    stop()
+  }
+  checkmate::assert_numeric(memory, lower = 500)
+  memory <- floor(memory)
 
 
   # Set up OTP
@@ -134,7 +143,7 @@ otp_setup <- function(otp = NULL,
       checkmate::testOS("mac") |
       checkmate::testOS("linux")) {
     text <- paste0(
-      "java -Xmx", memory, 'G -jar "',
+      "java -Xmx", memory, 'M -jar "',
       otp,
       '" --router ', router,
       ' --graphs "', dir, '/graphs"',
@@ -166,10 +175,10 @@ otp_setup <- function(otp = NULL,
   ))
 
   if (wait) {
-    Sys.sleep(30)
+    Sys.sleep(60)
 
     # Check if connected
-    for (i in 1:10) {
+    for (i in 1:30) {
       # message(paste0("Attempt ",i))
       otpcon <- try(otp_connect(
         hostname = "localhost",
@@ -195,11 +204,12 @@ otp_setup <- function(otp = NULL,
           Sys.sleep(30)
         } else {
           message(paste0(Sys.time(),
-          " OTP is taking an unusually long time to load, releasing R to your control, OTP will continue in the background"))
+                         " OTP is taking an unusually long time to load, releasing R to your control, OTP will continue in the background"))
         }
       }
     }
   }
+
 }
 
 #' Stop and OTP Instance
@@ -263,26 +273,9 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
 
 otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
   # Checks
-  checkmate::assertFileExists(otp, extension = "jar")
   checkmate::assertDirectoryExists(dir)
   checkmate::assertDirectoryExists(paste0(dir, "/graphs/", router))
-
-  # Check we have correct verrsion of Java
-  java_version <- try(system2("java", "-version", stdout = TRUE, stderr = TRUE))
-  if (class(java_version) == "try-error") {
-    stop("R was unable to detect a version of Java")
-  } else {
-    java_version <- java_version[1]
-    java_version <- strsplit(java_version, "\"")[[1]][2]
-    java_version <- strsplit(java_version, "\\.")[[1]][1:2]
-    java_version <- as.numeric(paste0(java_version[1], ".", java_version[2]))
-    if (is.na(java_version)) {
-      stop("OTP requires Java version 8 ")
-    }
-    if (java_version < 1.8 | java_version >= 1.9) {
-      stop("OTP requires Java version 8 ")
-    }
-  }
+  checkmate::assertFileExists(otp, extension = "jar")
 
   # Check that the graph exists, and is over 5KB
   if (graph) {
@@ -291,6 +284,29 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
     size <- size$size
     if(size < 5000){
       warning("Graph.obj exists but is very small, the build process may have failed")
+      return(FALSE)
     }
   }
+
+  # Check we have correct verrsion of Java
+  java_version <- try(system2("java", "-version", stdout = TRUE, stderr = TRUE))
+  if (class(java_version) == "try-error") {
+    warning("R was unable to detect a version of Java")
+    return(FALSE)
+  } else {
+    java_version <- java_version[1]
+    java_version <- strsplit(java_version, "\"")[[1]][2]
+    java_version <- strsplit(java_version, "\\.")[[1]][1:2]
+    java_version <- as.numeric(paste0(java_version[1], ".", java_version[2]))
+    if (is.na(java_version)) {
+      warning("OTP requires Java version 8 ")
+      return(FALSE)
+    }
+    if (java_version < 1.8 | java_version >= 1.9) {
+      warning("OTP requires Java version 8 ")
+      return(FALSE)
+    }
+  }
+
+  return(TRUE)
 }

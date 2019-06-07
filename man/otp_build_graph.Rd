@@ -4,7 +4,7 @@
 \alias{otp_build_graph}
 \title{Build an OTP Graph}
 \usage{
-otp_build_graph(otp = NULL, dir = NULL, memory = 2,
+otp_build_graph(otp = NULL, dir = NULL, memory = 2048,
   router = "default", analyst = FALSE)
 }
 \arguments{
@@ -12,7 +12,7 @@ otp_build_graph(otp = NULL, dir = NULL, memory = 2,
 
 \item{dir}{A character string, path to a directory containing the necessary files, see details}
 
-\item{memory}{A positive integer. Amount of memory to assign to the OTP in GB, default is 2}
+\item{memory}{A positive integer. Amount of memory to assign to the OTP in MB, default is 2048}
 
 \item{router}{A character string for the name of the router, must match with contents of dir, default "default"}
 

@@ -4,15 +4,16 @@
 \alias{otp_setup}
 \title{Set up an OTP instance.}
 \usage{
-otp_setup(otp = NULL, dir = NULL, memory = 2, router = "default",
-  port = 8080, securePort = 8081, analyst = FALSE, wait = TRUE)
+otp_setup(otp = NULL, dir = NULL, memory = 2048,
+  router = "default", port = 8080, securePort = 8081,
+  analyst = FALSE, wait = TRUE)
 }
 \arguments{
 \item{otp}{A character string, path to the OTP .jar file}
 
 \item{dir}{A character string, path to a directory containing the necessary files, see details}
 
-\item{memory}{A positive integer. Amount of memory to assign to the OTP in GB, default is 2}
+\item{memory}{A positive integer. Amount of memory to assign to the OTP in MB, default is 2048}
 
 \item{router}{A character vector for the name of the routers, must match with contents of dir, default "default"
 Only a single router is currently supported}
@@ -50,7 +51,7 @@ specified by the dir variable.
 \examples{
 \dontrun{
 otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data")
-otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5, analyst = TRUE)
+otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5000, analyst = TRUE)
 }
 }
 \seealso{

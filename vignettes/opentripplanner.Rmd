@@ -69,10 +69,10 @@ Now we can build the graph. This code will create a new file `Graph.obj` that wi
 log <- otp_build_graph(otp = path_otp, dir = path_data) 
 ```
 
-By default, R will assign OTP 2GB of memory to build the graph. For larger areas, you may need more memory and can use the `memory` argument. For example, to allocated 10GB you would use.
+By default, R will assign OTP 2GB of memory to build the graph. For larger areas, you may need more memory and can use the `memory` argument  to set the memory allocation in MB. For example, to allocate 10GB you would use.
 
 ```{r eval=FALSE}
-log <- otp_build_graph(otp = path_otp, dir = path_data, memory = 10) 
+log <- otp_build_graph(otp = path_otp, dir = path_data, memory = 10240) 
 ```
 
 Note that you cannot allocate more memory than you have RAM, and if you use 32 Bit Java you cannot allocate more than 3GB. It is possible to run OTP in just 1GB of memory for very small areas (including the demo dataset). 
