@@ -108,12 +108,8 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
   checkmate::assert_character(fromID, null.ok = TRUE)
   checkmate::assert_character(toID, null.ok = TRUE)
-
-  if (arriveBy) {
-    arriveBy <- "true"
-  } else {
-    arriveBy <- "false"
-  }
+  checkmate::assert_logical(arriveBy)
+  arriveBy <- tolower(arriveBy)
 
   # Special checks for fromPlace and toPlace
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
