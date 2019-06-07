@@ -59,6 +59,20 @@ test_that("otp_plan input validation", {
   regexp = "Failed to connect to localhost port 8080: Connection refused"
   )
   expect_error(otp_plan(otpcon,
+                        toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+                        fromPlace = matrix(c(1, 1), ncol = 2),
+                        toID = c("A","B","C")
+  ),
+  regexp = "The length of toID and toPlace are not the same"
+  )
+  expect_error(otp_plan(otpcon,
+                        toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+                        fromPlace = matrix(c(1, 1), ncol = 2),
+                        fromID = c("A","B","C")
+  ),
+  regexp = "The length of fromID and fromPlace are not the same"
+  )
+  expect_error(otp_plan(otpcon,
     fromPlace = matrix(c(1, 1, 2, 2), ncol = 2),
     toPlace = matrix(c(1, 1), ncol = 2)
   ),
@@ -131,6 +145,21 @@ test_that("otp_make_config tests", {
     tempdir(), "graphs", "default", "otp-config.json")))
 
 })
+
+test_that("otp_build_graph input validation", {
+  expect_error(otp_build_graph(otp = path_otp, dir = path_data),
+    regexp = "File does not exist:"
+  )
+
+})
+
+test_that("otp_setup input validation", {
+  expect_error(otp_setup(otp = path_otp, dir = path_data),
+               regexp = "File does not exist:"
+  )
+
+})
+
 
 test_that("otp_stop tests", {
   # Don't know how to test this
