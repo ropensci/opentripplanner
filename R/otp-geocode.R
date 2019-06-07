@@ -80,7 +80,8 @@ otp_geocode <- function(otpcon = NULL,
       }
       response <- sf::st_as_sf(asjson,
         coords = c("lng", "lat"),
-        remove = remove
+        remove = remove,
+        crs = 4326
       )
       return(response)
     } else {
