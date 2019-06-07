@@ -213,7 +213,7 @@ test_that("geocode both", {
 test_that("geocode nonsence", {
   skip_no_otp()
   expect_warning(otp_geocode(otpcon = otpcon,
-                          query = "bananas"))
+                          query = "jhgfdhgdcmhxgfxgfx"))
 
 
 })
