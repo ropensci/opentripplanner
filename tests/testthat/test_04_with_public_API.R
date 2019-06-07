@@ -13,7 +13,9 @@ context("Test the otp_plan function")
 test_that("basic routing", {
   route <- otp_plan(otpcon,
     fromPlace = c(4.46594, 51.92394),
-    toPlace = c(4.96582, 52.38901)
+    toPlace = c(4.96582, 52.38901),
+    fromID = "A",
+    toID = "B"
   )
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
