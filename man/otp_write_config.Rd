@@ -17,7 +17,7 @@ otp_write_config(config, dir = NULL, router = "default")
 Takes a config list produced by `otp_make_config()` and saves it as json file for OTP
 }
 \examples{
-{
+\dontrun{
 conf <- otp_make_config("build")
 otp_write_config(conf, dir = tempdir())
 }
