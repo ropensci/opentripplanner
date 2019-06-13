@@ -10,7 +10,7 @@
 #' @examples
 #' {
 #' conf <- otp_make_config("build")
-#' otp_write_config(conf, dir = temp.dir())
+#' otp_write_config(conf, dir = tempdir())
 #' }
 #' @export
 

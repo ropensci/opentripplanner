@@ -19,7 +19,7 @@ For more details see:
 http://docs.opentripplanner.org/en/latest/Configuration
 }
 \examples{
-\dontrun{
+{
 conf <- otp_make_config("build")
 conf <- otp_make_config("router")
 }
