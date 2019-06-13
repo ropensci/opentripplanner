@@ -19,7 +19,7 @@ Takes a config list produced by `otp_make_config()` and saves it as json file fo
 \examples{
 {
 conf <- otp_make_config("build")
-otp_write_config(conf, dir = temp.dir())
+otp_write_config(conf, dir = tempdir())
 }
 }
 \seealso{
