@@ -8,7 +8,7 @@
 #' @param router name of the router, default is "default"
 #' @family setup
 #' @examples
-#' {
+#' \dontrun{
 #' conf <- otp_make_config("build")
 #' otp_write_config(conf, dir = tempdir())
 #' }
