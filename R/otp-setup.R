@@ -200,7 +200,7 @@ otp_setup <- function(otp = NULL,
                                 "localhost:", port))
         break
       } else {
-        if (i < 10) {
+        if (i < 30) {
           Sys.sleep(30)
         } else {
           message(paste0(Sys.time(),
