@@ -1,0 +1,41 @@
+---
+title: "Known Issues"
+author: "Malcolm Morgan"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{opentripplanner-get-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette highlights some known limitations or bugs with OpenTripPlanner as well as suggested solutions.
+
+## Getting help and reporting bugs
+
+### OpenTripPlanner
+
+* [OTP Users Group](https://groups.google.com/forum/#!forum/opentripplanner-users)
+* [OTP GitHub Issues](https://github.com/opentripplanner/OpenTripPlanner/issues)
+
+### OpenTripPlanner for R
+
+* [OTP GitHub Issues](https://github.com/ITSleeds/opentripplanner/issues)
+
+## Support for OTP 1.4
+
+Coming Soon
+
+## Driving on Roads with cycleway tag
+
+Known bug that stops driving on any road with cycling infrastrucutre. https://groups.google.com/forum/#!topic/opentripplanner-users/BOv1J32k6Sc 
+
+## GTFS Data for the UK
+
+Coming Soon
+
+## Elevation Data
+
+It is common for GeoTIFF to have a no data value often the maximum possible value. OTP can misinterpret this as an elevation value. So set your no data values in your elevation data to something more plausible like 0.
+
+Note that OTP does not support all types of GeoTIFF compression so you may have to change the compression type of the image if you are experiencing problems. 
