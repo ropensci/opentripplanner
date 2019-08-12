@@ -4,7 +4,7 @@ author: "Malcolm Morgan"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{opentripplanner-get-started}
+  %\VignetteIndexEntry{opentripplanner-known-issues}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
