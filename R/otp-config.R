@@ -32,6 +32,7 @@ otp_write_config <- function(config,
       paste0(type, "-config.json")
     ),
     pretty = TRUE,
+    auto_unbox = TRUE,
     null = "null",
     na = "null"
   )
