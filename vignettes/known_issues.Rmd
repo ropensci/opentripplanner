@@ -26,9 +26,27 @@ This vignette highlights some known limitations or bugs with OpenTripPlanner as 
 
 Coming Soon
 
-## Driving on Roads with cycleway tag
+
+## Reasons for Routing to Fail
+
+If you find OTP can not find a route here are some common reasons to check:
+
+### Start or End is too far from the road network
+
+OTP will snap fromPlace and toPlace coordinates to the road network, but only for a limited distance. If your points are far from the raod network (e.g. in a lake or middle of a park) then OTP will fail to find a route.
+
+### Mode Specific Limits
+
+OTP does not support all mode combinations (e.g. walk + drive) so some places may only be acessible by certain modes. For example you can't walk on a motorway or drive on a path. Use the debug layers to check for mode restrictions.
+
+### Maximum walk to transit
+
+by default OPT caps the maximum walking distance to a transit stop at a low level, so some areas are unreachable by transit. Increase the maximum walking distance to get better results.
+
+### Driving on Roads with cycleway tag
 
 Known bug that stops driving on any road with cycling infrastrucutre. https://groups.google.com/forum/#!topic/opentripplanner-users/BOv1J32k6Sc 
+
 
 ## GTFS Data for the UK
 
