@@ -33,7 +33,7 @@ If you find OTP can not find a route here are some common reasons to check:
 
 ### Start or End is too far from the road network
 
-OTP will snap fromPlace and toPlace coordinates to the road network, but only for a limited distance. If your points are far from the raod network (e.g. in a lake or middle of a park) then OTP will fail to find a route.
+OTP will snap fromPlace and toPlace coordinates to the road network, but only for a limited distance. If your points are far from the road network (e.g. in a lake or middle of a park) then OTP will fail to find a route.
 
 ### Mode Specific Limits
 
@@ -45,12 +45,21 @@ by default OPT caps the maximum walking distance to a transit stop at a low leve
 
 ### Driving on Roads with cycleway tag
 
-Known bug that stops driving on any road with cycling infrastrucutre. https://groups.google.com/forum/#!topic/opentripplanner-users/BOv1J32k6Sc 
+Known bug that stops driving on any road with cycling infrastructure. https://groups.google.com/forum/#!topic/opentripplanner-users/BOv1J32k6Sc 
+
+## Speeding up routing
+
+If you are doing a large amount of routing conisder the following options.
+
+1. Use multicore routing using `ncores` argumment of `otp_plan()`
+2. Reduce the area, for example if your are only routing in one city you don't need a whole country graph.
+3. Remove unneeded roads using [osmfilter](https://wiki.openstreetmap.org/wiki/Osmfilter) or [OSMtools](https://github.com/ITSLeeds/OSMtools) for example if you are only inrested in driving you can remove footpaths and cycleways. This will simplify your graph and povide a small performance boost.
+4. Upgrading you computer, a new fast CPU with more cores will route faster.
 
 
 ## GTFS Data for the UK
 
-Coming Soon
+Coming Soon see https://github.com/ITSLeeds/UK2GTFS
 
 ## Elevation Data
 
