@@ -73,13 +73,23 @@ knitr::include_graphics("images/routes_to_ferry.jpg")
 It is sometimes useful to find the route between every possible origin and destination for example when producing an OD matrix. If you wished to route from every LSOA to every other LSOA point this can easily be done by repeating the points. 
 
 ```{r, eval=FALSE}
-toPlace   = lsoa[rep(1:nrow(lsoa), times = nrow(lsoa)),]
-fromPlace = lsoa[rep(1:nrow(lsoa), each  = nrow(lsoa)),]
+toPlace   = lsoa[rep(1, nrow(lsoa), times = nrow(lsoa)),]
+fromPlace = lsoa[rep(1, nrow(lsoa), each  = nrow(lsoa)),]
 ```
 
 **Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case, 89 points results in 89 x 89 = 7921 routes, this will take a while.
 
 For an OD matrix, you may only be interested in the total travel time and not require the route geometry. By setting `get_geometry = FALSE` in `otp_plan()` R will just return the meta-data and discard the geometry. This is slightly faster than when using `get_geometry = TRUE` and uses less memory.
+
+### Multicore Support
+
+OTP supports mulitcore routing out of the box. This is based on one core per route, so is only suited to finding large number of routes. The `otp_plan()` fucntion has the argument `ncores = 1` this can be changed to any positive integer to enable multicore processing e.g. `ncores = 4`. It is recommended that the maximum value for `ncores` is one less than the number of cores on your system. This allows one core to be left for the operating system and any other tasks. 
+
+This graph demonstrates the reduction in time take to route between all LSOA pairs on the Isle of Wight demo, using one to six cores.
+
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:multicore} Multicore performance improvements"}
+knitr::include_graphics("images/multicore.jpeg")
+```
 
 ## Isochrones
 

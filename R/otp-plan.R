@@ -6,9 +6,9 @@
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param fromPlace Numeric vector, Longitude/Latitude pair, e.g. `c(-0.134649,51.529258)`,
-#' or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS
+#' or 2 column matrix of Longitude/Latitude pairs, or sf data frame of POINTS
 #' @param toPlace Numeric vector, Longitude/Latitude pair, e.g. `c(-0.088780,51.506383)`,
-#' or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS
+#' or 2 column matrix of Longitude/Latitude pairs, or sf data frame of POINTS
 #' @param fromID character vector same length as fromPlace
 #' @param toID character vector same length as toPlace
 #' @param mode Character vector of modes of travel valid values TRANSIT, WALK,
@@ -27,7 +27,7 @@
 #'
 #' @export
 #' @family routing
-#' @return Returns an SF data.frame of LINESTRINGs
+#' @return Returns an SF data frame of LINESTRINGs
 #'
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -37,10 +37,9 @@
 #'
 #' ## Batch Routing
 #'
-#' When passing a matrix or SF data.frame object to fromPlace and toPlace `otp_plan` will route in batch mode.
-#' In this case the `ncores` variable will be used. `ncores == 2` will likely yield a 35% performance boost
-#' but `ncores > 3` will not yield a performance improvement on typical computers, as you will reduce the
-#' amount of resource available for OTP.
+#' When passing a matrix or SF data frame object to fromPlace and toPlace `otp_plan` will route in batch mode.
+#' In this case the `ncores` variable will be used. Increasing `ncores` will enable multicore routing, the max
+#'  `ncores` should be the number of cores on your system - 1.
 #'
 #' ## Elevation
 #'
