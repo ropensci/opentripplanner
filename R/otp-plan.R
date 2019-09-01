@@ -370,6 +370,9 @@ otp_plan_internal <- function(otpcon = NA,
   routerUrl <- make_url(otpcon)
   routerUrl <- paste0(routerUrl, "/plan")
 
+  fromPlace <- format(fromPlace, scientific = FALSE, digits = 9, trim = TRUE)
+  toPlace <- format(toPlace, scientific = FALSE, digits = 9, trim = TRUE)
+
   fromPlace <- paste(fromPlace, collapse = ",")
   toPlace <- paste(toPlace, collapse = ",")
 

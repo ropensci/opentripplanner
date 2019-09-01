@@ -14,10 +14,10 @@ otp_plan(otpcon = NA, fromPlace = NA, toPlace = NA, fromID = NULL,
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
 \item{fromPlace}{Numeric vector, Longitude/Latitude pair, e.g. `c(-0.134649,51.529258)`,
-or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS}
+or 2 column matrix of Longitude/Latitude pairs, or sf data frame of POINTS}
 
 \item{toPlace}{Numeric vector, Longitude/Latitude pair, e.g. `c(-0.088780,51.506383)`,
-or 2 column matrix of Longitude/Latitude pairs, or sf data.frame of POINTS}
+or 2 column matrix of Longitude/Latitude pairs, or sf data frame of POINTS}
 
 \item{fromID}{character vector same length as fromPlace}
 
@@ -48,7 +48,7 @@ date and time, default FALSE}
 \item{ncores}{Numeric, number of cores to use when batch processing, default 1, see details}
 }
 \value{
-Returns an SF data.frame of LINESTRINGs
+Returns an SF data frame of LINESTRINGs
 }
 \description{
 This is the main routing function for OTP and can find single or multiple routes between
@@ -62,10 +62,9 @@ and is indicated by the `route_option` column. The number of different itinerari
 
 ## Batch Routing
 
-When passing a matrix or SF data.frame object to fromPlace and toPlace `otp_plan` will route in batch mode.
-In this case the `ncores` variable will be used. `ncores == 2` will likely yield a 35% performance boost
-but `ncores > 3` will not yield a performance improvement on typical computers, as you will reduce the
-amount of resource available for OTP.
+When passing a matrix or SF data frame object to fromPlace and toPlace `otp_plan` will route in batch mode.
+In this case the `ncores` variable will be used. Increasing `ncores` will enable multicore routing, the max
+ `ncores` should be the number of cores on your system - 1.
 
 ## Elevation
 
