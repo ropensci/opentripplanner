@@ -38,7 +38,8 @@ The `otp_plan()` function can produce multiple routes at once. In this example, 
 We'll start by importing the locations of the LSOA points.
 
 ```{r, eval=FALSE}
-lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
+lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg",
+                    stringsAsFactors = FALSE)
 head(lsoa)
 ```
 
@@ -71,13 +72,27 @@ knitr::include_graphics("images/routes_to_ferry.jpg")
 It is sometimes useful to find the route between every possible origin and destination for example when producing an OD matrix. If you wished to route from every LSOA to every other LSOA point this can easily be done by repeating the points. 
 
 ```{r, eval=FALSE}
-toPlace   = lsoa[rep(1, nrow(lsoa), times = nrow(lsoa)),]
-fromPlace = lsoa[rep(1, nrow(lsoa), each  = nrow(lsoa)),]
+toPlace   = lsoa[rep(seq(1, nrow(lsoa)), times = nrow(lsoa)),]
+fromPlace = lsoa[rep(seq(1, nrow(lsoa)), each  = nrow(lsoa)),]
 ```
 
 **Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case, 89 points results in 89 x 89 = 7921 routes, this will take a while.
 
 For an OD matrix, you may only be interested in the total travel time and not require the route geometry. By setting `get_geometry = FALSE` in `otp_plan()` R will just return the meta-data and discard the geometry. This is slightly faster than when using `get_geometry = TRUE` and uses less memory.
+
+For example to make a travel time matrix:
+
+```{r, eval=FALSE}
+routes <- otp_plan(otpcon = otpcon,
+                    fromPlace = fromPlace,
+                    toPlace = toPlace,
+                   fromID = fromPlace$geo_code,
+                   toID = toPlace$geo_code,
+                   ncores = 5,
+                   get_geometry = FALSE)
+routes <- routes[,c("fromPlace","toPlace","duration")]
+routes_matrix <- tidyr::spread(routes, key = "toPlace", value = "duration") #Uses the tidyr package
+```
 
 ### Multicore Support
 
