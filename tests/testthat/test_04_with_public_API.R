@@ -1,11 +1,11 @@
 # Checks against a  public API
 # Very limited testing to abide by fair use policy
 
-otpcon <- otp_connect(
-  hostname = "demo.planner.plannerstack.com",
-  router = "default",
-  port = 80
-)
+#otpcon <- otp_connect(
+ # hostname = "demo.planner.plannerstack.com",
+ # router = "default",
+ # port = 80
+#)
 
 
 context("Test the otp_plan function")
