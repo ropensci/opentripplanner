@@ -91,7 +91,10 @@ routes <- otp_plan(otpcon = otpcon,
                    ncores = 5,
                    get_geometry = FALSE)
 routes <- routes[,c("fromPlace","toPlace","duration")]
-routes_matrix <- tidyr::spread(routes, key = "toPlace", value = "duration") #Uses the tidyr package
+# Use the tidyr package to go from long to wide format
+routes_matrix <- tidyr::spread(routes, 
+                               key = "toPlace", 
+                               value = "duration") 
 ```
 
 ### Multicore Support
@@ -126,7 +129,7 @@ library(tmap)                       # Load the tmap package
 tmap_mode("view")                   # Set tmap to interative viewing
 map <- tm_shape(ferry_current) +  # Build the map
   tm_fill("minutes",
-          breaks = c(0, 15.001, 30.001, 45.001, 60.001, 75.001, 90.001),
+          breaks = c(0, 15.01, 30.01, 45.01, 60.01, 75.01, 90.01),
           style = "fixed",
           palette = "-RdYlBu") +
   tm_borders()
