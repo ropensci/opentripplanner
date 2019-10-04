@@ -168,7 +168,7 @@ router_config$routingDefaults$walkSpeed        # Currently 1.34 m/s
 router_config$routingDefaults$walkSpeed <- 1.5 # Increase the walking speed
 otp_validate_config(router_config)             # Check the new config is valid
 otp_write_config(router_config,                # Save the config file
-                 dir = data_path,
+                 dir = path_data,
                  router = "default")
 
 ```
