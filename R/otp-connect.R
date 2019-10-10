@@ -116,7 +116,7 @@ make_url.otpconnect <- function(x) {
       x$router
     )
   } else {
-    url <- url
+    url <- x$url
   }
 
   return(url)
