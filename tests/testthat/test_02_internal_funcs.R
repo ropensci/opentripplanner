@@ -32,8 +32,10 @@ test_that("test otp_clean_input", {
   expect_true(nrow(r2) == 2)
   expect_true(ncol(r2) == 2)
 
-  r3 <- sf::st_as_sf(data.frame(id = 1,
-                                geometry = sf::st_sfc(sf::st_point(c(1, 1)))))
+  r3 <- sf::st_as_sf(data.frame(
+    id = 1,
+    geometry = sf::st_sfc(sf::st_point(c(1, 1)))
+  ))
   r3 <- otp_clean_input(r3)
   expect_is(r3, "matrix")
   expect_true(nrow(r3) == 1)

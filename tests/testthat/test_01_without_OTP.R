@@ -59,16 +59,16 @@ test_that("otp_plan input validation", {
   regexp = "Failed to connect to localhost port 8080: Connection refused"
   )
   expect_error(otp_plan(otpcon,
-                        toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-                        fromPlace = matrix(c(1, 1), ncol = 2),
-                        toID = c("A","B","C")
+    toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+    fromPlace = matrix(c(1, 1), ncol = 2),
+    toID = c("A", "B", "C")
   ),
   regexp = "The length of toID and toPlace are not the same"
   )
   expect_error(otp_plan(otpcon,
-                        toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-                        fromPlace = matrix(c(1, 1), ncol = 2),
-                        fromID = c("A","B","C")
+    toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
+    fromPlace = matrix(c(1, 1), ncol = 2),
+    fromID = c("A", "B", "C")
   ),
   regexp = "The length of fromID and fromPlace are not the same"
   )
@@ -138,26 +138,26 @@ test_that("otp_make_config tests", {
   otp_write_config(config_otp, dir = tempdir())
 
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "default", "router-config.json")))
+    tempdir(), "graphs", "default", "router-config.json"
+  )))
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "default", "build-config.json")))
+    tempdir(), "graphs", "default", "build-config.json"
+  )))
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "default", "otp-config.json")))
-
+    tempdir(), "graphs", "default", "otp-config.json"
+  )))
 })
 
 test_that("otp_build_graph input validation", {
   expect_error(otp_build_graph(otp = path_otp, dir = path_data),
     regexp = "File does not exist:"
   )
-
 })
 
 test_that("otp_setup input validation", {
   expect_error(otp_setup(otp = path_otp, dir = path_data),
-               regexp = "File does not exist:"
+    regexp = "File does not exist:"
   )
-
 })
 
 

@@ -15,8 +15,9 @@ otp_stop(warn = TRUE, kill_all = TRUE)
 This function return a message but no object
 }
 \description{
-OTP is run in Java and requires Java commands to be typed into the command line.
-The function allows the parameters to be defined in R and automatically passed to Java.
+OTP is run in Java and requires Java commands to be typed
+into the command line. The function allows the parameters
+to be defined in R and automatically passed to Java.
 This function stops an already running OTP instance
 }
 \details{

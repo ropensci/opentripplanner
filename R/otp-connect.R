@@ -1,14 +1,17 @@
 #' Set up and confirm a connection to an OTP instance.
 #'
-#' Defines the parameters required to connect to a router on an OTP instance and,
-#' if required, confirms that the instance and router are query-able.
+#' Defines the parameters required to connect to a router on an OTP
+#' instance and, if required, confirms that the instance and router
+#' are query-able.
 #'
 #' @param hostname A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
 #'     Optional, default is "localhost".
 #' @param router A string, e.g. "UK2018". Optional, default is "default".
-#' @param url If a nonstandard URL stucture is used provide a full url, default is NULL
+#' @param url If a nonstandard URL stucture is used provide a full url,
+#'     default is NULL
 #' @param port A positive integer. Optional, default is 8080.
-#' @param ssl Logical, indicates whether to use https. Optional, default is FALSE.
+#' @param ssl Logical, indicates whether to use https. Optional,
+#'     default is FALSE.
 #' @param check Logical. If TRUE connection object is only returned if OTP
 #'     instance and router are confirmed reachable. Optional, default is TRUE.
 #' @return Returns an S3 object of class otpconnect. If \code{check} is TRUE
@@ -19,10 +22,11 @@
 #' http://<hostname>:<port>/otp/routers/<router>
 #' For example: http://localhost:8080/otp/routers/default
 #'
-#' Functions construct the URL from the parameters provided in otpconnect objects. However
-#' some websites hosting OTP have modified the default URL structure. If this is the case
-#' you can use the \code{url} parameter to bypass the URL construction and provide a fully
-#' formed URL. In this case the \code{hostname}, \code{router}, \code{port}, and \code{ssl}
+#' Functions construct the URL from the parameters provided in otpconnect
+#' objects. However some websites hosting OTP have modified the default
+#' URL structure. If this is the case you can use the \code{url} parameter
+#' to bypass the URL construction and provide a fully formed URL. In this
+#' case the \code{hostname}, \code{router}, \code{port}, and \code{ssl}
 #' are ignored.
 #' @examples
 #' \dontrun{
@@ -116,7 +120,7 @@ make_url.default <- function(x) {
 #' @noRd
 #'
 make_url.otpconnect <- function(x) {
-  if(is.null(x$url)){
+  if (is.null(x$url)) {
     url <- paste0(
       ifelse(isTRUE(x$ssl), "https://", "http://"),
       x$hostname,

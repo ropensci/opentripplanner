@@ -10,8 +10,9 @@ otp_make_config(type)
 \item{type}{Which type of config file to create, "otp", "build", "router"}
 }
 \description{
-OTP can be configured using three json files `otp-config.json`, `build-config.json`,
-and `router-config.json`. This function creates a named list for each config file and
+OTP can be configured using three json files `otp-config.json`,
+`build-config.json`, and `router-config.json`. This function
+creates a named list for each config file and
 populates the defaults values.
 }
 \details{
@@ -20,8 +21,8 @@ http://docs.opentripplanner.org/en/latest/Configuration
 }
 \examples{
 {
-conf <- otp_make_config("build")
-conf <- otp_make_config("router")
+  conf <- otp_make_config("build")
+  conf <- otp_make_config("router")
 }
 }
 \seealso{

@@ -11,36 +11,44 @@ otp_setup(otp = NULL, dir = NULL, memory = 2048,
 \arguments{
 \item{otp}{A character string, path to the OTP .jar file}
 
-\item{dir}{A character string, path to a directory containing the necessary files, see details}
+\item{dir}{A character string, path to a directory containing the
+necessary files, see details}
 
-\item{memory}{A positive integer. Amount of memory to assign to the OTP in MB, default is 2048}
+\item{memory}{A positive integer. Amount of memory to assign to
+the OTP in MB, default is 2048}
 
-\item{router}{A character vector for the name of the routers, must match with contents of dir, default "default"
+\item{router}{A character vector for the name of the routers, must
+    match with contents of dir, default "default"
 Only a single router is currently supported}
 
 \item{port}{A positive integer. Optional, default is 8080.}
 
 \item{securePort}{A positive integer. Optional, default is 8081.}
 
-\item{analyst}{Logical. Should the analyst features be loaded? Default FALSE}
+\item{analyst}{Logical. Should the analyst features be loaded?
+Default FALSE}
 
-\item{wait}{Logical, Should R wait until OTP has loaded before running next line of code, default TRUE}
+\item{wait}{Logical, Should R wait until OTP has loaded before
+running next line of code, default TRUE}
 }
 \value{
-This function does not return a value to R.
-If wait is TRUE R will wait until OTP is running (maximum of 5 minutes).
-After 5 minutes (or if wait is FALSE) the function will return R to your control, but the OTP will keep loading.
+This function does not return a value to R. If wait is TRUE R
+will wait until OTP is running (maximum of 5 minutes).
+After 5 minutes (or if wait is FALSE) the function will return
+R to your control, but the OTP will keep loading.
 }
 \description{
-OTP is run in Java and requires Java commands to be typed into the command line.
-The function allows the parameters to be defined in R and automatically passed to Java.
-This function sets up a local instance of OTP, for remote versions see documentation.
+OTP is run in Java and requires Java commands to be typed into the
+command line. The function allows the parameters to be defined in
+R and automatically passed to Java. This function sets up a local
+instance of OTP, for remote versions see documentation.
 
 The function assumes you have run otp_build_graph()
 }
 \details{
-To run an OTP graph must have been created using otp_build_graph and the following files to be in the directory
-specified by the dir variable.
+To run an OTP graph must have been created using otp_build_graph
+and the following files to be in the directory specified by the
+dir variable.
 
 /graphs - A sub-directory
 
@@ -50,8 +58,16 @@ specified by the dir variable.
 }
 \examples{
 \dontrun{
-otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data")
-otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5000, analyst = TRUE)
+otp_setup(
+  otp = "C:/otp/otp.jar",
+  dir = "C:/data"
+)
+otp_setup(
+  otp = "C:/otp/otp.jar",
+  dir = "C:/data",
+  memory = 5000,
+  analyst = TRUE
+)
 }
 }
 \seealso{

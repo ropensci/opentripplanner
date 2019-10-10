@@ -14,7 +14,8 @@ otp_write_config(config, dir = NULL, router = "default")
 \item{router}{name of the router, default is "default"}
 }
 \description{
-Takes a config list produced by `otp_make_config()` and saves it as json file for OTP
+Takes a config list produced by `otp_make_config()` and saves it as json
+file for OTP
 }
 \examples{
 \dontrun{

@@ -12,13 +12,17 @@ otp_isochrone(otpcon = NA, fromPlace = NA, mode = "TRANSIT",
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
-\item{fromPlace}{Numeric vector, Longitude/Latitude pair, e.g. `c(-0.134649, 51.529258,)`}
+\item{fromPlace}{Numeric vector, Longitude/Latitude pair,
+e.g. `c(-0.134649, 51.529258,)`}
 
-\item{mode}{Character vector of modes of travel valid values TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR}
+\item{mode}{Character vector of modes of travel valid values
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR}
 
-\item{date_time}{POSIXct, a date and time, defaults to current date and time}
+\item{date_time}{POSIXct, a date and time, defaults to current
+date and time}
 
-\item{arriveBy}{Logical, Whether the trip should depart or arrive at the specified date and time, default FALSE}
+\item{arriveBy}{Logical, Whether the trip should depart or
+arrive at the specified date and time, default FALSE}
 
 \item{maxWalkDistance}{Numeric passed to OTP}
 
@@ -28,7 +32,8 @@ otp_isochrone(otpcon = NA, fromPlace = NA, mode = "TRANSIT",
 
 \item{minTransferTime}{Numeric passed to OTP}
 
-\item{cutoffSec}{Numeric vector, number of seconds to define the break points of each Isochrone}
+\item{cutoffSec}{Numeric vector, number of seconds to define
+the break points of each Isochrone}
 }
 \value{
 Returns a SF data.frame of POLYGONs

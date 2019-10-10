@@ -12,21 +12,28 @@ otp_geocode(otpcon = NULL, query = NULL, autocomplete = FALSE,
 
 \item{query}{Character, The query string we want to geocode}
 
-\item{autocomplete}{logical Whether we should use the query string to do a prefix match, default FALSE}
+\item{autocomplete}{logical Whether we should use the query
+string to do a prefix match, default FALSE}
 
-\item{stops}{Logical, Search for stops, either by name or stop code, default TRUE}
+\item{stops}{Logical, Search for stops, either by name or
+stop code, default TRUE}
 
-\item{clusters}{Logical, Search for clusters by their name, default FALSE}
+\item{clusters}{Logical, Search for clusters by their name,
+default FALSE}
 
-\item{corners}{Logical, Search for street corners using at least one of the street names, default TRUE}
+\item{corners}{Logical, Search for street corners using at
+least one of the street names, default TRUE}
 
-\item{type}{Character, How should results be returned can be "SF" or "Coordinates" or "Both", Default "SF"}
+\item{type}{Character, How should results be returned can
+be "SF" or "Coordinates" or "Both", Default "SF"}
 }
 \value{
-Returns a data.frame of SF POINTS or Coordinates of all the locations that match `query`
+Returns a data.frame of SF POINTS or Coordinates of all
+    the locations that match `query`
 }
 \description{
-Geo-coding converts a named place, such as a street name into a lat/lng pair.
+Geo-coding converts a named place, such as a street name into a
+     lng/lat pair.
 }
 \details{
 OTP will return a maximum of 10 results

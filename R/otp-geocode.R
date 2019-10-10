@@ -1,17 +1,24 @@
 #'  Use OTP Geo-coder to find a location
 #'
-#'  Geo-coding converts a named place, such as a street name into a lat/lng pair.
+#'  Geo-coding converts a named place, such as a street name into a
+#'      lng/lat pair.
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param query Character, The query string we want to geocode
-#' @param autocomplete logical Whether we should use the query string to do a prefix match, default FALSE
-#' @param stops Logical, Search for stops, either by name or stop code, default TRUE
-#' @param clusters Logical, Search for clusters by their name, default FALSE
-#' @param corners Logical, Search for street corners using at least one of the street names, default TRUE
-#' @param type Character, How should results be returned can be "SF" or "Coordinates" or "Both", Default "SF"
+#' @param autocomplete logical Whether we should use the query
+#'     string to do a prefix match, default FALSE
+#' @param stops Logical, Search for stops, either by name or
+#'     stop code, default TRUE
+#' @param clusters Logical, Search for clusters by their name,
+#'     default FALSE
+#' @param corners Logical, Search for street corners using at
+#'     least one of the street names, default TRUE
+#' @param type Character, How should results be returned can
+#'     be "SF" or "Coordinates" or "Both", Default "SF"
 #' @family routing
 #' @return
-#' Returns a data.frame of SF POINTS or Coordinates of all the locations that match `query`
+#' Returns a data.frame of SF POINTS or Coordinates of all
+#'     the locations that match `query`
 #' @examples
 #' \dontrun{
 #' locations <- otp_geocode(otpcon, "High Street")
@@ -30,15 +37,17 @@ otp_geocode <- function(otpcon = NULL,
   # Validate Inputs
   checkmate::assert_class(otpcon, "otpconnect", null.ok = FALSE)
   checkmate::assert_character(query,
-                              null.ok = FALSE, len = 1,
-                              min.chars = 1, any.missing = FALSE)
+    null.ok = FALSE, len = 1,
+    min.chars = 1, any.missing = FALSE
+  )
   checkmate::assert_logical(autocomplete, null.ok = FALSE)
   checkmate::assert_logical(stops, null.ok = FALSE)
   checkmate::assert_logical(clusters, null.ok = FALSE)
   checkmate::assert_logical(corners, null.ok = FALSE)
   checkmate::assert_choice(type,
-                           choices = c("SF", "Coordinates", "Both"),
-                           null.ok = FALSE)
+    choices = c("SF", "Coordinates", "Both"),
+    null.ok = FALSE
+  )
 
 
   autocomplete <- tolower(as.character(autocomplete))

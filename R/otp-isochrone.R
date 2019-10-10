@@ -1,15 +1,20 @@
 #' Get the Isochrones from a location
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
-#' @param fromPlace Numeric vector, Longitude/Latitude pair, e.g. `c(-0.134649, 51.529258,)`
-#' @param mode Character vector of modes of travel valid values TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR
-#' @param date_time POSIXct, a date and time, defaults to current date and time
-#' @param arriveBy Logical, Whether the trip should depart or arrive at the specified date and time, default FALSE
+#' @param fromPlace Numeric vector, Longitude/Latitude pair,
+#'     e.g. `c(-0.134649, 51.529258,)`
+#' @param mode Character vector of modes of travel valid values
+#'     TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR
+#' @param date_time POSIXct, a date and time, defaults to current
+#'     date and time
+#' @param arriveBy Logical, Whether the trip should depart or
+#'     arrive at the specified date and time, default FALSE
 #' @param maxWalkDistance Numeric passed to OTP
 #' @param walkReluctance Numeric passed to OTP
 #' @param transferPenalty Numeric passed to OTP
 #' @param minTransferTime Numeric passed to OTP
-#' @param cutoffSec Numeric vector, number of seconds to define the break points of each Isochrone
+#' @param cutoffSec Numeric vector, number of seconds to define
+#'     the break points of each Isochrone
 #' @family routing
 #' @return
 #' Returns a SF data.frame of POLYGONs

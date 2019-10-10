@@ -1,26 +1,32 @@
 #' Build an OTP Graph
 #'
 #' @description
-#' OTP is run in Java and requires Java commands to be typed into the command line.
-#' The function allows the parameters to be defined in R and automatically passed to Java.
-#' This function builds a OTP graph from the Open Street Map and other files.
+#' OTP is run in Java and requires Java commands to be typed into the
+#' command line. The function allows the parameters to be defined in
+#' R and automatically passed to Java. This function builds a OTP
+#' graph from the Open Street Map and other files.
 #'
 #' @param otp A character string, path to the OTP .jar file
-#' @param dir A character string, path to a directory containing the necessary files, see details
-#' @param memory A positive integer. Amount of memory to assign to the OTP in MB, default is 2048
-#' @param router A character string for the name of the router, must match with contents of dir, default "default"
+#' @param dir A character string, path to a directory containing the
+#'     necessary files, see details
+#' @param memory A positive integer. Amount of memory to assign to
+#'     the OTP in MB, default is 2048
+#' @param router A character string for the name of the router, must
+#'     match with contents of dir, default "default"
 #' @param analyst Logical, should analyst feature be built, default FALSE
 #' @return
-#' Returns and log messages produced by OTP, and will return the message "Graph built" if successful
+#' Returns and log messages produced by OTP, and will return the message
+#'     "Graph built" if successful
 #' @details
-#' The OTP .jar file can be downloaded from https://repo1.maven.org/maven2/org/opentripplanner/otp/
+#' The OTP .jar file can be downloaded from
+#'     https://repo1.maven.org/maven2/org/opentripplanner/otp/
 #'
 #' To build an OTP graph requires the following files to be in the directory
 #' specified by the dir variable.
 #'
 #' /graphs - A sub-directory
 #'
-#'   /default - A sub-directory with the name of the OTP router used in 'router' variable
+#'   /default - A sub-directory with the name of the OTP router used in router' variable
 #'
 #'     osm.pbf - Required, pbf file containing the Open Street Map
 #'
@@ -30,8 +36,10 @@
 #'
 #'     terrain.tif - Optional, GeoTiff image of terrain map
 #'
-#' The function will accept any file name for the .jar file, but it must be the only .jar file in that directory
-#' OTP can support multiple routers (e.g. different regions), each router must have its own sub-directory in the graphs directory
+#' The function will accept any file name for the .jar file, but it must be
+#' the only .jar file in that directory OTP can support multiple routers
+#' (e.g. different regions), each router must have its own sub-directory in
+#' the graphs directory
 #' @family setup
 #' @examples
 #' \dontrun{
@@ -47,11 +55,13 @@ otp_build_graph <- function(otp = NULL,
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
-  if(!check){
+  if (!check) {
     stop()
   }
-  message(paste0(Sys.time(),
-                 " Basic checks completed, building graph, this may take a few minutes"))
+  message(paste0(
+    Sys.time(),
+    " Basic checks completed, building graph, this may take a few minutes"
+  ))
 
   text <- paste0(
     "java -Xmx",
@@ -73,10 +83,10 @@ otp_build_graph <- function(otp = NULL,
 
   # Check for errors
   if (any(grepl("ERROR", set_up, ignore.case = TRUE)) & length(set_up) < 10) {
-    message(paste0(Sys.time()," Failed to build graph with message:"))
+    message(paste0(Sys.time(), " Failed to build graph with message:"))
     message(set_up)
   } else {
-    message(paste0(Sys.time()," Graph built"))
+    message(paste0(Sys.time(), " Graph built"))
   }
   return(set_up)
 }
@@ -85,29 +95,37 @@ otp_build_graph <- function(otp = NULL,
 #' Set up an OTP instance.
 #'
 #' @description
-#' OTP is run in Java and requires Java commands to be typed into the command line.
-#' The function allows the parameters to be defined in R and automatically passed to Java.
-#' This function sets up a local instance of OTP, for remote versions see documentation.
+#' OTP is run in Java and requires Java commands to be typed into the
+#' command line. The function allows the parameters to be defined in
+#' R and automatically passed to Java. This function sets up a local
+#' instance of OTP, for remote versions see documentation.
 #'
 #' The function assumes you have run otp_build_graph()
 #' @param otp A character string, path to the OTP .jar file
-#' @param dir A character string, path to a directory containing the necessary files, see details
-#' @param memory A positive integer. Amount of memory to assign to the OTP in MB, default is 2048
-#' @param router A character vector for the name of the routers, must match with contents of dir, default "default"
+#' @param dir A character string, path to a directory containing the
+#'     necessary files, see details
+#' @param memory A positive integer. Amount of memory to assign to
+#'     the OTP in MB, default is 2048
+#' @param router A character vector for the name of the routers, must
+#'     match with contents of dir, default "default"
 #' Only a single router is currently supported
 #' @param port A positive integer. Optional, default is 8080.
 #' @param securePort A positive integer. Optional, default is 8081.
-#' @param analyst Logical. Should the analyst features be loaded? Default FALSE
-#' @param wait Logical, Should R wait until OTP has loaded before running next line of code, default TRUE
+#' @param analyst Logical. Should the analyst features be loaded?
+#'     Default FALSE
+#' @param wait Logical, Should R wait until OTP has loaded before
+#'     running next line of code, default TRUE
 #' @family setup
 #' @return
-#' This function does not return a value to R.
-#' If wait is TRUE R will wait until OTP is running (maximum of 5 minutes).
-#' After 5 minutes (or if wait is FALSE) the function will return R to your control, but the OTP will keep loading.
+#' This function does not return a value to R. If wait is TRUE R
+#' will wait until OTP is running (maximum of 5 minutes).
+#' After 5 minutes (or if wait is FALSE) the function will return
+#' R to your control, but the OTP will keep loading.
 #' @details
 #'
-#' To run an OTP graph must have been created using otp_build_graph and the following files to be in the directory
-#' specified by the dir variable.
+#' To run an OTP graph must have been created using otp_build_graph
+#' and the following files to be in the directory specified by the
+#' dir variable.
 #'
 #' /graphs - A sub-directory
 #'
@@ -117,8 +135,16 @@ otp_build_graph <- function(otp = NULL,
 #'
 #' @examples
 #' \dontrun{
-#' otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data")
-#' otp_setup(otp = "C:/otp/otp.jar", dir = "C:/data", memory = 5000, analyst = TRUE)
+#' otp_setup(
+#'   otp = "C:/otp/otp.jar",
+#'   dir = "C:/data"
+#' )
+#' otp_setup(
+#'   otp = "C:/otp/otp.jar",
+#'   dir = "C:/data",
+#'   memory = 5000,
+#'   analyst = TRUE
+#' )
 #' }
 #' @export
 otp_setup <- function(otp = NULL,
@@ -131,7 +157,7 @@ otp_setup <- function(otp = NULL,
                       wait = TRUE) {
   # Run Checks
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
-  if(!check){
+  if (!check) {
     stop()
   }
   checkmate::assert_numeric(memory, lower = 500)
@@ -140,8 +166,8 @@ otp_setup <- function(otp = NULL,
 
   # Set up OTP
   if (checkmate::testOS("windows") |
-      checkmate::testOS("mac") |
-      checkmate::testOS("linux")) {
+    checkmate::testOS("mac") |
+    checkmate::testOS("linux")) {
     text <- paste0(
       "java -Xmx", memory, 'M -jar "',
       otp,
@@ -195,28 +221,33 @@ otp_setup <- function(otp = NULL,
           port,
           " in your browser to view the OTP"
         ))
-        utils::browseURL(paste0(ifelse(otpcon$ssl,
-                                       "https://", "http://"),
-                                "localhost:", port))
+        utils::browseURL(paste0(
+          ifelse(otpcon$ssl,
+            "https://", "http://"
+          ),
+          "localhost:", port
+        ))
         break
       } else {
         if (i < 30) {
           Sys.sleep(30)
         } else {
-          message(paste0(Sys.time(),
-                         " OTP is taking an unusually long time to load, releasing R to your control, OTP will continue in the background"))
+          message(paste0(
+            Sys.time(),
+            " OTP is taking an unusually long time to load, releasing R to your control, OTP will continue in the background"
+          ))
         }
       }
     }
   }
-
 }
 
 #' Stop and OTP Instance
 #'
 #' @description
-#' OTP is run in Java and requires Java commands to be typed into the command line.
-#' The function allows the parameters to be defined in R and automatically passed to Java.
+#' OTP is run in Java and requires Java commands to be typed
+#' into the command line. The function allows the parameters
+#' to be defined in R and automatically passed to Java.
 #' This function stops an already running OTP instance
 #' @param warn Logical, should you get a warning message
 #' @param kill_all Logical, should all Java instances be killed?
@@ -232,8 +263,10 @@ otp_setup <- function(otp = NULL,
 #' @export
 otp_stop <- function(warn = TRUE, kill_all = TRUE) {
   if (warn && interactive()) {
-    readline(prompt =
-    "This will force Java to close, Press [enter] to continue, [escape] to abort")
+    readline(
+      prompt =
+        "This will force Java to close, Press [enter] to continue, [escape] to abort"
+    )
   }
 
   if (checkmate::testOS("linux") | checkmate::testOS("mac")) {
@@ -264,8 +297,10 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
 #'
 #' Checks to run before setting up the OTP
 #'
-#' @param dir A character string path to a folder containing the necessary files, see details
-#' @param router A character string for the name of the router, must match with contents of dir, default "default"
+#' @param dir A character string path to a folder containing the necessary
+#'     files, see details
+#' @param router A character string for the name of the router, must match
+#'     with contents of dir, default "default"
 #' @param graph Logical, check for graph, default = FALSE
 #' @param otp Path to otp.jar
 #' @family internal
@@ -282,7 +317,7 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
     checkmate::assertFileExists(paste0(dir, "/graphs/", router, "/Graph.obj"))
     size <- file.info(paste0(dir, "/graphs/", router, "/Graph.obj"))
     size <- size$size
-    if(size < 5000){
+    if (size < 5000) {
       warning("Graph.obj exists but is very small, the build process may have failed")
       return(FALSE)
     }
