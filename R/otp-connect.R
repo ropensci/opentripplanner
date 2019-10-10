@@ -6,6 +6,7 @@
 #' @param hostname A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
 #'     Optional, default is "localhost".
 #' @param router A string, e.g. "UK2018". Optional, default is "default".
+#' @param url If a nonstandard URL strucutre is used provide a full url, default is NULL
 #' @param port A positive integer. Optional, default is 8080.
 #' @param ssl Logical, indicates whether to use https. Optional, default is FALSE.
 #' @param check Logical. If TRUE connection object is only returned if OTP
@@ -26,10 +27,14 @@
 #'   port = 8888,
 #'   ssl = TRUE
 #' )
+#' otpcon <- otp_connect(
+#'   url = "https://api.digitransit.fi/routing/v1/routers/hsl"
+#' )
 #' }
 #' @export
 otp_connect <- function(hostname = "localhost",
                         router = "default",
+                        url = NULL,
                         port = 8080,
                         ssl = FALSE,
                         check = TRUE) {
@@ -38,6 +43,7 @@ otp_connect <- function(hostname = "localhost",
   coll <- checkmate::makeAssertCollection()
   checkmate::assert_string(hostname, add = coll)
   checkmate::assert_string(router, add = coll)
+  checkmate::assert_string(url, add = coll)
   checkmate::assert_int(port, lower = 1, add = coll)
   checkmate::assert_logical(ssl, add = coll)
   checkmate::assert_logical(check, add = coll)
@@ -46,6 +52,7 @@ otp_connect <- function(hostname = "localhost",
   otpcon <- list(
     hostname = hostname,
     router = router,
+    url = url,
     port = port,
     ssl = ssl
   )
@@ -99,16 +106,22 @@ make_url.default <- function(x) {
 #' @noRd
 #'
 make_url.otpconnect <- function(x) {
-  url <- paste0(
-    ifelse(isTRUE(x$ssl), "https://", "http://"),
-    x$hostname,
-    ":",
-    x$port,
-    "/otp/routers/",
-    x$router
-  )
+  if(is.null(x$url)){
+    url <- paste0(
+      ifelse(isTRUE(x$ssl), "https://", "http://"),
+      x$hostname,
+      ":",
+      x$port,
+      "/otp/routers/",
+      x$router
+    )
+  } else {
+    url <- url
+  }
+
   return(url)
 }
+
 
 #' otpconnect method to check if router exists
 #' @param x otpcon

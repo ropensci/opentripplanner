@@ -116,11 +116,10 @@ If you have not used the default settings, such as a different `port` you can sp
 otpcon <- otp_connect(hostname =  "localhost", router = "default", port = 8801)
 ```
 
-You can also use the `otp_connect()` function to make a connection to OTP on a remote server, for example [plannerstack](http://demo.planner.plannerstack.com/) run an OTP server for the Netherlands. See their [documentation](http://docs.plannerstack.org/en/latest/) for more details.
+You can also use the `otp_connect()` function to make a connection to OTP on a remote server, for example [digitransit](https://digitransit.fi/en/) run an OTP server for Finland. See their [documentation](https://digitransit.fi/en/developers/) for more details. Digitransit use a non-standard URL strucutre for their API, so we provide the full URL directly to `otp_connect()`.
 
 ```{r, eval = FALSE}
-otpcon <- otp_connect(hostname = "demo.planner.plannerstack.com",
-                      router = "default", port = 80)
+otpcon <- otp_connect(url = "https://api.digitransit.fi/routing/v1/routers/hsl")
 ```
 
 

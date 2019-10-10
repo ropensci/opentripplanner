@@ -539,7 +539,14 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
 
   # Extract Fare Info and discard for now
   fare <- itineraries$fare
-  itineraries$fare <- NULL
+  if(!is.null(fare)){
+    itineraries$fare <- fare$fare$regular$cents / 100
+    itineraries$fare_currency <- fare$fare$regular$currency$currency
+  } else {
+    itineraries$fare <- NA
+    itineraries$fare_currency <- NA
+  }
+
 
   itineraries <- itineraries[legs$route_option, ]
   itineraries <- dplyr::bind_cols(itineraries, legs)
