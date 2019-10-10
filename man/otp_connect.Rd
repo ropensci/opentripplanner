@@ -13,7 +13,7 @@ Optional, default is "localhost".}
 
 \item{router}{A string, e.g. "UK2018". Optional, default is "default".}
 
-\item{url}{If a nonstandard URL strucutre is used provide a full url, default is NULL}
+\item{url}{If a nonstandard URL stucture is used provide a full url, default is NULL}
 
 \item{port}{A positive integer. Optional, default is 8080.}
 
@@ -30,6 +30,17 @@ Returns an S3 object of class otpconnect. If \code{check} is TRUE
 Defines the parameters required to connect to a router on an OTP instance and,
 if required, confirms that the instance and router are query-able.
 }
+\details{
+The default URL structure for the OTP API is:
+http://<hostname>:<port>/otp/routers/<router>
+For example: http://localhost:8080/otp/routers/default
+
+Functions construct the URL from the parameters provided in otpconnect objects. However
+some websites hosting OTP have modified the default URL structure. If this is the case
+you can use the \code{url} parameter to bypass the URL construction and provide a fully
+formed URL. In this case the \code{hostname}, \code{router}, \code{port}, and \code{ssl}
+are ignored.
+}
 \examples{
 \dontrun{
 otpcon <- otp_connect()
@@ -44,7 +55,7 @@ otpcon <- otp_connect(
   ssl = TRUE
 )
 otpcon <- otp_connect(
-  url = "https://api.digitransit.fi/routing/v1/routers/hsl"
+  url = "https://api.digitransit.fi:443/routing/v1/routers/hsl"
 )
 }
 }
