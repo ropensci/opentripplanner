@@ -8,10 +8,13 @@ context("Test the otp_plan function")
 
 test_that("basic routing", {
  route <- otp_plan(otpcon,
-   fromPlace = c(24.904353, 60.220485),
+   fromPlace = matrix(c(24.904353, 60.220485, 0, 0),
+                      ncol = 2,
+                      byrow = TRUE),
    toPlace = c(24.952068, 60.192033),
-   fromID = "A",
-   toID = "B"
+   fromID = c("A","Bug"),
+   toID = "B",
+   full_elevation = TRUE
  )
  expect_is(route, "sf")
  expect_true(nrow(route) == 1)

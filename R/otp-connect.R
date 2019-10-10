@@ -6,7 +6,7 @@
 #' @param hostname A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
 #'     Optional, default is "localhost".
 #' @param router A string, e.g. "UK2018". Optional, default is "default".
-#' @param url If a nonstandard URL strucutre is used provide a full url, default is NULL
+#' @param url If a nonstandard URL stucture is used provide a full url, default is NULL
 #' @param port A positive integer. Optional, default is 8080.
 #' @param ssl Logical, indicates whether to use https. Optional, default is FALSE.
 #' @param check Logical. If TRUE connection object is only returned if OTP
@@ -14,6 +14,16 @@
 #' @return Returns an S3 object of class otpconnect. If \code{check} is TRUE
 #'     and the router is not reachable the object is not returned.
 #' @family connect
+#' @details
+#' The default URL structure for the OTP API is:
+#' http://<hostname>:<port>/otp/routers/<router>
+#' For example: http://localhost:8080/otp/routers/default
+#'
+#' Functions construct the URL from the parameters provided in otpconnect objects. However
+#' some websites hosting OTP have modified the default URL structure. If this is the case
+#' you can use the \code{url} parameter to bypass the URL construction and provide a fully
+#' formed URL. In this case the \code{hostname}, \code{router}, \code{port}, and \code{ssl}
+#' are ignored.
 #' @examples
 #' \dontrun{
 #' otpcon <- otp_connect()
@@ -28,7 +38,7 @@
 #'   ssl = TRUE
 #' )
 #' otpcon <- otp_connect(
-#'   url = "https://api.digitransit.fi/routing/v1/routers/hsl"
+#'   url = "https://api.digitransit.fi:443/routing/v1/routers/hsl"
 #' )
 #' }
 #' @export

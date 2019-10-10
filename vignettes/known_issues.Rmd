@@ -22,11 +22,6 @@ This vignette highlights some known limitations or bugs with OpenTripPlanner as 
 
 * [OTP GitHub Issues](https://github.com/ITSleeds/opentripplanner/issues)
 
-## Support for OTP 1.4
-
-Coming Soon
-
-
 ## Reasons for Routing to Fail
 
 If you find OTP can not find a route here are some common reasons to check:
@@ -41,7 +36,7 @@ OTP does not support all mode combinations (e.g. walk + drive) so some places ma
 
 ### Maximum walk to transit
 
-by default OPT caps the maximum walking distance to a transit stop at a low level, so some areas are unreachable by transit. Increase the maximum walking distance to get better results.
+By default OTP caps the maximum walking distance to a transit stop at a low level, so some areas are unreachable by transit. Increase the maximum walking distance to get better results.
 
 ### Driving on Roads with cycleway tag
 
@@ -59,7 +54,7 @@ If you are doing a large amount of routing conisder the following options.
 
 ## GTFS Data for the UK
 
-Coming Soon see https://github.com/ITSLeeds/UK2GTFS
+See https://github.com/ITSLeeds/UK2GTFS
 
 ## Elevation Data
 

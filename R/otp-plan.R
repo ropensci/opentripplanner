@@ -133,13 +133,13 @@ otp_plan <- function(otpcon = NA,
     if (nrfp > nrtp & nrtp == 1) {
       toPlace <- toPlace[rep(1, times = nrfp), ]
       if (!is.null(toID)) {
-        toID <- toID[rep(1, times = nrfp), ]
+        toID <- toID[rep(1, times = nrfp)]
       }
       warning("repeating toPlace to match length of fromPlace")
     } else if (nrtp > nrfp & nrfp == 1) {
       fromPlace <- fromPlace[rep(1, times = nrtp), ]
       if (!is.null(fromID)) {
-        fromID <- fromID[rep(1, times = nrtp), ]
+        fromID <- fromID[rep(1, times = nrtp)]
       }
       warning("repeating fromPlace to match length of toPlace")
     } else {
