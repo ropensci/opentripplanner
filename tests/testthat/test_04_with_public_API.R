@@ -1,7 +1,7 @@
 # Checks against a  public API
 # Very limited testing to abide by fair use policy
 
-otpcon <- otp_connect(url = "https://api.digitransit.fi/routing/v1/routers/hsl")
+otpcon <- otp_connect(url = "https://api.digitransit.fi:443/routing/v1/routers/hsl")
 
 
 context("Test the otp_plan function")
