@@ -43,7 +43,7 @@ otp_connect <- function(hostname = "localhost",
   coll <- checkmate::makeAssertCollection()
   checkmate::assert_string(hostname, add = coll)
   checkmate::assert_string(router, add = coll)
-  checkmate::assert_string(url, add = coll)
+  checkmate::assert_string(url, add = coll, null.ok = TRUE)
   checkmate::assert_int(port, lower = 1, add = coll)
   checkmate::assert_logical(ssl, add = coll)
   checkmate::assert_logical(check, add = coll)
