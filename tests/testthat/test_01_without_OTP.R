@@ -15,7 +15,6 @@ path_data <- file.path(tempdir(), "otp")
 otp_dl_demo(path_data)
 
 test_that("download example data", {
-
   expect_true(file.exists(file.path(
     path_data, "graphs", "default", "isle-of-wight.osm.pbf"
   )))
