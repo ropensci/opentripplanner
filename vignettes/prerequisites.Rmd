@@ -15,41 +15,35 @@ vignette: >
 This vignette provides guidance for people who new to OpenTripPlanner (OTP) and R.
 After you have R and OTP installed and have become familiar with them (e.g. by reading this vignette), we recommend working through [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
 
+### Why would I want to use OpenTripPlanner for R?
+
+[OpenTripPlanner](http://www.opentripplanner.org/) (OTP) is a free, open-source, and cross-platform multi-modal route planner written in Java.  It is like having your own private version of Google Maps. OTP can be used to run public route-finding services such as https://ride.trimet.org but it can also be run on your own computer or server. If you want to analyse a transport networks OTP is a very useful tool. However, OTP is, as the name suggests, a Trip Planner, not analytical software.  So, while OTP can find the fastest route from A to B or find all the places that are within a 20-minute walk of C, it cannot answer a question like “how many people live within 10-minutes of a park?”  This is where R can help.  R can process multiple spatial datasets such as population densities and park locations but does not have a built-in journey planner. 
+
+This package allows you to use the trip planning power of OTP with the analytical might of R.
+
 ## What is this package for, and what is a package anyway?
 
 The `opentripplanner` R package makes it easier for R and OpenTripPlanner to communicate.
 Specifically, it allows you to do use R to control OTP and use it as a local routing service.
 For more on local versus remote routing services, see the Transportation chapter in [Geocomputation with R](https://geocompr.robinlovelace.net/transport.html).
 
-### What is OpenTripPlanner?
-
-OTP is a free, open-source, and cross-platform multi-modal route planner written in JAVA.  It is like having your own private version of Google Maps.
-
-Learn more about OTP at:
-
-* http://www.opentripplanner.org/
-* https://wiki.openstreetmap.org/wiki/OpenTripPlanner
-
-### What is R?
-
-R is a programming language and free software environment for statistical computing and graphics.  R has many capabilities for analysing data and writing software, but in this context, its ability to produce and analyse spatial data and maps is most relevant.
-
-You can find a lot more information about R at:
-
-* https://www.r-project.org/ 
-* https://en.wikipedia.org/wiki/R_(programming_language) 
-
-To get started with R, see An Introduction to R [online](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, or introductory tutorials such as DataCamp's [free](https://www.datacamp.com/courses/free-introduction-to-r) Introduction to R course.
-
 ### What is an R package?
 
 An R package is a small piece of software that extends the basic capabilities of R. It is a bit like how a new phone can do some things out of the box (make phone calls, send email) but you have to install apps to add extra abilities.
 
-### Why would I want to use OpenTripPlanner for R?
+### What are R and RStudio?
 
-OTP can be used to run public route finding services such as https://ride.trimet.org but it can also be run on your own private computer or server. If you want to analyse a transport network OTP is a very useful tool. However, OTP is, as the name suggests, a Trip Planner, not analytical software.  So, while OTP can find the fastest route from A to B or find all the places that are within a 20-minute walk of C, it cannot answer a question like “how many people live within 10-minutes of a park?”  This is where R can help.  R can process multiple spatial datasets such as population densities and park locations but does not have a built-in journey planner. 
+[R](https://www.r-project.org/) is an open-source programming language and free software environment for statistical computing and graphics.  R has many capabilities for analysing data and writing software, but in this context, its ability to produce and analyse spatial data and maps is most relevant. [RStudio](https://rstudio.com/) is an Integrated Development Environment (IDE) for R which is free for personal use.
 
-This package allows you to use the trip planning power of OTP with the analytical might of R.
+#### Help with R
+
+To get started with R, see [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, introductory tutorials such as DataCamp's free [Introduction to R course](https://www.datacamp.com/courses/free-introduction-to-r), or the [R tutor website](http://www.r-tutor.com/r-introduction). The [Geocomputation with R](https://geocompr.robinlovelace.net) book covers the packages and skills required to analyse spatial datasets such as those produced by OpenTripPlanner.
+
+A video tutorial for installing R and RStudio 
+
+* On [Mac](https://www.youtube.com/watch?v=cX532N_XLIs) 
+* On [Windows](https://www.youtube.com/watch?v=9-RrkJQQYqY)
+
 
 ## What do I need to get started?
 
@@ -57,7 +51,7 @@ You will need a modern computer and to install some software to use OTP and R on
 
 ### Hardware
 
-Running your own trip planners is computationally expensive an so the best results will be had on a modern desktop computer. This package comes with some demonstration data for the Isle of Wight, which as a very small area will run on most modern computers.
+Running your own trip planner is computationally expensive an so the best results will be had on a modern desktop computer. This package comes with some demonstration data for the Isle of Wight, which as a very small area will run on most modern laptops and desktops.
 
 **Recommended Hardware**
 
@@ -90,10 +84,8 @@ OTP is optimised for city-scale routing and performance will degrade with larger
 The OpenTripPlanner for R package requires:
 
 * R - [download R](https://cran.r-project.org/mirrors.html) selecting your country (or nearest available country)
-* RStudio - [download free version](https://www.rstudio.com/products/rstudio/download/) for personal use. RStudio is not essential, but is strongly reccomneded.
+* RStudio - [download free version](https://www.rstudio.com/products/rstudio/download/) for personal use. RStudio is not essential but is strongly recommended.
 * Java 8 **Note** OTP does not work with later versions of Java such as Java 11.
-* OpenTripPlanner jar file [download](https://repo1.maven.org/maven2/org/opentripplanner/otp/) or [compile from source](http://docs.opentripplanner.org/en/latest/Getting-OTP/)
-
 
 Download and install Java 8. You will need the correct version for your operating system. If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
 
@@ -102,19 +94,6 @@ To get Java:
 * **Windows/Mac** https://www.java.com/en/download/ This link defaults to the 32 Bit version, so also check https://java.com/en/download/manual.jsp.
 
 * **Linux**  we recommend instructions at [StackOverflow](https://askubuntu.com/questions/740757/switch-between-multiple-java-versions).
-
-
-#### Help with R
-
-A video tutorial for installing R and RStudio 
-
-* On Mac https://www.youtube.com/watch?v=cX532N_XLIs 
-* On Windows https://www.youtube.com/watch?v=9-RrkJQQYqY 
-
-If you have never used R before there are lots of free tutorials to get you started, such as:
-
-* https://www.datacamp.com/courses/free-introduction-to-r
-* http://www.r-tutor.com/r-introduction
 
 
 ## Next Steps
