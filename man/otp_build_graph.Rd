@@ -61,7 +61,8 @@ log <- otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
 }
 }
 \seealso{
-Other setup: \code{\link{otp_make_config}},
+Other setup: \code{\link{otp_dl_demo}},
+  \code{\link{otp_dl_jar}}, \code{\link{otp_make_config}},
   \code{\link{otp_setup}}, \code{\link{otp_stop}},
   \code{\link{otp_validate_config}},
   \code{\link{otp_write_config}}

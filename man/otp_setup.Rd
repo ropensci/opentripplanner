@@ -72,6 +72,7 @@ otp_setup(
 }
 \seealso{
 Other setup: \code{\link{otp_build_graph}},
+  \code{\link{otp_dl_demo}}, \code{\link{otp_dl_jar}},
   \code{\link{otp_make_config}}, \code{\link{otp_stop}},
   \code{\link{otp_validate_config}},
   \code{\link{otp_write_config}}

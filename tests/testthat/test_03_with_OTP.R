@@ -6,53 +6,7 @@ skip_no_otp <- function() {
   }
 }
 
-context("Download required files")
-path_data <- file.path(tempdir(), "otp")
 
-test_that("download example data", {
-  dir.create(file.path(tempdir(), "otp"))
-  dir.create(file.path(tempdir(), "otp", "graphs"))
-  dir.create(file.path(tempdir(), "otp", "graphs", "default"))
-
-  download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip",
-    destfile = file.path(path_data, "isle-of-wight-demo.zip"), mode = "wb", quiet = TRUE
-  )
-  expect_true(file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
-  unzip(file.path(path_data, "isle-of-wight-demo.zip"),
-    exdir = file.path(path_data, "graphs", "default")
-  )
-
-  expect_true(file.exists(file.path(
-    path_data, "graphs", "default", "isle-of-wight.osm.pbf"
-  )))
-  expect_true(file.exists(file.path(
-    path_data, "graphs", "default", "iow-rail-gtfs.zip"
-  )))
-  expect_true(file.exists(file.path(
-    path_data, "graphs", "default", "iow-bus-gtfs.zip"
-  )))
-  expect_true(file.exists(file.path(
-    path_data, "graphs", "default", "IOW_DEM.tif"
-  )))
-  expect_true(file.exists(file.path(
-    path_data, "graphs", "default", "router-config.json"
-  )))
-
-  unlink(file.path(path_data, "isle-of-wight-demo.zip"))
-  expect_true(!file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
-})
-
-path_otp <- file.path(path_data, "otp.jar")
-test_that("download otp", {
-  url_otp <- "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
-  download.file(
-    url = url_otp,
-    destfile = file.path(path_data, "otp.jar"),
-    mode = "wb",
-    quiet = TRUE
-  )
-  expect_true(file.exists(file.path(path_otp)))
-})
 
 lsoa <- sf::read_sf("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
 test_that("can get lsoa points", {

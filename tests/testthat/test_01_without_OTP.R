@@ -6,11 +6,40 @@ context("Test function without an OTP connection")
 
 # setup empy files
 otpcon <- otp_connect(check = FALSE)
-dir.create(file.path(tempdir(), "otp"))
-dir.create(file.path(tempdir(), "otp", "graphs"))
-dir.create(file.path(tempdir(), "otp", "graphs", "default"))
+
+context("Download required files")
+
 path_data <- file.path(tempdir(), "otp")
-path_otp <- file.path(path_data, "otp.jar")
+otp_dl_demo(path_data)
+
+test_that("download example data", {
+
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "isle-of-wight.osm.pbf"
+  )))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "iow-rail-gtfs.zip"
+  )))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "iow-bus-gtfs.zip"
+  )))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "IOW_DEM.tif"
+  )))
+  expect_true(file.exists(file.path(
+    path_data, "graphs", "default", "router-config.json"
+  )))
+
+
+  expect_true(!file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
+})
+
+path_otp <- otp_dl_jar(path_data)
+
+test_that("download otp", {
+  expect_true(file.exists(file.path(path_otp)))
+})
+
 
 test_that("default object is created and make_url method works", {
   expect_is(otpcon, "otpconnect")
