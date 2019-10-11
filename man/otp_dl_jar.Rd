@@ -8,13 +8,13 @@ otp_dl_jar(path = NULL, version = "1.4.0", file_name = "otp.jar",
   url = "https://repo1.maven.org/maven2/org/opentripplanner/otp")
 }
 \arguments{
+\item{path}{path to folder where OTP is to be stored}
+
 \item{version}{a character string ov version number default is "1.4.0"}
 
 \item{file_name}{file name to give the otp default "otp.jar"}
 
 \item{url}{URL to the dowload server}
-
-\item{path_otp}{path to folder where OTP is to be stored}
 }
 \value{
 The path to the OTP file
@@ -24,7 +24,7 @@ Download the OTP jar file from mavern.org
 }
 \examples{
 \dontrun{
- otp_dl_jar(tempdir())
+otp_dl_jar(tempdir())
 }
 }
 \seealso{

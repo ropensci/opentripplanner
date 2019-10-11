@@ -53,8 +53,13 @@ The package contains three groups of functions:
 
 Functions for setting up a local instance of OTP:
 
-1.  `otp_build_graph()` To make a OTP graph from raw data
-2.  `otp_setup()` To start up a local instance of OTP
+1.  `otp_dl_jar()` To download the OTP Jar file
+2.  `otp_dl_demo()` To download the demo data for the Isle of Wight
+3.  `otp_build_graph()` To make a OTP graph from raw data
+4.  `otp_setup()` To start up a local instance of OTP
+5.  `otp_make_config()` To make a config object
+6.  `otp_validate_config()` To validate a config object
+7.  `otp_write_config()` To save a config object as a json file
 
 Functions for connecting to a local or remote instance of OTP:
 

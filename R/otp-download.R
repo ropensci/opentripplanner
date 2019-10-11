@@ -3,8 +3,8 @@
 #' @description
 #' Download the OTP jar file from mavern.org
 #'
+#' @param path path to folder where OTP is to be stored
 #' @param version a character string ov version number default is "1.4.0"
-#' @param path_otp path to folder where OTP is to be stored
 #' @param file_name file name to give the otp default "otp.jar"
 #' @param url URL to the dowload server
 #' @return
@@ -22,7 +22,7 @@ otp_dl_jar <- function(path = NULL,
                        url = "https://repo1.maven.org/maven2/org/opentripplanner/otp") {
   url <- paste0(url, "/", version, "/otp-", version, "-shaded.jar")
   destfile <- file.path(path, file_name)
-  download.file(url = url, destfile = destfile, mode = "wb")
+  utils::download.file(url = url, destfile = destfile, mode = "wb")
   return(destfile)
 }
 
@@ -53,12 +53,12 @@ otp_dl_demo <- function(path_data = NULL,
     dir.create(file.path(path_data, "graphs", "default"))
   }
 
-  download.file(
+  utils::download.file(
     url = url,
     destfile = file.path(path_data, "isle-of-wight-demo.zip"),
     mode = "wb"
   )
-  unzip(file.path(path_data, "isle-of-wight-demo.zip"),
+  utils::unzip(file.path(path_data, "isle-of-wight-demo.zip"),
     exdir = file.path(path_data, "graphs", "default")
   )
   unlink(file.path(path_data, "isle-of-wight-demo.zip"))

@@ -17,7 +17,7 @@ Download the demonstration data for the Isle of Wight
 }
 \examples{
 \dontrun{
- otp_dl_demo(tempdir())
+otp_dl_demo(tempdir())
 }
 }
 \seealso{
