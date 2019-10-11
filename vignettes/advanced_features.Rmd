@@ -97,15 +97,59 @@ routes_matrix <- tidyr::spread(routes,
                                value = "duration") 
 ```
 
+Notice the use of `fromID` and `toID` this allows `otp_plan` to return the LSOA `geo_code` with the routes. This can be useful when producing many routes. If no IDs are provided `otp_plan` will return the latitude/longitude of the fromPlace and toPlace.
+
 ### Multicore Support
 
-OTP supports mulitcore routing out of the box. This is based on one core per route, so is only suited to finding large number of routes. The `otp_plan()` fucntion has the argument `ncores = 1` this can be changed to any positive integer to enable multicore processing e.g. `ncores = 4`. It is recommended that the maximum value for `ncores` is one less than the number of cores on your system. This allows one core to be left for the operating system and any other tasks. 
+OTP supports multicore routing out of the box. This is based on one core per route, so is only suited to finding a large number of routes. The `otp_plan()` function has the argument `ncores = 1` this can be changed to any positive integer to enable multicore processing e.g. `ncores = 4`. It is recommended that the maximum value for `ncores` is one less than the number of cores on your system. This allows one core to be left for the operating system and any other tasks. 
 
-This graph demonstrates the reduction in time take to route between all LSOA pairs on the Isle of Wight demo, using one to six cores.
+This graph demonstrates the reduction in time taken to route between all LSOA pairs on the Isle of Wight demo, using one to six cores.
 
 ```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:multicore} Multicore performance improvements"}
 knitr::include_graphics("images/multicore.jpeg")
 ```
+
+## Elevation Profiles
+
+For walking an cycling routes the hilliness of the route matters. If elevation data is available OTP will return the elevation profile of the route. By default, OTP returns the elevation separately from the XY coordinates, but for convenience `otp_plan()` matches the Z coordinates to the XY coordinates. This may result in some minor misalignments. To demonstrate this, let's get a walking route.
+
+```{r, eval=FALSE}
+route <- otp_plan(otpcon = otpcon,
+                    fromPlace = c(-1.18968, 50.60096),
+                    toPlace = c(-1.19105, 50.60439),
+                    mode = "WALK",
+                    full_elevation = TRUE)
+```
+
+Notice the use of `full_elevation = TRUE` this will return the raw elevation profile from OTP.
+
+We can view the raw profile. It is a data.frame of 3 columns, `first` is the distance along a leg of the route, `second` is the elevation, and `distance` is calculated by `otp_plan()` as the cumulative distance along the whole route. 
+
+```{r, eval=FALSE}
+profile_raw <- route$elevation[[1]]
+plot(profile_raw$distance, profile_raw$second, type = "p",
+     xlab = "distance along route", ylab = "elevation")
+```
+
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:ele1}Elevation profile from raw data"}
+knitr::include_graphics("images/elevation1.png")
+```
+
+To get an elevation profile from the XYZ coordinates is a little more complicated. The `sf::st_coordinates` function returns a matrix of the XYZ coordinates that make up the line. The `geodist` package provides a quick way to calculate the lengths in metres between lng/lat points. 
+
+```{r, eval=FALSE}
+profile_xyz <- sf::st_coordinates(route)
+dists <- geodist::geodist(profile_xyz[,c("X","Y")], sequential = TRUE)
+dists <- cumsum(dists)
+plot(dists, profile_xyz[2:nrow(profile_xyz),"Z"], type = "p",
+     xlab = "distance along route", ylab = "elevation")
+```
+
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:ele2}Elevation profile from XZY coordinates"}
+knitr::include_graphics("images/elevation2.png")
+```
+
+Notice that there is less detail in the XYZ graph as the Z coordinates are only matched to a change in XY coordinates, i.e. you only check the elevation when there is a turn in the road.
 
 ## Isochrones
 
