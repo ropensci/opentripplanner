@@ -30,10 +30,10 @@ To use OpenTripPlanner on your local computer you will need to install Java 8 an
 
 ### R Package
 
-Install the package with **remotes** as follows:
+Install the package with **devtools** as follows:
 
 ```{r install, eval=FALSE}
-install.packages("remotes") # If you do not already have the remotes package
+install.packages("devtools") # If you do not already have the remotes package
 remotes::install_github("ITSleeds/opentripplanner")
 ```
 

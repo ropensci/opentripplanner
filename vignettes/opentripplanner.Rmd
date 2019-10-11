@@ -27,7 +27,7 @@ You will need to have installed R, RStudio, and Java 8. For more details on the 
 The following commands will install and attach the package:
 
 ```{r, eval=FALSE}
-remotes::install_github("ITSLeeds/opentripplanner") # Requires the remotes package
+devtools::install_github("ITSLeeds/opentripplanner") # Requires the devtools package
 library(opentripplanner)
 ```
 
