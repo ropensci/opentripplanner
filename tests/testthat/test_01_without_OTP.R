@@ -9,7 +9,9 @@ otpcon <- otp_connect(check = FALSE)
 
 context("Download required files")
 
+dir.create(file.path(tempdir(), "otp"))
 path_data <- file.path(tempdir(), "otp")
+
 otp_dl_demo(path_data)
 
 test_that("download example data", {
