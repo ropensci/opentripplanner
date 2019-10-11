@@ -574,34 +574,69 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
 
 #' Correct the elevation distances
 #'
-#' OTP returns elevation as a distance along the leg, resetting to 0 at each leg
-#' but we need the distance along the total route. so calculate this
+#' OTP returns elevation as a distance along the leg,
+#' resetting to 0 at each leg but we need the distance
+#' along the total route. so calculate this. Sometimes
+#' the legs don't reset at 0, so account for this by
+#' looking for a drop in length, sometimes small drops
+#' within a leg so allows an error factor to ignore
+#' small drops.
+#'
 #' @param dists numeric from the elevation first column
+#' @param err a tollerance for errors in otp results
 #' @family internal
 #' @noRd
 
-correct_distances <- function(dists) {
-  res <- list()
-  rebase <- 0
-  for (k in seq(1, length(dists))) {
-    if (k == 1) {
-      dists_k <- dists[k]
-      res[[k]] <- dists_k
+correct_distances <- function(dists, err = 1) {
+  lth <- length(dists)
+  brks <- dists[seq(1,lth - 1)]  > (dists[seq(2,lth)] + err)
+  brks <- seq(1, lth)[brks]
+  mxs <- list()
+  brks_lth <- length(brks)
+  for(k in seq(1, brks_lth)){
+    if(k == 1){
+      mxs[[k]] <- max(dists[seq(1,brks[k])])
+    } else if (k <= brks_lth){
+      mxs[[k]] <- max(dists[seq(brks[k - 1] + 1,brks[k])])
     } else {
-      dists_k <- dists[k]
-      res_km1 <- res[[k - 1]]
-      if (dists_k == 0) {
-        rebase <- rebase + dists[k - 1]
-        res[[k]] <- dists_k + rebase
-      } else {
-        res[[k]] <- dists_k + rebase
-      }
+      stop("error in sequence of correct_distances")
     }
   }
-
-  res <- unlist(res)
+  mxs <- unlist(mxs)
+  mxs <- cumsum(mxs)
+  mxs <- c(0, mxs)
+  reps <- c(0, brks, lth)
+  reps <- reps[seq(2, length(reps))] - reps[seq(1, length(reps) - 1)]
+  csum <- rep(mxs, times = reps)
+  res <- dists + csum
   return(res)
+
 }
+# correct_distances <- function(dists) {
+#   res <- list()
+#   rebase <- 0
+#   for (k in seq(1, length(dists))) {
+#     if (k == 1) {
+#       dists_k <- dists[k]
+#       res[[k]] <- dists_k
+#     } else {
+#       dists_k <- dists[k]
+#       res_km1 <- res[[k - 1]]
+#       if (dists_k == 0) {
+#         rebase <- rebase + dists[k - 1]
+#         res[[k]] <- dists_k + rebase
+#       } else {
+#         res[[k]] <- dists_k + rebase
+#       }
+#     }
+#   }
+#
+#   res <- unlist(res)
+#   return(res)
+# }
+
+
+
 
 #' Convert Google Encoded Polyline and elevation data into sf object
 #'
