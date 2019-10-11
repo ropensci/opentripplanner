@@ -31,7 +31,7 @@ devtools::install_github("ITSLeeds/opentripplanner") # Requires the devtools pac
 library(opentripplanner)
 ```
 
-## Downloading OTP and the demonstation data
+## Downloading OTP and the demonstration data
 
 We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided.
 
@@ -68,7 +68,7 @@ Now we can build the graph. This code will create a new file `Graph.obj` that wi
 log <- otp_build_graph(otp = path_otp, dir = path_data) 
 ```
 
-By default, R will assign OTP 2GB of memory to build the graph. For larger areas, you may need more memory and can use the `memory` argument  to set the memory allocation in MB. For example, to allocate 10GB you would use.
+By default, R will assign OTP 2GB of memory to build the graph. For larger areas, you may need more memory and can use the `memory` argument to set the memory allocation in MB. For example, to allocate 10GB you would use.
 
 ```{r eval=FALSE}
 log <- otp_build_graph(otp = path_otp, dir = path_data, memory = 10240) 
@@ -161,7 +161,7 @@ An OTP graph specifies every location in the region covered and how to travel be
 
 Our first task is to create the folder and file structure expected by OTP. This is a base directory called `otp` which contains a sub-directory called `graphs`. Directories created under `graphs` are known as OTP routers and contain all the files required to build a graph. A single OTP instance can host several routers, for example covering different regions. 
 
-The basic file strucutre is shown below.
+The basic file structure is shown below.
 
 ```{r, engine='bash', eval=FALSE}
 / otp                         # Your top folder for storing all OTP data
@@ -185,7 +185,7 @@ To use OTP on your local computer you will need data about your location of inte
 
 OTP uses road maps from the [Open Street Map (OSM)](https://www.openstreetmap.org) in the [.osm or .pbf format](https://wiki.openstreetmap.org/wiki/OSM_file_formats). OSM is a free map that anybody can edit. You can download all or part of the OSM from [Geofabrik](https://download.geofabrik.de/).
 
-Note that OTP only really needs the road network from the OSM, but the Geofabrik downloads include non-road data such as buildings, parks water etc. So for large areas, you may wish to remove unneeded data from the file prior to building the graph. You can do this using [osmconvert](https://wiki.openstreetmap.org/wiki/Osmconvert) and [osmfilter](https://wiki.openstreetmap.org/wiki/Osmfilter). These are command-line utilities for editing large OSM files and are documented on the OSM Wiki. For small areas (e.g. city scale) this is not necessary. 
+Note that OTP only really needs the road network from the OSM, but the Geofabrik downloads include non-road data such as buildings, parks water etc. So for large areas, you may wish to remove unneeded data from the file before building the graph. You can do this using [osmconvert](https://wiki.openstreetmap.org/wiki/Osmconvert) and [osmfilter](https://wiki.openstreetmap.org/wiki/Osmfilter). These are command-line utilities for editing large OSM files and are documented on the OSM Wiki. For small areas (e.g. city scale) this is not necessary. 
 
 #### Public Transport Timetables
 
