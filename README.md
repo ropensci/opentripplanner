@@ -39,12 +39,15 @@ vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html
 
 ### R Package
 
-Install the package with **devtools** as
-follows:
+Install the package using the **devtools** package as follows:
 
 ``` r
-install.packages("devtools") # If you do not already have the devtools package
+# If you do not already have the devtools package
+install.packages("devtools")
+# Install the package from GitHub
 devtools::install_github("ITSleeds/opentripplanner")
+# Load the package
+library(opentripplanner)
 ```
 
 ## Usage
@@ -68,7 +71,7 @@ Functions for connecting to a local or remote instance of OTP:
 Functions for retrieving data from OTP:
 
 1.  `otp_plan()` To get routes from A to B
-2.  `otp_isochone()` To get isochrone maps
+2.  `otp_isochrone()` To get isochrone maps
 3.  `otp_geocode()` To get the locations of named places e.g. road names
 
 Results are returned as [sf

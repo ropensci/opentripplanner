@@ -27,15 +27,15 @@ The `opentripplanner` R package makes it easier for R and OpenTripPlanner to com
 Specifically, it allows you to do use R to control OTP and use it as a local routing service.
 For more on local versus remote routing services, see the Transportation chapter in [Geocomputation with R](https://geocompr.robinlovelace.net/transport.html).
 
-### What is an R package?
-
-An R package is a small piece of software that extends the basic capabilities of R. It is a bit like how a new phone can do some things out of the box (make phone calls, send email) but you have to install apps to add extra abilities.
-
 ### What are R and RStudio?
 
 [R](https://www.r-project.org/) is an open-source programming language and free software environment for statistical computing and graphics.  R has many capabilities for analysing data and writing software, but in this context, its ability to produce and analyse spatial data and maps is most relevant. [RStudio](https://rstudio.com/) is an Integrated Development Environment (IDE) for R which is free for personal use.
 
-#### Help with R
+### What is an R package?
+
+An R package is a small piece of software that extends the basic capabilities of R. It is a bit like how a new phone can do some things out of the box (make phone calls, send email) but you have to install apps to add extra abilities.
+
+### Help with R
 
 To get started with R, see [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, introductory tutorials such as DataCamp's free [Introduction to R course](https://www.datacamp.com/courses/free-introduction-to-r), or the [R tutor website](http://www.r-tutor.com/r-introduction). The [Geocomputation with R](https://geocompr.robinlovelace.net) book covers the packages and skills required to analyse spatial datasets such as those produced by OpenTripPlanner.
 
@@ -98,5 +98,4 @@ To get Java:
 
 ## Next Steps
 
-Now that you have installed Java and R go to the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), to find how to install the package, create a graph, and use it to plan trips. 
-Some sample data for the Isle of Wight is provided on the GitHub page for this package https://github.com/ITSLeeds/opentripplanner/releases/tag/0.1
+Now that you have installed Java and R go to the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), to find how to install the package, create a graph, and use it to plan trips.

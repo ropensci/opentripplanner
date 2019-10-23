@@ -14,7 +14,7 @@ vignette: >
 This vignette is an introduction to OpenTripPlanner (OTP) - an open-source and cross-platform multi-modal route planner written in Java. It uses imported OpenStreetMap (OSM) data for routing on the street and path network and supports
 multi-agency public transport routing through imported  [General Transit Feed Specification](https://developers.google.com/transit/gtfs/) (GTFS) feeds. It can also apply a digital elevation model to the OSM street network, allowing, for example, cycle-friendly routes to be requested. OTP has a web front-end that can be used by end-users and a sophisticated routing API.
 
-OTP works worldwide as long as there is OSM map coverage in the area. Support for transit timetables and elevation calculations are dependant on the available data. For more information on getting data see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
+OTP works worldwide as long as there is OSM map coverage in the area. Support for transit timetables and elevation calculations are dependant on the available data. For more information on getting data see the [getting data for OTP](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html#getting-data-for-otp) section.
 
 A major advantage of running your own multi-modal route planner is the ability to carry out analysis using amended transport data. Services such as Google Maps or TransportAPI are based on current public transport schedules and the existing road network. OTP enables you to modify transit schedules and/or make changes to the underlying street network. By editing a local copy of OSM, you can model the effects of opening new roads, closing roads or imposing other restrictions. You can also look back in time. For example, you might want to examine the effect of reductions in rural bus services on the accessibility of health facilities. To do this you would need a network with bus schedules as they were in previous years.
 
@@ -24,16 +24,21 @@ You will need to have installed R, RStudio, and Java 8. For more details on the 
 
 ## Installation
 
-The following commands will install and attach the package:
+Install the package using the **devtools** package as follows:
 
-```{r, eval=FALSE}
-devtools::install_github("ITSLeeds/opentripplanner") # Requires the devtools package
+```{r install, eval=FALSE}
+# If you do not already have the devtools package
+install.packages("devtools")
+# Install the package from GitHub
+devtools::install_github("ITSleeds/opentripplanner")
+# Load the package
 library(opentripplanner)
 ```
 
+
 ## Downloading OTP and the demonstration data
 
-We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided.
+We will build an example graph for the Isle of Wight using some example data provided for the package. A graph is what OTP uses to find routes, and must be built out of the raw data provided. Please note the demo data has been modified for teaching purposes and should not be used for analysis.
 
 ### Creating a folder to store OTP and its data
 
@@ -92,12 +97,13 @@ otp_setup(otp = path_otp, dir = path_data, port = 8801, securePort = 8802)
 
 It should only take a minute or two for OTP to load the graph and start the Grizzly server. If all has worked you should see the message: `OTP is ready to use` and R will open your web browser at the OTP.
 
-You can also access the web interface using the URL: [http://localhost:8080](http://localhost:8080). **Note:** The web interface does not work correctly in Internet Explorer - use Firefox or Chrome. You can now zoom into the Isle of Wight area and request a route by setting an origin and a destination directly on the map (by right-clicking your mouse) and you can specify travel dates, times and modes using the 'Trip Options' window (see Figure \ref{fig:otpgui}). You can change the background map from the layer stack icon at the top right.
+You can also access the web interface using the URL: [http://localhost:8080](http://localhost:8080). You can now zoom into the Isle of Wight area and request a route by setting an origin and a destination directly on the map (by right-clicking your mouse) and you can specify travel dates, times and modes using the 'Trip Options' window (see Figure \ref{fig:otpgui}). You can change the background map from the layer stack icon at the top right.
 
 ```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:otpgui}OTP Web GUI"}
 knitr::include_graphics("images/otpwebgui.jpg")
 ```
 
+**Note:** The web interface does not work correctly in Internet Explorer - use Firefox or Chrome.
 
 ## Connecting to the OTP from R
 
@@ -112,7 +118,9 @@ The connection is created and tested, a message will be returned saying if the c
 If you have not used the default settings, such as a different `port` you can specify those settings in `otp_connect()`.
 
 ```{r, eval = FALSE}
-otpcon <- otp_connect(hostname =  "localhost", router = "default", port = 8801)
+otpcon <- otp_connect(hostname =  "localhost",
+                      router = "default",
+                      port = 8801)
 ```
 
 You can also use the `otp_connect()` function to make a connection to OTP on a remote server, for example [digitransit](https://digitransit.fi/en/) run an OTP server for Finland. See their [documentation](https://digitransit.fi/en/developers/) for more details. Digitransit use a non-standard URL strucutre for their API, so we provide the full URL directly to `otp_connect()`. See the `otp_connect()` help for more details.
@@ -127,7 +135,9 @@ otpcon <- otp_connect(url = "https://api.digitransit.fi/routing/v1/routers/hsl")
 Now we can use R to get a route from the OTP. OTP accepts pairs of longitude/latitude coordinates for a `fromPlace` (start of the journey) and `toPlace` (end of the journey).
 
 ```{r, eval = FALSE}
-route <- otp_plan(otpcon, fromPlace = c(-1.17502, 50.64590), toPlace = c(-1.15339, 50.72266))
+route <- otp_plan(otpcon, 
+                  fromPlace = c(-1.17502, 50.64590), 
+                  toPlace = c(-1.15339, 50.72266))
 ```
 
 If you have the `tmap` package installed you can view the route using.
@@ -197,4 +207,4 @@ You can add terrain information to your routes, especially useful for walking an
 
 **Warning** It is common for GeoTIFF to have a no data value often the maximum possible value. OTP can misinterpret this as an elevation value. So set your no data values in your elevation data to something more plausible like 0.
 
-Note that OTP does not support all types of GeoTIFF compression so you may have to change the compression type of the image if you are experiencing problems. 
+**Note** that OTP does not support all types of GeoTIFF compression so you may have to change the compression type of the image if you are experiencing problems. 

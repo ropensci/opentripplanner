@@ -84,11 +84,10 @@ For example to make a travel time matrix:
 
 ```{r, eval=FALSE}
 routes <- otp_plan(otpcon = otpcon,
-                    fromPlace = fromPlace,
-                    toPlace = toPlace,
+                   fromPlace = fromPlace,
+                   toPlace = toPlace,
                    fromID = fromPlace$geo_code,
                    toID = toPlace$geo_code,
-                   ncores = 5,
                    get_geometry = FALSE)
 routes <- routes[,c("fromPlace","toPlace","duration")]
 # Use the tidyr package to go from long to wide format
