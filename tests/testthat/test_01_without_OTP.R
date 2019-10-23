@@ -12,6 +12,13 @@ context("Download required files")
 dir.create(file.path(tempdir(), "otp"))
 path_data <- file.path(tempdir(), "otp")
 
+
+test_that("need valid path to download", {
+  expect_error(otp_dl_demo("orghkfjbgkfxjbgkj"),
+               regexp = "Can't find folder")
+})
+
+
 otp_dl_demo(path_data)
 
 test_that("download example data", {
@@ -34,6 +41,8 @@ test_that("download example data", {
 
   expect_true(!file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
 })
+
+
 
 path_otp <- otp_dl_jar(path_data)
 

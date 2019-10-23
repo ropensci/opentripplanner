@@ -54,14 +54,6 @@ otp_build_graph <- function(otp = NULL,
 
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
-  check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
-  if (!check) {
-    stop()
-  }
-  message(paste0(
-    Sys.time(),
-    " Basic checks completed, building graph, this may take a few minutes"
-  ))
 
   text <- paste0(
     "java -Xmx",
@@ -78,6 +70,15 @@ otp_build_graph <- function(otp = NULL,
   if (analyst) {
     text <- paste0(text, " --analyst")
   }
+
+  check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
+  if (!check) {
+    stop()
+  }
+  message(paste0(
+    Sys.time(),
+    " Basic checks completed, building graph, this may take a few minutes"
+  ))
 
   set_up <- try(system(text, intern = TRUE))
 
@@ -156,36 +157,35 @@ otp_setup <- function(otp = NULL,
                       analyst = FALSE,
                       wait = TRUE) {
   # Run Checks
+  checkmate::assert_numeric(memory, lower = 500)
+  memory <- floor(memory)
+
+  # Setup request
+  text <- paste0(
+    "java -Xmx", memory, 'M -jar "',
+    otp,
+    '" --router ', router,
+    ' --graphs "', dir, '/graphs"',
+    " --server --port ", port,
+    " --securePort ", securePort
+  )
+
+  if (analyst) {
+    text <- paste0(text, " --analyst")
+  }
+
+  # Run extra checks
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
   if (!check) {
     stop()
   }
-  checkmate::assert_numeric(memory, lower = 500)
-  memory <- floor(memory)
-
 
   # Set up OTP
-  if (checkmate::testOS("windows") |
-    checkmate::testOS("mac") |
-    checkmate::testOS("linux")) {
-    text <- paste0(
-      "java -Xmx", memory, 'M -jar "',
-      otp,
-      '" --router ', router,
-      ' --graphs "', dir, '/graphs"',
-      " --server --port ", port,
-      " --securePort ", securePort
-    )
-
-    if (analyst) {
-      text <- paste0(text, " --analyst")
-    }
+  if (!checkmate::testOS("solaris")) {
     set_up <- try(system(text, intern = FALSE, wait = FALSE))
   } else {
-    message("You're on and unknow OS, this function is not yet supported")
-    stop()
+    stop("You're on and unknow OS, this function is not yet supported")
   }
-
 
   # Check for errors
   if (grepl("ERROR", set_up[2], ignore.case = TRUE)) {
