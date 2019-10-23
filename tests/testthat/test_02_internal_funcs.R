@@ -100,3 +100,47 @@ test_that("test polyline2linestring", {
 
   expect_identical(r2, t2)
 })
+
+# otp_checks
+context("Test otp_checks")
+dir.create(file.path(tempdir(), "otp2"))
+path_data <- file.path(tempdir(), "otp2")
+path_otp <- file.path(tempdir(), "otp2","otp.jar")
+
+
+test_that("test otp_checks without graph, missing files", {
+  expect_error(otp_checks(otp = path_otp,
+                                            dir = path_data,
+                                            router = "default",
+                                            graph = FALSE),
+               regexp = "does not exist")
+})
+
+
+dir.create(file.path(path_data, "graphs"))
+dir.create(file.path(path_data, "graphs","default"))
+file.create(path_otp)
+
+test_that("test otp_checks without graph, with files", {
+  expect_true(otp_checks(otp = path_otp,
+                                            dir = path_data,
+                                            router = "default",
+                                            graph = FALSE))
+})
+
+test_that("test otp_checks with graph, missing files", {
+  expect_error(otp_checks(otp = path_otp,
+                                            dir = path_data,
+                                            router = "default",
+                                            graph = TRUE),
+               regexp = "File does not exist")
+})
+
+file.create(file.path(path_data, "graphs","default","Graph.obj"))
+
+test_that("test otp_checks with graph, with files", {
+  expect_true(otp_checks(otp = path_otp,
+                                           dir = path_data,
+                                           router = "default",
+                                           graph = TRUE))
+})
