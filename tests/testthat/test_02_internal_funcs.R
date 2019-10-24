@@ -102,6 +102,14 @@ test_that("test polyline2linestring", {
 })
 
 # otp_checks
+skip_otp <- function() {
+  if (identical(Sys.getenv("I_have_OTP"), "TRUE")) {
+    skip("Not running full test.")
+  }
+}
+
+
+
 context("Test otp_checks")
 dir.create(file.path(tempdir(), "otp2"))
 path_data <- file.path(tempdir(), "otp2")
@@ -122,11 +130,11 @@ dir.create(file.path(path_data, "graphs","default"))
 file.create(path_otp)
 
 test_that("test otp_checks without graph, with files", {
-  expect_error(otp_checks(otp = path_otp,
+  skip_otp()
+  expect_false(otp_checks(otp = path_otp,
                                             dir = path_data,
                                             router = "default",
-                                            graph = FALSE),
-               regexp = "java")
+                                            graph = FALSE))
 })
 
 test_that("test otp_checks with graph, missing files", {
@@ -140,9 +148,9 @@ test_that("test otp_checks with graph, missing files", {
 file.create(file.path(path_data, "graphs","default","Graph.obj"))
 
 test_that("test otp_checks with graph, with files", {
-  expect_error(otp_checks(otp = path_otp,
+  skip_otp()
+  expect_false(otp_checks(otp = path_otp,
                                            dir = path_data,
                                            router = "default",
-                                           graph = TRUE),
-               regexp = "java")
+                                           graph = TRUE))
 })
