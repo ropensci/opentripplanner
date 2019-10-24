@@ -122,10 +122,11 @@ dir.create(file.path(path_data, "graphs","default"))
 file.create(path_otp)
 
 test_that("test otp_checks without graph, with files", {
-  expect_true(otp_checks(otp = path_otp,
+  expect_error(otp_checks(otp = path_otp,
                                             dir = path_data,
                                             router = "default",
-                                            graph = FALSE))
+                                            graph = FALSE),
+               regexp = "java")
 })
 
 test_that("test otp_checks with graph, missing files", {
@@ -139,8 +140,9 @@ test_that("test otp_checks with graph, missing files", {
 file.create(file.path(path_data, "graphs","default","Graph.obj"))
 
 test_that("test otp_checks with graph, with files", {
-  expect_true(otp_checks(otp = path_otp,
+  expect_error(otp_checks(otp = path_otp,
                                            dir = path_data,
                                            router = "default",
-                                           graph = TRUE))
+                                           graph = TRUE),
+               regexp = "java")
 })
