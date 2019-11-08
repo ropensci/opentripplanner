@@ -200,6 +200,13 @@ For troubleshooting routing issues, you can visualise the traversal permissions 
 
 You can read more about the different debug layers in the official OTP documentation: [http://docs.opentripplanner.org/en/latest/Troubleshooting-Routing/#debug-layers](http://docs.opentripplanner.org/en/latest/Troubleshooting-Routing/#debug-layers).
 
+## Analyist
+
+
+## Multiple Routers
+
+
+
 ## Configuring OpenTripPlanner
 
 How OTP works can be configured using JSON files. `build-config.json` is used during graph building (i.e. `otp_build_graph()`). While `router-config.json` is used during setup (i.e. `otp_setup()`). These files must be saved with the rest of your data and each router can have a unique configuration.
