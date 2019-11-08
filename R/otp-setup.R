@@ -287,7 +287,7 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
   } else if (checkmate::testOS("windows")) {
     system("Taskkill /IM java.exe /F", intern = TRUE)
   } else {
-    message("You're on and unknow OS, this function is not yet supported")
+    message("You're on and unknown OS, this function is not yet supported")
   }
 }
 
