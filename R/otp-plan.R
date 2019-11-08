@@ -15,8 +15,10 @@
 #'     Longitude/Latitude pairs, or sf data frame of POINTS
 #' @param fromID character vector same length as fromPlace
 #' @param toID character vector same length as toPlace
-#' @param mode Character vector of modes of travel valid values
-#'     TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR
+#' @param mode character vector of one or more modes of travel valid values
+#'     TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
+#'     combinations are valid e.g. c("WALK","BUS") is valid but
+#'     c("WALK","CAR") is not.
 #' @param date_time POSIXct, a date and time, defaults to current
 #'     date and time
 #' @param arriveBy Logical, Whether the trip should depart or arrive
