@@ -23,8 +23,10 @@ otp_write_config <- function(config,
   otp_validate_config(config)
   config <- otp_list_clean(config)
 
-  message("The config file will be saved to ",
-          file.path(dir,"graphs",router))
+  message(
+    "The config file will be saved to ",
+    file.path(dir, "graphs", router)
+  )
 
   # Convert to JSON
   jsonlite::write_json(

@@ -15,7 +15,8 @@ path_data <- file.path(tempdir(), "otptests")
 
 test_that("need valid path to download", {
   expect_error(otp_dl_demo("orghkfjbgkfxjbgkj"),
-               regexp = "Can't find folder")
+    regexp = "Can't find folder"
+  )
 })
 
 
@@ -188,13 +189,13 @@ test_that("otp_make_config tests", {
 })
 
 test_that("otp_build_graph input validation", {
-  expect_error(otp_build_graph(otp = paste0(path_otp,"Z"), dir = path_data),
+  expect_error(otp_build_graph(otp = paste0(path_otp, "Z"), dir = path_data),
     regexp = "File does not exist:"
   )
 })
 
 test_that("otp_setup input validation", {
-  expect_error(otp_setup(otp = paste0(path_otp,"Z"), dir = path_data),
+  expect_error(otp_setup(otp = paste0(path_otp, "Z"), dir = path_data),
     regexp = "File does not exist:"
   )
 })

@@ -38,7 +38,7 @@ test_that("basic routing", {
 context("Test the otp_geocode function")
 
 test_that("basic geocode", {
- museum <- otp_geocode(otpcon = otpcon, query = "museum")
- expect_is(museum, "sf")
- expect_true(nrow(museum) > 1)
+  museum <- otp_geocode(otpcon = otpcon, query = "museum")
+  expect_is(museum, "sf")
+  expect_true(nrow(museum) > 1)
 })

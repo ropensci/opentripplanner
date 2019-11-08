@@ -17,9 +17,9 @@
 #' @export
 
 otp_dl_jar <- function(path = NULL,
-              version = "1.4.0",
-              file_name = "otp.jar",
-              url = "https://repo1.maven.org/maven2/org/opentripplanner/otp") {
+                       version = "1.4.0",
+                       file_name = "otp.jar",
+                       url = "https://repo1.maven.org/maven2/org/opentripplanner/otp") {
   url <- paste0(url, "/", version, "/otp-", version, "-shaded.jar")
   destfile <- file.path(path, file_name)
   message("The OTP will be saved to ", destfile)
@@ -43,7 +43,7 @@ otp_dl_jar <- function(path = NULL,
 #' @export
 
 otp_dl_demo <- function(path_data = NULL,
-                url = "https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip") {
+                        url = "https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip") {
   if (!dir.exists(path_data)) {
     stop(paste0("Can't find folder ", path_data))
   }

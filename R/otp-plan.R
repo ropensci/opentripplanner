@@ -591,15 +591,15 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
 
 correct_distances <- function(dists, err = 1) {
   lth <- length(dists)
-  brks <- dists[seq(1,lth - 1)]  > (dists[seq(2,lth)] + err)
+  brks <- dists[seq(1, lth - 1)] > (dists[seq(2, lth)] + err)
   brks <- seq(1, lth)[brks]
   mxs <- list()
   brks_lth <- length(brks)
-  for(k in seq(1, brks_lth)){
-    if(k == 1){
-      mxs[[k]] <- max(dists[seq(1,brks[k])])
-    } else if (k <= brks_lth){
-      mxs[[k]] <- max(dists[seq(brks[k - 1] + 1,brks[k])])
+  for (k in seq(1, brks_lth)) {
+    if (k == 1) {
+      mxs[[k]] <- max(dists[seq(1, brks[k])])
+    } else if (k <= brks_lth) {
+      mxs[[k]] <- max(dists[seq(brks[k - 1] + 1, brks[k])])
     } else {
       stop("error in sequence of correct_distances")
     }
@@ -612,7 +612,6 @@ correct_distances <- function(dists, err = 1) {
   csum <- rep(mxs, times = reps)
   res <- dists + csum
   return(res)
-
 }
 # correct_distances <- function(dists) {
 #   res <- list()
