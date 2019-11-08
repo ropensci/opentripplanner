@@ -12,10 +12,10 @@
 #' @param memory A positive integer. Amount of memory to assign to
 #'     the OTP in MB, default is 2048
 #' @param router A character string for the name of the router, must
-#'     match with contents of dir, default "default"
-#' @param analyst Logical, should analyst feature be built, default FALSE
+#'     match with contents of dir, default "default". See advanced vignette for details.
+#' @param analyst Logical, should analyst feature be built, default FALSE. See advanced vignette for details.
 #' @return
-#' Returns and log messages produced by OTP, and will return the message
+#' Character vector of messages produced by OTP, and will return the message
 #'     "Graph built" if successful
 #' @details
 #' The OTP .jar file can be downloaded from
@@ -107,9 +107,8 @@ otp_build_graph <- function(otp = NULL,
 #'     necessary files, see details
 #' @param memory A positive integer. Amount of memory to assign to
 #'     the OTP in MB, default is 2048
-#' @param router A character vector for the name of the routers, must
-#'     match with contents of dir, default "default"
-#' Only a single router is currently supported
+#' @param router A character for the name of the router to use, must
+#'     match with contents of dir, default "default". See advanced vignette for details.
 #' @param port A positive integer. Optional, default is 8080.
 #' @param securePort A positive integer. Optional, default is 8081.
 #' @param analyst Logical. Should the analyst features be loaded?
