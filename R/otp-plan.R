@@ -23,10 +23,10 @@
 #'     date and time
 #' @param arriveBy Logical, Whether the trip should depart or arrive
 #'     at the specified date and time, default FALSE
-#' @param maxWalkDistance Numeric passed to OTP
+#' @param maxWalkDistance Numeric passed to OTP in metres
 #' @param walkReluctance Numeric passed to OTP
 #' @param transferPenalty Numeric passed to OTP
-#' @param minTransferTime Numeric passed to OTP
+#' @param minTransferTime Numeric passed to OTP in seconds
 #' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned,
 #'     default FALSE

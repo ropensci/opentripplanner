@@ -6,7 +6,7 @@
 #'
 #' @param config A named list made/modified from `otp_make_config()`
 #' @param dir Path to folder where data for OTP is to be stored
-#' @param router name of the router, default is "default"
+#' @param router name of the router, default is "default", must be a subfolder of dir/graphs
 #' @family setup
 #' @examples
 #' \dontrun{

@@ -12,7 +12,7 @@
 #' @param memory A positive integer. Amount of memory to assign to
 #'     the OTP in MB, default is 2048
 #' @param router A character string for the name of the router, must
-#'     match with contents of dir, default "default". See advanced vignette for details.
+#'     subfolder of  dir/graphs, default "default". See vignettes for details.
 #' @param analyst Logical, should analyst feature be built, default FALSE. See advanced vignette for details.
 #' @return
 #' Character vector of messages produced by OTP, and will return the message
@@ -108,7 +108,8 @@ otp_build_graph <- function(otp = NULL,
 #' @param memory A positive integer. Amount of memory to assign to
 #'     the OTP in MB, default is 2048
 #' @param router A character for the name of the router to use, must
-#'     match with contents of dir, default "default". See advanced vignette for details.
+#'     be subfolder of dir/graphs, default "default". See
+#'     vignettes for details.
 #' @param port A positive integer. Optional, default is 8080.
 #' @param securePort A positive integer. Optional, default is 8081.
 #' @param analyst Logical. Should the analyst features be loaded?
@@ -298,8 +299,8 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
 #'
 #' @param dir A character string path to a folder containing the necessary
 #'     files, see details
-#' @param router A character string for the name of the router, must match
-#'     with contents of dir, default "default"
+#' @param router A character string for the name of the router, must be a
+#'     subfolder of dir/graphs, default "default"
 #' @param graph Logical, check for graph, default = FALSE
 #' @param otp Path to otp.jar
 #' @family internal

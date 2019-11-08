@@ -11,9 +11,9 @@
 #'     date and time
 #' @param arriveBy Logical, Whether the trip should depart or
 #'     arrive at the specified date and time, default FALSE
-#' @param maxWalkDistance Numeric passed to OTP
+#' @param maxWalkDistance Numeric passed to OTP in metres
 #' @param walkReluctance Numeric passed to OTP
-#' @param transferPenalty Numeric passed to OTP
+#' @param transferPenalty Numeric passed to OTP in seconds
 #' @param minTransferTime Numeric passed to OTP
 #' @param cutoffSec Numeric vector, number of seconds to define
 #'     the break points of each Isochrone
