@@ -69,7 +69,7 @@ knitr::include_graphics("images/routes_to_ferry.jpg")
 
 ### All to All routing
 
-It is sometimes useful to find the route between every possible origin and destination for example when producing an OD matrix. If you wished to route from every LSOA to every other LSOA point this can easily be done by repeating the points. 
+It is sometimes useful to find the route between every possible origin and destination for example when producing an Origin-Destination (OD) matrix. If you wished to route from every LSOA to every other LSOA point this can easily be done by repeating the points. 
 
 ```{r, eval=FALSE}
 toPlace   = lsoa[rep(seq(1, nrow(lsoa)), times = nrow(lsoa)),]
@@ -91,7 +91,7 @@ routes <- otp_plan(otpcon = otpcon,
                    get_geometry = FALSE)
 routes <- routes[,c("fromPlace","toPlace","duration")]
 # Use the tidyr package to go from long to wide format
-routes_matrix <- tidyr::spread(routes, 
+routes_matrix <- tidyr::pivot_wider(routes, 
                                key = "toPlace", 
                                value = "duration") 
 ```
