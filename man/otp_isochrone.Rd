@@ -15,8 +15,10 @@ otp_isochrone(otpcon = NA, fromPlace = NA, mode = "TRANSIT",
 \item{fromPlace}{Numeric vector, Longitude/Latitude pair,
 e.g. `c(-0.134649, 51.529258,)`}
 
-\item{mode}{Character vector of modes of travel valid values
-TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR}
+\item{mode}{character vector of one or more modes of travel valid values
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
+combinations are valid e.g. c("WALK","BUS") is valid but
+c("WALK","CAR") is not.}
 
 \item{date_time}{POSIXct, a date and time, defaults to current
 date and time}

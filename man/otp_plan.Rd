@@ -26,8 +26,10 @@ Longitude/Latitude pairs, or sf data frame of POINTS}
 
 \item{toID}{character vector same length as toPlace}
 
-\item{mode}{Character vector of modes of travel valid values
-TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR}
+\item{mode}{character vector of one or more modes of travel valid values
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
+combinations are valid e.g. c("WALK","BUS") is valid but
+c("WALK","CAR") is not.}
 
 \item{date_time}{POSIXct, a date and time, defaults to current
 date and time}

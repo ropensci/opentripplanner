@@ -17,12 +17,12 @@ necessary files, see details}
 the OTP in MB, default is 2048}
 
 \item{router}{A character string for the name of the router, must
-match with contents of dir, default "default"}
+match with contents of dir, default "default". See advanced vignette for details.}
 
-\item{analyst}{Logical, should analyst feature be built, default FALSE}
+\item{analyst}{Logical, should analyst feature be built, default FALSE. See advanced vignette for details.}
 }
 \value{
-Returns and log messages produced by OTP, and will return the message
+Character vector of messages produced by OTP, and will return the message
     "Graph built" if successful
 }
 \description{

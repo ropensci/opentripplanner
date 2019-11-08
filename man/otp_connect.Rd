@@ -11,7 +11,7 @@ otp_connect(hostname = "localhost", router = "default", url = NULL,
 \item{hostname}{A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
 Optional, default is "localhost".}
 
-\item{router}{A string, e.g. "UK2018". Optional, default is "default".}
+\item{router}{A string, e.g. "UK2018". Optional, default is "default". OTP can support multiple routers see advanced vignette for details.}
 
 \item{url}{If a nonstandard URL stucture is used provide a full url,
 default is NULL}

@@ -17,9 +17,8 @@ necessary files, see details}
 \item{memory}{A positive integer. Amount of memory to assign to
 the OTP in MB, default is 2048}
 
-\item{router}{A character vector for the name of the routers, must
-    match with contents of dir, default "default"
-Only a single router is currently supported}
+\item{router}{A character for the name of the router to use, must
+match with contents of dir, default "default". See advanced vignette for details.}
 
 \item{port}{A positive integer. Optional, default is 8080.}
 
