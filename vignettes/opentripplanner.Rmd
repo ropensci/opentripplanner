@@ -194,6 +194,23 @@ The basic file structure is shown below.
 
 `router-config.json` is read when the OTP server is started, while `build-config.json` is read during the graph building stage. For more information on the config files see the [advanced features vignette](https://itsleeds.github.io/opentripplanner/articles/advanced_features.html).
 
+### Multiple Routers 
+
+OTP supports multiple routes by having them in separate folders. For example:
+
+```{r, engine='bash', eval=FALSE}
+/ otp                        # Your top folder for storing all OTP data
+  /graphs                     
+     /london                 # router called london
+         osm.pbf             # map of London
+     /manchester             # router called 
+         osm.pbf             # map of Manchester
+```
+
+Having multiple routers may be useful to support different regions, or different scenarios e.g. past, present, future.
+
+Each router requires its own graph via `otp_build_graph()` but only one version of the OTP jar files is needed (i.e. `otp_dl_jar()`) Each route must be started via `otp_setup()` before use. While it is technically possible to run multiple routers simultaneously it is not recommended for performance reasons.
+
 ### Getting Data for OTP
 
 To use OTP on your local computer you will need data about your location of interest, such as where the roads are, what is the public transport timetable etc.

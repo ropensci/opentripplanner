@@ -31,7 +31,7 @@ otpcon <- otp_connect()
 
 ## Batch Routing
 
-The `otp_plan()` function can produce multiple routes at once. In this example, we will gather data on travel times between each of the [LSOAs](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography) on the Isle of White and the [Ryde Ferry](https://www.wightlink.co.uk/go/isle-of-wight-ferry-routes-destinations/) .
+The `otp_plan()` function can produce multiple routes at once. In this example, we will gather data on travel times between each of the [LSOAs](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography) on the Isle of White and the [Ryde Ferry](https://www.wightlink.co.uk/go/isle-of-wight-ferry-routes-destinations/).
 
 `otp_plan()` accepts three types of input for the `fromPlace` and `toPlace`: a numeric longitude/latitude pair; a 2 x m matrix where each row is a longitude/latitude pair; or an SF data.frame of only POINTS. The number of `fromPlace` and `toPlace` must be the same or equal one (in which case `otp_plan()` will repeat the single location to match the length of the longer locations.
 
@@ -110,7 +110,7 @@ knitr::include_graphics("images/multicore.jpeg")
 
 ## Elevation Profiles
 
-For walking an cycling routes the hilliness of the route matters. If elevation data is available OTP will return the elevation profile of the route. By default, OTP returns the elevation separately from the XY coordinates, but for convenience `otp_plan()` matches the Z coordinates to the XY coordinates. This may result in some minor misalignments. To demonstrate this, let's get a walking route.
+For walking and cycling routes the hilliness of the route matters. If elevation data is available OTP will return the elevation profile of the route. By default, OTP returns the elevation separately from the XY coordinates, but for convenience `otp_plan()` matches the Z coordinates to the XY coordinates. This may result in some minor misalignments. To demonstrate this, let's get a walking route.
 
 ```{r, eval=FALSE}
 route <- otp_plan(otpcon = otpcon,
@@ -200,12 +200,9 @@ For troubleshooting routing issues, you can visualise the traversal permissions 
 
 You can read more about the different debug layers in the official OTP documentation: [http://docs.opentripplanner.org/en/latest/Troubleshooting-Routing/#debug-layers](http://docs.opentripplanner.org/en/latest/Troubleshooting-Routing/#debug-layers).
 
-## Analyist
+## Analyst
 
-
-## Multiple Routers
-
-
+Older versions of OTP has some limited analytical features built-in which needed to be enabled during graph build and startup. These features are accessible via the `analyst = TRUE` arguments of `otp_build_graph()` and `otp_setup()`. For more information see the [OTP documentation](http://docs.opentripplanner.org/en/latest/Analyst/)
 
 ## Configuring OpenTripPlanner
 
