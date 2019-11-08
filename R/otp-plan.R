@@ -272,14 +272,14 @@ otp_plan <- function(otpcon = NA,
 #'
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
-                            ... = ...) {
+                            ...) {
   res <- otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
     toPlace = toPlace[x, ],
     fromID = fromID[x],
     toID = toID[x],
-    ... = ...
+    ...
   )
 
   # if ("data.frame" %in% class(res)) {
