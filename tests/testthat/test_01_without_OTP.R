@@ -177,13 +177,13 @@ test_that("otp_make_config tests", {
   otp_write_config(config_otp, dir = tempdir())
 
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "configtests", "router-config.json"
+    tempdir(), "otptests", "graphs", "configtests", "router-config.json"
   )))
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "configtests", "build-config.json"
+    tempdir(), "otptests", "graphs", "configtests", "build-config.json"
   )))
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "configtests", "otp-config.json"
+    tempdir(), "otptests", "graphs", "configtests", "otp-config.json"
   )))
 })
 

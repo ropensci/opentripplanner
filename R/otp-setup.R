@@ -79,7 +79,7 @@ otp_build_graph <- function(otp = NULL,
     Sys.time(),
     " Basic checks completed, building graph, this may take a few minutes"
   ))
-
+  message("The graph will be saved to ", dir)
   set_up <- try(system(text, intern = TRUE))
 
   # Check for errors
