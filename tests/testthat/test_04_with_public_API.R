@@ -23,7 +23,7 @@ test_that("basic routing", {
 
 
 # context("Test the otp_isochone function")
-#
+
 # test_that("basic isochrone", {
 #  isochrone <- otp_isochrone(
 #    otpcon = otpcon,
@@ -34,11 +34,11 @@ test_that("basic routing", {
 #  expect_is(isochrone, "sf")
 #  expect_true(nrow(isochrone) == 6)
 # })
-#
-# context("Test the otp_geocode function")
-#
-# test_that("basic geocode", {
-#  museum <- otp_geocode(otpcon = otpcon, query = "museum")
-#  expect_is(museum, "sf")
-#  expect_true(nrow(museum) > 1)
-# })
+
+context("Test the otp_geocode function")
+
+test_that("basic geocode", {
+ museum <- otp_geocode(otpcon = otpcon, query = "museum")
+ expect_is(museum, "sf")
+ expect_true(nrow(museum) > 1)
+})

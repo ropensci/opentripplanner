@@ -129,13 +129,13 @@ dir.create(file.path(path_data, "graphs"))
 dir.create(file.path(path_data, "graphs","default"))
 file.create(path_otp)
 
-test_that("test otp_checks without graph, with files", {
-  skip_otp()
-  expect_false(otp_checks(otp = path_otp,
-                                            dir = path_data,
-                                            router = "default",
-                                            graph = FALSE))
-})
+# test_that("test otp_checks without graph, with files", {
+#   skip_otp()
+#   expect_false(otp_checks(otp = path_otp,
+#                                             dir = path_data,
+#                                             router = "default",
+#                                             graph = FALSE))
+# })
 
 test_that("test otp_checks with graph, missing files", {
   expect_error(otp_checks(otp = path_otp,
@@ -147,10 +147,10 @@ test_that("test otp_checks with graph, missing files", {
 
 file.create(file.path(path_data, "graphs","default","Graph.obj"))
 
-test_that("test otp_checks with graph, with files", {
-  skip_otp()
-  expect_false(otp_checks(otp = path_otp,
-                                           dir = path_data,
-                                           router = "default",
-                                           graph = TRUE))
-})
+# test_that("test otp_checks with graph, with files", {
+#   skip_otp()
+#   expect_false(otp_checks(otp = path_otp,
+#                                            dir = path_data,
+#                                            router = "default",
+#                                            graph = TRUE))
+# })

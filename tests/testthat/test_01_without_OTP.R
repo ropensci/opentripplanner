@@ -9,8 +9,8 @@ otpcon <- otp_connect(check = FALSE)
 
 context("Download required files")
 
-dir.create(file.path(tempdir(), "otp"))
-path_data <- file.path(tempdir(), "otp")
+dir.create(file.path(tempdir(), "otptests"))
+path_data <- file.path(tempdir(), "otptests")
 
 
 test_that("need valid path to download", {
@@ -169,21 +169,21 @@ test_that("otp_make_config tests", {
   expect_true(otp_validate_config(config_build))
   expect_true(otp_validate_config(config_otp))
 
-  dir.create(file.path(tempdir(), "graphs"))
-  dir.create(file.path(tempdir(), "graphs", "default"))
+  dir.create(file.path(tempdir(), "otptests", "graphs"))
+  dir.create(file.path(tempdir(), "otptests", "graphs", "configtests"))
 
   otp_write_config(config_router, dir = tempdir())
   otp_write_config(config_build, dir = tempdir())
   otp_write_config(config_otp, dir = tempdir())
 
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "default", "router-config.json"
+    tempdir(), "graphs", "configtests", "router-config.json"
   )))
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "default", "build-config.json"
+    tempdir(), "graphs", "configtests", "build-config.json"
   )))
   expect_true(file.exists(file.path(
-    tempdir(), "graphs", "default", "otp-config.json"
+    tempdir(), "graphs", "configtests", "otp-config.json"
   )))
 })
 
