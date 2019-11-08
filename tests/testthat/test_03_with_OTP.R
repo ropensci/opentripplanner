@@ -6,12 +6,27 @@ skip_no_otp <- function() {
   }
 }
 
-
+context("Test the download of the LSOA file")
 
 lsoa <- sf::read_sf("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg")
 test_that("can get lsoa points", {
   expect_is(lsoa, "sf")
   expect_true(nrow(lsoa) == 89)
+})
+
+context("Check previos tests have left the files we need")
+
+path_data <- file.path(tempdir(), "otptests")
+path_otp <- file.path(path_data, "otp.jar")
+
+test_that("path_data is valid", {
+  skip_no_otp()
+  expect_true(dir.exists(file.path(path_data)))
+})
+
+test_that("path_otp is valid", {
+  skip_no_otp()
+  expect_true(file.exists(path_otp))
 })
 
 

@@ -173,9 +173,9 @@ test_that("otp_make_config tests", {
   dir.create(file.path(tempdir(), "otptests", "graphs"))
   dir.create(file.path(tempdir(), "otptests", "graphs", "configtests"))
 
-  otp_write_config(config_router, dir = tempdir())
-  otp_write_config(config_build, dir = tempdir())
-  otp_write_config(config_otp, dir = tempdir())
+  otp_write_config(config_router, dir = file.path(tempdir(), "otptests"), router = "configtests")
+  otp_write_config(config_build, dir = file.path(tempdir(), "otptests"), router = "configtests")
+  otp_write_config(config_otp, dir = file.path(tempdir(), "otptests"), router = "configtests")
 
   expect_true(file.exists(file.path(
     tempdir(), "otptests", "graphs", "configtests", "router-config.json"
