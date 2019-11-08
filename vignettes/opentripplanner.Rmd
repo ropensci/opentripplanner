@@ -42,10 +42,17 @@ We will build an example graph for the Isle of Wight using some example data pro
 
 ### Creating a folder to store OTP and its data
 
-OTP expects its data to be stored in a specific structure, see [building your own otp graph](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html#building-your-own-otp-graph) for more details. We will make a folder called OTP in the temporary directory, you may wish to change this to keep your results after closing R.
+OTP expects its data to be stored in a specific structure, see [building your own otp graph](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html#building-your-own-otp-graph) for more details. We will make a folder called OTP in the temporary directory. 
 
 ```{r, eval=FALSE}
 path_data <- file.path(tempdir(), "OTP")
+dir.create(path_data) 
+```
+
+**You may wish to change this** to keep your files after closing R. Otherwise you will need to download your files and build your graph every time. For example:
+
+```{r, eval=FALSE}
+path_data <- file.path("C:/Users/Public", "OTP")
 dir.create(path_data) 
 ```
 
