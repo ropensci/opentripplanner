@@ -4,13 +4,17 @@
 \alias{otp_dl_jar}
 \title{Download OTP Jar File}
 \usage{
-otp_dl_jar(path = NULL, version = "1.4.0", file_name = "otp.jar",
-  url = "https://repo1.maven.org/maven2/org/opentripplanner/otp")
+otp_dl_jar(
+  path = NULL,
+  version = "1.4.0",
+  file_name = "otp.jar",
+  url = "https://repo1.maven.org/maven2/org/opentripplanner/otp"
+)
 }
 \arguments{
 \item{path}{path to folder where OTP is to be stored}
 
-\item{version}{a character string ov version number default is "1.4.0"}
+\item{version}{a character string of the version number default is "1.4.0"}
 
 \item{file_name}{file name to give the otp default "otp.jar"}
 
@@ -20,7 +24,7 @@ otp_dl_jar(path = NULL, version = "1.4.0", file_name = "otp.jar",
 The path to the OTP file
 }
 \description{
-Download the OTP jar file from mavern.org
+Download the OTP jar file from maven.org
 }
 \examples{
 \dontrun{
@@ -28,10 +32,13 @@ otp_dl_jar(tempdir())
 }
 }
 \seealso{
-Other setup: \code{\link{otp_build_graph}},
-  \code{\link{otp_dl_demo}}, \code{\link{otp_make_config}},
-  \code{\link{otp_setup}}, \code{\link{otp_stop}},
-  \code{\link{otp_validate_config}},
-  \code{\link{otp_write_config}}
+Other setup: 
+\code{\link{otp_build_graph}()},
+\code{\link{otp_dl_demo}()},
+\code{\link{otp_make_config}()},
+\code{\link{otp_setup}()},
+\code{\link{otp_stop}()},
+\code{\link{otp_validate_config}()},
+\code{\link{otp_write_config}()}
 }
 \concept{setup}

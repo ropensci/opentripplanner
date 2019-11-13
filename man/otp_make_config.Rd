@@ -26,10 +26,13 @@ http://docs.opentripplanner.org/en/latest/Configuration
 }
 }
 \seealso{
-Other setup: \code{\link{otp_build_graph}},
-  \code{\link{otp_dl_demo}}, \code{\link{otp_dl_jar}},
-  \code{\link{otp_setup}}, \code{\link{otp_stop}},
-  \code{\link{otp_validate_config}},
-  \code{\link{otp_write_config}}
+Other setup: 
+\code{\link{otp_build_graph}()},
+\code{\link{otp_dl_demo}()},
+\code{\link{otp_dl_jar}()},
+\code{\link{otp_setup}()},
+\code{\link{otp_stop}()},
+\code{\link{otp_validate_config}()},
+\code{\link{otp_write_config}()}
 }
 \concept{setup}

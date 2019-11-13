@@ -32,24 +32,24 @@ OTP will snap fromPlace and toPlace coordinates to the road network, but only fo
 
 ### Mode Specific Limits
 
-OTP does not support all mode combinations (e.g. walk + drive) so some places may only be acessible by certain modes. For example you can't walk on a motorway or drive on a path. Use the debug layers to check for mode restrictions.
+OTP does not support all mode combinations (e.g. walk + drive) so some places may only be accessible by certain modes. For example, you can't walk on a motorway or drive on a path. Use the debug layers to check for mode restrictions.
 
 ### Maximum walk to transit
 
-By default OTP caps the maximum walking distance to a transit stop at a low level, so some areas are unreachable by transit. Increase the maximum walking distance to get better results.
+By default, OTP caps the maximum walking distance to a transit stop at a low level, so some areas are unreachable by transit. Increase the maximum walking distance to get better results.
 
 ### Driving on Roads with cycleway tag
 
-Known bug that stops driving on any road with cycling infrastructure. https://groups.google.com/forum/#!topic/opentripplanner-users/BOv1J32k6Sc 
+A known bug that stops driving on any road with cycling infrastructure. https://groups.google.com/forum/#!topic/opentripplanner-users/BOv1J32k6Sc 
 
 ## Speeding up routing
 
-If you are doing a large amount of routing conisder the following options.
+If you are doing a large amount of routing consider the following options.
 
-1. Use multicore routing using `ncores` argumment of `otp_plan()`
-2. Reduce the area, for example if your are only routing in one city you don't need a whole country graph.
-3. Remove unneeded roads using [osmfilter](https://wiki.openstreetmap.org/wiki/Osmfilter) or [OSMtools](https://github.com/ITSLeeds/OSMtools) for example if you are only inrested in driving you can remove footpaths and cycleways. This will simplify your graph and povide a small performance boost.
-4. Upgrading you computer, a new fast CPU with more cores will route faster.
+1. Use multicore routing using `ncores` argument of `otp_plan()`
+2. Reduce the area, for example, if you are only routing in one city you don't need a whole country graph.
+3. Remove unneeded roads using [osmfilter](https://wiki.openstreetmap.org/wiki/Osmfilter) or [OSMtools](https://github.com/ITSLeeds/OSMtools) for example if you are only interested in driving you can remove footpaths and cycleways. This will simplify your graph and provide a small performance boost.
+4. Upgrading your computer, a new fast CPU with more cores will route faster.
 
 
 ## GTFS Data for the UK

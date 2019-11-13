@@ -4,8 +4,15 @@
 \alias{otp_geocode}
 \title{Use OTP Geo-coder to find a location}
 \usage{
-otp_geocode(otpcon = NULL, query = NULL, autocomplete = FALSE,
-  stops = TRUE, clusters = FALSE, corners = TRUE, type = "SF")
+otp_geocode(
+  otpcon = NULL,
+  query = NULL,
+  autocomplete = FALSE,
+  stops = TRUE,
+  clusters = FALSE,
+  corners = TRUE,
+  type = "SF"
+)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
@@ -44,7 +51,8 @@ locations <- otp_geocode(otpcon, "High Street")
 }
 }
 \seealso{
-Other routing: \code{\link{otp_isochrone}},
-  \code{\link{otp_plan}}
+Other routing: 
+\code{\link{otp_isochrone}()},
+\code{\link{otp_plan}()}
 }
 \concept{routing}

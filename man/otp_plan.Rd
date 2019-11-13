@@ -4,11 +4,24 @@
 \alias{otp_plan}
 \title{Get get a route or routes from the OTP}
 \usage{
-otp_plan(otpcon = NA, fromPlace = NA, toPlace = NA, fromID = NULL,
-  toID = NULL, mode = "CAR", date_time = Sys.time(),
-  arriveBy = FALSE, maxWalkDistance = 1000, walkReluctance = 2,
-  transferPenalty = 0, minTransferTime = 0, numItineraries = 3,
-  full_elevation = FALSE, get_geometry = TRUE, ncores = 1)
+otp_plan(
+  otpcon = NA,
+  fromPlace = NA,
+  toPlace = NA,
+  fromID = NULL,
+  toID = NULL,
+  mode = "CAR",
+  date_time = Sys.time(),
+  arriveBy = FALSE,
+  maxWalkDistance = 1000,
+  walkReluctance = 2,
+  transferPenalty = 0,
+  minTransferTime = 0,
+  numItineraries = 3,
+  full_elevation = FALSE,
+  get_geometry = TRUE,
+  ncores = 1
+)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
@@ -37,13 +50,13 @@ date and time}
 \item{arriveBy}{Logical, Whether the trip should depart or arrive
 at the specified date and time, default FALSE}
 
-\item{maxWalkDistance}{Numeric passed to OTP}
+\item{maxWalkDistance}{Numeric passed to OTP in metres}
 
 \item{walkReluctance}{Numeric passed to OTP}
 
 \item{transferPenalty}{Numeric passed to OTP}
 
-\item{minTransferTime}{Numeric passed to OTP}
+\item{minTransferTime}{Numeric passed to OTP in seconds}
 
 \item{numItineraries}{The maximum number of possible itineraries to return}
 
@@ -108,13 +121,14 @@ otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
 )
 otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
   mode = "BICYCLE", arriveBy = TRUE,
-  date_time = as.POSIXct(strptime("2018-06-03 13:30", "\%Y-\%m-\%d \%H:\%M"))
+  date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M"))
 )
 }
 
 }
 \seealso{
-Other routing: \code{\link{otp_geocode}},
-  \code{\link{otp_isochrone}}
+Other routing: 
+\code{\link{otp_geocode}()},
+\code{\link{otp_isochrone}()}
 }
 \concept{routing}

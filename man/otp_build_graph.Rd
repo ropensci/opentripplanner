@@ -4,8 +4,13 @@
 \alias{otp_build_graph}
 \title{Build an OTP Graph}
 \usage{
-otp_build_graph(otp = NULL, dir = NULL, memory = 2048,
-  router = "default", analyst = FALSE)
+otp_build_graph(
+  otp = NULL,
+  dir = NULL,
+  memory = 2048,
+  router = "default",
+  analyst = FALSE
+)
 }
 \arguments{
 \item{otp}{A character string, path to the OTP .jar file}
@@ -17,7 +22,7 @@ necessary files, see details}
 the OTP in MB, default is 2048}
 
 \item{router}{A character string for the name of the router, must
-match with contents of dir, default "default". See advanced vignette for details.}
+subfolder of  dir/graphs, default "default". See vignettes for details.}
 
 \item{analyst}{Logical, should analyst feature be built, default FALSE. See advanced vignette for details.}
 }
@@ -61,10 +66,13 @@ log <- otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
 }
 }
 \seealso{
-Other setup: \code{\link{otp_dl_demo}},
-  \code{\link{otp_dl_jar}}, \code{\link{otp_make_config}},
-  \code{\link{otp_setup}}, \code{\link{otp_stop}},
-  \code{\link{otp_validate_config}},
-  \code{\link{otp_write_config}}
+Other setup: 
+\code{\link{otp_dl_demo}()},
+\code{\link{otp_dl_jar}()},
+\code{\link{otp_make_config}()},
+\code{\link{otp_setup}()},
+\code{\link{otp_stop}()},
+\code{\link{otp_validate_config}()},
+\code{\link{otp_write_config}()}
 }
 \concept{setup}

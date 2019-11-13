@@ -57,7 +57,7 @@ routes <- otp_plan(otpcon = otpcon,
                     toPlace = toPlace)
 ```
 
-You may get some warning messages returned as OTP is unable to find some of the routes. The `otp_plan()` will skip over errors and return all the routes it can get. It will then print any messages to the consol. You will have also noticed the handy progress bar.
+You may get some warning messages returned as OTP is unable to find some of the routes. The `otp_plan()` will skip over errors and return all the routes it can get. It will then print any messages to the console. You will have also noticed the handy progress bar.
 
 You can plot the routes using the `tmap` package.
 

@@ -7,7 +7,7 @@
 #' @param hostname A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
 #'     Optional, default is "localhost".
 #' @param router A string, e.g. "UK2018". Optional, default is "default". OTP can support multiple routers see advanced vignette for details.
-#' @param url If a nonstandard URL stucture is used provide a full url,
+#' @param url If a non-standard URL structure is used provide a full url,
 #'     default is NULL
 #' @param port A positive integer. Optional, default is 8080.
 #' @param ssl Logical, indicates whether to use https. Optional,

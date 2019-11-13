@@ -4,10 +4,18 @@
 \alias{otp_isochrone}
 \title{Get the Isochrones from a location}
 \usage{
-otp_isochrone(otpcon = NA, fromPlace = NA, mode = "TRANSIT",
-  date_time = Sys.time(), arriveBy = FALSE, maxWalkDistance = 800,
-  walkReluctance = 5, transferPenalty = 0, minTransferTime = 600,
-  cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600))
+otp_isochrone(
+  otpcon = NA,
+  fromPlace = NA,
+  mode = "TRANSIT",
+  date_time = Sys.time(),
+  arriveBy = FALSE,
+  maxWalkDistance = 800,
+  walkReluctance = 5,
+  transferPenalty = 0,
+  minTransferTime = 600,
+  cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600)
+)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
@@ -26,11 +34,11 @@ date and time}
 \item{arriveBy}{Logical, Whether the trip should depart or
 arrive at the specified date and time, default FALSE}
 
-\item{maxWalkDistance}{Numeric passed to OTP}
+\item{maxWalkDistance}{Numeric passed to OTP in metres}
 
 \item{walkReluctance}{Numeric passed to OTP}
 
-\item{transferPenalty}{Numeric passed to OTP}
+\item{transferPenalty}{Numeric passed to OTP in seconds}
 
 \item{minTransferTime}{Numeric passed to OTP}
 
@@ -60,7 +68,8 @@ isochrone2 <- otp_isochrone(otpcon,
 }
 }
 \seealso{
-Other routing: \code{\link{otp_geocode}},
-  \code{\link{otp_plan}}
+Other routing: 
+\code{\link{otp_geocode}()},
+\code{\link{otp_plan}()}
 }
 \concept{routing}

@@ -4,8 +4,11 @@
 \alias{otp_dl_demo}
 \title{Download Demo Data}
 \usage{
-otp_dl_demo(path_data = NULL,
-  url = "https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip")
+otp_dl_demo(
+  path_data = NULL,
+ 
+    url = "https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip"
+)
 }
 \arguments{
 \item{path_data}{path to folder where data for OTP is to be stored}
@@ -21,10 +24,13 @@ otp_dl_demo(tempdir())
 }
 }
 \seealso{
-Other setup: \code{\link{otp_build_graph}},
-  \code{\link{otp_dl_jar}}, \code{\link{otp_make_config}},
-  \code{\link{otp_setup}}, \code{\link{otp_stop}},
-  \code{\link{otp_validate_config}},
-  \code{\link{otp_write_config}}
+Other setup: 
+\code{\link{otp_build_graph}()},
+\code{\link{otp_dl_jar}()},
+\code{\link{otp_make_config}()},
+\code{\link{otp_setup}()},
+\code{\link{otp_stop}()},
+\code{\link{otp_validate_config}()},
+\code{\link{otp_write_config}()}
 }
 \concept{setup}

@@ -4,9 +4,16 @@
 \alias{otp_setup}
 \title{Set up an OTP instance.}
 \usage{
-otp_setup(otp = NULL, dir = NULL, memory = 2048,
-  router = "default", port = 8080, securePort = 8081,
-  analyst = FALSE, wait = TRUE)
+otp_setup(
+  otp = NULL,
+  dir = NULL,
+  memory = 2048,
+  router = "default",
+  port = 8080,
+  securePort = 8081,
+  analyst = FALSE,
+  wait = TRUE
+)
 }
 \arguments{
 \item{otp}{A character string, path to the OTP .jar file}
@@ -18,7 +25,8 @@ necessary files, see details}
 the OTP in MB, default is 2048}
 
 \item{router}{A character for the name of the router to use, must
-match with contents of dir, default "default". See advanced vignette for details.}
+be subfolder of dir/graphs, default "default". See
+vignettes for details.}
 
 \item{port}{A positive integer. Optional, default is 8080.}
 
@@ -70,10 +78,13 @@ otp_setup(
 }
 }
 \seealso{
-Other setup: \code{\link{otp_build_graph}},
-  \code{\link{otp_dl_demo}}, \code{\link{otp_dl_jar}},
-  \code{\link{otp_make_config}}, \code{\link{otp_stop}},
-  \code{\link{otp_validate_config}},
-  \code{\link{otp_write_config}}
+Other setup: 
+\code{\link{otp_build_graph}()},
+\code{\link{otp_dl_demo}()},
+\code{\link{otp_dl_jar}()},
+\code{\link{otp_make_config}()},
+\code{\link{otp_stop}()},
+\code{\link{otp_validate_config}()},
+\code{\link{otp_write_config}()}
 }
 \concept{setup}

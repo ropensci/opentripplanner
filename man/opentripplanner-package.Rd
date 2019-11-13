@@ -20,17 +20,17 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Malcolm Morgan \email{m.morgan1@leeds.ac.uk} (0000-0002-9488-9183)
+\strong{Maintainer}: Malcolm Morgan \email{m.morgan1@leeds.ac.uk} (\href{https://orcid.org/0000-0002-9488-9183}{ORCID})
 
 Authors:
 \itemize{
-  \item Marcus Young \email{M.A.Young@soton.ac.uk} (0000-0003-4627-1116)
-  \item Robin Lovelace \email{rob00x@gmail.com} (0000-0001-5679-6536)
+  \item Marcus Young \email{M.A.Young@soton.ac.uk} (\href{https://orcid.org/0000-0003-4627-1116}{ORCID})
+  \item Robin Lovelace \email{rob00x@gmail.com} (\href{https://orcid.org/0000-0001-5679-6536}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Layik Hama \email{layik.hama@gmail.com} (0000-0003-1912-4890) [contributor]
+  \item Layik Hama \email{layik.hama@gmail.com} (\href{https://orcid.org/0000-0003-1912-4890}{ORCID}) [contributor]
 }
 
 }

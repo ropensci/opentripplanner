@@ -67,7 +67,7 @@ Running your own trip planner is computationally expensive an so the best result
 
 OTP requires at least 1 GB of space to run the demonstration dataset, but by default will request 2 GB. On low-end machines, it is necessary to change the default memory allocations and minimise memory use by other programmes. 
 
-For larger areas OTP will need more memory. An approximite guide to memory use is:
+For larger areas OTP will need more memory. An approximate guide to memory use is:
 
 * 2 GB - Small Town / Region
 * 4 GB - Large Town / City
