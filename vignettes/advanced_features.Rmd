@@ -154,6 +154,8 @@ Notice that there is less detail in the XYZ graph as the Z coordinates are only 
 
 Isochrones are lines of equal time. Suppose we are interested in visualising how long it takes to access Ryde ferry using public transport from different parts of the island. We will do this by requesting isochrones from OTP for 15, 30, 45, 60, 75 and 90 minutes. This can be achieved with a single function `otp_isochrone()`.
 
+**Note** isochrones are currently only reliable for "Walk" and "Transit" modes.
+
 ```{r eval=FALSE}
 ferry_current  <- otp_isochrone(otpcon = otpcon,
             fromPlace = c(-1.159494, 50.732429), # lng/lat of Ryde ferry
