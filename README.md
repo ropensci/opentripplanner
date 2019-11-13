@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# ITSleeds <a href='https://itsleeds.github.io/'><img src='man/figures/its.jpg' align="right" height=215/></a>
+
 [![Travis build
 status](https://travis-ci.org/ITSLeeds/opentripplanner.svg?branch=master)](https://travis-ci.org/ITSLeeds/opentripplanner)
 [![Coverage
