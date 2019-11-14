@@ -1,43 +1,23 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+ITSleeds <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=215/></a>
+=============================================================================================================
 
-# ITSleeds <a href='https://itsleeds.github.io/'><img src='man/figures/its.jpg' align="right" height=215/></a>
+[![Travis build status](https://travis-ci.org/ITSLeeds/opentripplanner.svg?branch=master)](https://travis-ci.org/ITSLeeds/opentripplanner) [![Coverage status](https://codecov.io/gh/ITSLeeds/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/github/ITSLeeds/opentripplanner?branch=master) [![Build status](https://ci.appveyor.com/api/projects/status/gqp3smc04as3qg85?svg=true)](https://ci.appveyor.com/project/layik/opentripplanner-05ana) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-[![Travis build
-status](https://travis-ci.org/ITSLeeds/opentripplanner.svg?branch=master)](https://travis-ci.org/ITSLeeds/opentripplanner)
-[![Coverage
-status](https://codecov.io/gh/ITSLeeds/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/github/ITSLeeds/opentripplanner?branch=master)
-[![Build
-status](https://ci.appveyor.com/api/projects/status/gqp3smc04as3qg85?svg=true)](https://ci.appveyor.com/project/layik/opentripplanner-05ana)
-[![Project Status: Active – The project has reached a stable, usable
-state and is being actively
-developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+OpenTripPlanner for R
+=====================
 
-# OpenTripPlanner for R
+The goal of OpenTripPlanner for R is to provide a simple R interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/). The OTP is a multimodal trip planning service written in Java. For more information on what OTP is, see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
 
-The goal of OpenTripPlanner for R is to provide a simple R interface to
-[OpenTripPlanner (OTP)](https://www.opentripplanner.org/). The OTP is a
-multimodal trip planning service written in Java. For more information
-on what OTP is, see the [prerequisites
-vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
+This package can be used to interface with a remote instance of OTP (e.g. a website) or help you set up and manage a local version of OTP for private use. Basic setup and routing functions are outlined in the [getting started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), while advanced functionality such as batch routing, isochrones, and customised setup is described in the [advanced features vignette](https://itsleeds.github.io/opentripplanner/articles/advanced_features.html).
 
-This package can be used to interface with a remote instance of OTP
-(e.g. a website) or help you set up and manage a local version of OTP
-for private use. Basic setup and routing functions are outlined in the
-[getting started
-vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html),
-while advanced functionality such as batch routing, isochrones, and
-customised setup is described in the [advanced features
-vignette](https://itsleeds.github.io/opentripplanner/articles/advanced_features.html).
-
-## Installation
+Installation
+------------
 
 ### OpenTripPlanner
 
-To use OpenTripPlanner on your local computer you will need to install
-Java 8 and download the latest version of OTP. Instructions on
-installing Java and setting up OTP can be found in the [prerequisites
-vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
+To use OpenTripPlanner on your local computer you will need to install Java 8 and download the latest version of OTP. Instructions on installing Java and setting up OTP can be found in the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html).
 
 ### R Package
 
@@ -52,7 +32,8 @@ devtools::install_github("ITSleeds/opentripplanner")
 library(opentripplanner)
 ```
 
-## Usage
+Usage
+-----
 
 The package contains three groups of functions:
 
@@ -74,40 +55,30 @@ Functions for retrieving data from OTP:
 
 1.  `otp_plan()` To get routes from A to B
 2.  `otp_isochrone()` To get isochrone maps
-3.  `otp_geocode()` To get the locations of named places e.g. road names
+3.  `otp_geocode()` To get the locations of named places e.g. road names
 
-Results are returned as [sf
-objects](https://cran.r-project.org/web/packages/sf/index.html)
+Results are returned as [sf objects](https://cran.r-project.org/web/packages/sf/index.html)
 
-## Tests
+Tests
+-----
 
-As this package does not work without a working connection to OTP, tests
-only run on machines that have the environment variable `I_have_OTP`
-with the value `TRUE`. You can add this with
-`usethis::edit_r_environ()`.
+As this package does not work without a working connection to OTP, tests only run on machines that have the environment variable `I_have_OTP` with the value `TRUE`. You can add this with `usethis::edit_r_environ()`.
 
 ``` r
 Sys.getenv("I_have_OTP")
 ```
 
-## Acknowledgement
+Acknowledgement
+---------------
 
-This package was built off the [tutorial by Marcus
-Young](https://github.com/marcusyoung/otp-tutorial).
+This package was built off the [tutorial by Marcus Young](https://github.com/marcusyoung/otp-tutorial).
 
-## Contribution
+Contribution
+------------
 
-Please note that the `opentripplanner` project is released with a
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to
-this project, you agree to abide by its terms. Bug reports and comments
-are welcome as Github
-[Issues](https://github.com/ITSLeeds/opentripplanner/issues) and code
-submissions as [Pull
-Requests](https://github.com/ITSLeeds/opentripplanner/pulls).
+Please note that the `opentripplanner` project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms. Bug reports and comments are welcome as Github [Issues](https://github.com/ITSLeeds/opentripplanner/issues) and code submissions as [Pull Requests](https://github.com/ITSLeeds/opentripplanner/pulls).
 
-## Package Status
+Package Status
+--------------
 
-This package is part of ongoing research at the University of Leeds, it
-is provided “as is” and is likely to be updated and changed without
-warning to meet the research needs of the University. It is our
-intention to bring a stable version to CRAN as soon as possible.
+This package is part of ongoing research at the University of Leeds, it is provided "as is" and is likely to be updated and changed without warning to meet the research needs of the University. It is our intention to bring a stable version to CRAN as soon as possible.
