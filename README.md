@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-OpenTripPlanner for R <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=215/></a>
+OpenTripPlanner for R <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=180/></a>
 ==========================================================================================================================
 
 [![Travis build status](https://travis-ci.org/ITSLeeds/opentripplanner.svg?branch=master)](https://travis-ci.org/ITSLeeds/opentripplanner) [![Coverage status](https://codecov.io/gh/ITSLeeds/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/github/ITSLeeds/opentripplanner?branch=master) [![Build status](https://ci.appveyor.com/api/projects/status/gqp3smc04as3qg85?svg=true)](https://ci.appveyor.com/project/layik/opentripplanner-05ana) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -36,25 +36,25 @@ The package contains three groups of functions:
 
 Functions for setting up a local instance of OTP:
 
-1.  `otp_dl_jar()` To download the OTP Jar file
-2.  `otp_dl_demo()` To download the demo data for the Isle of Wight
-3.  `otp_build_graph()` To make a OTP graph from raw data
-4.  `otp_setup()` To start up a local instance of OTP
-5.  `otp_make_config()` To make a config object
-6.  `otp_validate_config()` To validate a config object
-7.  `otp_write_config()` To save a config object as a json file
+1.  `otp_dl_jar()` To download the OTP Jar file;
+2.  `otp_dl_demo()` To download the demo data for the Isle of Wight;
+3.  `otp_build_graph()` To make a OTP graph from raw data;
+4.  `otp_setup()` To start up a local instance of OTP;
+5.  `otp_make_config()` To make a config object;
+6.  `otp_validate_config()` To validate a config object;
+7.  `otp_write_config()` To save a config object as a json file.
 
 Functions for connecting to a local or remote instance of OTP:
 
-1.  `otp_connect()` To connect to OTP
+1.  `otp_connect()` To connect to OTP.
 
 Functions for retrieving data from OTP:
 
-1.  `otp_plan()` To get routes from A to B
-2.  `otp_isochrone()` To get isochrone maps
-3.  `otp_geocode()` To get the locations of named places e.g. road names
+1.  `otp_plan()` To get routes from A to B;
+2.  `otp_isochrone()` To get isochrone maps;
+3.  `otp_geocode()` To get the locations of named places e.g. road names.
 
-Results are returned as [sf objects](https://cran.r-project.org/web/packages/sf/index.html)
+Results are returned as [sf objects](https://cran.r-project.org/web/packages/sf/index.html).
 
 Tests
 -----
@@ -78,4 +78,4 @@ Please note that the `opentripplanner` project is released with a [Contributor C
 Package Status
 --------------
 
-This package is part of ongoing research at the University of Leeds, it is provided "as is" and is likely to be updated and changed without warning to meet the research needs of the University. It is our intention to bring a stable version to CRAN as soon as possible.
+This package is part of ongoing research at the University of Leeds, it is provided "as is" and is likely to be updated and changed without warning to meet the research needs of the University. We intend to bring a stable version to CRAN as soon as possible.
