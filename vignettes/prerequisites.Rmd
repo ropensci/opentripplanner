@@ -13,7 +13,7 @@ vignette: >
 ## Introduction
 
 This vignette provides guidance for people who new to OpenTripPlanner (OTP) and R.
-After you have R and OTP installed and have become familiar with them (e.g. by reading this vignette), we recommend working through [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html).
+After you have R and OTP installed and have become familiar with them (e.g. by reading this vignette), we recommend working through [Getting Started vignette](https://docs.ropensci.org/opentripplanner/articles/opentripplanner.html).
 
 ### Why would I want to use OpenTripPlanner for R?
 
@@ -98,4 +98,4 @@ To get Java:
 
 ## Next Steps
 
-Now that you have installed Java and R go to the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html), to find how to install the package, create a graph, and use it to plan trips.
+Now that you have installed Java and R go to the [Getting Started vignette](https://docs.ropensci.org/opentripplanner/articles/opentripplanner.html), to find how to install the package, create a graph, and use it to plan trips.

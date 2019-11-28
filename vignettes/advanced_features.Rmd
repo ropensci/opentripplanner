@@ -15,7 +15,7 @@ The vignette introduces some of the more advanced features of OTP and gives some
 
 ### Recap
 
-For this vignette, we will use the same data as the [Getting Started vignette](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html) vignette. If you have not yet created the example graph you can set it up with the following commands. If you are using non-default settings see the Getting Started vignette for full details.
+For this vignette, we will use the same data as the [Getting Started vignette](https://docs.ropensci.org/opentripplanner/articles/opentripplanner.html) vignette. If you have not yet created the example graph you can set it up with the following commands. If you are using non-default settings see the Getting Started vignette for full details.
 
 ```{r eval =FALSE}
 library(opentripplanner)
@@ -38,7 +38,7 @@ The `otp_plan()` function can produce multiple routes at once. In this example, 
 We'll start by importing the locations of the LSOA points.
 
 ```{r, eval=FALSE}
-lsoa <- sf::st_read("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/centroids.gpkg",
+lsoa <- sf::st_read("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg",
                     stringsAsFactors = FALSE)
 head(lsoa)
 ```

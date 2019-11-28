@@ -20,7 +20,7 @@ This vignette highlights some known limitations or bugs with OpenTripPlanner as 
 
 ### OpenTripPlanner for R
 
-* [OTP GitHub Issues](https://github.com/ITSleeds/opentripplanner/issues)
+* [OTP GitHub Issues](https://github.com/ropensci/opentripplanner/issues)
 
 ## Reasons for Routing to Fail
 

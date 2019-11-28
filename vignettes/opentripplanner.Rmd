@@ -14,13 +14,13 @@ vignette: >
 This vignette is an introduction to OpenTripPlanner (OTP) - an open-source and cross-platform multi-modal route planner written in Java. It uses imported OpenStreetMap (OSM) data for routing on the street and path network and supports
 multi-agency public transport routing through imported  [General Transit Feed Specification](https://developers.google.com/transit/gtfs/) (GTFS) feeds. It can also apply a digital elevation model to the OSM street network, allowing, for example, cycle-friendly routes to be requested. OTP has a web front-end that can be used by end-users and a sophisticated routing API.
 
-OTP works worldwide as long as there is OSM map coverage in the area. Support for transit timetables and elevation calculations are dependant on the available data. For more information on getting data see the [getting data for OTP](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html#getting-data-for-otp) section.
+OTP works worldwide as long as there is OSM map coverage in the area. Support for transit timetables and elevation calculations are dependant on the available data. For more information on getting data see the [getting data for OTP](https://docs.ropensci.org/opentripplanner/articles/opentripplanner.html#getting-data-for-otp) section.
 
 A major advantage of running your own multi-modal route planner is the ability to carry out analysis using amended transport data. Services such as Google Maps or TransportAPI are based on current public transport schedules and the existing road network. OTP enables you to modify transit schedules and/or make changes to the underlying street network. By editing a local copy of OSM, you can model the effects of opening new roads, closing roads or imposing other restrictions. You can also look back in time. For example, you might want to examine the effect of reductions in rural bus services on the accessibility of health facilities. To do this you would need a network with bus schedules as they were in previous years.
 
 ## Prerequisites
 
-You will need to have installed R, RStudio, and Java 8. For more details on the required software see the [prerequisites vignette](https://itsleeds.github.io/opentripplanner/articles/prerequisites.html) included with this package.
+You will need to have installed R, RStudio, and Java 8. For more details on the required software see the [prerequisites vignette](https://docs.ropensci.org/opentripplanner/articles/prerequisites.html) included with this package.
 
 ## Installation
 
@@ -30,7 +30,7 @@ Install the package using the **devtools** package as follows:
 # If you do not already have the devtools package
 install.packages("devtools")
 # Install the package from GitHub
-devtools::install_github("ITSleeds/opentripplanner")
+devtools::install_github("ropensci/opentripplanner")
 # Load the package
 library(opentripplanner)
 ```
@@ -42,7 +42,7 @@ We will build an example graph for the Isle of Wight using some example data pro
 
 ### Creating a folder to store OTP and its data
 
-OTP expects its data to be stored in a specific structure, see [building your own otp graph](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html#building-your-own-otp-graph) for more details. We will make a folder called OTP in the temporary directory. 
+OTP expects its data to be stored in a specific structure, see [building your own otp graph](https://docs.ropensci.org/opentripplanner/articles/opentripplanner.html#building-your-own-otp-graph) for more details. We will make a folder called OTP in the temporary directory. 
 
 ```{r, eval=FALSE}
 path_data <- file.path(tempdir(), "OTP")
@@ -192,7 +192,7 @@ The basic file structure is shown below.
          
 ```
 
-`router-config.json` is read when the OTP server is started, while `build-config.json` is read during the graph building stage. For more information on the config files see the [advanced features vignette](https://itsleeds.github.io/opentripplanner/articles/advanced_features.html).
+`router-config.json` is read when the OTP server is started, while `build-config.json` is read during the graph building stage. For more information on the config files see the [advanced features vignette](https://docs.ropensci.org/opentripplanner/articles/advanced_features.html).
 
 ### Multiple Routers 
 

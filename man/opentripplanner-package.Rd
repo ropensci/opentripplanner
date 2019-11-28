@@ -13,9 +13,9 @@ The OTP is a multimodal trip planning service.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/ITSLeeds/opentripplanner}
-  \item \url{https://itsleeds.github.io/opentripplanner/}
-  \item Report bugs at \url{https://github.com/ITSLeeds/opentripplanner/issues}
+  \item \url{https://github.com/ropensci/opentripplanner}
+  \item \url{https://docs.ropensci.org/opentripplanner/}
+  \item Report bugs at \url{https://github.com/ropensci/opentripplanner/issues}
 }
 
 }

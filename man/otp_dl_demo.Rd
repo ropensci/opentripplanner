@@ -7,7 +7,7 @@
 otp_dl_demo(
   path_data = NULL,
  
-    url = "https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip"
+    url = "https://github.com/ropensci/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip"
 )
 }
 \arguments{

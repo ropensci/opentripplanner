@@ -121,7 +121,7 @@ otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
 )
 otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
   mode = "BICYCLE", arriveBy = TRUE,
-  date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M"))
+  date_time = as.POSIXct(strptime("2018-06-03 13:30", "\%Y-\%m-\%d \%H:\%M"))
 )
 }
 
