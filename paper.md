@@ -1,5 +1,5 @@
 ---
-title: 'opentripplanner: R interface to the OpenTripPlanner'
+title: 'OpenTripPlanner for R'
 authors:
 - affiliation: 1
   name: Malcolm Morgan
@@ -13,7 +13,7 @@ authors:
 - affiliation: 1
   name: Layik Hama
   orcid: 0000-0003-1912-4890
-date: "01 Apr 2019"
+date: "27 Nov 2019"
 output:
   html_document: default
   pdf_document: default
@@ -22,8 +22,8 @@ tags:
 - transport
 - geospatial
 - transit
-- open trip planner
-- open street map
+- OpenTripPlanner
+- OpenStreetMap
 affiliations:
 - index: 1
   name: Institute for Transport Studies, University of Leeds, UK
@@ -60,39 +60,29 @@ OTP is unusual among open source routing tools in its ability to account for a w
 However, OTP’s primary purpose is to support public facing websites such as TriMet thus its analytical capabilities are limited.
 Conversely, the R language is well suited to statistical and spatial analysis but has no route planning capabilities.
 
-<!-- # Key functions in the opentripplanner R package -->
-
 The OpenTripPlanner for R package aims to bridge the gap between OTP and R by supplying simple ways for R to connect to OTP either on a local machine or on a remote server, via OTP’s API.
 The package has been designed to ease bulk routing by allowing the input of multiple origins and destinations as two column matrices of longitude-latitude pairs.
 The package also supports multi-core operation to take advantage of OTP’s multicore functionality.
-Results are returned in the widely used [SF data.frame]( https://cran.r-project.org/web/packages/sf/index.html) format.
-Although performance is dependant on the size of the map being routed over, it is typical to achieve more than 10 routes per second.
+Results are returned in the widely used [SF data frame]( https://cran.r-project.org/web/packages/sf/index.html) format.
+Although performance is dependant on the size of the map being routed over, it is typical to achieve more than 10 routes per second per core.
 
 The package has been developed from a set of R functions that formed part of an intermediate-level [OTP tutorial](https://github.com/marcusyoung/otp-tutorial/raw/master/intro-otp.pdf) as part of research at [Centre for Research into Energy Demand Solutions]( https://www.creds.ac.uk/) and the [Institute of Transport Studies](https://environment.leeds.ac.uk/transport).
 
 # Reproducible demonstration
 
-Example data for the Isle of Wight, UK is provided with the package. The example below uses this data to demonstrate the basic functionality of the package. A full explanation is provided in the [package vignettes](https://itsleeds.github.io/opentripplanner/articles/opentripplanner.html)
+Example data for the Isle of Wight, UK is provided with the package. The example below uses this data to demonstrate the basic functionality of the package. A full explanation is provided in the [package vignettes](https://docs.ropensci.org/opentripplanner/articles/opentripplanner.html)
 
-First, download the data and OTP.
+First, download the demo data and OTP.
 
 ```{r, eval=FALSE}
 library(opentripplanner)
-# Download OTP
-dir.create(file.path(tempdir(), "OTP"))
+# Create folder for data
 path_data <- file.path(tempdir(), "OTP")
-path_otp <- file.path(path_data, "otp.jar")
-url_otp <-
-  "https://repo1.maven.org/maven2/org/opentripplanner/otp/1.3.0/otp-1.3.0-shaded.jar"
-download.file(url = url_otp, destfile = path_otp, mode = "wb")
-# Path to the sample data
-dir.create(file.path(path_data,"graphs")) # create a folder structure for the data
-dir.create(file.path(path_data,"graphs","default"))
-# Download example data
-download.file("https://github.com/ITSLeeds/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip", 
-              destfile = file.path(path_data,"isle-of-wight-demo.zip") , mode="wb")
-unzip(file.path(path_data,"isle-of-wight-demo.zip"), exdir = file.path(path_data,"graphs","default"))
-unlink(file.path(path_data,"isle-of-wight-demo.zip"))
+dir.create(path_data)
+# Download OTP
+path_otp <- otp_dl_jar(path_data)
+# Download demo data
+otp_dl_demo(path_data)
 ```
 Second, build the OTP graph, start up OTP server and connect to the server
 

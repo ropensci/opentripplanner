@@ -1,0 +1,228 @@
+{
+  "@context": [
+    "https://doi.org/10.5063/schema/codemeta-2.0",
+    "http://schema.org"
+  ],
+  "@type": "SoftwareSourceCode",
+  "identifier": "opentripplanner",
+  "description": "An R interface for OpenTripPlanner <http://www.opentripplanner.org/>.\n    OpenTripPlanner (OTP) is an open source platform for multi-modal and multi-agency\n    journey planning written in Java. OTP provides a REST API which OpenTripPlanner\n    for R uses to connect to OTP.\n This package has been peer-reviewed by rOpenSci (v. 0.1.0.0).",
+  "name": "opentripplanner: OpenTripPlanner for R",
+  "codeRepository": "https://github.com/ropensci/opentripplanner",
+  "relatedLink": "https://docs.ropensci.org/opentripplanner/",
+  "issueTracker": "https://github.com/ropensci/opentripplanner/issues",
+  "license": "file LICENSE",
+  "version": "0.1.0.0",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "R",
+    "version": "3.6.0",
+    "url": "https://r-project.org"
+  },
+  "runtimePlatform": "R version 3.6.0 (2019-04-26)",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Malcolm",
+      "familyName": "Morgan",
+      "email": "m.morgan1@leeds.ac.uk",
+      "@id": "https://orcid.org/0000-0002-9488-9183"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Marcus",
+      "familyName": "Young",
+      "email": "M.A.Young@soton.ac.uk",
+      "@id": "https://orcid.org/0000-0003-4627-1116"
+    },
+    {
+      "@type": "Person",
+      "givenName": "Robin",
+      "familyName": "Lovelace",
+      "email": "rob00x@gmail.com",
+      "@id": "https://orcid.org/0000-0001-5679-6536"
+    }
+  ],
+  "contributor": [
+    {
+      "@type": "Person",
+      "givenName": "Layik",
+      "familyName": "Hama",
+      "email": "layik.hama@gmail.com",
+      "@id": "https://orcid.org/0000-0003-1912-4890"
+    }
+  ],
+  "copyrightHolder": {},
+  "funder": {},
+  "maintainer": [
+    {
+      "@type": "Person",
+      "givenName": "Malcolm",
+      "familyName": "Morgan",
+      "email": "m.morgan1@leeds.ac.uk",
+      "@id": "https://orcid.org/0000-0002-9488-9183"
+    }
+  ],
+  "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "covr",
+      "name": "covr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=covr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    }
+  ],
+  "softwareRequirements": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "checkmate",
+      "name": "checkmate",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=checkmate"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "dplyr",
+      "name": "dplyr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "geodist",
+      "name": "geodist",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=geodist"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "googlePolylines",
+      "name": "googlePolylines",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=googlePolylines"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "httr",
+      "name": "httr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=httr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "jsonlite",
+      "name": "jsonlite",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=jsonlite"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "pbapply",
+      "name": "pbapply",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=pbapply"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "sf",
+      "name": "sf",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=sf"
+    }
+  ],
+  "readme": "https://github.com/ropensci/opentripplanner/blob/master/README.md",
+  "fileSize": "462.89KB",
+  "contIntegration": [
+    "https://travis-ci.org/ITSLeeds/opentripplanner",
+    "https://codecov.io/github/ITSLeeds/opentripplanner?branch=master",
+    "https://ci.appveyor.com/project/layik/opentripplanner-05ana"
+  ],
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": [
+    "r",
+    "transport",
+    "data",
+    "routing",
+    "opentripplanner"
+  ]
+}
