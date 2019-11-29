@@ -4,14 +4,15 @@
 # OpenTripPlanner for R <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=180/></a>
 
 [![Travis build
-status](https://travis-ci.org/ropensci/opentripplanner.svg?branch=master)](https://travis-ci.org/ropensci/opentripplanner)
-[![Coverage
-status](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/github/ropensci/opentripplanner?branch=master)
+status](https://travis-ci.org/ropensci/opentripplanner.svg)](https://travis-ci.org/ropensci/opentripplanner)
+[![codecov](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/opentripplanner)
 [![Build
 status](https://ci.appveyor.com/api/projects/status/gqp3smc04as3qg85?svg=true)](https://ci.appveyor.com/project/ropensci/opentripplanner-05ana)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
 
 The goal of OpenTripPlanner for R is to provide a simple R interface to
 [OpenTripPlanner (OTP)](https://www.opentripplanner.org/). The OTP is a
@@ -106,10 +107,9 @@ Requests](https://github.com/ropensci/opentripplanner/pulls).
 
 ## Package Status
 
-This package is part of ongoing research at the University of Leeds, it
-is provided “as is” and is likely to be updated and changed without
-warning to meet the research needs of the University. We intend to bring
-a stable version to CRAN as soon as
-possible.
+This package is part of ongoing research at the University of Leeds. A
+stable version of the package (v0.2.0) is
+[available](https://github.com/ropensci/opentripplanner/releases/tag/0.2).
+We intend to bring a verson to CRAN soon.
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
