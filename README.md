@@ -77,7 +77,7 @@ Functions for retrieving data from OTP:
     names.
 
 Results are returned as [sf
-objects](https://cran.r-project.org/web/packages/sf/index.html).
+objects](https://CRAN.R-project.org/package=sf).
 
 ## Tests
 

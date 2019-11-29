@@ -70,7 +70,7 @@ Functions for retrieving data from OTP:
 1. `otp_isochrone()`     To get isochrone maps;
 1. `otp_geocode()`      To get the locations of named places e.g. road names.
 
-Results are returned as [sf objects](https://cran.r-project.org/web/packages/sf/index.html).
+Results are returned as [sf objects](https://CRAN.R-project.org/package=sf).
 
 ## Tests 
 
