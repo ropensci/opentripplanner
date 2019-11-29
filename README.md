@@ -6,8 +6,8 @@
 [![Travis build
 status](https://travis-ci.org/ropensci/opentripplanner.svg)](https://travis-ci.org/ropensci/opentripplanner)
 [![codecov](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/opentripplanner)
-[![Build
-status](https://ci.appveyor.com/api/projects/status/gqp3smc04as3qg85?svg=true)](https://ci.appveyor.com/project/ropensci/opentripplanner-05ana)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/ropensci/opentripplanner?branch=master&svg=true)](https://ci.appveyor.com/project/mem48/opentripplanner)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
