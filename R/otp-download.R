@@ -42,8 +42,11 @@ otp_dl_jar <- function(path = NULL,
 #' }
 #' @export
 
-otp_dl_demo <- function(path_data = NULL,
-                        url = "https://github.com/ropensci/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip") {
+otp_dl_demo <- function(
+  path_data = NULL,
+  url = paste0("https://github.com/ropensci/opentripplanner/",
+               "releases/download/0.1/isle-of-wight-demo.zip")
+  ) {
   if (!dir.exists(path_data)) {
     stop(paste0("Can't find folder ", path_data))
   }

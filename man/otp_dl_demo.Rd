@@ -6,8 +6,8 @@
 \usage{
 otp_dl_demo(
   path_data = NULL,
- 
-    url = "https://github.com/ropensci/opentripplanner/releases/download/0.1/isle-of-wight-demo.zip"
+  url = paste0("https://github.com/ropensci/opentripplanner/",
+    "releases/download/0.1/isle-of-wight-demo.zip")
 )
 }
 \arguments{
