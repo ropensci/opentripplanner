@@ -14,10 +14,10 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
 
-The goal of OpenTripPlanner for R is to provide a simple R interface to
-[OpenTripPlanner (OTP)](https://www.opentripplanner.org/). The OTP is a
-multimodal trip planning service written in Java. For more information
-on what OTP is, see the [prerequisites
+The goal **opentripplanner** is to provide a simple yet flexible
+interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/).
+The OTP is a multimodal trip planning service written in Java. For more
+information on what OTP is, see the [prerequisites
 vignette](https://docs.ropensci.org/opentripplanner/articles/prerequisites.html).
 
 This package can be used to interface with a remote instance of OTP
@@ -110,6 +110,7 @@ Requests](https://github.com/ropensci/opentripplanner/pulls).
 This package is part of ongoing research at the University of Leeds. A
 stable version of the package (v0.2.0) is
 [available](https://github.com/ropensci/opentripplanner/releases/tag/0.2).
-We intend to bring a verson to CRAN soon.
+We intend to bring a verson to CRAN
+soon.
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
