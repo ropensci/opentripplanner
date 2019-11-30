@@ -15,19 +15,19 @@ test_that("test otp_list_clean", {
 context("Test internal functions from otp-plan.R")
 
 test_that("test otp_clean_input", {
-  expect_error(otp_clean_input(c(181, 2)), regexp = "is not <= 180")
-  expect_error(otp_clean_input(c(-181, 2)), regexp = "is not >= -180")
-  expect_error(otp_clean_input(c(0, 91)), regexp = "is not <= 90")
-  expect_error(otp_clean_input(c(0, -91)), regexp = "is not >= -90")
-  expect_error(otp_clean_input(1), regexp = " Must have length 2")
+  expect_error(otp_clean_input(c(181, 2), "foo"), regexp = "is not <= 180")
+  expect_error(otp_clean_input(c(-181, 2), "foo"), regexp = "is not >= -180")
+  expect_error(otp_clean_input(c(0, 91), "foo"), regexp = "is not <= 90")
+  expect_error(otp_clean_input(c(0, -91), "foo"), regexp = "is not >= -90")
+  expect_error(otp_clean_input(1, "foo"), regexp = " Must have length 2")
   expect_error(otp_clean_input("1", "2"), regexp = "is not in a valid format")
 
-  r1 <- otp_clean_input(c(1, 2))
+  r1 <- otp_clean_input(c(1, 2), "foo")
   expect_is(r1, "matrix")
   expect_true(nrow(r1) == 1)
   expect_true(ncol(r1) == 2)
 
-  r2 <- otp_clean_input(matrix(c(1, 2, 3, 4), ncol = 2))
+  r2 <- otp_clean_input(matrix(c(1, 2, 3, 4), ncol = 2), "foo")
   expect_is(r2, "matrix")
   expect_true(nrow(r2) == 2)
   expect_true(ncol(r2) == 2)
@@ -36,7 +36,7 @@ test_that("test otp_clean_input", {
     id = 1,
     geometry = sf::st_sfc(sf::st_point(c(1, 1)))
   ))
-  r3 <- otp_clean_input(r3)
+  r3 <- otp_clean_input(r3, "foo")
   expect_is(r3, "matrix")
   expect_true(nrow(r3) == 1)
   expect_true(ncol(r3) == 2)
@@ -151,7 +151,7 @@ test_that("test otp_checks with graph, missing files", {
   )
 })
 
-file.create(file.path(path_data, "graphs", "default", "Graph.obj"))
+# file.create(file.path(path_data, "graphs", "default", "Graph.obj"))
 
 # test_that("test otp_checks with graph, with files", {
 #   skip_otp()

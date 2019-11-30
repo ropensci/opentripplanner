@@ -77,51 +77,51 @@ test_that("otp_plan input validation", {
   expect_error(otp_plan(otpcon),
     regexp = "fromPlace is not in a valid format"
   )
-  expect_error(otp_plan(otpcon, fromPlace = c(1, 1)),
+  expect_error(otp_plan(otpcon, fromPlace = c(1.23, 1.23)),
     regexp = "toPlace is not in a valid format"
   )
   expect_error(otp_plan(otpcon,
-    fromPlace = c(1, 1),
-    toPlace = c(1, 1)
+    fromPlace = c(1.23, 1.23),
+    toPlace = c(1.23, 1.23)
   ),
   regexp = "Failed to connect to localhost port 8080: Connection refused"
   )
   expect_error(otp_plan(otpcon,
-    fromPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-    toPlace = matrix(c(1, 1, 2, 2, 3, 3), ncol = 2)
+    fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+    toPlace = matrix(c(1.23, 1.23, 2.34, 2.34, 3.45, 3.45), ncol = 2)
   ),
   regexp = "Number of fromPlaces and toPlaces do not match"
   )
   expect_error(otp_plan(otpcon,
-    toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-    fromPlace = matrix(c(1, 1), ncol = 2)
+    toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+    fromPlace = matrix(c(1.23, 1.23), ncol = 2)
   ),
   regexp = "Failed to connect to localhost port 8080: Connection refused"
   )
   expect_error(otp_plan(otpcon,
-    toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-    fromPlace = matrix(c(1, 1), ncol = 2),
+    toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+    fromPlace = matrix(c(1.23, 1.23), ncol = 2),
     toID = c("A", "B", "C")
   ),
   regexp = "The length of toID and toPlace are not the same"
   )
   expect_error(otp_plan(otpcon,
-    toPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-    fromPlace = matrix(c(1, 1), ncol = 2),
+    toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+    fromPlace = matrix(c(1.23, 1.23), ncol = 2),
     fromID = c("A", "B", "C")
   ),
   regexp = "The length of fromID and fromPlace are not the same"
   )
   expect_error(otp_plan(otpcon,
-    fromPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-    toPlace = matrix(c(1, 1), ncol = 2)
+    fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+    toPlace = matrix(c(1.23, 1.23), ncol = 2)
   ),
   regexp = "Failed to connect to localhost port 8080: Connection refused"
   )
   # ncore
   expect_error(otp_plan(otpcon,
-    fromPlace = matrix(c(1, 1, 2, 2), ncol = 2),
-    toPlace = matrix(c(1, 1), ncol = 2),
+    fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+    toPlace = matrix(c(1.23, 1.23), ncol = 2),
     ncore = 2
   ),
   regexp = "Failed to connect to localhost port 8080: Connection refused"
