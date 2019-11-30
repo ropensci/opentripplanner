@@ -4,7 +4,7 @@
 # OpenTripPlanner for R <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=180/></a>
 
 [![Travis build
-status](https://travis-ci.org/ropensci/opentripplanner.svg)](https://travis-ci.org/ropensci/opentripplanner)
+status](https://travis-ci.org/ropensci/opentripplanner.svg?branch=master)](https://travis-ci.org/ropensci/opentripplanner)
 [![codecov](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/opentripplanner)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/ropensci/opentripplanner?branch=master&svg=true)](https://ci.appveyor.com/project/mem48/opentripplanner)
@@ -14,16 +14,16 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
 
-The goal **opentripplanner** is to provide a simple yet flexible
+**opentripplanner** is an R package that provides a simple yet flexible
 interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/).
-The OTP is a multimodal trip planning service written in Java. For more
+OTP is a multimodal trip planning service written in Java. For more
 information on what OTP is, see the [prerequisites
 vignette](https://docs.ropensci.org/opentripplanner/articles/prerequisites.html).
 
-This package can be used to interface with a remote instance of OTP
-(e.g. a website) or help you set up and manage a local version of OTP
-for private use. Basic setup and routing functions are outlined in the
-[getting started
+**opentripplanner** can be used to interface with a remote instance of
+OTP (e.g. a website) or help you set up and manage a local version of
+OTP for private use. Basic setup and routing functions are outlined in
+the [getting started
 vignette](https://docs.ropensci.org/opentripplanner/articles/opentripplanner.html),
 while advanced functionality such as batch routing, isochrones, and
 customised setup is described in the [advanced features
