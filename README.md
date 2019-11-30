@@ -98,9 +98,10 @@ Young](https://github.com/marcusyoung/otp-tutorial).
 ## Contribution
 
 Please note that the `opentripplanner` project is released with a
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to
-this project, you agree to abide by its terms. Bug reports and comments
-are welcome as Github
+[Contributor Code of
+Conduct](https://github.com/ropensci/opentripplanner/blob/master/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms. Bug
+reports and comments are welcome as Github
 [Issues](https://github.com/ropensci/opentripplanner/issues) and code
 submissions as [Pull
 Requests](https://github.com/ropensci/opentripplanner/pulls).
