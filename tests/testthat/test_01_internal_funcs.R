@@ -15,12 +15,12 @@ test_that("test otp_list_clean", {
 context("Test internal functions from otp-plan.R")
 
 test_that("test otp_clean_input", {
-  expect_error(otp_clean_input(c(181, 2), "foo"), "is not <= 180")
-  expect_error(otp_clean_input(c(-181, 2), "foo"), "is not >= -180")
-  expect_error(otp_clean_input(c(0, 91), "foo"), "is not <= 90")
-  expect_error(otp_clean_input(c(0, -91), "foo"), "is not >= -90")
-  expect_error(otp_clean_input(1, "foo"), " Must have length 2")
-  expect_error(otp_clean_input("1", "2"), "is not in a valid format")
+  expect_error(otp_clean_input(c(181, 2), "foo"))
+  expect_error(otp_clean_input(c(-181, 2), "foo"))
+  expect_error(otp_clean_input(c(0, 91), "foo"))
+  expect_error(otp_clean_input(c(0, -91), "foo"))
+  expect_error(otp_clean_input(1, "foo"))
+  expect_error(otp_clean_input("1", "2"))
 
   r1 <- otp_clean_input(c(1, 2), "foo")
   expect_is(r1, "matrix")
@@ -122,9 +122,7 @@ test_that("test otp_checks without graph, missing files", {
     dir = path_data,
     router = "default",
     graph = FALSE
-  ),
-  "does not exist"
-  )
+  ))
 })
 
 
@@ -146,9 +144,7 @@ test_that("test otp_checks with graph, missing files", {
     dir = path_data,
     router = "default",
     graph = TRUE
-  ),
-  "File does not exist"
-  )
+  ))
 })
 
 # file.create(file.path(path_data, "graphs", "default", "Graph.obj"))
