@@ -15,12 +15,12 @@ test_that("test otp_list_clean", {
 context("Test internal functions from otp-plan.R")
 
 test_that("test otp_clean_input", {
-  expect_error(otp_clean_input(c(181, 2), "foo"), regexp = "is not <= 180")
-  expect_error(otp_clean_input(c(-181, 2), "foo"), regexp = "is not >= -180")
-  expect_error(otp_clean_input(c(0, 91), "foo"), regexp = "is not <= 90")
-  expect_error(otp_clean_input(c(0, -91), "foo"), regexp = "is not >= -90")
-  expect_error(otp_clean_input(1, "foo"), regexp = " Must have length 2")
-  expect_error(otp_clean_input("1", "2"), regexp = "is not in a valid format")
+  expect_error(otp_clean_input(c(181, 2), "foo"), "is not <= 180")
+  expect_error(otp_clean_input(c(-181, 2), "foo"), "is not >= -180")
+  expect_error(otp_clean_input(c(0, 91), "foo"), "is not <= 90")
+  expect_error(otp_clean_input(c(0, -91), "foo"), "is not >= -90")
+  expect_error(otp_clean_input(1, "foo"), " Must have length 2")
+  expect_error(otp_clean_input("1", "2"), "is not in a valid format")
 
   r1 <- otp_clean_input(c(1, 2), "foo")
   expect_is(r1, "matrix")
@@ -123,7 +123,7 @@ test_that("test otp_checks without graph, missing files", {
     router = "default",
     graph = FALSE
   ),
-  regexp = "does not exist"
+  "does not exist"
   )
 })
 
@@ -147,7 +147,7 @@ test_that("test otp_checks with graph, missing files", {
     router = "default",
     graph = TRUE
   ),
-  regexp = "File does not exist"
+  "File does not exist"
   )
 })
 
