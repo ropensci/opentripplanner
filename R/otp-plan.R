@@ -315,8 +315,10 @@ otp_clean_input <- function(imp, imp_name) {
       stop(paste0(imp_name, " contains non-POINT geometry"))
     }
   }
+
   # For matrix inputs
-  if (all(class(imp) == "matrix")) {
+  #if (all(class(imp) == "matrix")) { # to pass CRAN checks
+  if ("matrix" %in% class(imp)) {
     checkmate::assert_matrix(imp,
       any.missing = FALSE,
       min.rows = 1,
@@ -332,7 +334,8 @@ otp_clean_input <- function(imp, imp_name) {
   # Otherwise stop as invalid input
   stop(paste0(
     imp_name,
-    " is not in a valid format"
+    " is not in a valid format ",
+    paste(class(imp), collapse = ", ")
   ))
 }
 
