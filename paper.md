@@ -74,31 +74,29 @@ Example data for the Isle of Wight, UK is provided with the package. The example
 
 First, download the demo data and OTP.
 
-```{r, eval=FALSE}
-library(opentripplanner)
-# Create folder for data
-path_data <- file.path(tempdir(), "OTP")
+``` r
+library(opentripplanner)                 # Load Package
+path_data <- file.path(tempdir(), "OTP") # Create folder for data
 dir.create(path_data)
-# Download OTP
-path_otp <- otp_dl_jar(path_data)
-# Download demo data
-otp_dl_demo(path_data)
+path_otp <- otp_dl_jar(path_data)        # Download OTP
+otp_dl_demo(path_data)                   # Download demo data
 ```
+
 Second, build the OTP graph, start up OTP server and connect to the server
 
-```{r eval =FALSE}
-# Build Graph and start OTP
-log <- otp_build_graph(otp = path_otp, dir = path_data)
-otp_setup(otp = path_otp, dir = path_data)
-otpcon <- otp_connect()
-
+``` r
+log <- otp_build_graph(otp = path_otp,     # Build Graph
+                       dir = path_data)
+otp_setup(otp = path_otp, dir = path_data) # Start OTP
+otpcon <- otp_connect()                    # Connect R to OTP
 ```
+
 Finally, find routes
 
-```{r, eval = FALSE}
+``` r
 route <- otp_plan(otpcon, 
-                  fromPlace = c(-1.17502, 50.64590), 
-                  toPlace = c(-1.15339, 50.72266))
+                 fromPlace = c(-1.17502, 50.64590), 
+                 toPlace = c(-1.15339, 50.72266))
 ```
 
 # References
