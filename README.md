@@ -13,6 +13,7 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
+[![status](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736/status.svg)](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736)
 
 **opentripplanner** is an R package that provides a simple yet flexible
 interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/).
