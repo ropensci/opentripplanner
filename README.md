@@ -116,29 +116,10 @@ Requests](https://github.com/ropensci/opentripplanner/pulls).
 
 ## Citation
 
-Please cite the package in publications
+Please cite the JOSS paper in publications:
 
-``` r
-citation("opentripplanner")
-#> Warning in citation("opentripplanner"): no date field in DESCRIPTION file of
-#> package 'opentripplanner'
-#> 
-#> To cite package 'opentripplanner' in publications use:
-#> 
-#>   Marcus Young, Malcolm Morgan and Robin Lovelace (2019).
-#>   opentripplanner: OpenTripPlanner for R.
-#>   https://github.com/ITSLeeds/opentripplanner,
-#>   https://itsleeds.github.io/opentripplanner/.
-#> 
-#> A BibTeX entry for LaTeX users is
-#> 
-#>   @Manual{,
-#>     title = {opentripplanner: OpenTripPlanner for R},
-#>     author = {Marcus Young and Malcolm Morgan and Robin Lovelace},
-#>     year = {2019},
-#>     note = {https://github.com/ITSLeeds/opentripplanner,
-#> https://itsleeds.github.io/opentripplanner/},
-#>   }
-```
+Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source
+Software, 4(44), 1926,
+<https://doi.org/10.21105/joss.01926>
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

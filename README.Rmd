@@ -100,11 +100,11 @@ Please note that the `opentripplanner` project is released with a [Contributor C
 
 ## Citation
 
-Please cite the package in publications
+Please cite the JOSS paper in publications:
 
-```{r}
-citation("opentripplanner")
-```
+Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source Software,
+  4(44), 1926, https://doi.org/10.21105/joss.01926
+
 
 
 [![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
