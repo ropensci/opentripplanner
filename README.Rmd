@@ -36,7 +36,14 @@ To use OpenTripPlanner on your local computer you will need to install Java 8 an
 
 ### R Package
 
-Install the package using the **devtools** package as follows:
+To install the stable CRAN version:
+
+```{r installCRAN, eval=FALSE}
+install.packages("opentripplanner") # Install Package
+library(opentripplanner)            # Load Package
+```
+
+Install the development version using **devtools**:
 
 ```{r install, eval=FALSE}
 # If you do not already have the devtools package
@@ -91,8 +98,13 @@ This package was built off the [tutorial by Marcus Young](https://github.com/mar
 Please note that the `opentripplanner` project is released with a [Contributor Code of Conduct](https://github.com/ropensci/opentripplanner/blob/master/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms. Bug reports and comments are welcome as Github [Issues](https://github.com/ropensci/opentripplanner/issues) and code submissions as [Pull Requests](https://github.com/ropensci/opentripplanner/pulls).
 
 
-## Package Status
+## Citation
 
-This package is part of ongoing research at the University of Leeds. A stable version of the package (v0.2.0) is [available](https://github.com/ropensci/opentripplanner/releases/tag/0.2). We intend to bring a verson to CRAN soon.
+Please cite the package in publications
+
+```{r}
+citation("opentripplanner")
+```
+
 
 [![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

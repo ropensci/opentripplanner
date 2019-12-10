@@ -1,6 +1,6 @@
 Package: opentripplanner
-Title: OpenTripPlanner for R
-Version: 0.2.0.2
+Title: Setup and connect to OpenTripPlanner
+Version: 0.2.0.3
 Authors@R: c(
     person("Malcolm", "Morgan", email = "m.morgan1@leeds.ac.uk", role = c("aut","cre"), 
       comment = c(ORCID = "0000-0002-9488-9183")),
@@ -12,13 +12,13 @@ Authors@R: c(
       comment = c(ORCID = "0000-0003-1912-4890"))
     )
 Maintainer: Malcolm Morgan <m.morgan1@leeds.ac.uk>
-Description: An R interface for OpenTripPlanner <http://www.opentripplanner.org/>.
-    OpenTripPlanner (OTP) is an open source platform for multi-modal and multi-agency
-    journey planning written in Java. OTP provides a REST API which OpenTripPlanner
-    for R uses to connect to OTP.
- This package has been peer-reviewed by rOpenSci (v. 0.2.0.0).
+Description: Setup and connect to OpenTripPlanner (OTP) <http://www.opentripplanner.org/>.
+    OTP is an open source platform for multi-modal and multi-agency
+    journey planning written in Java. The package allows you to manage a local version or 
+    connect to remote OTP server e.g. <https://api.digitransit.fi:443/routing/v1/routers/hsl>.
+    This package has been peer-reviewed by rOpenSci (v. 0.2.0.0).
 Language: EN-GB
-License: file LICENSE
+License: GPL-3
 URL: https://github.com/ropensci/opentripplanner, https://docs.ropensci.org/opentripplanner/
 BugReports: https://github.com/ropensci/opentripplanner/issues
 Encoding: UTF-8

@@ -41,7 +41,14 @@ vignette](https://docs.ropensci.org/opentripplanner/articles/prerequisites.html)
 
 ### R Package
 
-Install the package using the **devtools** package as follows:
+To install the stable CRAN version:
+
+``` r
+install.packages("opentripplanner") # Install Package
+library(opentripplanner)            # Load Package
+```
+
+Install the development version using **devtools**:
 
 ``` r
 # If you do not already have the devtools package
@@ -107,12 +114,31 @@ reports and comments are welcome as Github
 submissions as [Pull
 Requests](https://github.com/ropensci/opentripplanner/pulls).
 
-## Package Status
+## Citation
 
-This package is part of ongoing research at the University of Leeds. A
-stable version of the package (v0.2.0) is
-[available](https://github.com/ropensci/opentripplanner/releases/tag/0.2).
-We intend to bring a verson to CRAN
-soon.
+Please cite the package in publications
+
+``` r
+citation("opentripplanner")
+#> Warning in citation("opentripplanner"): no date field in DESCRIPTION file of
+#> package 'opentripplanner'
+#> 
+#> To cite package 'opentripplanner' in publications use:
+#> 
+#>   Marcus Young, Malcolm Morgan and Robin Lovelace (2019).
+#>   opentripplanner: OpenTripPlanner for R.
+#>   https://github.com/ITSLeeds/opentripplanner,
+#>   https://itsleeds.github.io/opentripplanner/.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {opentripplanner: OpenTripPlanner for R},
+#>     author = {Marcus Young and Malcolm Morgan and Robin Lovelace},
+#>     year = {2019},
+#>     note = {https://github.com/ITSLeeds/opentripplanner,
+#> https://itsleeds.github.io/opentripplanner/},
+#>   }
+```
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
