@@ -9,10 +9,10 @@ citEntry(
   person("Robin Lovelace"),
   person("Layik Hama")),
   journal  = "Journal of Open Source Software"",
-  year     = 2019,
-  volume   = 4,
-  number   = 44,
-  pages    = 1926,
+  year     = "2019",
+  volume   = "4",
+  number   = "44",
+  pages    = "1926",
   doi      = "https://doi.org/10.21105/joss.01926",
   textVersion = paste(
     "Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source Software, 4(44), 1926, https://doi.org/10.21105/joss.01926"
