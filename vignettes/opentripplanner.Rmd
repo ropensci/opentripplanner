@@ -203,7 +203,7 @@ OTP supports multiple routes by having them in separate folders. For example:
   /graphs                     
      /london                 # router called london
          osm.pbf             # map of London
-     /manchester             # router called 
+     /manchester             # router called manchester
          osm.pbf             # map of Manchester
 ```
 
