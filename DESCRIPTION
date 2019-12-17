@@ -18,7 +18,7 @@ Description: Setup and connect to OpenTripPlanner (OTP) <http://www.opentripplan
     connect to remote OTP server e.g. <https://api.digitransit.fi:443/routing/v1/routers/hsl>.
     This package has been peer-reviewed by rOpenSci (v. 0.2.0.0).
 Language: EN-GB
-License: GPL-3 + file LICENSE
+License: GPL-3
 URL: https://github.com/ropensci/opentripplanner, https://docs.ropensci.org/opentripplanner/
 BugReports: https://github.com/ropensci/opentripplanner/issues
 Encoding: UTF-8
