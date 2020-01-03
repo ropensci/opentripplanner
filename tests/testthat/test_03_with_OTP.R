@@ -11,7 +11,7 @@ context("Test the download of the LSOA file")
 f <- file.path(tempdir(), "centroids.gpkg")
 download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f,  mode = "wb")
 lsoa <- sf::read_sf(f)
-file.remove("centroids.gpkg")
+file.remove(f)
 test_that("can get lsoa points", {
   expect_is(lsoa, "sf")
   expect_true(nrow(lsoa) == 89)
