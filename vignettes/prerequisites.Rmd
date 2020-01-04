@@ -95,6 +95,12 @@ To get Java:
 
 * **Linux**  we recommend instructions at [StackOverflow](https://askubuntu.com/questions/740757/switch-between-multiple-java-versions).
 
+For Debian based Linux including Ubuntu and Linux Mint, the follwoing commands in the terminal will install the correct version.
+
+```{eval = FALSE}
+sudo apt install openjdk-8-jdk
+```
+
 
 ## Next Steps
 
