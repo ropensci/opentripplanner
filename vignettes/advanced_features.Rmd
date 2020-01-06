@@ -23,8 +23,8 @@ library(opentripplanner)
 path_data <- file.path(tempdir(),"OTP")
 path_otp <- file.path(path_data,"otp.jar")
 # Build Graph and start OTP
-log <- otp_build_graph(otp = path_otp, dir = path_data)
-otp_setup(otp = path_otp, dir = path_data, analyst = T)
+log1 <- otp_build_graph(otp = path_otp, dir = path_data)
+log2 <- otp_setup(otp = path_otp, dir = path_data)
 otpcon <- otp_connect()
 
 ```
