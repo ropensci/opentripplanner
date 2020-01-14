@@ -15,7 +15,7 @@ Maintainer: Malcolm Morgan <m.morgan1@leeds.ac.uk>
 Description: Setup and connect to 'OpenTripPlanner' (OTP) <http://www.opentripplanner.org/>.
     OTP is an open source platform for multi-modal and multi-agency
     journey planning written in 'Java'. The package allows you to manage a local version or 
-    connect to remote OTP server e.g. <https://api.digitransit.fi:443/routing/v1/routers/hsl>.
+    connect to remote OTP server.
     This package has been peer-reviewed by rOpenSci (v. 0.2.0.0).
 Language: EN-GB
 License: GPL-3
