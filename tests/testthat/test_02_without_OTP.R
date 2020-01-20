@@ -84,7 +84,7 @@ test_that("otp_plan input validation", {
     fromPlace = c(1.23, 1.23),
     toPlace = c(1.23, 1.23)
   ),
-  regexp = "Failed to connect to localhost port 8080: Connection refused"
+  regexp = "Failed to connect to localhost port 8080"
   )
   expect_error(otp_plan(otpcon,
     fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
@@ -96,7 +96,7 @@ test_that("otp_plan input validation", {
     toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     fromPlace = matrix(c(1.23, 1.23), ncol = 2)
   ),
-  regexp = "Failed to connect to localhost port 8080: Connection refused"
+  regexp = "Failed to connect to localhost port 8080"
   )
   expect_error(otp_plan(otpcon,
     toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
@@ -116,7 +116,7 @@ test_that("otp_plan input validation", {
     fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     toPlace = matrix(c(1.23, 1.23), ncol = 2)
   ),
-  regexp = "Failed to connect to localhost port 8080: Connection refused"
+  regexp = "Failed to connect to localhost port 8080"
   )
   # ncore
   expect_error(otp_plan(otpcon,
@@ -124,7 +124,7 @@ test_that("otp_plan input validation", {
     toPlace = matrix(c(1.23, 1.23), ncol = 2),
     ncore = 2
   ),
-  regexp = "Failed to connect to localhost port 8080: Connection refused"
+  regexp = "Failed to connect to localhost port 8080"
   )
   # linestring
   ls <- sf::st_as_sf(data.frame(
@@ -144,7 +144,7 @@ test_that("otp_geocode input validation", {
     regexp = "Assertion on 'query' failed: Must be of type 'character', not 'NULL'."
   )
   expect_error(otp_geocode(otpcon, query = "test"),
-    regexp = "Failed to connect to localhost port 8080: Connection refused"
+    regexp = "Failed to connect to localhost port 8080"
   )
 })
 
@@ -153,7 +153,7 @@ test_that("otp_isochrone input validation", {
     regexp = "Assertion on 'fromPlace' failed: Must have length 2, but has length 1."
   )
   expect_error(otp_isochrone(otpcon, fromPlace = c(1, 1)),
-    regexp = "Failed to connect to localhost port 8080: Connection refused"
+    regexp = "Failed to connect to localhost port 8080"
   )
 })
 
