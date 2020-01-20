@@ -14,6 +14,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
 [![status](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736/status.svg)](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
 
 **opentripplanner** is an R package that provides a simple yet flexible
 interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/).
@@ -119,7 +121,6 @@ Requests](https://github.com/ropensci/opentripplanner/pulls).
 Please cite the JOSS paper in publications:
 
 Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source
-Software, 4(44), 1926,
-<https://doi.org/10.21105/joss.01926>
+Software, 4(44), 1926, <https://doi.org/10.21105/joss.01926>
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

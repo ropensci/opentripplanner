@@ -22,6 +22,8 @@ knitr::opts_chunk$set(
 [![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
 [![status](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736/status.svg)](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
 
 
 **opentripplanner** is an R package that provides a simple yet flexible interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/). OTP is a multimodal trip planning service written in Java. For more information on what OTP is, see the [prerequisites vignette](https://docs.ropensci.org/opentripplanner/articles/prerequisites.html).
