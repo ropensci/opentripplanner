@@ -24,15 +24,11 @@ You will need to have installed R, RStudio, and Java 8. For more details on the 
 
 ## Installation
 
-Install the package using the **devtools** package as follows:
+Install the package as follows:
 
-```{r install, eval=FALSE}
-# If you do not already have the devtools package
-install.packages("devtools")
-# Install the package from GitHub
-devtools::install_github("ropensci/opentripplanner")
-# Load the package
-library(opentripplanner)
+```{r installCRAN, eval=FALSE}
+install.packages("opentripplanner") # Install Package
+library(opentripplanner)            # Load Package
 ```
 
 
