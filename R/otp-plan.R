@@ -555,11 +555,17 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
 
   itineraries$legs <- NULL
 
-  # Extract Fare Info and discard for now
+  # Extract Fare Info
   fare <- itineraries$fare
   if (!is.null(fare)) {
-    itineraries$fare <- fare$fare$regular$cents / 100
-    itineraries$fare_currency <- fare$fare$regular$currency$currency
+    if(ncol(fare$fare) > 0){
+      itineraries$fare <- fare$fare$regular$cents / 100
+      itineraries$fare_currency <- fare$fare$regular$currency$currency
+    } else {
+      warning("Unstructured fare data has been discarded")
+      itineraries$fare <- NA
+      itineraries$fare_currency <- NA
+    }
   } else {
     itineraries$fare <- NA
     itineraries$fare_currency <- NA
