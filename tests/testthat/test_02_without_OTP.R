@@ -93,25 +93,39 @@ test_that("otp_plan input validation", {
   regexp = "Number of fromPlaces and toPlaces do not match"
   )
   expect_error(otp_plan(otpcon,
+                        toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+                        fromPlace = matrix(c(1.23, 1.23), ncol = 2),
+                        toID = c("A", "B", "C")
+  ),
+  regexp = "The length of toID and toPlace are not the same"
+  )
+  expect_error(otp_plan(otpcon,
+                        toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
+                        fromPlace = matrix(c(1.23, 1.23), ncol = 2),
+                        fromID = c("A", "B", "C")
+  ),
+  regexp = "The length of fromID and fromPlace are not the same"
+  )
+  # linestring
+  ls <- sf::st_as_sf(data.frame(
+    id = 1,
+    geom = sf::st_sfc(sf::st_linestring(rbind(c(0, 0), c(1, 1), c(2, 1))))
+  ))
+  expect_error(otp_plan(otpcon,
+                        fromPlace = ls,
+                        toPlace = matrix(c(1, 1), ncol = 2)
+  ),
+  regexp = "contains non-POINT geometry"
+  )
+
+  skip_on_cran()
+  expect_error(otp_plan(otpcon,
     toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     fromPlace = matrix(c(1.23, 1.23), ncol = 2)
   ),
   regexp = "Failed to connect to localhost port 8080"
   )
-  expect_error(otp_plan(otpcon,
-    toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
-    fromPlace = matrix(c(1.23, 1.23), ncol = 2),
-    toID = c("A", "B", "C")
-  ),
-  regexp = "The length of toID and toPlace are not the same"
-  )
-  expect_error(otp_plan(otpcon,
-    toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
-    fromPlace = matrix(c(1.23, 1.23), ncol = 2),
-    fromID = c("A", "B", "C")
-  ),
-  regexp = "The length of fromID and fromPlace are not the same"
-  )
+
   expect_error(otp_plan(otpcon,
     fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     toPlace = matrix(c(1.23, 1.23), ncol = 2)
@@ -126,23 +140,14 @@ test_that("otp_plan input validation", {
   ),
   regexp = "Failed to connect to localhost port 8080"
   )
-  # linestring
-  ls <- sf::st_as_sf(data.frame(
-    id = 1,
-    geom = sf::st_sfc(sf::st_linestring(rbind(c(0, 0), c(1, 1), c(2, 1))))
-  ))
-  expect_error(otp_plan(otpcon,
-    fromPlace = ls,
-    toPlace = matrix(c(1, 1), ncol = 2)
-  ),
-  regexp = "contains non-POINT geometry"
-  )
+
 })
 
 test_that("otp_geocode input validation", {
   expect_error(otp_geocode(otpcon),
     regexp = "Assertion on 'query' failed: Must be of type 'character', not 'NULL'."
   )
+  skip_on_cran()
   expect_error(otp_geocode(otpcon, query = "test"),
     regexp = "Failed to connect to localhost port 8080"
   )
@@ -152,6 +157,7 @@ test_that("otp_isochrone input validation", {
   expect_error(otp_isochrone(otpcon),
     regexp = "Assertion on 'fromPlace' failed: Must have length 2, but has length 1."
   )
+  skip_on_cran()
   expect_error(otp_isochrone(otpcon, fromPlace = c(1, 1)),
     regexp = "Failed to connect to localhost port 8080"
   )

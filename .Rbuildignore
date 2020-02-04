@@ -10,3 +10,5 @@
 ^codemeta\.json$
 ^paper\.bib$
 ^LICENSE\.md$
+^CRAN-RELEASE$
+^cran-comments\.md$
