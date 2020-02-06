@@ -1,5 +1,9 @@
 # opentripplanner 0.2.0.8
 
+* Fix bug in correct_distances() when input is of length <= 2 or the distances never decrease
+
+# opentripplanner 0.2.0.8
+
 * Disabled CRAN tests that fail on solaris OS, due to different wording of error messages
 
 # opentripplanner 0.2.0.6

@@ -600,8 +600,14 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
 
 correct_distances <- function(dists, err = 1) {
   lth <- length(dists)
+  if(lth <= 2){
+    return(dists) # Can't break up 2 points
+  }
   brks <- dists[seq(1, lth - 1)] > (dists[seq(2, lth)] + err)
   brks <- seq(1, lth)[brks]
+  if(length(brks) == 0){
+    return(dists) # No places the length decreased
+  }
   mxs <- list()
   brks_lth <- length(brks)
   for (k in seq(1, brks_lth)) {
