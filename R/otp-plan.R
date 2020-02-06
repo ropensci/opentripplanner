@@ -675,8 +675,8 @@ polyline2linestring <- function(line, elevation = NULL) {
     } else {
       elevation <- elevation[order(elevation$distance), ]
       # Calculate the length of each segment
-      dist <- geodist::geodist(line[seq(1, nrow(line) - 1), ],
-        line[seq(2, nrow(line)), ],
+      dist <- geodist::geodist(line[seq(1, nrow(line) - 1), , drop=FALSE],
+        line[seq(2, nrow(line)), , drop=FALSE],
         paired = TRUE,
         measure = "cheap"
       )

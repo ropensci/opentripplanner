@@ -1,6 +1,7 @@
 # opentripplanner 0.2.0.8
 
 * Fix bug in correct_distances() when input is of length <= 2 or the distances never decrease
+* Fix bug in polyline2linestring() when elevation is length <= 2
 
 # opentripplanner 0.2.0.8
 
