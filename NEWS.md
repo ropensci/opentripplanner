@@ -1,3 +1,7 @@
+# opentripplanner 0.2.0.8
+
+* Disabled CRAN tests that fail on solaris OS, due to different wording of error messages
+
 # opentripplanner 0.2.0.6
 
 * Fixed bug where routing failes due to missing fare data

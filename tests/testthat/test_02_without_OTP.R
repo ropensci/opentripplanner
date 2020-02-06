@@ -81,12 +81,6 @@ test_that("otp_plan input validation", {
     regexp = "toPlace is not in a valid format"
   )
   expect_error(otp_plan(otpcon,
-    fromPlace = c(1.23, 1.23),
-    toPlace = c(1.23, 1.23)
-  ),
-  regexp = "Failed to connect to localhost port 8080"
-  )
-  expect_error(otp_plan(otpcon,
     fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     toPlace = matrix(c(1.23, 1.23, 2.34, 2.34, 3.45, 3.45), ncol = 2)
   ),
@@ -119,6 +113,12 @@ test_that("otp_plan input validation", {
   )
 
   skip_on_cran()
+  expect_error(otp_plan(otpcon,
+                        fromPlace = c(1.23, 1.23),
+                        toPlace = c(1.23, 1.23)
+  ),
+  regexp = "Failed to connect to localhost port 8080"
+  )
   expect_error(otp_plan(otpcon,
     toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     fromPlace = matrix(c(1.23, 1.23), ncol = 2)
