@@ -99,6 +99,10 @@ otp_isochrone <- function(otpcon = NA,
     # parse to sf
     response <- sf::st_read(text, quiet = TRUE)
     response$id <- seq(1, nrow(response))
+    if(any(!sf::st_is_valid(response))){
+      suppressWarnings(response <- sf::st_buffer(response, 0))
+    }
+
     return(response)
   }
 }
