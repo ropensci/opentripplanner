@@ -34,75 +34,75 @@
 #'
 #' This feature is known to not work correctly with any mode other than TRANSIT.
 #' @export
-otp_isochrone <- function(otpcon = NA,
-                          fromPlace = NA,
-                          mode = "TRANSIT",
-                          date_time = Sys.time(),
-                          arriveBy = FALSE,
-                          maxWalkDistance = 800,
-                          walkReluctance = 5,
-                          transferPenalty = 0,
-                          minTransferTime = 600,
-                          cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600)) {
-  # Check Valid Inputs
-  checkmate::assert_class(otpcon, "otpconnect")
-  checkmate::assert_numeric(fromPlace, lower = -180, upper = 180, len = 2)
-  fromPlace <- fromPlace[2:1]
-  fromPlace <- paste(fromPlace, collapse = ",")
-  mode <- toupper(mode)
-  checkmate::assert_subset(mode,
-    choices = c(
-      "TRANSIT", "WALK", "BICYCLE",
-      "CAR", "BUS", "RAIL"
-    ),
-    empty.ok = FALSE
-  )
-  mode <- paste(mode, collapse = ",")
-  checkmate::assert_posixct(date_time)
-  date <- format(date_time, "%m-%d-%Y")
-  time <- tolower(format(date_time, "%I:%M%p"))
-  checkmate::assert_numeric(cutoffSec, lower = 0)
-  checkmate::assert_logical(arriveBy)
-  arriveBy <- tolower(as.character(arriveBy))
-
-  # Construct URL
-  routerUrl <- make_url(otpcon)
-  routerUrl <- paste0(routerUrl, "/isochrone")
-
-  query <- list(
-    fromPlace = fromPlace,
-    mode = mode,
-    date = date,
-    time = time,
-    maxWalkDistance = maxWalkDistance,
-    walkReluctance = walkReluctance,
-    arriveBy = arriveBy,
-    transferPenalty = transferPenalty,
-    minTransferTime = minTransferTime
-  )
-  cutoffSec <- as.list(cutoffSec)
-  names(cutoffSec) <- rep("cutoffSec", length(cutoffSec))
-  query <- c(query, cutoffSec)
-
-  req <- httr::GET(
-    routerUrl,
-    query = query
-  )
-
-  # convert response content into text
-  text <- httr::content(req, as = "text", encoding = "UTF-8")
-
-  if (nchar(text) < 200) {
-    warning("Failed to get isochrone, returning error message")
-    return(text)
-  } else {
-    # parse to sf
-    response <- sf::st_read(text, quiet = TRUE)
-    response$id <- seq(1, nrow(response))
-    if(any(!sf::st_is_valid(response))){
-      suppressMessages(suppressWarnings(response <- sf::st_buffer(response, 0)))
-    }
-
-    return(response)
-  }
-}
+# otp_isochrone <- function(otpcon = NA,
+#                           fromPlace = NA,
+#                           mode = "TRANSIT",
+#                           date_time = Sys.time(),
+#                           arriveBy = FALSE,
+#                           maxWalkDistance = 800,
+#                           walkReluctance = 5,
+#                           transferPenalty = 0,
+#                           minTransferTime = 600,
+#                           cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600)) {
+#   # Check Valid Inputs
+#   checkmate::assert_class(otpcon, "otpconnect")
+#   checkmate::assert_numeric(fromPlace, lower = -180, upper = 180, len = 2)
+#   fromPlace <- fromPlace[2:1]
+#   fromPlace <- paste(fromPlace, collapse = ",")
+#   mode <- toupper(mode)
+#   checkmate::assert_subset(mode,
+#     choices = c(
+#       "TRANSIT", "WALK", "BICYCLE",
+#       "CAR", "BUS", "RAIL"
+#     ),
+#     empty.ok = FALSE
+#   )
+#   mode <- paste(mode, collapse = ",")
+#   checkmate::assert_posixct(date_time)
+#   date <- format(date_time, "%m-%d-%Y")
+#   time <- tolower(format(date_time, "%I:%M%p"))
+#   checkmate::assert_numeric(cutoffSec, lower = 0)
+#   checkmate::assert_logical(arriveBy)
+#   arriveBy <- tolower(as.character(arriveBy))
+#
+#   # Construct URL
+#   routerUrl <- make_url(otpcon)
+#   routerUrl <- paste0(routerUrl, "/isochrone")
+#
+#   query <- list(
+#     fromPlace = fromPlace,
+#     mode = mode,
+#     date = date,
+#     time = time,
+#     maxWalkDistance = maxWalkDistance,
+#     walkReluctance = walkReluctance,
+#     arriveBy = arriveBy,
+#     transferPenalty = transferPenalty,
+#     minTransferTime = minTransferTime
+#   )
+#   cutoffSec <- as.list(cutoffSec)
+#   names(cutoffSec) <- rep("cutoffSec", length(cutoffSec))
+#   query <- c(query, cutoffSec)
+#
+#   req <- httr::GET(
+#     routerUrl,
+#     query = query
+#   )
+#
+#   # convert response content into text
+#   text <- httr::content(req, as = "text", encoding = "UTF-8")
+#
+#   if (nchar(text) < 200) {
+#     warning("Failed to get isochrone, returning error message")
+#     return(text)
+#   } else {
+#     # parse to sf
+#     response <- sf::st_read(text, quiet = TRUE)
+#     response$id <- seq(1, nrow(response))
+#     if(any(!sf::st_is_valid(response))){
+#       suppressMessages(suppressWarnings(response <- sf::st_buffer(response, 0)))
+#     }
+#
+#     return(response)
+#   }
+# }
