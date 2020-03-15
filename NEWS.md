@@ -1,4 +1,8 @@
-# opentripplanner 0.2.0.8
+# opentripplanner 0.2.0.10
+
+* Batch isochrones support added
+
+# opentripplanner 0.2.0.9
 
 * Fix bug in correct_distances() when input is of length <= 2 or the distances never decrease
 * Fix bug in polyline2linestring() when elevation is length <= 2
