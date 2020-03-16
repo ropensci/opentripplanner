@@ -101,6 +101,12 @@ For Debian based Linux including Ubuntu and Linux Mint, the follwoing commands i
 sudo apt install openjdk-8-jdk
 ```
 
+The package includes a simple function for checking if you have the correct version of Java.
+
+```{eval = FALSE}
+otp_check_java()
+```
+
 
 ## Next Steps
 
