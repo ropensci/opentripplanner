@@ -14,10 +14,8 @@ otp_plan(
   date_time = Sys.time(),
   arriveBy = FALSE,
   maxWalkDistance = 1000,
-  walkReluctance = 2,
-  transferPenalty = 0,
-  minTransferTime = 0,
   numItineraries = 3,
+  routeOptions = NULL,
   full_elevation = FALSE,
   get_geometry = TRUE,
   ncores = 1
@@ -52,13 +50,10 @@ at the specified date and time, default FALSE}
 
 \item{maxWalkDistance}{Numeric passed to OTP in metres}
 
-\item{walkReluctance}{Numeric passed to OTP}
-
-\item{transferPenalty}{Numeric passed to OTP}
-
-\item{minTransferTime}{Numeric passed to OTP in seconds}
-
 \item{numItineraries}{The maximum number of possible itineraries to return}
+
+\item{routeOptions}{Named list of values passed to OTP use `otp_route_options()`
+to make template object.}
 
 \item{full_elevation}{Logical, should the full elevation profile be returned,
 default FALSE}
@@ -129,6 +124,8 @@ otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
 \seealso{
 Other routing: 
 \code{\link{otp_geocode}()},
-\code{\link{otp_isochrone}()}
+\code{\link{otp_isochrone}()},
+\code{\link{otp_routing_options}()},
+\code{\link{otp_validate_routing_options}()}
 }
 \concept{routing}

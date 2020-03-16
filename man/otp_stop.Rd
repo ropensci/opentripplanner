@@ -31,6 +31,7 @@ otp_stop(kill_all = FALSE)
 \seealso{
 Other setup: 
 \code{\link{otp_build_graph}()},
+\code{\link{otp_check_java}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_make_config}()},

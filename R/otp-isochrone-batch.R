@@ -14,12 +14,11 @@
 #'     date and time
 #' @param arriveBy Logical, Whether the trip should depart or
 #'     arrive at the specified date and time, default FALSE
-#' @param maxWalkDistance Numeric passed to OTP in metres
-#' @param walkReluctance Numeric passed to OTP
-#' @param transferPenalty Numeric passed to OTP in seconds
-#' @param minTransferTime Numeric passed to OTP
+#' @param maxWalkDistance maximum distance to walk in metres
+#' @param routingOptions named list passed to OTP see `otp_routing_options()`
 #' @param cutoffSec Numeric vector, number of seconds to define
 #'     the break points of each Isochrone
+#' @param ncores number of cores to use in parallel processing
 #' @family routing
 #' @return
 #' Returns a SF data.frame of POLYGONs
@@ -43,11 +42,10 @@ otp_isochrone <- function(otpcon = NA,
                           mode = "TRANSIT",
                           date_time = Sys.time(),
                           arriveBy = FALSE,
-                          maxWalkDistance = 800,
-                          walkReluctance = 5,
-                          transferPenalty = 0,
-                          minTransferTime = 600,
-                          cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600)) {
+                          maxWalkDistance = 1000,
+                          routingOptions = NULL,
+                          cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
+                          ncores = 1) {
   # Check Valid Inputs
   checkmate::assert_class(otpcon, "otpconnect")
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
@@ -94,10 +92,7 @@ otp_isochrone <- function(otpcon = NA,
                                  time = time,
                                  arriveBy = arriveBy,
                                  maxWalkDistance = maxWalkDistance,
-                                 walkReluctance = walkReluctance,
-                                 transferPenalty = transferPenalty,
-                                 minTransferTime = minTransferTime,
-                                 numItineraries = numItineraries,
+                                 routingOptions = routingOptions,
                                  cutoffSec = cutoffSec,
                                  cl = cl
     )
@@ -114,9 +109,7 @@ otp_isochrone <- function(otpcon = NA,
                                  time = time,
                                  arriveBy = arriveBy,
                                  maxWalkDistance = maxWalkDistance,
-                                 walkReluctance = walkReluctance,
-                                 transferPenalty = transferPenalty,
-                                 minTransferTime = minTransferTime,
+                                 routingOptions = routingOptions,
                                  cutoffSec = cutoffSec
     )
   }
@@ -197,9 +190,7 @@ otp_get_isochrone_results <- function(x, otpcon, fromPlace, fromID, ...) {
 #' @param arriveBy Logical, Whether the trip should depart or
 #'     arrive at the specified date and time, default FALSE
 #' @param maxWalkDistance Numeric passed to OTP in metres
-#' @param walkReluctance Numeric passed to OTP
-#' @param transferPenalty Numeric passed to OTP in seconds
-#' @param minTransferTime Numeric passed to OTP
+#' @param routingOptions Names list passed to OTP
 #' @param cutoffSec Numeric vector, number of seconds to define
 #'     the break points of each Isochrone
 #' @family internal
@@ -213,9 +204,7 @@ otp_isochrone_internal <- function(otpcon = NA,
                            time = NULL,
                            arriveBy = NULL,
                            maxWalkDistance = NULL,
-                           walkReluctance = NULL,
-                           transferPenalty = NULL,
-                           minTransferTime = NULL,
+                           routingOptions = NULL,
                            cutoffSec = NULL) {
 
   # Construct URL
@@ -231,14 +220,15 @@ otp_isochrone_internal <- function(otpcon = NA,
     date = date,
     time = time,
     maxWalkDistance = maxWalkDistance,
-    walkReluctance = walkReluctance,
-    arriveBy = arriveBy,
-    transferPenalty = transferPenalty,
-    minTransferTime = minTransferTime
+    arriveBy = arriveBy
   )
   cutoffSec <- as.list(cutoffSec)
   names(cutoffSec) <- rep("cutoffSec", length(cutoffSec))
   query <- c(query, cutoffSec)
+
+  if(!is.null(routingOptions)){
+    query <- c(query, routingOptions)
+  }
 
   req <- httr::GET(
     routerUrl,

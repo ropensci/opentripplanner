@@ -28,6 +28,7 @@ http://docs.opentripplanner.org/en/latest/Configuration
 \seealso{
 Other setup: 
 \code{\link{otp_build_graph}()},
+\code{\link{otp_check_java}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_setup}()},

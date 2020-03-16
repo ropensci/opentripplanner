@@ -155,7 +155,7 @@ test_that("otp_geocode input validation", {
 
 test_that("otp_isochrone input validation", {
   expect_error(otp_isochrone(otpcon),
-    regexp = "Assertion on 'fromPlace' failed: Must have length 2, but has length 1."
+    regexp = "fromPlace is not in a valid format"
   )
   skip_on_cran()
   expect_error(otp_isochrone(otpcon, fromPlace = c(1, 1)),
@@ -204,6 +204,15 @@ test_that("otp_setup input validation", {
   expect_error(otp_setup(otp = paste0(path_otp, "Z"), dir = path_data),
     regexp = "File does not exist:"
   )
+})
+
+test_that("otp_routing_options creation", {
+  routingOptions <- otp_routing_options()
+  expect_true(class(routingOptions) == "list")
+  routingOptions$walkSpeed <- 999
+  routingOptions <- otp_validate_routing_options(routingOptions)
+  expect_true(class(routingOptions) == "list")
+  expect_true(length(routingOptions) == 1)
 })
 
 
