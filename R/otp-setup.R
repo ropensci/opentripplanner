@@ -322,7 +322,7 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
       return(FALSE)
     }
   }
-  if(!otp_check_java()){
+  if(otp_check_java()){
     return(TRUE)
   } else{
     return(FALSE)
