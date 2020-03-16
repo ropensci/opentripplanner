@@ -31,7 +31,7 @@ install.packages("opentripplanner") # Install Package
 library(opentripplanner)            # Load Package
 ```
 
-Or you can install the development version from GitHub:
+Or you can install the development version from GitHub using the **remotes** package:
 
 ```{r installGitHub, eval=FALSE}
 remotes::install_github("ropensci/opentripplanner") # Install Package
