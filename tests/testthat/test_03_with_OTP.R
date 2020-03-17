@@ -18,7 +18,7 @@ test_that("can get lsoa points", {
   expect_true(nrow(lsoa) == 89)
 })
 
-context("Check previos tests have left the files we need")
+context("Check previous tests have left the files we need")
 
 path_data <- file.path(tempdir(), "otptests")
 path_otp <- file.path(path_data, "otp.jar")
@@ -33,16 +33,28 @@ test_that("path_otp is valid", {
   expect_true(file.exists(path_otp))
 })
 
+context("download special testing data")
+url = "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
+dir.create(file.path(path_data,"graphs","tests"))
+utils::download.file(
+  url = url,
+  destfile = file.path(path_data,"graphs","tests","test_data.zip"),
+  mode = "wb"
+)
+utils::unzip(file.path(path_data,"graphs","tests","test_data.zip"),
+             exdir = file.path(path_data, "graphs", "tests")
+)
+unlink(file.path(path_data,"graphs","tests","test_data.zip"))
 
 context("Test the otp_build_graph function")
 
 test_that("We can build an otp graph", {
   skip_no_otp()
-  log <- otp_build_graph(otp = path_otp, dir = path_data)
+  log <- otp_build_graph(otp = path_otp, dir = path_data, router = "tests")
   expect_true(file.exists(file.path(
     path_data,
     "graphs",
-    "default",
+    "tests",
     "Graph.obj"
   )))
 })
@@ -51,7 +63,7 @@ context("Test the otp_setup function")
 
 test_that("We can startup OTP", {
   skip_no_otp()
-  expect_message(otp_setup(otp = path_otp, dir = path_data),
+  expect_message(otp_setup(otp = path_otp, dir = path_data, router = "tests"),
     regexp = "OTP is ready to use"
   )
 })
@@ -61,7 +73,7 @@ context("Test the otp_connect function")
 
 test_that("object returned when check is TRUE and router exists", {
   skip_no_otp()
-  otpcon <- otp_connect()
+  otpcon <- otp_connect(router = "tests")
   expect_is(otpcon, "otpconnect")
 })
 
@@ -69,15 +81,15 @@ test_that("correct message when check is TRUE and router exists", {
   skip_no_otp()
   expect_message(
     otp_connect(),
-    "Router http://localhost:8080/otp/routers/default exists"
+    "Router http://localhost:8080/otp/routers/tests exists"
   )
 })
 
 test_that("correct error when check is TRUE and router does not exist", {
   skip_no_otp()
   expect_error(
-    otp_connect(router = "test"),
-    "Router http://localhost:8080/otp/routers/test does not exist"
+    otp_connect(router = "not"),
+    "Router http://localhost:8080/otp/routers/not does not exist"
   )
 })
 
