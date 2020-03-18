@@ -1,8 +1,8 @@
 # Check that require OTP to work
 
 skip_no_otp <- function() {
-  # if (!identical(Sys.getenv("I_have_OTP"), "TRUE")) {
-  if (!otp_check_java()) {
+  if (!identical(Sys.getenv("I_have_OTP"), "TRUE")) {
+  # if (!otp_check_java()) {
     skip("Not running full test.")
   }
 }
@@ -234,7 +234,4 @@ test_that("otp_stop", {
   }
 })
 
-otp_stop(FALSE)
-
-test_that("got ot end", expect_true(FALSE))
 
