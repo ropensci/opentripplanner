@@ -205,28 +205,36 @@ otp_validate_routing_options <- function(opts){
 
   # Character
   checkmate::assert_character(opts$bannedAgencies,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$bannedRoutes,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$bannedStops,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$bannedStopsHard,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$bannedTrips,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$boardSlack,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$preferredAgencies,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$preferredRoutes,
-                              null.ok = TRUE
+                              null.ok = TRUE,
+                              len = 1
   )
   checkmate::assert_character(opts$optimize,
                               len = 1,
