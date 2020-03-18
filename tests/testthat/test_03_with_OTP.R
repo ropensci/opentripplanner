@@ -233,3 +233,8 @@ test_that("otp_stop", {
     expect_true(TRUE)
   }
 })
+
+otp_stop(FALSE)
+
+test_that("got ot end", expect_true(FALSE))
+
