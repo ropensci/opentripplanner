@@ -93,7 +93,7 @@ test_that("correct error when check is TRUE and router does not exist", {
   )
 })
 
-if (otp_check_java()) {
+if (identical(Sys.getenv("I_have_OTP"), "TRUE")) {
   otpcon <- otp_connect(router = "tests")
 }
 
