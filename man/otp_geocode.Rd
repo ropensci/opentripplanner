@@ -53,6 +53,8 @@ locations <- otp_geocode(otpcon, "High Street")
 \seealso{
 Other routing: 
 \code{\link{otp_isochrone}()},
-\code{\link{otp_plan}()}
+\code{\link{otp_plan}()},
+\code{\link{otp_routing_options}()},
+\code{\link{otp_validate_routing_options}()}
 }
 \concept{routing}

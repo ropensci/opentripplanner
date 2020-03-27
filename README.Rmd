@@ -45,13 +45,13 @@ install.packages("opentripplanner") # Install Package
 library(opentripplanner)            # Load Package
 ```
 
-Install the development version using **devtools**:
+Install the development version using **remotes**:
 
 ```{r install, eval=FALSE}
-# If you do not already have the devtools package
-install.packages("devtools")
+# If you do not already have the remotes package
+install.packages("remotes")
 # Install the package from GitHub
-devtools::install_github("ropensci/opentripplanner")
+remotes::install_github("ropensci/opentripplanner")
 # Load the package
 library(opentripplanner)
 ```
@@ -64,6 +64,7 @@ Functions for setting up a local instance of OTP:
 
 1. `otp_dl_jar()`          To download the OTP Jar file;
 1. `otp_dl_demo()`         To download the demo data for the Isle of Wight;
+1. `otp_check_java()`      To check you have the correct version of Java;
 1. `otp_build_graph()`     To make a OTP graph from raw data;
 1. `otp_setup()`           To start up a local instance of OTP;
 1. `otp_make_config()`     To make a config object;
@@ -77,7 +78,7 @@ Functions for connecting to a local or remote instance of OTP:
 Functions for retrieving data from OTP:
 
 1. `otp_plan()`         To get routes from A to B;
-1. `otp_isochrone()`     To get isochrone maps;
+1. `otp_isochrone()`    To get isochrone maps;
 1. `otp_geocode()`      To get the locations of named places e.g. road names.
 
 Results are returned as [sf objects](https://CRAN.R-project.org/package=sf).

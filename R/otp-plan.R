@@ -24,9 +24,8 @@
 #' @param arriveBy Logical, Whether the trip should depart or arrive
 #'     at the specified date and time, default FALSE
 #' @param maxWalkDistance Numeric passed to OTP in metres
-#' @param walkReluctance Numeric passed to OTP
-#' @param transferPenalty Numeric passed to OTP
-#' @param minTransferTime Numeric passed to OTP in seconds
+#' @param routeOptions Named list of values passed to OTP use `otp_route_options()`
+#'     to make template object.
 #' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned,
 #'     default FALSE
@@ -95,10 +94,8 @@ otp_plan <- function(otpcon = NA,
                      date_time = Sys.time(),
                      arriveBy = FALSE,
                      maxWalkDistance = 1000,
-                     walkReluctance = 2,
-                     transferPenalty = 0,
-                     minTransferTime = 0,
                      numItineraries = 3,
+                     routeOptions = NULL,
                      full_elevation = FALSE,
                      get_geometry = TRUE,
                      ncores = 1) {
@@ -117,13 +114,18 @@ otp_plan <- function(otpcon = NA,
   date <- format(date_time, "%m-%d-%Y")
   time <- tolower(format(date_time, "%I:%M%p"))
   checkmate::assert_numeric(maxWalkDistance, lower = 0, len = 1)
-  checkmate::assert_numeric(walkReluctance, lower = 0, len = 1)
-  checkmate::assert_numeric(transferPenalty, lower = 0, len = 1)
+  #checkmate::assert_numeric(walkReluctance, lower = 0, len = 1)
+  #checkmate::assert_numeric(transferPenalty, lower = 0, len = 1)
   checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
   checkmate::assert_character(fromID, null.ok = TRUE)
   checkmate::assert_character(toID, null.ok = TRUE)
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(arriveBy)
+
+  # Check Route Options
+  if(!is.null(routeOptions)){
+    routeOptions <- otp_validate_routing_options(routeOptions)
+  }
 
   # Special checks for fromPlace and toPlace
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
@@ -164,6 +166,8 @@ otp_plan <- function(otpcon = NA,
 
 
 
+
+
   if (ncores > 1) {
     cl <- parallel::makeCluster(ncores)
     parallel::clusterExport(
@@ -187,10 +191,8 @@ otp_plan <- function(otpcon = NA,
       time = time,
       arriveBy = arriveBy,
       maxWalkDistance = maxWalkDistance,
-      walkReluctance = walkReluctance,
-      transferPenalty = transferPenalty,
-      minTransferTime = minTransferTime,
       numItineraries = numItineraries,
+      routeOptions = routeOptions,
       full_elevation = full_elevation,
       get_geometry = get_geometry,
       cl = cl
@@ -210,10 +212,8 @@ otp_plan <- function(otpcon = NA,
       time = time,
       arriveBy = arriveBy,
       maxWalkDistance = maxWalkDistance,
-      walkReluctance = walkReluctance,
-      transferPenalty = transferPenalty,
-      minTransferTime = minTransferTime,
       numItineraries = numItineraries,
+      routeOptions = routeOptions,
       full_elevation = full_elevation,
       get_geometry = get_geometry
     )
@@ -352,9 +352,7 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param time time
 #' @param arriveBy Logical, Whether the trip should depart or arrive at the specified date and time, default FALSE
 #' @param maxWalkDistance Numeric passed to OTP
-#' @param walkReluctance Numeric passed to OTP
-#' @param transferPenalty Numeric passed to OTP
-#' @param minTransferTime Numeric passed to OTP
+#' @param routeOptions names list passed to OTP
 #' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
 #' @param get_geometry logical, should geometry be returned
@@ -376,10 +374,8 @@ otp_plan_internal <- function(otpcon = NA,
                               time = time,
                               arriveBy = FALSE,
                               maxWalkDistance = 1000,
-                              walkReluctance = 2,
-                              transferPenalty = 0,
-                              minTransferTime = 0,
                               numItineraries = 3,
+                              routeOptions = NULL,
                               full_elevation = FALSE,
                               get_geometry = TRUE) {
 
@@ -394,21 +390,24 @@ otp_plan_internal <- function(otpcon = NA,
   fromPlace <- paste(fromPlace, collapse = ",")
   toPlace <- paste(toPlace, collapse = ",")
 
+  query <- list(
+    fromPlace = fromPlace,
+    toPlace = toPlace,
+    mode = mode,
+    date = date,
+    time = time,
+    maxWalkDistance = maxWalkDistance,
+    arriveBy = arriveBy,
+    numItineraries = numItineraries
+  )
+
+  if(!is.null(routeOptions)){
+    query <- c(query, routeOptions)
+  }
+
   req <- httr::GET(
     routerUrl,
-    query = list(
-      fromPlace = fromPlace,
-      toPlace = toPlace,
-      mode = mode,
-      date = date,
-      time = time,
-      maxWalkDistance = maxWalkDistance,
-      walkReluctance = walkReluctance,
-      arriveBy = arriveBy,
-      transferPenalty = transferPenalty,
-      minTransferTime = minTransferTime,
-      numItineraries = numItineraries
-    )
+    query = query
   )
 
   # convert response content into text

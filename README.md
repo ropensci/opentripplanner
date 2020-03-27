@@ -50,13 +50,13 @@ install.packages("opentripplanner") # Install Package
 library(opentripplanner)            # Load Package
 ```
 
-Install the development version using **devtools**:
+Install the development version using **remotes**:
 
 ``` r
-# If you do not already have the devtools package
-install.packages("devtools")
+# If you do not already have the remotes package
+install.packages("remotes")
 # Install the package from GitHub
-devtools::install_github("ropensci/opentripplanner")
+remotes::install_github("ropensci/opentripplanner")
 # Load the package
 library(opentripplanner)
 ```
@@ -69,11 +69,12 @@ Functions for setting up a local instance of OTP:
 
 1.  `otp_dl_jar()` To download the OTP Jar file;
 2.  `otp_dl_demo()` To download the demo data for the Isle of Wight;
-3.  `otp_build_graph()` To make a OTP graph from raw data;
-4.  `otp_setup()` To start up a local instance of OTP;
-5.  `otp_make_config()` To make a config object;
-6.  `otp_validate_config()` To validate a config object;
-7.  `otp_write_config()` To save a config object as a json file.
+3.  `otp_check_java()` To check you have the correct version of Java;
+4.  `otp_build_graph()` To make a OTP graph from raw data;
+5.  `otp_setup()` To start up a local instance of OTP;
+6.  `otp_make_config()` To make a config object;
+7.  `otp_validate_config()` To validate a config object;
+8.  `otp_write_config()` To save a config object as a json file.
 
 Functions for connecting to a local or remote instance of OTP:
 
@@ -121,6 +122,7 @@ Requests](https://github.com/ropensci/opentripplanner/pulls).
 Please cite the JOSS paper in publications:
 
 Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source
-Software, 4(44), 1926, <https://doi.org/10.21105/joss.01926>
+Software, 4(44), 1926,
+<https://doi.org/10.21105/joss.01926>
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)

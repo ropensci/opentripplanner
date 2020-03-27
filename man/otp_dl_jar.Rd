@@ -34,6 +34,7 @@ otp_dl_jar(tempdir())
 \seealso{
 Other setup: 
 \code{\link{otp_build_graph}()},
+\code{\link{otp_check_java}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_make_config}()},
 \code{\link{otp_setup}()},

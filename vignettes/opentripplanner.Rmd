@@ -24,13 +24,19 @@ You will need to have installed R, RStudio, and Java 8. For more details on the 
 
 ## Installation
 
-Install the package as follows:
+Install the stable version of the package from CRAN as follows:
 
 ```{r installCRAN, eval=FALSE}
 install.packages("opentripplanner") # Install Package
 library(opentripplanner)            # Load Package
 ```
 
+Or you can install the development version from GitHub using the **remotes** package:
+
+```{r installGitHub, eval=FALSE}
+remotes::install_github("ropensci/opentripplanner") # Install Package
+library(opentripplanner)                            # Load Package
+```
 
 ## Downloading OTP and the demonstration data
 

@@ -1,7 +1,12 @@
-# opentripplanner 0.2.0.8
+# opentripplanner 0.2.1
 
+* Batch isochrones support added
 * Fix bug in correct_distances() when input is of length <= 2 or the distances never decrease
 * Fix bug in polyline2linestring() when elevation is length <= 2
+* New input artgument to otp_plan and otp_isochrone routingOptions this allows support
+    for many more routing options to be set. Arguments walkReluctance, transferPenalty, and
+    minTransferTime have been removed and replaced with routingOptions.
+* New functions otp_routing_options() and otp_validate_routing_options()
 
 # opentripplanner 0.2.0.8
 
