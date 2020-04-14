@@ -34,7 +34,7 @@ test_that("path_otp is valid", {
 })
 
 context("download special testing data")
-url = "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
+url <- "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
 dir.create(file.path(path_data,"graphs","tests"))
 utils::download.file(
   url = url,
