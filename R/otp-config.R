@@ -456,7 +456,7 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
     # Character
     checkmate::assert_subset(config$osmWayPropertySet,
       empty.ok = TRUE,
-      choices = c("default", "norway")
+      choices = c("default", "norway","uk")
     )
     checkmate::assert_subset(config$stopClusterMode,
       empty.ok = TRUE,
