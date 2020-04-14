@@ -15,4 +15,3 @@ export(otp_stop)
 export(otp_validate_config)
 export(otp_validate_routing_options)
 export(otp_write_config)
-
