@@ -33,6 +33,8 @@
 #'     default 1, see details
 #' @param get_geometry Logical, should the route geometry be returned,
 #'     default TRUE, see details
+#' @param timezone Character, what timezone to use, see as.POSIXct, default is
+#'   local timezone
 #'
 #' @export
 #' @family routing
@@ -98,7 +100,8 @@ otp_plan <- function(otpcon = NA,
                      routeOptions = NULL,
                      full_elevation = FALSE,
                      get_geometry = TRUE,
-                     ncores = 1) {
+                     ncores = 1,
+                     timezone = Sys.timezone()) {
   # Check Valid Inputs
   checkmate::assert_class(otpcon, "otpconnect")
   mode <- toupper(mode)
@@ -195,6 +198,7 @@ otp_plan <- function(otpcon = NA,
       routeOptions = routeOptions,
       full_elevation = full_elevation,
       get_geometry = get_geometry,
+      timezone = timezone,
       cl = cl
     )
     parallel::stopCluster(cl)
@@ -215,7 +219,8 @@ otp_plan <- function(otpcon = NA,
       numItineraries = numItineraries,
       routeOptions = routeOptions,
       full_elevation = full_elevation,
-      get_geometry = get_geometry
+      get_geometry = get_geometry,
+      timezone = timezone
     )
   }
 
@@ -377,7 +382,8 @@ otp_plan_internal <- function(otpcon = NA,
                               numItineraries = 3,
                               routeOptions = NULL,
                               full_elevation = FALSE,
-                              get_geometry = TRUE) {
+                              get_geometry = TRUE,
+                              timezone = "") {
 
 
   # Construct URL
@@ -417,7 +423,7 @@ otp_plan_internal <- function(otpcon = NA,
 
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
-    response <- otp_json2sf(asjson, full_elevation, get_geometry)
+    response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone)
     # Add Ids
     if (is.null(fromID)) {
       response$fromPlace <- fromPlace
@@ -448,10 +454,12 @@ otp_plan_internal <- function(otpcon = NA,
 #' @param obj Object from the OTP API to process
 #' @param full_elevation logical should the full elevation profile be returned (if available)
 #' @param get_geometry logical, should geometry be returned
+#' @param timezone character, which timezone to use, default "" means local time
 #' @family internal
 #' @noRd
 
-otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
+otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
+                        timezone = "") {
   requestParameters <- obj$requestParameters
   plan <- obj$plan
   debugOutput <- obj$debugOutput
@@ -459,10 +467,10 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
   itineraries <- plan$itineraries
 
   itineraries$startTime <- as.POSIXct(itineraries$startTime / 1000,
-    origin = "1970-01-01", tz = "UTC"
+    origin = "1970-01-01", tz = timezone
   )
   itineraries$endTime <- as.POSIXct(itineraries$endTime / 1000,
-    origin = "1970-01-01", tz = "UTC"
+    origin = "1970-01-01", tz = timezone
   )
 
 
