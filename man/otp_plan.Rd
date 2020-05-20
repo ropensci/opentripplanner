@@ -18,7 +18,8 @@ otp_plan(
   routeOptions = NULL,
   full_elevation = FALSE,
   get_geometry = TRUE,
-  ncores = 1
+  ncores = 1,
+  timezone = Sys.timezone()
 )
 }
 \arguments{
@@ -63,6 +64,9 @@ default TRUE, see details}
 
 \item{ncores}{Numeric, number of cores to use when batch processing,
 default 1, see details}
+
+\item{timezone}{Character, what timezone to use, see as.POSIXct, default is
+local timezone}
 }
 \value{
 Returns an SF data frame of LINESTRINGs
