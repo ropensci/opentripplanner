@@ -459,10 +459,10 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE) {
   itineraries <- plan$itineraries
 
   itineraries$startTime <- as.POSIXct(itineraries$startTime / 1000,
-    origin = "1970-01-01", tz = "GMT"
+    origin = "1970-01-01", tz = "UTC"
   )
   itineraries$endTime <- as.POSIXct(itineraries$endTime / 1000,
-    origin = "1970-01-01", tz = "GMT"
+    origin = "1970-01-01", tz = "UTC"
   )
 
 
