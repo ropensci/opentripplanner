@@ -93,8 +93,8 @@ routes <- otp_plan(otpcon = otpcon,
 routes <- routes[,c("fromPlace","toPlace","duration")]
 # Use the tidyr package to go from long to wide format
 routes_matrix <- tidyr::pivot_wider(routes, 
-                               key = "toPlace", 
-                               value = "duration") 
+                               names_from = "toPlace", 
+                               values_from = "duration") 
 ```
 
 Notice the use of `fromID` and `toID` this allows `otp_plan` to return the LSOA `geo_code` with the routes. This can be useful when producing many routes. If no IDs are provided `otp_plan` will return the latitude/longitude of the fromPlace and toPlace.
