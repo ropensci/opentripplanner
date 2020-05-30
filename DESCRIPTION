@@ -25,7 +25,9 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     checkmate,
+    data.table,
     dplyr,
+    tibble,
     geodist,
     googlePolylines,
     httr,

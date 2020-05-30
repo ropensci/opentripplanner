@@ -14,6 +14,7 @@
 #'     default is FALSE.
 #' @param check Logical. If TRUE connection object is only returned if OTP
 #'     instance and router are confirmed reachable. Optional, default is TRUE.
+#' @param timezone Character, timezone, defaults to local timezone
 #' @return Returns an S3 object of class otpconnect. If \code{check} is TRUE
 #'     and the router is not reachable the object is not returned.
 #' @family connect

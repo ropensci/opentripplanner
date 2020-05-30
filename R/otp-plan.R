@@ -104,6 +104,14 @@ otp_plan <- function(otpcon = NA,
                      ncores = 1,
                      timezone = otpcon$timezone) {
   # Check Valid Inputs
+
+  # Back compatability with 0.2.1
+  if(is.null(timezone)){
+    warning("otpcon is missing the timezone variaible, assuming local timezone")
+    timezone <- Sys.timezone()
+  }
+  checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
+
   checkmate::assert_class(otpcon, "otpconnect")
   mode <- toupper(mode)
   checkmate::assert_subset(mode,
@@ -124,12 +132,7 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(arriveBy)
 
-  # Back compatability with 0.2.1
-  if(is.null(timezone)){
-    warning("otpcon is missing the timezone variaible, assuming local timezone")
-    timezone <- Sys.timezone()
-  }
-  checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
+
 
   # Check Route Options
   if(!is.null(routeOptions)){
@@ -251,13 +254,15 @@ otp_plan <- function(otpcon = NA,
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
     })))) {
-      suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
+      #suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
+      results_routes <- data.table::rbindlist(results_routes)
       results_routes <- as.data.frame(results_routes)
       results_routes$geometry <- sf::st_sfc(results_routes$geometry)
       results_routes <- sf::st_sf(results_routes)
       sf::st_crs(results_routes) <- 4326
     } else {
-      results_routes <- dplyr::bind_rows(results_routes)
+      #results_routes <- dplyr::bind_rows(results_routes)
+      results_routes <- data.table::rbindlist(results_routes)
     }
   }
 
@@ -369,6 +374,7 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
 #' @param get_geometry logical, should geometry be returned
+#' @param timezone timezone to use
 #' @family internal
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -506,7 +512,8 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
         # We have Elevation Data
         # Extract the elevation values
         elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-          dplyr::bind_rows(elevation[[x]])
+          #dplyr::bind_rows(elevation[[x]])
+          data.table::rbindlist(elevation[[x]])
         })
         elevation <- lapply(seq(1, length(legGeometry)), function(x) {
           if (nrow(elevation[[x]]) == 0) {
@@ -551,7 +558,8 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
   }
 
   legs <- legs[!is.na(legs)]
-  suppressWarnings(legs <- dplyr::bind_rows(legs))
+  #suppressWarnings(legs <- dplyr::bind_rows(legs))
+  legs <- data.table::rbindlist(legs)
 
   if (get_geometry) {
     # rebuild the sf object
@@ -592,6 +600,7 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
   names(legs)[names(legs) == "endTime"] <- "leg_endTime"
   names(legs)[names(legs) == "duration"] <- "leg_duration"
   itineraries <- dplyr::bind_cols(itineraries, legs)
+  #itineraries <- cbind(itineraries, legs)
 
   if (get_geometry) {
     itineraries <- sf::st_as_sf(itineraries)
