@@ -7,13 +7,16 @@
 otp_dl_demo(
   path_data = NULL,
   url = paste0("https://github.com/ropensci/opentripplanner/",
-    "releases/download/0.1/isle-of-wight-demo.zip")
+    "releases/download/0.1/isle-of-wight-demo.zip"),
+  quiet = FALSE
 )
 }
 \arguments{
 \item{path_data}{path to folder where data for OTP is to be stored}
 
 \item{url}{URL to data}
+
+\item{quiet}{logical, passed to download.file, default FALSE}
 }
 \description{
 Download the demonstration data for the Isle of Wight

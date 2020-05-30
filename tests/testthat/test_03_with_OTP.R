@@ -10,7 +10,7 @@ skip_no_otp <- function() {
 context("Test the download of the LSOA file")
 
 f <- file.path(tempdir(), "centroids.gpkg")
-download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f,  mode = "wb")
+download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f,  mode = "wb", quiet = TRUE)
 lsoa <- sf::read_sf(f)
 file.remove(f)
 test_that("can get lsoa points", {
@@ -39,7 +39,8 @@ dir.create(file.path(path_data,"graphs","tests"))
 utils::download.file(
   url = url,
   destfile = file.path(path_data,"graphs","tests","test_data.zip"),
-  mode = "wb"
+  mode = "wb",
+  quiet = TRUE
 )
 utils::unzip(file.path(path_data,"graphs","tests","test_data.zip"),
              exdir = file.path(path_data, "graphs", "tests")
