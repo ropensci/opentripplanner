@@ -27,7 +27,7 @@ otp_dl_demo(path_data)
 # Build Graph and start OTP
 log1 <- otp_build_graph(otp = path_otp, dir = path_data)
 log2 <- otp_setup(otp = path_otp, dir = path_data)
-otpcon <- otp_connect()
+otpcon <- otp_connect(timezone = "Europe/London")
 ```
 
 ## Batch Routing

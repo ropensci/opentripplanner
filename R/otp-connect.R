@@ -51,13 +51,15 @@ otp_connect <- function(hostname = "localhost",
                         url = NULL,
                         port = 8080,
                         ssl = FALSE,
-                        check = TRUE) {
+                        check = TRUE,
+                        timezone = Sys.timezone()) {
   # argument checks
 
   coll <- checkmate::makeAssertCollection()
   checkmate::assert_string(hostname, add = coll)
   checkmate::assert_string(router, add = coll)
   checkmate::assert_string(url, add = coll, null.ok = TRUE)
+  checkmate::assert_string(timezone, add = coll)
   checkmate::assert_int(port, lower = 1, add = coll)
   checkmate::assert_logical(ssl, add = coll)
   checkmate::assert_logical(check, add = coll)
@@ -68,7 +70,8 @@ otp_connect <- function(hostname = "localhost",
     router = router,
     url = url,
     port = port,
-    ssl = ssl
+    ssl = ssl,
+    timezone = timezone
   )
 
   # Set the name for the class

@@ -116,14 +116,13 @@ knitr::include_graphics("images/otpwebgui.jpg")
 
 ## Connecting to the OTP from R
 
-Now you have the OTP running on your computer you can let R connect to the OTP. `otp_connect()` creates an OTP connection object which will allow R to connect to the OTP. 
+Now you have the OTP running on your computer you can let R connect to the OTP. `otp_connect()` creates an OTP connection object which will allow R to connect to the OTP. By default your local timezone is used, but if your are not in the UK you need to specify the UK timezone to get the correct results with the demo data.
 
 ```{r, eval = FALSE}
-otpcon <- otp_connect()
+otpcon <- otp_connect(timezone = "Europe/London")
 ```
 
 The connection is created and tested, a message will be returned saying if the connection exists or not. 
-
 If you have not used the default settings, such as a different `port` you can specify those settings in `otp_connect()`.
 
 ```{r, eval = FALSE}

@@ -14,7 +14,8 @@ otp_isochrone(
   maxWalkDistance = 1000,
   routingOptions = NULL,
   cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
-  ncores = 1
+  ncores = 1,
+  timezone = otpcon$timezone
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ arrive at the specified date and time, default FALSE}
 the break points of each Isochrone}
 
 \item{ncores}{number of cores to use in parallel processing}
+
+\item{timezone}{character, timezone to use, default from otpcon}
 }
 \value{
 Returns a SF data.frame of POLYGONs
@@ -57,8 +60,6 @@ Get the Isochrones from a location
 Isochrones are maps of equal travel time,
 for a given location a map is produced showing how long it takes to reach
 each location.
-
-This feature is known to not work correctly with any mode other than TRANSIT.
 }
 \examples{
 \dontrun{

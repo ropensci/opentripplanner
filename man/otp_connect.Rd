@@ -10,7 +10,8 @@ otp_connect(
   url = NULL,
   port = 8080,
   ssl = FALSE,
-  check = TRUE
+  check = TRUE,
+  timezone = Sys.timezone()
 )
 }
 \arguments{

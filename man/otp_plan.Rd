@@ -19,7 +19,7 @@ otp_plan(
   full_elevation = FALSE,
   get_geometry = TRUE,
   ncores = 1,
-  timezone = Sys.timezone()
+  timezone = otpcon$timezone
 )
 }
 \arguments{

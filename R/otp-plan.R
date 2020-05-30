@@ -102,7 +102,7 @@ otp_plan <- function(otpcon = NA,
                      full_elevation = FALSE,
                      get_geometry = TRUE,
                      ncores = 1,
-                     timezone = Sys.timezone()) {
+                     timezone = otpcon$timezone) {
   # Check Valid Inputs
   checkmate::assert_class(otpcon, "otpconnect")
   mode <- toupper(mode)
@@ -115,16 +115,21 @@ otp_plan <- function(otpcon = NA,
   )
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
-  date <- format(date_time, "%m-%d-%Y")
-  time <- tolower(format(date_time, "%I:%M%p"))
+  date <- format(date_time, "%m-%d-%Y", tz = timezone)
+  time <- tolower(format(date_time, "%I:%M%p", tz = timezone))
   checkmate::assert_numeric(maxWalkDistance, lower = 0, len = 1)
-  #checkmate::assert_numeric(walkReluctance, lower = 0, len = 1)
-  #checkmate::assert_numeric(transferPenalty, lower = 0, len = 1)
   checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
   checkmate::assert_character(fromID, null.ok = TRUE)
   checkmate::assert_character(toID, null.ok = TRUE)
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(arriveBy)
+
+  # Back compatability with 0.2.1
+  if(is.null(timezone)){
+    warning("otpcon is missing the timezone variaible, assuming local timezone")
+    timezone <- Sys.timezone()
+  }
+  checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
 
   # Check Route Options
   if(!is.null(routeOptions)){

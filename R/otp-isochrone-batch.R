@@ -19,6 +19,7 @@
 #' @param cutoffSec Numeric vector, number of seconds to define
 #'     the break points of each Isochrone
 #' @param ncores number of cores to use in parallel processing
+#' @param timezone character, timezone to use, default from otpcon
 #' @family routing
 #' @return
 #' Returns a SF data.frame of POLYGONs
@@ -34,7 +35,6 @@
 #' for a given location a map is produced showing how long it takes to reach
 #' each location.
 #'
-#' This feature is known to not work correctly with any mode other than TRANSIT.
 #' @export
 otp_isochrone <- function(otpcon = NA,
                           fromPlace = NA,
@@ -45,7 +45,8 @@ otp_isochrone <- function(otpcon = NA,
                           maxWalkDistance = 1000,
                           routingOptions = NULL,
                           cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
-                          ncores = 1) {
+                          ncores = 1,
+                          timezone = otpcon$timezone) {
   # Check Valid Inputs
   checkmate::assert_class(otpcon, "otpconnect")
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
@@ -59,8 +60,8 @@ otp_isochrone <- function(otpcon = NA,
   )
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
-  date <- format(date_time, "%m-%d-%Y")
-  time <- tolower(format(date_time, "%I:%M%p"))
+  date <- format(date_time, "%m-%d-%Y", tz = timezone)
+  time <- tolower(format(date_time, "%I:%M%p", tz = timezone))
   checkmate::assert_numeric(cutoffSec, lower = 0)
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(as.character(arriveBy))
