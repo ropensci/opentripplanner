@@ -104,6 +104,14 @@ otp_plan <- function(otpcon = NA,
                      ncores = 1,
                      timezone = otpcon$timezone) {
   # Check Valid Inputs
+
+  # Back compatability with 0.2.1
+  if(is.null(timezone)){
+    warning("otpcon is missing the timezone variaible, assuming local timezone")
+    timezone <- Sys.timezone()
+  }
+  checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
+
   checkmate::assert_class(otpcon, "otpconnect")
   mode <- toupper(mode)
   checkmate::assert_subset(mode,
@@ -124,12 +132,6 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(arriveBy)
 
-  # Back compatability with 0.2.1
-  if(is.null(timezone)){
-    warning("otpcon is missing the timezone variaible, assuming local timezone")
-    timezone <- Sys.timezone()
-  }
-  checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
 
   # Check Route Options
   if(!is.null(routeOptions)){
@@ -369,6 +371,7 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
 #' @param get_geometry logical, should geometry be returned
+#' @param timezone timezone to use
 #' @family internal
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
