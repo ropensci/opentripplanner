@@ -7,12 +7,13 @@
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param fromPlace Numeric vector, Longitude/Latitude pair,
-#'     e.g. `c(-0.134649,51.529258)`,
-#' or 2 column matrix of Longitude/Latitude pairs, or sf
-#'     data frame of POINTS
+#'     e.g. `c(-0.134649,51.529258)`, or 2 column matrix of
+#'     Longitude/Latitude pairs, or sf data frame of POINTS
+#'     with CRS 4326
 #' @param toPlace Numeric vector, Longitude/Latitude pair,
 #'     e.g. `c(-0.088780,51.506383)`, or 2 column matrix of
 #'     Longitude/Latitude pairs, or sf data frame of POINTS
+#'     with CRS 4326
 #' @param fromID character vector same length as fromPlace
 #' @param toID character vector same length as toPlace
 #' @param mode character vector of one or more modes of travel valid values
@@ -331,8 +332,10 @@ otp_clean_input <- function(imp, imp_name) {
       max.cols = 2,
       null.ok = FALSE
     )
-    checkmate::assert_numeric(imp[, 1], lower = -180, upper = 180)
-    checkmate::assert_numeric(imp[, 2], lower = -90, upper = 90)
+    checkmate::assert_numeric(imp[, 1], lower = -180, upper = 180,
+                              any.missing = FALSE, .var.name = paste0(imp_name," Longitude"))
+    checkmate::assert_numeric(imp[, 2], lower = -90, upper = 90,
+                              any.missing = FALSE, .var.name = paste0(imp_name," Latitude"))
     imp[] <- imp[, 2:1] # Switch round lng/lat to lat/lng for OTP
     return(imp)
   }

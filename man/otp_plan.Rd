@@ -26,13 +26,14 @@ otp_plan(
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
 \item{fromPlace}{Numeric vector, Longitude/Latitude pair,
-    e.g. `c(-0.134649,51.529258)`,
-or 2 column matrix of Longitude/Latitude pairs, or sf
-    data frame of POINTS}
+e.g. `c(-0.134649,51.529258)`, or 2 column matrix of
+Longitude/Latitude pairs, or sf data frame of POINTS
+with CRS 4326}
 
 \item{toPlace}{Numeric vector, Longitude/Latitude pair,
 e.g. `c(-0.088780,51.506383)`, or 2 column matrix of
-Longitude/Latitude pairs, or sf data frame of POINTS}
+Longitude/Latitude pairs, or sf data frame of POINTS
+with CRS 4326}
 
 \item{fromID}{character vector same length as fromPlace}
 
