@@ -4,7 +4,7 @@
 * Added timezone support to `otp_connect`, `otp_plan`, and `otp_isochrone` fixing issue #54, see docs for details.
 * Added `quiet` argument to `otp_dl_jar` and `otp_dl_demo`
 * Fixed error in advanced features vignette, issue #57
-
+* Switch from dplyr to data.table, issue #60
 
 # opentripplanner 0.2.1.0
 
