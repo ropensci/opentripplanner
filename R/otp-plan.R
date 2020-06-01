@@ -133,7 +133,6 @@ otp_plan <- function(otpcon = NA,
   arriveBy <- tolower(arriveBy)
 
 
-
   # Check Route Options
   if(!is.null(routeOptions)){
     routeOptions <- otp_validate_routing_options(routeOptions)

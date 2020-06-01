@@ -2,7 +2,10 @@
 
 * Changes to support dplyr 1.0.0
 * Added timezone support to `otp_plan` fixing issue #54
-* Switch from dplyr to data.table 
+* Switch from dplyr to data.table
+* Added timezone support to `otp_connect`, `otp_plan`, and `otp_isochrone` fixing issue #54, see docs for details.
+* Added `quiet` argument to `otp_dl_jar` and `otp_dl_demo`
+* Fixed error in advanced features vignette, issue #57
 
 # opentripplanner 0.2.1.0
 
