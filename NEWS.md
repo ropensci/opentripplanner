@@ -2,6 +2,7 @@
 
 * Changes to support dplyr 1.0.0
 * Added timezone support to `otp_plan` fixing issue #54
+* Switch from dplyr to data.table 
 
 # opentripplanner 0.2.1.0
 

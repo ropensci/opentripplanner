@@ -599,8 +599,9 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
   names(legs)[names(legs) == "startTime"] <- "leg_startTime"
   names(legs)[names(legs) == "endTime"] <- "leg_endTime"
   names(legs)[names(legs) == "duration"] <- "leg_duration"
-  itineraries <- dplyr::bind_cols(itineraries, legs)
-  #itineraries <- cbind(itineraries, legs)
+  #itineraries <- dplyr::bind_cols(itineraries, legs)
+  itineraries <- cbind(itineraries, legs)
+  #foo <- cbind(itineraries, legs)
 
   if (get_geometry) {
     itineraries <- sf::st_as_sf(itineraries)
