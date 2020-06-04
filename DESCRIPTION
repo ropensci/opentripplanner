@@ -30,8 +30,10 @@ Imports:
     googlePolylines,
     httr,
     jsonlite,
-    pbapply,
-    sf
+    pbapply
+Remotes:
+    r-spatial/sf#1414,
+    r-lib/vctrs#1137
 RoxygenNote: 7.1.0
 Suggests: 
     covr,
