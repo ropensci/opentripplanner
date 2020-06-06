@@ -25,14 +25,14 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     checkmate,
-    dplyr > 1.0.0,
+    dplyr (>= 1.0.0),
     geodist,
     googlePolylines,
     httr,
     jsonlite,
     pbapply,
-    sf > 0.9.3
-    vctrs > 0.3.1
+    sf (>= 0.9.3)
+    vctrs (>= 0.3.1)
 RoxygenNote: 7.1.0
 Suggests: 
     covr,
