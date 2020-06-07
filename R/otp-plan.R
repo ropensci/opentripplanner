@@ -1,80 +1,83 @@
 #' Get get a route or routes from the OTP
 #'
-#' @description
-#' This is the main routing function for OTP and can find single or
-#'     multiple routes between
-#' `fromPlace` and `toPlace`.
+#' @description This is the main routing function for OTP and can find single or
+#'   multiple routes between `fromPlace` and `toPlace`.
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
-#' @param fromPlace Numeric vector, Longitude/Latitude pair,
-#'     e.g. `c(-0.134649,51.529258)`, or 2 column matrix of
-#'     Longitude/Latitude pairs, or sf data frame of POINTS
-#'     with CRS 4326
-#' @param toPlace Numeric vector, Longitude/Latitude pair,
-#'     e.g. `c(-0.088780,51.506383)`, or 2 column matrix of
-#'     Longitude/Latitude pairs, or sf data frame of POINTS
-#'     with CRS 4326
+#' @param fromPlace Numeric vector, Longitude/Latitude pair, e.g.
+#'   `c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
+#'   or sf data frame of POINTS with CRS 4326
+#' @param toPlace Numeric vector, Longitude/Latitude pair, e.g.
+#'   `c(-0.088780,51.506383)`, or 2 column matrix of Longitude/Latitude pairs,
+#'   or sf data frame of POINTS with CRS 4326
 #' @param fromID character vector same length as fromPlace
 #' @param toID character vector same length as toPlace
 #' @param mode character vector of one or more modes of travel valid values
-#'     TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
-#'     combinations are valid e.g. c("WALK","BUS") is valid but
-#'     c("WALK","CAR") is not.
-#' @param date_time POSIXct, a date and time, defaults to current
-#'     date and time
-#' @param arriveBy Logical, Whether the trip should depart or arrive
-#'     at the specified date and time, default FALSE
+#'   TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
+#'   are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.
+#' @param date_time POSIXct, a date and time, defaults to current date and time
+#' @param arriveBy Logical, Whether the trip should depart or arrive at the
+#'   specified date and time, default FALSE
 #' @param maxWalkDistance Numeric passed to OTP in metres
-#' @param routeOptions Named list of values passed to OTP use `otp_route_options()`
-#'     to make template object.
+#' @param routeOptions Named list of values passed to OTP use
+#'   `otp_route_options()` to make template object.
 #' @param numItineraries The maximum number of possible itineraries to return
 #' @param full_elevation Logical, should the full elevation profile be returned,
-#'     default FALSE
-#' @param ncores Numeric, number of cores to use when batch processing,
-#'     default 1, see details
-#' @param get_geometry Logical, should the route geometry be returned,
-#'     default TRUE, see details
+#'   default FALSE
+#' @param ncores Numeric, number of cores to use when batch processing, default
+#'   1, see details
+#' @param get_geometry Logical, should the route geometry be returned, default
+#'   TRUE, see details
 #' @param timezone Character, what timezone to use, see as.POSIXct, default is
 #'   local timezone
+#' @param distance_balance Logical, use distance balancing, default false, see
+#'   details
 #'
 #' @export
 #' @family routing
 #' @return Returns an SF data frame of LINESTRINGs
 #'
-#' @details
-#' This function returns a SF data.frame with one row for each leg
-#' of the journey (a leg is defined by a change in mode). For transit,
-#' more than one route option may be returned and is indicated by the
-#' `route_option` column. The number of different itineraries can be
-#' set with the `numItineraries` variable.
+#' @details This function returns a SF data.frame with one row for each leg of
+#'   the journey (a leg is defined by a change in mode). For transit, more than
+#'   one route option may be returned and is indicated by the `route_option`
+#'   column. The number of different itineraries can be set with the
+#'   `numItineraries` variable.
 #'
-#' ## Batch Routing
+#'   ## Batch Routing
 #'
-#' When passing a matrix or SF data frame object to fromPlace and toPlace
-#' `otp_plan` will route in batch mode. In this case the `ncores` variable
-#' will be used. Increasing `ncores` will enable multicore routing, the max
-#'  `ncores` should be the number of cores on your system - 1.
+#'   When passing a matrix or SF data frame object to fromPlace and toPlace
+#'   `otp_plan` will route in batch mode. In this case the `ncores` variable
+#'   will be used. Increasing `ncores` will enable multicore routing, the max
+#'   `ncores` should be the number of cores on your system - 1.
 #'
-#' ## Elevation
+#'   ## Distance Balancing
 #'
-#' OTP supports elevation data and can return the elevation profile of the
-#' route if available. OTP returns the elevation profile separately from the
-#' XY coordinates, this means there is not direct match between the number of
-#'  XY points and the number of Z points.  OTP also only returns the
-#' elevation profile for the first leg of the route (this appears to be a bug).
-#' As a default, the otp_plan function matches the elevation profile to the
-#' XY coordinates to return an SF linestring with XYZ coordinates. If you
-#' require a more detailed elevation profile, the full_elevation parameter
-#' will return a nested data.frame with three columns. first and second
-#' are returned from OTP, while distance is the cumulative distance along the
-#' route and is derived from First.
+#'   When using multicore routing each task does not take the same amount of
+#'   time. This can result in wasted time between batches. Distance Balancing
+#'   sorts the routing by the euclidean distance between fromPlace and toPlace,
+#'   this offers a small performance improvement of around 5%. As the original
+#'   order of the inputs is lost fromID and toID must be provided.
 #'
-#' ## Route Geometry
+#'   ## Elevation
 #'
-#' The `get_geometry` provides the option to not return the route geometry,
-#' and just return the meta-data (e.g. journey time). This may be useful when
-#' creating an Origin:Destination matrix and also provides a small
-#' performance boost by reduced processing of geometries.
+#'   OTP supports elevation data and can return the elevation profile of the
+#'   route if available. OTP returns the elevation profile separately from the
+#'   XY coordinates, this means there is not direct match between the number of
+#'   XY points and the number of Z points.  OTP also only returns the elevation
+#'   profile for the first leg of the route (this appears to be a bug). As a
+#'   default, the otp_plan function matches the elevation profile to the XY
+#'   coordinates to return an SF linestring with XYZ coordinates. If you require
+#'   a more detailed elevation profile, the full_elevation parameter will return
+#'   a nested data.frame with three columns. first and second are returned from
+#'   OTP, while distance is the cumulative distance along the route and is
+#'   derived from First.
+#'
+#'   ## Route Geometry
+#'
+#'   The `get_geometry` provides the option to not return the route geometry,
+#'   and just return the meta-data (e.g. journey time). This may be useful when
+#'   creating an Origin:Destination matrix and also provides a small performance
+#'   boost by reduced processing of geometries.
 #' @examples
 #' \dontrun{
 #' otpcon <- otp_connect()
@@ -102,7 +105,8 @@ otp_plan <- function(otpcon = NA,
                      full_elevation = FALSE,
                      get_geometry = TRUE,
                      ncores = 1,
-                     timezone = otpcon$timezone) {
+                     timezone = otpcon$timezone,
+                     distance_balance = FALSE) {
   # Check Valid Inputs
 
   # Back compatability with 0.2.1
@@ -131,6 +135,16 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_character(toID, null.ok = TRUE)
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(arriveBy)
+  checkmate::assert_logical(distance_balance, len = 1, null.ok = FALSE)
+
+  if(distance_balance){
+    if(is.null(fromID)){
+      stop("Distance balancing changes the order of the output, so fromID must not be NULL")
+    }
+    if(is.null(toID)){
+      stop("Distance balancing changes the order of the output, so toID must not be NULL")
+    }
+  }
 
 
   # Check Route Options
@@ -175,9 +189,14 @@ otp_plan <- function(otpcon = NA,
     }
   }
 
-
-
-
+  if(distance_balance & (ncores > 1) ){
+    dists <- geodist::geodist(fromPlace, toPlace, paired = TRUE)
+    dists <- order(dists, decreasing = TRUE)
+    fromPlace <- fromPlace[dists, ]
+    toPlace <- toPlace[dists, ]
+    fromID <- fromID[dists, ]
+    toID <- toID[dists, ]
+  }
 
   if (ncores > 1) {
     cl <- parallel::makeCluster(ncores)
