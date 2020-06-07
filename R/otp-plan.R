@@ -137,7 +137,7 @@ otp_plan <- function(otpcon = NA,
   arriveBy <- tolower(arriveBy)
   checkmate::assert_logical(distance_balance, len = 1, null.ok = FALSE)
 
-  if(distance_balance){
+  if(distance_balance & (ncores > 1)){
     if(is.null(fromID)){
       stop("Distance balancing changes the order of the output, so fromID must not be NULL")
     }
@@ -189,7 +189,7 @@ otp_plan <- function(otpcon = NA,
     }
   }
 
-  if(distance_balance & (ncores > 1) ){
+  if(distance_balance & (ncores > 1)){
     dists <- geodist::geodist(fromPlace, toPlace, paired = TRUE)
     dists <- order(dists, decreasing = TRUE)
     fromPlace <- fromPlace[dists, ]
