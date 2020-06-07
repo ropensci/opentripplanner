@@ -1,3 +1,7 @@
+# opentripplanner 0.2.2.1 (In development)
+
+* Added `distance_balancing` argument to `otp_plan` gives a small perfomance boost to multicore routing
+
 # opentripplanner 0.2.2.0
 
 * Changes to support `dplyr 1.0.0`, package now needs `vctrs 0.3.1`
