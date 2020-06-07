@@ -56,7 +56,7 @@
 #'   time. This can result in wasted time between batches. Distance Balancing
 #'   sorts the routing by the euclidean distance between fromPlace and toPlace,
 #'   this offers a small performance improvement of around five percent. As the
-#'   original order of the inputs is lost fromID and toID must be provided.
+#'   original order of the inputs is lost so fromID and toID must be provided.
 #'
 #'   ## Elevation
 #'
