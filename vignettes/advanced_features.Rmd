@@ -125,6 +125,8 @@ Notice the use of `full_elevation = TRUE` this will return the raw elevation pro
 
 We can view the raw profile. It is a data.frame of 3 columns, `first` is the distance along a leg of the route, `second` is the elevation, and `distance` is calculated by `otp_plan()` as the cumulative distance along the whole route. 
 
+As of version 0.2.3.0 the `get_elevation` argument in `otp_plan` can be set to FALSE this speeds up routing by only returning XY coordinates rather than XYZ coordinates. 
+
 ```{r, eval=FALSE}
 profile_raw <- route$elevation[[1]]
 plot(profile_raw$distance, profile_raw$second, type = "p",
