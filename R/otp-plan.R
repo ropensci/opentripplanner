@@ -32,6 +32,8 @@
 #'   local timezone
 #' @param distance_balance Logical, use distance balancing, default false, see
 #'   details
+#' @param get_elevation Logical, default TRUE, if true XYZ coordinates returned
+#'   else XY coordinates returned.
 #'
 #' @export
 #' @family routing
@@ -64,13 +66,13 @@
 #'   route if available. OTP returns the elevation profile separately from the
 #'   XY coordinates, this means there is not direct match between the number of
 #'   XY points and the number of Z points.  OTP also only returns the elevation
-#'   profile for the first leg of the route (this appears to be a bug). As a
-#'   default, the otp_plan function matches the elevation profile to the XY
-#'   coordinates to return an SF linestring with XYZ coordinates. If you require
-#'   a more detailed elevation profile, the full_elevation parameter will return
-#'   a nested data.frame with three columns. first and second are returned from
-#'   OTP, while distance is the cumulative distance along the route and is
-#'   derived from First.
+#'   profile for the first leg of the route (this appears to be a bug). If
+#'   `get_elevation` is TRUE the otp_plan function matches the elevation profile
+#'   to the XY coordinates to return an SF linestring with XYZ coordinates. If
+#'   you require a more detailed elevation profile, the full_elevation parameter
+#'   will return a nested data.frame with three columns. first and second are
+#'   returned from OTP, while distance is the cumulative distance along the
+#'   route and is derived from First.
 #'
 #'   ## Route Geometry
 #'
@@ -106,7 +108,8 @@ otp_plan <- function(otpcon = NA,
                      get_geometry = TRUE,
                      ncores = 1,
                      timezone = otpcon$timezone,
-                     distance_balance = FALSE) {
+                     distance_balance = FALSE,
+                     get_elevation = TRUE) {
   # Check Valid Inputs
 
   # Back compatability with 0.2.1
@@ -136,6 +139,7 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(arriveBy)
   checkmate::assert_logical(distance_balance, len = 1, null.ok = FALSE)
+  checkmate::assert_logical(get_elevation, len = 1, null.ok = FALSE)
 
   if(distance_balance & (ncores > 1)){
     if(is.null(fromID)){
@@ -226,6 +230,7 @@ otp_plan <- function(otpcon = NA,
       full_elevation = full_elevation,
       get_geometry = get_geometry,
       timezone = timezone,
+      get_elevation = get_elevation,
       cl = cl
     )
     parallel::stopCluster(cl)
@@ -247,6 +252,7 @@ otp_plan <- function(otpcon = NA,
       routeOptions = routeOptions,
       full_elevation = full_elevation,
       get_geometry = get_geometry,
+      get_elevation = get_elevation,
       timezone = timezone
     )
   }
@@ -269,17 +275,18 @@ otp_plan <- function(otpcon = NA,
 
   # Bind together
   if (!all(class(results_routes) == "logical")) {
-    if (any(unlist(lapply(results, function(x) {
-      "sf" %in% class(x)
-    })))) {
-      suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
-      results_routes <- as.data.frame(results_routes)
-      results_routes$geometry <- sf::st_sfc(results_routes$geometry)
-      results_routes <- sf::st_sf(results_routes)
-      sf::st_crs(results_routes) <- 4326
-    } else {
-      results_routes <- dplyr::bind_rows(results_routes)
-    }
+    results_routes <- dplyr::bind_rows(results_routes)
+    # if (any(unlist(lapply(results, function(x) {
+    #   "sf" %in% class(x)
+    # })))) {
+    #   suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
+    #   results_routes <- as.data.frame(results_routes)
+    #   results_routes$geometry <- sf::st_sfc(results_routes$geometry)
+    #   results_routes <- sf::st_sf(results_routes)
+    #   sf::st_crs(results_routes) <- 4326
+    # } else {
+    #   results_routes <- dplyr::bind_rows(results_routes)
+    # }
   }
 
 
@@ -391,6 +398,7 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone timezone to use
+#' @param get_elevation Logical, should you get elevation
 #' @family internal
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -413,7 +421,8 @@ otp_plan_internal <- function(otpcon = NA,
                               routeOptions = NULL,
                               full_elevation = FALSE,
                               get_geometry = TRUE,
-                              timezone = "") {
+                              timezone = "",
+                              get_elevation = TRUE) {
 
 
   # Construct URL
@@ -453,7 +462,7 @@ otp_plan_internal <- function(otpcon = NA,
 
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
-    response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone)
+    response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone, get_elevation)
     # Add Ids
     if (is.null(fromID)) {
       response$fromPlace <- fromPlace
@@ -485,11 +494,15 @@ otp_plan_internal <- function(otpcon = NA,
 #' @param full_elevation logical should the full elevation profile be returned (if available)
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone character, which timezone to use, default "" means local time
+#' @param get_elevation, logical, shoudl xyz coordinate be returned
 #' @family internal
 #' @noRd
 
-otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
-                        timezone = "") {
+otp_json2sf <- function(obj,
+                        full_elevation = FALSE,
+                        get_geometry = TRUE,
+                        timezone = "",
+                        get_elevation = TRUE) {
   requestParameters <- obj$requestParameters
   plan <- obj$plan
   debugOutput <- obj$debugOutput
@@ -521,35 +534,44 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
 
       # Check for Elevations
       steps <- leg$steps
-      elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-        leg$steps[[x]]$elevation
-      })
-      if (sum(lengths(elevation)) > 0) {
-        # We have Elevation Data
-        # Extract the elevation values
+      if(get_elevation | full_elevation){
         elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-          dplyr::bind_rows(elevation[[x]])
+          leg$steps[[x]]$elevation
         })
-        elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-          if (nrow(elevation[[x]]) == 0) {
-            NA
-          } else {
-            elevation[[x]]
+        if (sum(lengths(elevation)) > 0) {
+          # We have Elevation Data
+          # Extract the elevation values
+          elevation <- lapply(seq(1, length(legGeometry)), function(x) {
+            dplyr::bind_rows(elevation[[x]])
+          })
+          elevation <- lapply(seq(1, length(legGeometry)), function(x) {
+            if (nrow(elevation[[x]]) == 0) {
+              NA
+            } else {
+              elevation[[x]]
+            }
+          })
+          # the x coordinate of elevation reset at each leg, correct for this
+          for (l in seq(1, length(elevation))) {
+            if (!all(is.na(elevation[[l]]))) {
+              elevation[[l]]$distance <- correct_distances(elevation[[l]]$first)
+            }
           }
-        })
-        # the x coordinate of elevation reset at each leg, correct for this
-        for (l in seq(1, length(elevation))) {
-          if (!all(is.na(elevation[[l]]))) {
-            elevation[[l]]$distance <- correct_distances(elevation[[l]]$first)
+          # process the lines into sf objects
+          lines <- list()
+          for (j in seq(1, length(legGeometry))) {
+            if(get_elevation){
+              lines[[j]] <- polyline2linestring(
+                line = legGeometry[j],
+                elevation = elevation[[j]]
+              )
+            } else {
+              lines[[j]] <- polyline2linestring(line = legGeometry[j])
+            }
+
           }
-        }
-        # process the lines into sf objects
-        lines <- list()
-        for (j in seq(1, length(legGeometry))) {
-          lines[[j]] <- polyline2linestring(
-            line = legGeometry[j],
-            elevation = elevation[[j]]
-          )
+        } else {
+          lines <- polyline2linestring(legGeometry)
         }
       } else {
         lines <- polyline2linestring(legGeometry)
@@ -573,15 +595,15 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
   }
 
   legs <- legs[!is.na(legs)]
-  suppressWarnings(legs <- dplyr::bind_rows(legs))
-
-  if (get_geometry) {
-    # rebuild the sf object
-    legs <- as.data.frame(legs)
-    legs$geometry <- sf::st_sfc(legs$geometry)
-    legs <- sf::st_sf(legs)
-    sf::st_crs(legs) <- 4326
-  }
+  #suppressWarnings(legs <- dplyr::bind_rows(legs))
+  legs <- dplyr::bind_rows(legs)
+  # if (get_geometry) {
+  #   # rebuild the sf object
+  #   legs <- as.data.frame(legs)
+  #   legs$geometry <- sf::st_sfc(legs$geometry)
+  #   legs <- sf::st_sf(legs)
+  #   sf::st_crs(legs) <- 4326
+  # }
 
   legs$startTime <- as.POSIXct(legs$startTime / 1000,
     origin = "1970-01-01", tz = timezone

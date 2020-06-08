@@ -20,7 +20,8 @@ otp_plan(
   get_geometry = TRUE,
   ncores = 1,
   timezone = otpcon$timezone,
-  distance_balance = FALSE
+  distance_balance = FALSE,
+  get_elevation = TRUE
 )
 }
 \arguments{
@@ -68,6 +69,9 @@ local timezone}
 
 \item{distance_balance}{Logical, use distance balancing, default false, see
 details}
+
+\item{get_elevation}{Logical, default TRUE, if true XYZ coordinates returned
+else XY coordinates returned.}
 }
 \value{
 Returns an SF data frame of LINESTRINGs
@@ -104,13 +108,13 @@ This function returns a SF data.frame with one row for each leg of
   route if available. OTP returns the elevation profile separately from the
   XY coordinates, this means there is not direct match between the number of
   XY points and the number of Z points.  OTP also only returns the elevation
-  profile for the first leg of the route (this appears to be a bug). As a
-  default, the otp_plan function matches the elevation profile to the XY
-  coordinates to return an SF linestring with XYZ coordinates. If you require
-  a more detailed elevation profile, the full_elevation parameter will return
-  a nested data.frame with three columns. first and second are returned from
-  OTP, while distance is the cumulative distance along the route and is
-  derived from First.
+  profile for the first leg of the route (this appears to be a bug). If
+  `get_elevation` is TRUE the otp_plan function matches the elevation profile
+  to the XY coordinates to return an SF linestring with XYZ coordinates. If
+  you require a more detailed elevation profile, the full_elevation parameter
+  will return a nested data.frame with three columns. first and second are
+  returned from OTP, while distance is the cumulative distance along the
+  route and is derived from First.
 
   ## Route Geometry
 
