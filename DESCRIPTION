@@ -40,4 +40,4 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Depends: 
-    R (>= 3.20)
+    R (>= 3.2)
