@@ -12,3 +12,5 @@
 ^LICENSE\.md$
 ^CRAN-RELEASE$
 ^cran-comments\.md$
+^vignettes/lucene/
+^tests/testthat/lucene/
