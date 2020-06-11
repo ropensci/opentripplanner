@@ -1,6 +1,12 @@
-# opentripplanner 0.2.1.X (In development)
+# opentripplanner 0.2.3.0
 
-* Changes to support dplyr 1.0.0
+* Added `distance_balancing` argument to `otp_plan` gives a small perfomance boost to multicore routing
+* Added `get_elevation` argument to `otp_plan` default TRUE, when FALSE returns XY coordinates rather than XYZ coordiantes and gives a 4% performance boost.
+* Removed helper code for `dplyr::bind_rows` as no longer required for `dplyr 1.0.0`
+
+# opentripplanner 0.2.2.0
+
+* Changes to support `dplyr 1.0.0`, package now needs `vctrs 0.3.1`
 * Added timezone support to `otp_connect`, `otp_plan`, and `otp_isochrone` fixing issue #54, see docs for details.
 * Added `quiet` argument to `otp_dl_jar` and `otp_dl_demo`
 * Fixed error in advanced features vignette, issue #57

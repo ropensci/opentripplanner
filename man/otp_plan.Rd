@@ -19,98 +19,109 @@ otp_plan(
   full_elevation = FALSE,
   get_geometry = TRUE,
   ncores = 1,
-  timezone = otpcon$timezone
+  timezone = otpcon$timezone,
+  distance_balance = FALSE,
+  get_elevation = TRUE
 )
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
-\item{fromPlace}{Numeric vector, Longitude/Latitude pair,
-e.g. `c(-0.134649,51.529258)`, or 2 column matrix of
-Longitude/Latitude pairs, or sf data frame of POINTS
-with CRS 4326}
+\item{fromPlace}{Numeric vector, Longitude/Latitude pair, e.g.
+`c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
+or sf data frame of POINTS with CRS 4326}
 
-\item{toPlace}{Numeric vector, Longitude/Latitude pair,
-e.g. `c(-0.088780,51.506383)`, or 2 column matrix of
-Longitude/Latitude pairs, or sf data frame of POINTS
-with CRS 4326}
+\item{toPlace}{Numeric vector, Longitude/Latitude pair, e.g.
+`c(-0.088780,51.506383)`, or 2 column matrix of Longitude/Latitude pairs,
+or sf data frame of POINTS with CRS 4326}
 
 \item{fromID}{character vector same length as fromPlace}
 
 \item{toID}{character vector same length as toPlace}
 
 \item{mode}{character vector of one or more modes of travel valid values
-TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
-combinations are valid e.g. c("WALK","BUS") is valid but
-c("WALK","CAR") is not.}
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
+are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.}
 
-\item{date_time}{POSIXct, a date and time, defaults to current
-date and time}
+\item{date_time}{POSIXct, a date and time, defaults to current date and time}
 
-\item{arriveBy}{Logical, Whether the trip should depart or arrive
-at the specified date and time, default FALSE}
+\item{arriveBy}{Logical, Whether the trip should depart or arrive at the
+specified date and time, default FALSE}
 
 \item{maxWalkDistance}{Numeric passed to OTP in metres}
 
 \item{numItineraries}{The maximum number of possible itineraries to return}
 
-\item{routeOptions}{Named list of values passed to OTP use `otp_route_options()`
-to make template object.}
+\item{routeOptions}{Named list of values passed to OTP use
+`otp_route_options()` to make template object.}
 
 \item{full_elevation}{Logical, should the full elevation profile be returned,
 default FALSE}
 
-\item{get_geometry}{Logical, should the route geometry be returned,
-default TRUE, see details}
+\item{get_geometry}{Logical, should the route geometry be returned, default
+TRUE, see details}
 
-\item{ncores}{Numeric, number of cores to use when batch processing,
-default 1, see details}
+\item{ncores}{Numeric, number of cores to use when batch processing, default
+1, see details}
 
 \item{timezone}{Character, what timezone to use, see as.POSIXct, default is
 local timezone}
+
+\item{distance_balance}{Logical, use distance balancing, default false, see
+details}
+
+\item{get_elevation}{Logical, default TRUE, if true XYZ coordinates returned
+else XY coordinates returned.}
 }
 \value{
 Returns an SF data frame of LINESTRINGs
 }
 \description{
 This is the main routing function for OTP and can find single or
-    multiple routes between
-`fromPlace` and `toPlace`.
+  multiple routes between `fromPlace` and `toPlace`.
 }
 \details{
-This function returns a SF data.frame with one row for each leg
-of the journey (a leg is defined by a change in mode). For transit,
-more than one route option may be returned and is indicated by the
-`route_option` column. The number of different itineraries can be
-set with the `numItineraries` variable.
+This function returns a SF data.frame with one row for each leg of
+  the journey (a leg is defined by a change in mode). For transit, more than
+  one route option may be returned and is indicated by the `route_option`
+  column. The number of different itineraries can be set with the
+  `numItineraries` variable.
 
-## Batch Routing
+  ## Batch Routing
 
-When passing a matrix or SF data frame object to fromPlace and toPlace
-`otp_plan` will route in batch mode. In this case the `ncores` variable
-will be used. Increasing `ncores` will enable multicore routing, the max
- `ncores` should be the number of cores on your system - 1.
+  When passing a matrix or SF data frame object to fromPlace and toPlace
+  `otp_plan` will route in batch mode. In this case the `ncores` variable
+  will be used. Increasing `ncores` will enable multicore routing, the max
+  `ncores` should be the number of cores on your system - 1.
 
-## Elevation
+  ## Distance Balancing
 
-OTP supports elevation data and can return the elevation profile of the
-route if available. OTP returns the elevation profile separately from the
-XY coordinates, this means there is not direct match between the number of
- XY points and the number of Z points.  OTP also only returns the
-elevation profile for the first leg of the route (this appears to be a bug).
-As a default, the otp_plan function matches the elevation profile to the
-XY coordinates to return an SF linestring with XYZ coordinates. If you
-require a more detailed elevation profile, the full_elevation parameter
-will return a nested data.frame with three columns. first and second
-are returned from OTP, while distance is the cumulative distance along the
-route and is derived from First.
+  When using multicore routing each task does not take the same amount of
+  time. This can result in wasted time between batches. Distance Balancing
+  sorts the routing by the euclidean distance between fromPlace and toPlace,
+  this offers a small performance improvement of around five percent. As the
+  original order of the inputs is lost so fromID and toID must be provided.
 
-## Route Geometry
+  ## Elevation
 
-The `get_geometry` provides the option to not return the route geometry,
-and just return the meta-data (e.g. journey time). This may be useful when
-creating an Origin:Destination matrix and also provides a small
-performance boost by reduced processing of geometries.
+  OTP supports elevation data and can return the elevation profile of the
+  route if available. OTP returns the elevation profile separately from the
+  XY coordinates, this means there is not direct match between the number of
+  XY points and the number of Z points.  OTP also only returns the elevation
+  profile for the first leg of the route (this appears to be a bug). If
+  `get_elevation` is TRUE the otp_plan function matches the elevation profile
+  to the XY coordinates to return an SF linestring with XYZ coordinates. If
+  you require a more detailed elevation profile, the full_elevation parameter
+  will return a nested data.frame with three columns. first and second are
+  returned from OTP, while distance is the cumulative distance along the
+  route and is derived from First.
+
+  ## Route Geometry
+
+  The `get_geometry` provides the option to not return the route geometry,
+  and just return the meta-data (e.g. journey time). This may be useful when
+  creating an Origin:Destination matrix and also provides a small performance
+  boost by reduced processing of geometries.
 }
 \examples{
 \dontrun{

@@ -1,6 +1,6 @@
 Package: opentripplanner
 Title: Setup and connect to 'OpenTripPlanner'
-Version: 0.2.2.0
+Version: 0.2.3.0
 Authors@R: c(
     person("Malcolm", "Morgan", email = "m.morgan1@leeds.ac.uk", role = c("aut","cre"), 
       comment = c(ORCID = "0000-0002-9488-9183")),
@@ -32,7 +32,7 @@ Imports:
     httr,
     jsonlite,
     pbapply,
-    sf
+    sf (>= 0.9.3)
 RoxygenNote: 7.1.0
 Suggests: 
     covr,
@@ -41,4 +41,4 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Depends: 
-    R (>= 2.10)
+    R (>= 3.2)
