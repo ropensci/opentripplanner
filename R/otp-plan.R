@@ -533,14 +533,16 @@ otp_json2sf <- function(obj,
       # Check for Elevations
       steps <- leg$steps
       if(get_elevation | full_elevation){
+
         elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-          data.table::rbindlist(elevation[[x]])
+            leg$steps[[x]]$elevation
         })
+
         if (sum(lengths(elevation)) > 0) {
           # We have Elevation Data
           # Extract the elevation values
           elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-            dplyr::bind_rows(elevation[[x]])
+            data.table::rbindlist(elevation[[x]])
           })
           elevation <- lapply(seq(1, length(legGeometry)), function(x) {
             if (nrow(elevation[[x]]) == 0) {
