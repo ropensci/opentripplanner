@@ -1,3 +1,7 @@
+# opentripplanner 0.2.3.1 In development
+
+* replaced `dplyr` with `data.table` dependancy
+
 # opentripplanner 0.2.3.0
 
 * Added `distance_balancing` argument to `otp_plan` gives a small perfomance boost to multicore routing
