@@ -275,18 +275,16 @@ otp_plan <- function(otpcon = NA,
 
   # Bind together
   if (!all(class(results_routes) == "logical")) {
-    results_routes <- dplyr::bind_rows(results_routes)
-    # if (any(unlist(lapply(results, function(x) {
-    #   "sf" %in% class(x)
-    # })))) {
-    #   suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
-    #   results_routes <- as.data.frame(results_routes)
-    #   results_routes$geometry <- sf::st_sfc(results_routes$geometry)
-    #   results_routes <- sf::st_sf(results_routes)
-    #   sf::st_crs(results_routes) <- 4326
-    # } else {
-    #   results_routes <- dplyr::bind_rows(results_routes)
-    # }
+    if (any(unlist(lapply(results, function(x) {
+      "sf" %in% class(x)
+    })))) {
+      results_routes <- data.table::rbindlist(results_routes)
+      results_routes <- as.data.frame(results_routes)
+      results_routes$geometry <- sf::st_sfc(results_routes$geometry)
+      results_routes <- sf::st_sf(results_routes, crs = 4326)
+    } else {
+      results_routes <- data.table::rbindlist(results_routes)
+    }
   }
 
 
@@ -536,7 +534,7 @@ otp_json2sf <- function(obj,
       steps <- leg$steps
       if(get_elevation | full_elevation){
         elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-          leg$steps[[x]]$elevation
+          data.table::rbindlist(elevation[[x]])
         })
         if (sum(lengths(elevation)) > 0) {
           # We have Elevation Data
@@ -595,15 +593,14 @@ otp_json2sf <- function(obj,
   }
 
   legs <- legs[!is.na(legs)]
-  #suppressWarnings(legs <- dplyr::bind_rows(legs))
-  legs <- dplyr::bind_rows(legs)
-  # if (get_geometry) {
-  #   # rebuild the sf object
-  #   legs <- as.data.frame(legs)
-  #   legs$geometry <- sf::st_sfc(legs$geometry)
-  #   legs <- sf::st_sf(legs)
-  #   sf::st_crs(legs) <- 4326
-  # }
+  legs <- data.table::rbindlist(legs)
+
+  if (get_geometry) {
+    # rebuild the sf object
+    legs <- as.data.frame(legs)
+    legs$geometry <- sf::st_sfc(legs$geometry)
+    legs <- sf::st_sf(legs, crs = 4326)
+  }
 
   legs$startTime <- as.POSIXct(legs$startTime / 1000,
     origin = "1970-01-01", tz = timezone
@@ -635,11 +632,11 @@ otp_json2sf <- function(obj,
   names(legs)[names(legs) == "startTime"] <- "leg_startTime"
   names(legs)[names(legs) == "endTime"] <- "leg_endTime"
   names(legs)[names(legs) == "duration"] <- "leg_duration"
-  itineraries <- dplyr::bind_cols(itineraries, legs)
+  itineraries <- cbind(itineraries, legs)
+
 
   if (get_geometry) {
-    itineraries <- sf::st_as_sf(itineraries)
-    sf::st_crs(itineraries) <- 4326
+    itineraries <- sf::st_as_sf(itineraries, crs = 4326)
   }
 
   return(itineraries)

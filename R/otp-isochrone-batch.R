@@ -133,18 +133,16 @@ otp_isochrone <- function(otpcon = NA,
 
   # Bind together
   if (!all(class(results_routes) == "logical")) {
-    results_routes <- dplyr::bind_rows(results_routes)
-    # if (any(unlist(lapply(results, function(x) {
-    #   "sf" %in% class(x)
-    # })))) {
-    #   suppressWarnings(results_routes <- dplyr::bind_rows(results_routes))
-    #   results_routes <- as.data.frame(results_routes)
-    #   results_routes$geometry <- sf::st_sfc(results_routes$geometry)
-    #   results_routes <- sf::st_sf(results_routes)
-    #   sf::st_crs(results_routes) <- 4326
-    # } else {
-    #   results_routes <- dplyr::bind_rows(results_routes)
-    # }
+    if (any(unlist(lapply(results, function(x) {
+      "sf" %in% class(x)
+    })))) {
+      results_routes <- data.table::rbindlist(results_routes)
+      results_routes <- as.data.frame(results_routes)
+      results_routes$geometry <- sf::st_sfc(results_routes$geometry)
+      results_routes <- sf::st_sf(results_routes, crs = 4326)
+    } else {
+      results_routes <- data.table::rbindlist(results_routes)
+    }
   }
 
 
