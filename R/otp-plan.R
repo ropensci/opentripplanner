@@ -496,150 +496,167 @@ otp_plan_internal <- function(otpcon = NA,
 #' @family internal
 #' @noRd
 
-otp_json2sf <- function(obj,
+otp_json2sf_alt <- function(obj,
                         full_elevation = FALSE,
                         get_geometry = TRUE,
                         timezone = "",
                         get_elevation = TRUE) {
-  requestParameters <- obj$requestParameters
-  plan <- obj$plan
-  debugOutput <- obj$debugOutput
+  #requestParameters <- obj$requestParameters
+  #plan <- obj$plan
+  #debugOutput <- obj$debugOutput
+  plan_date <- obj$plan$date
 
-  itineraries <- plan$itineraries
+  itineraries <- list()
+  for(k in seq_len(length(obj$plan$itineraries))){
+    itinerary <- obj$plan$itineraries[[k]]
 
-  itineraries$startTime <- as.POSIXct(itineraries$startTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
-  itineraries$endTime <- as.POSIXct(itineraries$endTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
+    itinerary$startTime <- as.POSIXct(itinerary$startTime / 1000,
+                                        origin = "1970-01-01", tz = timezone
+    )
+    itinerary$endTime <- as.POSIXct(itinerary$endTime / 1000,
+                                      origin = "1970-01-01", tz = timezone
+    )
 
+    legs <- list()
+    # Loop over itineraries
+    for (i in seq_len(length(itinerary$legs))) {
+      leg <- itinerary$legs[[i]]
+      # split into parts
+      #vars <- leg
+      leg$from <- NULL
+      leg$to <- NULL
+      #leg$steps <- NULL
+      #leg$legGeometry <- NULL
 
-  legs <- list()
-  # Loop over itineraries
-  for (i in seq(1, nrow(itineraries))) {
-    leg <- itineraries$legs[[i]]
-    # split into parts
-    vars <- leg
-    vars$from <- NULL
-    vars$to <- NULL
-    vars$steps <- NULL
-    vars$legGeometry <- NULL
+      if (get_geometry) {
+        # Extract geometry
+        legGeometry <- leg$legGeometry$points
+        leg$legGeometry <- NULL
 
-    if (get_geometry) {
-      # Extract geometry
-      legGeometry <- leg$legGeometry$points
+        # Check for Elevations
+        # steps <- leg$steps
+        #leg$steps <- NULL
+        if(get_elevation | full_elevation){
 
-      # Check for Elevations
-      steps <- leg$steps
-      if(get_elevation | full_elevation){
-
-        elevation <- lapply(seq(1, length(legGeometry)), function(x) {
+          elevation <- lapply(seq(1, length(leg$steps)), function(x) {
             leg$steps[[x]]$elevation
-        })
-
-        if (sum(lengths(elevation)) > 0) {
-          # We have Elevation Data
-          # Extract the elevation values
-          elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-            data.table::rbindlist(elevation[[x]])
           })
-          elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-            if (nrow(elevation[[x]]) == 0) {
-              NA
-            } else {
-              elevation[[x]]
-            }
-          })
-          # the x coordinate of elevation reset at each leg, correct for this
-          for (l in seq(1, length(elevation))) {
-            if (!all(is.na(elevation[[l]]))) {
-              elevation[[l]]$distance <- correct_distances(elevation[[l]]$first)
-            }
-          }
-          # process the lines into sf objects
-          lines <- list()
-          for (j in seq(1, length(legGeometry))) {
-            if(get_elevation){
-              lines[[j]] <- polyline2linestring(
-                line = legGeometry[j],
-                elevation = elevation[[j]]
-              )
-            } else {
-              lines[[j]] <- polyline2linestring(line = legGeometry[j])
-            }
+          #elevation <- elevation[[1]]
+          leg$steps <- NULL
 
+          if (sum(lengths(elevation)) > 0) {
+            # We have Elevation Data
+            # Extract the elevation values
+            elevation <- lapply(elevation, function(x){
+              x <- data.frame(first = vapply(x, `[[`, 1 ,1),
+                                      second = vapply(x, `[[`, 1 ,2))
+
+              x$distance <- correct_distances(x$first)
+              return(x)
+            })
+
+            elevation <- data.table::rbindlist(elevation)
+
+
+          } else {
+            elevation <- NULL
           }
         } else {
-          lines <- polyline2linestring(legGeometry)
+          elevation <- NULL
+          leg$steps <- NULL
+        }
+
+        lines <- polyline2linestring(legGeometry, elevation = elevation)
+
+        lines <- sf::st_sfc(lines, crs = 4326)
+
+        leg$geometry <- lines
+        leg <- as.data.frame(leg)
+        leg <- sf::st_sf(leg)
+
+        # Add full elevation if required
+        if (full_elevation) {
+          leg$elevation <- list(elevation)
         }
       } else {
-        lines <- polyline2linestring(legGeometry)
+        leg$legGeometry <- NULL
+        leg$steps <- NULL
       }
 
-      lines <- sf::st_sfc(lines, crs = 4326)
 
-      vars$geometry <- lines
-      vars <- sf::st_sf(vars)
+      leg$route_option <- i
 
-      # Add full elevation if required
-      if (full_elevation) {
-        vars$elevation <- elevation
-      }
+      # return to list
+      legs[[i]] <- leg
     }
 
-    vars$route_option <- i
+    legs <- legs[!is.na(legs)]
+    legs <- data.table::rbindlist(legs)
 
-    # return to list
-    legs[[i]] <- vars
+    # if (get_geometry) {
+    #   # rebuild the sf object
+    #   legs <- as.data.frame(legs)
+    #   legs$geometry <- sf::st_sfc(legs$geometry, crs = 4326)
+    #   legs <- sf::st_sf(legs)
+    # }
+
+    legs$startTime <- as.POSIXct(legs$startTime / 1000,
+      origin = "1970-01-01", tz = timezone
+    )
+    legs$endTime <- as.POSIXct(legs$endTime / 1000,
+      origin = "1970-01-01", tz = timezone
+    )
+
+    itinerary$legs <- NULL
+
+    # Extract Fare Info
+    fare <- itinerary$fare
+    if (!is.null(fare)) {
+      if(ncol(fare$fare) > 0){
+        itinerary$fare <- fare$fare$regular$cents / 100
+        itinerary$fare_currency <- fare$fare$regular$currency$currency
+      } else {
+        warning("Unstructured fare data has been discarded")
+        itinerary$fare <- NA
+        itinerary$fare_currency <- NA
+      }
+    } else {
+      itinerary$fare <- NA
+      itinerary$fare_currency <- NA
+    }
+
+    itinerary <- as.data.frame(itinerary)
+    #itinerary <- itinerary[legs$route_option, ]
+    names(legs)[names(legs) == "startTime"] <- "leg_startTime"
+    names(legs)[names(legs) == "endTime"] <- "leg_endTime"
+    names(legs)[names(legs) == "duration"] <- "leg_duration"
+    itinerary <- cbind(itinerary, legs)
+
+
+    # if (get_geometry) {
+    #   itineraries <- sf::st_as_sf(itineraries, crs = 4326)
+    # }
+    itineraries[[k]] <- itinerary
+
   }
 
-  legs <- legs[!is.na(legs)]
-  legs <- data.table::rbindlist(legs)
+  itineraries <- data.table::rbindlist(itineraries)
+  itineraries <- as.data.frame(itineraries)
 
   if (get_geometry) {
     # rebuild the sf object
-    legs <- as.data.frame(legs)
-    legs$geometry <- sf::st_sfc(legs$geometry)
-    legs <- sf::st_sf(legs, crs = 4326)
+    itineraries$geometry <- sf::st_sfc(itineraries$geometry, crs = 4326)
+    itineraries <- sf::st_sf(itineraries)
   }
 
-  legs$startTime <- as.POSIXct(legs$startTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
-  legs$endTime <- as.POSIXct(legs$endTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
-
-  itineraries$legs <- NULL
-
-  # Extract Fare Info
-  fare <- itineraries$fare
-  if (!is.null(fare)) {
-    if(ncol(fare$fare) > 0){
-      itineraries$fare <- fare$fare$regular$cents / 100
-      itineraries$fare_currency <- fare$fare$regular$currency$currency
-    } else {
-      warning("Unstructured fare data has been discarded")
-      itineraries$fare <- NA
-      itineraries$fare_currency <- NA
-    }
-  } else {
-    itineraries$fare <- NA
-    itineraries$fare_currency <- NA
-  }
-
-
-  itineraries <- itineraries[legs$route_option, ]
-  names(legs)[names(legs) == "startTime"] <- "leg_startTime"
-  names(legs)[names(legs) == "endTime"] <- "leg_endTime"
-  names(legs)[names(legs) == "duration"] <- "leg_duration"
-  itineraries <- cbind(itineraries, legs)
-
-
-  if (get_geometry) {
-    itineraries <- sf::st_as_sf(itineraries, crs = 4326)
-  }
+  itineraries$duration <- as.integer(itineraries$duration)
+  itineraries$walkTime <- as.integer(itineraries$walkTime)
+  itineraries$transitTime <- as.integer(itineraries$transitTime)
+  itineraries$waitingTime <- as.integer(itineraries$waitingTime)
+  itineraries$transfers <- as.integer(itineraries$transfers)
+  itineraries$departureDelay <- as.integer(itineraries$departureDelay)
+  itineraries$arrivalDelay <- as.integer(itineraries$arrivalDelay)
+  itineraries$agencyTimeZoneOffset <- as.integer(itineraries$agencyTimeZoneOffset)
 
   return(itineraries)
 }
