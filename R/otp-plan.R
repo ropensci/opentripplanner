@@ -261,7 +261,7 @@ otp_plan <- function(otpcon = NA,
 
   results_class <- unlist(lapply(results, function(x) {
     "data.frame" %in% class(x)
-  }))
+  }), use.names = FALSE)
   if (all(results_class)) {
     results_routes <- results[results_class]
     results_errors <- NA
@@ -277,7 +277,7 @@ otp_plan <- function(otpcon = NA,
   if (!all(class(results_routes) == "logical")) {
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
-    })))) {
+    }), use.names = FALSE))) {
       results_routes <- data.table::rbindlist(results_routes)
       results_routes <- as.data.frame(results_routes)
       results_routes$geometry <- sf::st_sfc(results_routes$geometry)
@@ -289,7 +289,7 @@ otp_plan <- function(otpcon = NA,
 
 
   if (!all(class(results_errors) == "logical")) {
-    results_errors <- unlist(results_errors)
+    results_errors <- unlist(results_errors, use.names = FALSE)
     warning(results_errors)
   }
   return(results_routes)
@@ -456,7 +456,8 @@ otp_plan_internal <- function(otpcon = NA,
   # convert response content into text
   text <- httr::content(req, as = "text", encoding = "UTF-8")
   # parse text to json
-  asjson <- jsonlite::fromJSON(text)
+  #asjson <- jsonlite::fromJSON(text)
+  asjson <- rjson::fromJSON(text)
 
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
@@ -534,46 +535,43 @@ otp_json2sf <- function(obj,
         leg$legGeometry <- NULL
 
         # Check for Elevations
-        # steps <- leg$steps
-        #leg$steps <- NULL
-        if(get_elevation | full_elevation){
+        # transit legs have no steps and no elevation
+        if((get_elevation | full_elevation)){
 
-          elevation <- lapply(seq(1, length(leg$steps)), function(x) {
-            leg$steps[[x]]$elevation
-          })
-          #elevation <- elevation[[1]]
-          leg$steps <- NULL
+          if(length(leg$steps) > 0){
+            if (sum(lengths(leg$steps[[1]]$elevation)) > 0) {
+              # We have Elevation Data
+              # Extract the elevation values
 
+              elevation <- lapply(seq(1, length(leg$steps)), function(x) {
+                leg$steps[[x]]$elevation
+              })
+              #elevation <- elevation[[1]]
+              leg$steps <- NULL
 
+              elevation_first <- unlist(lapply(elevation, function(x){
+                vapply(x, `[[`, 1 ,1)
+              }), use.names = FALSE)
 
-          if (sum(lengths(elevation)) > 0) {
-            # We have Elevation Data
-            # Extract the elevation values
-            # elevation <- lapply(elevation, function(x){
-            #   x <- data.frame(first = vapply(x, `[[`, 1 ,1),
-            #                           second = vapply(x, `[[`, 1 ,2))
-            #
-            #   x$distance <- correct_distances(x$first)
-            #   return(x)
-            # })
+              elevation_second <- unlist(lapply(elevation, function(x){
+                vapply(x, `[[`, 1 ,2)
+              }), use.names = FALSE)
 
-            elevation_first <- unlist(lapply(elevation, function(x){
-              vapply(x, `[[`, 1 ,1)
-            }))
+              elevation_distance <- correct_distances(elevation_first)
 
-            elevation_second <- unlist(lapply(elevation, function(x){
-              vapply(x, `[[`, 1 ,2)
-            }))
+              elevation <- data.frame(first = elevation_first,
+                                      second = elevation_second,
+                                      distance = elevation_distance)
 
-            elevation_distance <- correct_distances(elevation_first)
-
-            elevation <- data.frame(first = elevation_first,
-                                    second = elevation_second,
-                                    distance = elevation_distance)
-
+            } else {
+              elevation <- NULL
+            }
           } else {
-            elevation <- NULL
+            elevation <- NA
+            leg$steps <- NULL
           }
+
+
         } else {
           elevation <- NULL
           leg$steps <- NULL
@@ -584,7 +582,7 @@ otp_json2sf <- function(obj,
         lines <- sf::st_sfc(lines, crs = 4326)
 
         leg$geometry <- lines
-        leg <- as.data.frame(leg)
+        leg <- list2df(leg)
         leg <- sf::st_sf(leg)
 
         # Add full elevation if required
@@ -597,14 +595,14 @@ otp_json2sf <- function(obj,
       }
 
 
-      leg$route_option <- i
+      leg$route_option <- k
 
       # return to list
       legs[[i]] <- leg
     }
 
     legs <- legs[!is.na(legs)]
-    legs <- data.table::rbindlist(legs)
+    legs <- data.table::rbindlist(legs, fill = TRUE)
 
     # if (get_geometry) {
     #   # rebuild the sf object
@@ -625,7 +623,7 @@ otp_json2sf <- function(obj,
     # Extract Fare Info
     fare <- itinerary$fare
     if (!is.null(fare)) {
-      if(ncol(fare$fare) > 0){
+      if(length(fare$fare) > 0){
         itinerary$fare <- fare$fare$regular$cents / 100
         itinerary$fare_currency <- fare$fare$regular$currency$currency
       } else {
@@ -638,7 +636,7 @@ otp_json2sf <- function(obj,
       itinerary$fare_currency <- NA
     }
 
-    itinerary <- as.data.frame(itinerary)
+    itinerary <- list2df(itinerary)
     #itinerary <- itinerary[legs$route_option, ]
     names(legs)[names(legs) == "startTime"] <- "leg_startTime"
     names(legs)[names(legs) == "endTime"] <- "leg_endTime"
@@ -710,7 +708,7 @@ correct_distances <- function(dists, err = 1) {
       stop("error in sequence of correct_distances")
     }
   }
-  mxs <- unlist(mxs)
+  mxs <- unlist(mxs, use.names = FALSE)
   mxs <- cumsum(mxs)
   mxs <- c(0, mxs)
   reps <- c(0, brks, lth)

@@ -30,7 +30,7 @@ Imports:
     geodist,
     googlePolylines,
     httr,
-    jsonlite,
+    rjson,
     pbapply,
     sf (>= 0.9.3)
 RoxygenNote: 7.1.0

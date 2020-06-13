@@ -25,7 +25,7 @@ if(FALSE){
   query <- list(
     fromPlace = fromPlace,
     toPlace = toPlace,
-    mode = "CAR"
+    mode = "WALK,TRANSIT"
   )
 
   req <- httr::GET(
@@ -33,20 +33,23 @@ if(FALSE){
     query = query
   )
 
-  profvis::profvis({for(q in 1:10){
-    f2 <- otp_json2sf_alt(rjson::fromJSON(text))
-  }}, interval = 0.005)
+  # profvis::profvis({for(q in 1:10){
+  #   f2 <- otp_json2sf_alt(rjson::fromJSON(text))
+  # }}, interval = 0.005)
 
 
   text <- httr::content(req, as = "text", encoding = "UTF-8")
   # parse text to json
 
-  asjson <- jsonlite::fromJSON(text)
+  #asjson <- jsonlite::fromJSON(text)
+  asjson <- rjson::fromJSON(text)
+  # json_example_drive <- asjson
+  # json_example_transit <- asjson
 
 
-  bench::mark(f1 <- opentripplanner:::otp_json2sf(jsonlite::fromJSON(text)),
-              f2 <- otp_json2sf_alt(rjson::fromJSON(text)),
-              check = FALSE, relative = TRUE)
+  # bench::mark(f1 <- opentripplanner:::otp_json2sf(jsonlite::fromJSON(text)),
+  #             f2 <- otp_json2sf_alt(rjson::fromJSON(text)),
+  #             check = FALSE, relative = TRUE)
 
   for(a in 1:ncol(f1)){
     if(!identical(f1[[a]], f2[[a]])){
