@@ -496,7 +496,7 @@ otp_plan_internal <- function(otpcon = NA,
 #' @family internal
 #' @noRd
 
-otp_json2sf_alt <- function(obj,
+otp_json2sf <- function(obj,
                         full_elevation = FALSE,
                         get_geometry = TRUE,
                         timezone = "",
@@ -544,19 +544,32 @@ otp_json2sf_alt <- function(obj,
           #elevation <- elevation[[1]]
           leg$steps <- NULL
 
+
+
           if (sum(lengths(elevation)) > 0) {
             # We have Elevation Data
             # Extract the elevation values
-            elevation <- lapply(elevation, function(x){
-              x <- data.frame(first = vapply(x, `[[`, 1 ,1),
-                                      second = vapply(x, `[[`, 1 ,2))
+            # elevation <- lapply(elevation, function(x){
+            #   x <- data.frame(first = vapply(x, `[[`, 1 ,1),
+            #                           second = vapply(x, `[[`, 1 ,2))
+            #
+            #   x$distance <- correct_distances(x$first)
+            #   return(x)
+            # })
 
-              x$distance <- correct_distances(x$first)
-              return(x)
-            })
+            elevation_first <- unlist(lapply(elevation, function(x){
+              vapply(x, `[[`, 1 ,1)
+            }))
 
-            elevation <- data.table::rbindlist(elevation)
+            elevation_second <- unlist(lapply(elevation, function(x){
+              vapply(x, `[[`, 1 ,2)
+            }))
 
+            elevation_distance <- correct_distances(elevation_first)
+
+            elevation <- data.frame(first = elevation_first,
+                                    second = elevation_second,
+                                    distance = elevation_distance)
 
           } else {
             elevation <- NULL
