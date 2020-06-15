@@ -14,3 +14,4 @@
 ^cran-comments\.md$
 ^vignettes/lucene/
 ^tests/testthat/lucene/
+^lucene/

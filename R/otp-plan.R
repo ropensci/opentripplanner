@@ -261,7 +261,7 @@ otp_plan <- function(otpcon = NA,
 
   results_class <- unlist(lapply(results, function(x) {
     "data.frame" %in% class(x)
-  }))
+  }), use.names = FALSE)
   if (all(results_class)) {
     results_routes <- results[results_class]
     results_errors <- NA
@@ -277,7 +277,7 @@ otp_plan <- function(otpcon = NA,
   if (!all(class(results_routes) == "logical")) {
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
-    })))) {
+    }), use.names = FALSE))) {
       results_routes <- data.table::rbindlist(results_routes)
       results_routes <- as.data.frame(results_routes)
       results_routes$geometry <- sf::st_sfc(results_routes$geometry)
@@ -289,7 +289,7 @@ otp_plan <- function(otpcon = NA,
 
 
   if (!all(class(results_errors) == "logical")) {
-    results_errors <- unlist(results_errors)
+    results_errors <- unlist(results_errors, use.names = FALSE)
     warning(results_errors)
   }
   return(results_routes)
@@ -319,10 +319,6 @@ otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
     ...
   )
 
-  # if ("data.frame" %in% class(res)) {
-  #   res$fromPlace <- paste(fromPlace[x, ], collapse = ",")
-  #   res$toPlace <- paste(toPlace[x, ], collapse = ",")
-  # }
   return(res)
 }
 
@@ -448,15 +444,10 @@ otp_plan_internal <- function(otpcon = NA,
     query <- c(query, routeOptions)
   }
 
-  req <- httr::GET(
-    routerUrl,
-    query = query
-  )
-
-  # convert response content into text
-  text <- httr::content(req, as = "text", encoding = "UTF-8")
-  # parse text to json
-  asjson <- jsonlite::fromJSON(text)
+  url <- build_url(routerUrl, query)
+  text <- curl::curl_fetch_memory(url)
+  text <- rawToChar(text$content)
+  asjson <- rjson::fromJSON(text)
 
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
@@ -492,7 +483,7 @@ otp_plan_internal <- function(otpcon = NA,
 #' @param full_elevation logical should the full elevation profile be returned (if available)
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone character, which timezone to use, default "" means local time
-#' @param get_elevation, logical, shoudl xyz coordinate be returned
+#' @param get_elevation, logical, should xyz coordinate be returned
 #' @family internal
 #' @noRd
 
@@ -501,144 +492,21 @@ otp_json2sf <- function(obj,
                         get_geometry = TRUE,
                         timezone = "",
                         get_elevation = TRUE) {
-  requestParameters <- obj$requestParameters
-  plan <- obj$plan
-  debugOutput <- obj$debugOutput
 
-  itineraries <- plan$itineraries
-
-  itineraries$startTime <- as.POSIXct(itineraries$startTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
-  itineraries$endTime <- as.POSIXct(itineraries$endTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
+  itineraries <- lapply(obj$plan$itineraries, parse_itinerary,
+                        timezone = timezone,
+                        get_geometry = get_geometry,
+                        get_elevation = get_elevation,
+                        full_elevation = full_elevation)
 
 
-  legs <- list()
-  # Loop over itineraries
-  for (i in seq(1, nrow(itineraries))) {
-    leg <- itineraries$legs[[i]]
-    # split into parts
-    vars <- leg
-    vars$from <- NULL
-    vars$to <- NULL
-    vars$steps <- NULL
-    vars$legGeometry <- NULL
-
-    if (get_geometry) {
-      # Extract geometry
-      legGeometry <- leg$legGeometry$points
-
-      # Check for Elevations
-      steps <- leg$steps
-      if(get_elevation | full_elevation){
-
-        elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-            leg$steps[[x]]$elevation
-        })
-
-        if (sum(lengths(elevation)) > 0) {
-          # We have Elevation Data
-          # Extract the elevation values
-          elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-            data.table::rbindlist(elevation[[x]])
-          })
-          elevation <- lapply(seq(1, length(legGeometry)), function(x) {
-            if (nrow(elevation[[x]]) == 0) {
-              NA
-            } else {
-              elevation[[x]]
-            }
-          })
-          # the x coordinate of elevation reset at each leg, correct for this
-          for (l in seq(1, length(elevation))) {
-            if (!all(is.na(elevation[[l]]))) {
-              elevation[[l]]$distance <- correct_distances(elevation[[l]]$first)
-            }
-          }
-          # process the lines into sf objects
-          lines <- list()
-          for (j in seq(1, length(legGeometry))) {
-            if(get_elevation){
-              lines[[j]] <- polyline2linestring(
-                line = legGeometry[j],
-                elevation = elevation[[j]]
-              )
-            } else {
-              lines[[j]] <- polyline2linestring(line = legGeometry[j])
-            }
-
-          }
-        } else {
-          lines <- polyline2linestring(legGeometry)
-        }
-      } else {
-        lines <- polyline2linestring(legGeometry)
-      }
-
-      lines <- sf::st_sfc(lines, crs = 4326)
-
-      vars$geometry <- lines
-      vars <- sf::st_sf(vars)
-
-      # Add full elevation if required
-      if (full_elevation) {
-        vars$elevation <- elevation
-      }
-    }
-
-    vars$route_option <- i
-
-    # return to list
-    legs[[i]] <- vars
-  }
-
-  legs <- legs[!is.na(legs)]
-  legs <- data.table::rbindlist(legs)
+  itineraries <- data.table::rbindlist(itineraries, idcol = "route_option")
+  itineraries <- as.data.frame(itineraries)
 
   if (get_geometry) {
     # rebuild the sf object
-    legs <- as.data.frame(legs)
-    legs$geometry <- sf::st_sfc(legs$geometry)
-    legs <- sf::st_sf(legs, crs = 4326)
-  }
-
-  legs$startTime <- as.POSIXct(legs$startTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
-  legs$endTime <- as.POSIXct(legs$endTime / 1000,
-    origin = "1970-01-01", tz = timezone
-  )
-
-  itineraries$legs <- NULL
-
-  # Extract Fare Info
-  fare <- itineraries$fare
-  if (!is.null(fare)) {
-    if(ncol(fare$fare) > 0){
-      itineraries$fare <- fare$fare$regular$cents / 100
-      itineraries$fare_currency <- fare$fare$regular$currency$currency
-    } else {
-      warning("Unstructured fare data has been discarded")
-      itineraries$fare <- NA
-      itineraries$fare_currency <- NA
-    }
-  } else {
-    itineraries$fare <- NA
-    itineraries$fare_currency <- NA
-  }
-
-
-  itineraries <- itineraries[legs$route_option, ]
-  names(legs)[names(legs) == "startTime"] <- "leg_startTime"
-  names(legs)[names(legs) == "endTime"] <- "leg_endTime"
-  names(legs)[names(legs) == "duration"] <- "leg_duration"
-  itineraries <- cbind(itineraries, legs)
-
-
-  if (get_geometry) {
-    itineraries <- sf::st_as_sf(itineraries, crs = 4326)
+    itineraries$geometry <- sf::st_sfc(itineraries$geometry, crs = 4326)
+    itineraries <- sf::st_sf(itineraries)
   }
 
   return(itineraries)
@@ -669,18 +537,7 @@ correct_distances <- function(dists, err = 1) {
   if(length(brks) == 0){
     return(dists) # No places the length decreased
   }
-  mxs <- list()
-  brks_lth <- length(brks)
-  for (k in seq(1, brks_lth)) {
-    if (k == 1) {
-      mxs[[k]] <- max(dists[seq(1, brks[k])])
-    } else if (k <= brks_lth) {
-      mxs[[k]] <- max(dists[seq(brks[k - 1] + 1, brks[k])])
-    } else {
-      stop("error in sequence of correct_distances")
-    }
-  }
-  mxs <- unlist(mxs)
+  mxs <- dists[brks]
   mxs <- cumsum(mxs)
   mxs <- c(0, mxs)
   reps <- c(0, brks, lth)
@@ -689,31 +546,6 @@ correct_distances <- function(dists, err = 1) {
   res <- dists + csum
   return(res)
 }
-# correct_distances <- function(dists) {
-#   res <- list()
-#   rebase <- 0
-#   for (k in seq(1, length(dists))) {
-#     if (k == 1) {
-#       dists_k <- dists[k]
-#       res[[k]] <- dists_k
-#     } else {
-#       dists_k <- dists[k]
-#       res_km1 <- res[[k - 1]]
-#       if (dists_k == 0) {
-#         rebase <- rebase + dists[k - 1]
-#         res[[k]] <- dists_k + rebase
-#       } else {
-#         res[[k]] <- dists_k + rebase
-#       }
-#     }
-#   }
-#
-#   res <- unlist(res)
-#   return(res)
-# }
-
-
-
 
 #' Convert Google Encoded Polyline and elevation data into sf object
 #'
@@ -734,13 +566,10 @@ polyline2linestring <- function(line, elevation = NULL) {
     if (all(is.na(elevation))) {
       ele <- rep(0, nrow(line))
     } else {
-      elevation <- elevation[order(elevation$distance), ]
+      elevation$first <- NULL
+      elevation <- elevation[order(elevation$distance, method = "radix"), ]
       # Calculate the length of each segment
-      dist <- geodist::geodist(line[seq(1, nrow(line) - 1), , drop=FALSE],
-        line[seq(2, nrow(line)), , drop=FALSE],
-        paired = TRUE,
-        measure = "cheap"
-      )
+      dist <- geodist::geodist(line, sequential = TRUE, measure = "cheap")
       dist <- cumsum(dist)
       vals <- findInterval(dist, elevation$distance)
       vals[vals == 0] <- 1L

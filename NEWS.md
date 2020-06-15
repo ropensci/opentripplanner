@@ -1,6 +1,8 @@
-# opentripplanner 0.2.3.1 In development
+# opentripplanner 0.3.0.0 In development
 
-* replaced `dplyr` with `data.table` dependancy
+* Significant refactor of code giving a 45% reduction to routing time
+* replaced `dplyr` with `data.table`
+* replaced `httr` with `curl`
 
 # opentripplanner 0.2.3.0
 

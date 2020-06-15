@@ -119,7 +119,7 @@ otp_isochrone <- function(otpcon = NA,
 
   results_class <- unlist(lapply(results, function(x) {
     "data.frame" %in% class(x)
-  }))
+  }), use.names = FALSE)
   if (all(results_class)) {
     results_routes <- results[results_class]
     results_errors <- NA
@@ -135,7 +135,7 @@ otp_isochrone <- function(otpcon = NA,
   if (!all(class(results_routes) == "logical")) {
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
-    })))) {
+    }), use.names = FALSE))) {
       results_routes <- data.table::rbindlist(results_routes)
       results_routes <- as.data.frame(results_routes)
       results_routes$geometry <- sf::st_sfc(results_routes$geometry)
@@ -147,7 +147,7 @@ otp_isochrone <- function(otpcon = NA,
 
 
   if (!all(class(results_errors) == "logical")) {
-    results_errors <- unlist(results_errors)
+    results_errors <- unlist(results_errors, use.names = FALSE)
     warning(results_errors)
   }
   return(results_routes)
@@ -230,13 +230,10 @@ otp_isochrone_internal <- function(otpcon = NA,
     query <- c(query, routingOptions)
   }
 
-  req <- httr::GET(
-    routerUrl,
-    query = query
-  )
-
   # convert response content into text
-  text <- httr::content(req, as = "text", encoding = "UTF-8")
+  url <- build_url(routerUrl, query)
+  text <- curl::curl_fetch_memory(url)
+  text <- rawToChar(text$content)
 
   if (nchar(text) < 200) {
     return(paste0("Failed to get isochrone with error: ",text))

@@ -29,8 +29,8 @@ Imports:
     tibble,
     geodist,
     googlePolylines,
-    httr,
-    jsonlite,
+    curl,
+    rjson,
     pbapply,
     sf (>= 0.9.3)
 RoxygenNote: 7.1.0
