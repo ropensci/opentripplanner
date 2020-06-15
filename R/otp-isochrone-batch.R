@@ -230,13 +230,10 @@ otp_isochrone_internal <- function(otpcon = NA,
     query <- c(query, routingOptions)
   }
 
-  req <- httr::GET(
-    routerUrl,
-    query = query
-  )
-
   # convert response content into text
-  text <- httr::content(req, as = "text", encoding = "UTF-8")
+  url <- build_url(routerUrl, query)
+  text <- curl::curl_fetch_memory(url)
+  text <- rawToChar(text$content)
 
   if (nchar(text) < 200) {
     return(paste0("Failed to get isochrone with error: ",text))

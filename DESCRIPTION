@@ -29,7 +29,7 @@ Imports:
     tibble,
     geodist,
     googlePolylines,
-    httr,
+    curl,
     rjson,
     pbapply,
     sf (>= 0.9.3)

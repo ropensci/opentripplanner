@@ -67,12 +67,11 @@ otp_geocode <- function(otpcon = NULL,
     corners = corners
   )
 
-  req <- httr::GET(routerUrl,
-    query = querylist
-  )
-
   # convert response content into text
-  text <- httr::content(req, as = "text", encoding = "UTF-8")
+  url <- build_url(routerUrl, querylist)
+  text <- curl::curl_fetch_memory(url)
+  text <- rawToChar(text$content)
+
 
   if (nchar(text) == 2) {
     warning(paste0("Failed to find '", query, "'"))

@@ -125,20 +125,30 @@ make_url.default <- function(x) {
 #'
 make_url.otpconnect <- function(x) {
   if (is.null(x$url)) {
-    url <- paste0(
-      ifelse(isTRUE(x$ssl), "https://", "http://"),
-      x$hostname,
-      ":",
-      x$port,
-      "/otp/routers/",
-      x$router
-    )
+    if(x$ssl){
+      url <- paste0("https://",
+        x$hostname,
+        ":",
+        x$port,
+        "/otp/routers/",
+        x$router
+      )
+    } else {
+      url <- paste0("http://",
+        x$hostname,
+        ":",
+        x$port,
+        "/otp/routers/",
+        x$router
+      )
+    }
   } else {
     url <- x$url
   }
 
   return(url)
 }
+
 
 
 #' otpconnect method to check if router exists
@@ -170,10 +180,11 @@ check_router.default <- function(x) {
 #' @noRd
 #'
 check_router.otpconnect <- function(x) {
-  check <- try(httr::GET(make_url(x)), silent = TRUE)
+  check <- try(curl::curl_fetch_memory(make_url(x)), silent = TRUE)
   if (class(check) == "try-error") {
     return(check[1])
   } else {
     return(check$status_code)
   }
 }
+
