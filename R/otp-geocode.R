@@ -80,6 +80,7 @@ otp_geocode <- function(otpcon = NULL,
     # parse text to json
     #asjson <- jsonlite::fromJSON(text)
     asjson <- rjson::fromJSON(text)
+    asjson <- data.table::rbindlist(asjson)
     # parse to sf
     if (type %in% c("SF", "Both")) {
       if (type == "SF") {
