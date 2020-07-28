@@ -447,7 +447,8 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  asjson <- rjson::fromJSON(text)
+  #asjson <- rjson::fromJSON(text)
+  asjson <- RcppSimdJson::fparse(text)
 
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
@@ -487,30 +488,72 @@ otp_plan_internal <- function(otpcon = NA,
 #' @family internal
 #' @noRd
 
-otp_json2sf <- function(obj,
-                        full_elevation = FALSE,
-                        get_geometry = TRUE,
-                        timezone = "",
-                        get_elevation = TRUE) {
+otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
+                        timezone = "") {
+  requestParameters <- obj$requestParameters
+  plan <- obj$plan
+  debugOutput <- obj$debugOutput
 
-  itineraries <- lapply(obj$plan$itineraries, parse_itinerary,
-                        timezone = timezone,
-                        get_geometry = get_geometry,
-                        get_elevation = get_elevation,
-                        full_elevation = full_elevation)
+  itineraries <- plan$itineraries
+
+  itineraries$startTime <- as.POSIXct(itineraries$startTime / 1000,
+                                      origin = "1970-01-01", tz = timezone
+  )
+  itineraries$endTime <- as.POSIXct(itineraries$endTime / 1000,
+                                    origin = "1970-01-01", tz = timezone
+  )
 
 
-  itineraries <- data.table::rbindlist(itineraries, idcol = "route_option")
-  itineraries <- as.data.frame(itineraries)
+  # Loop over itineraries
+  legs <- lapply(itineraries$legs, parse_leg2,
+                 get_geometry = get_geometry,
+                 get_elevation = get_elevation,
+                 full_elevation = full_elevation)
+
+  legs <- legs[!is.na(legs)]
+  legs <- data.table::rbindlist(legs, fill = TRUE)
+
+  legs$startTime <- as.POSIXct(legs$startTime / 1000,
+                               origin = "1970-01-01", tz = timezone
+  )
+  legs$endTime <- as.POSIXct(legs$endTime / 1000,
+                             origin = "1970-01-01", tz = timezone
+  )
+
+  itineraries$legs <- NULL
+
+  # Extract Fare Info
+  fare <- itineraries$fare
+  if (!is.null(fare)) {
+    if(length(fare$fare) > 0){
+      itineraries$fare <- fare$fare$regular$cents / 100
+      itineraries$fare_currency <- fare$fare$regular$currency$currency
+    } else {
+      warning("Unstructured fare data has been discarded")
+      itineraries$fare <- NA
+      itineraries$fare_currency <- NA
+    }
+  } else {
+    itineraries$fare <- NA
+    itineraries$fare_currency <- NA
+  }
+
+  itineraries <- list2df(itineraries)
+
+  names(legs)[names(legs) == "startTime"] <- "leg_startTime"
+  names(legs)[names(legs) == "endTime"] <- "leg_endTime"
+  names(legs)[names(legs) == "duration"] <- "leg_duration"
+  itineraries <- cbind(itineraries, legs)
+
 
   if (get_geometry) {
-    # rebuild the sf object
-    itineraries$geometry <- sf::st_sfc(itineraries$geometry, crs = 4326)
-    itineraries <- sf::st_sf(itineraries)
+    itineraries <- sf::st_as_sf(itineraries)
+    sf::st_crs(itineraries) <- 4326
   }
 
   return(itineraries)
 }
+
 
 #' Correct the elevation distances
 #'

@@ -4,6 +4,8 @@
 * replaced `dplyr` with `data.table`
 * replaced `httr` with `curl`
 
+Note that this version makes minor changes to how results are returned, for example column order. These changes are due to the new json parser and should not affect the overall results but may affect any dependant code.
+
 # opentripplanner 0.2.3.0
 
 * Added `distance_balancing` argument to `otp_plan` gives a small perfomance boost to multicore routing

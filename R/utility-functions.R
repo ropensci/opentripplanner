@@ -116,6 +116,92 @@ parse_leg <- function(leg,
 
 }
 
+#' Parse a single leg otp_plan
+#'
+#' Function to replace looping over lists
+#'
+#' @param leg list
+#' @param get_geometry Logical
+#' @param get_elevation Logical
+#' @param full_elevation Logical
+#' @family internal
+#' @noRd
+parse_leg2 <- function(leg,
+                       get_geometry = TRUE,
+                       get_elevation = TRUE,
+                       full_elevation = FALSE){
+  # split into parts
+  leg$from <- NULL
+  leg$to <- NULL
+
+  if (get_geometry) {
+    # Extract geometry
+    legGeometry <- leg$legGeometry[[1]]$points
+    leg$legGeometry <- NULL
+
+    # Check for Elevations
+    # transit legs have no steps and no elevation
+    if((get_elevation | full_elevation)){
+
+      if(length(leg$steps) > 0){
+        if (sum(lengths(leg$steps[[1]]$elevation)) > 0) {
+          # We have Elevation Data
+          # Extract the elevation values
+
+          elevation <- lapply(seq(1, length(leg$steps)), function(x) {
+            leg$steps[[x]]$elevation
+          })
+          leg$steps <- NULL
+
+          elevation_first <- unlist(lapply(elevation, function(x){
+            vapply(x, `[[`, 1 ,1)
+          }), use.names = FALSE)
+
+          elevation_second <- unlist(lapply(elevation, function(x){
+            vapply(x, `[[`, 1 ,2)
+          }), use.names = FALSE)
+
+          elevation_distance <- correct_distances(elevation_first)
+
+          elevation <- data.frame(first = elevation_first,
+                                  second = elevation_second,
+                                  distance = elevation_distance)
+
+        } else {
+          elevation <- NULL
+        }
+      } else {
+        elevation <- NA
+        leg$steps <- NULL
+      }
+
+
+    } else {
+      elevation <- NULL
+      leg$steps <- NULL
+    }
+
+    lines <- polyline2linestring(legGeometry, elevation = elevation)
+
+    lines <- sf::st_sfc(lines, crs = 4326)
+
+    leg$geometry <- lines
+    leg <- list2df(leg)
+    leg <- sf::st_sf(leg)
+
+    # Add full elevation if required
+    if (full_elevation) {
+      leg$elevation <- list(elevation)
+    }
+  } else {
+    leg$legGeometry <- NULL
+    leg$steps <- NULL
+  }
+
+  return(leg)
+
+}
+
 #' Parse a single itinerary otp_plan
 #'
 #' Function to replace looping over lists
