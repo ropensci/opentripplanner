@@ -1,0 +1,44 @@
+---
+title: "benchmarks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{benchmarks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(opentripplanner)
+```
+
+The main purpose of this vignette is to document the work to improve routing speed for version 0.3.0.0 but will additional compare the performance with the `otpr` package.
+
+## The challange
+
+```{r map, eval=FALSE}
+path_data = "C:/Users/malco/Downloads/otp_test"
+path_otp = otp_dl_jar(path_data)
+otp_setup(path_otp, path_data)
+
+cents <- pct::get_centroids_ew()
+cents <- sf::st_transform(cents, 4326)
+
+fromPlace = sf::st_sfc(list(sf::st_point(c(-5.55359, 50.11001))), crs = 4326)
+
+otpcon <- opentripplanner::otp_connect()
+```
+The map below shows the 7201 population weighted centroids of MSOAs in England and Wales in black and a single starting point in red. The routing task is to find the driving time from the parting point to all the MSOAs. Some of the MSOA centorids are too far from the road to be routeable so the task is also handle these errors.
+
+```{r, echo=FALSE, fig.align='center', fig.cap="\\label{fig:msoa}MSOAs in England and Wales (black) and starting point (red)"}
+knitr::include_graphics("images/routes_to_ferry.jpg")
+```
+
+
+
