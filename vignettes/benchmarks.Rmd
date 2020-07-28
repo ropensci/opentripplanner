@@ -31,6 +31,7 @@ cents <- pct::get_centroids_ew()
 cents <- sf::st_transform(cents, 4326)
 
 fromPlace = sf::st_sfc(list(sf::st_point(c(-5.55359, 50.11001))), crs = 4326)
+fromPlace = sf::st_as_sf(data.frame(id = 1, geometry = fromPlace))
 
 otpcon <- opentripplanner::otp_connect()
 ```
@@ -41,4 +42,28 @@ knitr::include_graphics("images/routes_to_ferry.jpg")
 ```
 
 
+```{r old, eval=FALSE}
+system.time({
+  r1 <- otp_plan(otpcon, fromPlace, cents, ncores = 4,
+               get_geometry = FALSE)
+})
 
+#user  system elapsed 
+#4.77    2.76  874.79 
+```
+
+
+```{r new, eval=FALSE}
+system.time({
+  r2 <- otp_plan(otpcon, fromPlace, cents, 
+                 fromID = "start", toID = cents$msoa11cd,
+                 ncores = 4, get_geometry = FALSE,
+                 distance_balance = TRUE )
+})
+#user  system elapsed 
+#5.83    4.27  749.80 
+
+#user  system elapsed with handle
+#5.61    3.70  788.35
+
+```

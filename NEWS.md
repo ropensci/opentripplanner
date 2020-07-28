@@ -1,8 +1,10 @@
 # opentripplanner 0.3.0.0 In development
 
-* Significant refactor of code giving a 45% reduction to routing time
+* Significant refactor of code giving a 15-45% reduction to routing time
 * replaced `dplyr` with `data.table`
 * replaced `httr` with `curl`
+* replaced `rjson` with `RcppSimdJson`
+* fixed bug in `otp_plan` when `distance_balancing = TRUE`
 
 Note that this version makes minor changes to how results are returned, for example column order. These changes are due to the new json parser and should not affect the overall results but may affect any dependant code.
 

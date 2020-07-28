@@ -33,6 +33,7 @@ Imports:
     rjson,
     RcppSimdJson,
     pbapply,
+    lubridate,
     sf (>= 0.9.3)
 RoxygenNote: 7.1.0
 Suggests: 
