@@ -311,7 +311,6 @@ otp_plan <- function(otpcon = NA,
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ...) {
 
-  handle <- curl::new_handle()
   res <- otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
@@ -396,7 +395,6 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone timezone to use
 #' @param get_elevation Logical, should you get elevation
-#' @param handle curl handle
 #' @family internal
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -420,8 +418,7 @@ otp_plan_internal <- function(otpcon = NA,
                               full_elevation = FALSE,
                               get_geometry = TRUE,
                               timezone = "",
-                              get_elevation = TRUE,
-                              handle = NULL) {
+                              get_elevation = TRUE) {
 
 
   # Construct URL
@@ -450,7 +447,7 @@ otp_plan_internal <- function(otpcon = NA,
   }
 
   url <- build_url(routerUrl, query)
-  text <- curl::curl_fetch_memory(url, handle = handle)
+  text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
   #asjson <- rjson::fromJSON(text)
   asjson <- RcppSimdJson::fparse(text)
