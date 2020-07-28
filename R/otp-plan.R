@@ -489,7 +489,7 @@ otp_plan_internal <- function(otpcon = NA,
 #' @noRd
 
 otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
-                        timezone = "") {
+                        timezone = "", get_elevation = TRUE) {
   requestParameters <- obj$requestParameters
   plan <- obj$plan
   debugOutput <- obj$debugOutput

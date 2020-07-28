@@ -152,6 +152,7 @@ parse_leg2 <- function(leg,
             leg$steps[[x]]$elevation
           })
           leg$steps <- NULL
+          elevation <- elevation[[1]]
 
           elevation_first <- unlist(lapply(elevation, function(x){
             vapply(x, `[[`, 1 ,1)
