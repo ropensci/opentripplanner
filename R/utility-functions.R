@@ -79,9 +79,11 @@ parse_leg <- function(leg,
 
           elevation_distance <- correct_distances(elevation_first)
 
-          elevation <- data.frame(first = elevation_first,
-                                  second = elevation_second,
-                                  distance = elevation_distance)
+          elevation <- list(first = elevation_first,
+                            second = elevation_second,
+                            distance = elevation_distance)
+          elevation <- list2df(elevation)
+
 
         } else {
           elevation <- NULL
