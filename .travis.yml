@@ -3,12 +3,7 @@
 language: R
 sudo: false
 cache: packages
-
-jobs:
-  include:
-    - name: gcc-7
-      env: CXX11="g++-7" CXX17="g++-7" CC="gcc-7"
-
+dist: bionic
 
 addons:
   apt:
