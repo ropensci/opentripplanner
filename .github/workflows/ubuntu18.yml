@@ -2,7 +2,7 @@ name: Ubuntu 18.04 CI
 on: [push, pull_request]
 
 jobs:
-  R-CMD-check:
+  build-and-open:
     runs-on: ubuntu-18.04
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -14,7 +14,8 @@ jobs:
           r-version: '3.6.1'
 
       - uses: r-lib/actions/setup-pandoc@master
-
+      - name: Install Ubuntu deps
+        run: sudo apt-get install libudunits2-dev libgdal-dev libgeos-dev libproj-dev
       - name: Query dependencies
         run: |
           install.packages('remotes')
