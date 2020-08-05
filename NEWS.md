@@ -5,6 +5,7 @@
 * replaced `httr` with `curl`
 * replaced `rjson` with `RcppSimdJson`
 * fixed bug in `otp_plan` when `distance_balancing = TRUE`
+* fixed bug #69 
 
 Note that this version makes minor changes to how results are returned, for example column order. These changes are due to the new json parser and should not affect the overall results but may affect any dependant code.
 
