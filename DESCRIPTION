@@ -34,7 +34,8 @@ Imports:
     RcppSimdJson,
     pbapply,
     lubridate,
-    sf (>= 0.9.3)
+    sf (>= 0.9.3),
+    sfheaders
 RoxygenNote: 7.1.0
 Suggests: 
     covr,

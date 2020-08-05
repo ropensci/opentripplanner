@@ -549,7 +549,8 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
 
 
   if (get_geometry) {
-    itineraries <- sf::st_as_sf(itineraries, crs = 4326)
+    #itineraries <- sf::st_as_sf(itineraries, crs = 4326)
+    itineraries <- df2sf(itineraries)
   }
 
   return(itineraries)
@@ -624,7 +625,8 @@ polyline2linestring <- function(line, elevation = NULL) {
     linestring3D <- sf::st_linestring(linestring3D, dim = "XYZ")
     return(linestring3D)
   } else {
-    linestring <- sf::st_linestring(line)
+    #linestring <- sf::st_linestring(line)
+    linestring <- sfheaders::sfg_linestring(line)
     return(linestring)
   }
 }
