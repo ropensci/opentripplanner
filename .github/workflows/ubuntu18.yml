@@ -1,0 +1,14 @@
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        R: [ '3.6.1' ]
+    name: R ${{ matrix.R }} sample
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup R
+        uses: r-lib/actions/setup-R@v1
+        with:
+          r-version: ${{ matrix.R }}
+      - run: Rscript -e 'print("hello")'
