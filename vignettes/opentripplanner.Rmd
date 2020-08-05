@@ -154,10 +154,9 @@ If you have the `tmap` package installed you can view the route using.
 # install.packages("tmap") # Only needed if you don't have tmap
 library(tmap)              # Load the tmap package
 tmap_mode("view")          # Set tmap to interactive viewing
-qtm(sf::st_zm(route))      # Plot the route on a map
+qtm(route)      # Plot the route on a map
 ```
 
-Notice the use of `sf::st_zm(route)` this is because `tmap` does not currently support XYZ coordinates.
 
 ## Stopping the OTP
 

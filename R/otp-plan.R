@@ -32,7 +32,7 @@
 #'   local timezone
 #' @param distance_balance Logical, use distance balancing, default false, see
 #'   details
-#' @param get_elevation Logical, default TRUE, if true XYZ coordinates returned
+#' @param get_elevation Logical, default FALSE, if true XYZ coordinates returned
 #'   else XY coordinates returned.
 #'
 #' @export
@@ -109,7 +109,7 @@ otp_plan <- function(otpcon = NA,
                      ncores = 1,
                      timezone = otpcon$timezone,
                      distance_balance = FALSE,
-                     get_elevation = TRUE) {
+                     get_elevation = FALSE) {
   # Check Valid Inputs
 
   # Back compatability with 0.2.1
@@ -417,7 +417,7 @@ otp_plan_internal <- function(otpcon = NA,
                               full_elevation = FALSE,
                               get_geometry = TRUE,
                               timezone = "",
-                              get_elevation = TRUE) {
+                              get_elevation = FALSE) {
 
 
   # Construct URL
