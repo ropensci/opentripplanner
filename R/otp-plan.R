@@ -317,7 +317,6 @@ otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
     toPlace = toPlace[x, ],
     fromID = fromID[x],
     toID = toID[x],
-    handle = handle,
     ...
   )
 
