@@ -10,11 +10,6 @@ jobs:
       env: CXX11="g++-7" CXX17="g++-7" CC="gcc-7"
 
 
-install:
-  - ./run.sh install_aptget ${CXX17} r-cran-rcpp r-cran-bit64 r-cran-tinytest
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/${CC} 60 --slave /usr/bin/g++ g++ /usr/bin/${CXX17}
-  - g++ --version
-
 addons:
   apt:
     sources:
