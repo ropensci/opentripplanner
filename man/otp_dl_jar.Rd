@@ -7,9 +7,10 @@
 otp_dl_jar(
   path = NULL,
   version = "1.4.0",
-  file_name = "otp.jar",
+  file_name = paste0("otp-", version, "-shaded.jar"),
   url = "https://repo1.maven.org/maven2/org/opentripplanner/otp",
-  quiet = FALSE
+  quiet = FALSE,
+  cache = TRUE
 )
 }
 \arguments{
@@ -22,12 +23,19 @@ otp_dl_jar(
 \item{url}{URL to the dowload server}
 
 \item{quiet}{logical, passed to download.file, default FALSE}
+
+\item{cache}{logical, default TRUE, see details}
 }
 \value{
 The path to the OTP file
 }
 \description{
 Download the OTP jar file from maven.org
+}
+\details{
+As of version 0.3.0.0 `otp_dl_jar` will cache the JAR file within
+the package and ignore the `path` argument. You can force a new download to
+be saved in the `path` location by setting `cache = FALSE`.
 }
 \examples{
 \dontrun{
