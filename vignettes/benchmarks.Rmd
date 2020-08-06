@@ -47,7 +47,8 @@ system.time({
   r1 <- otp_plan(otpcon, fromPlace, cents, ncores = 4,
                get_geometry = FALSE)
 })
-
+r1 <- otp_plan(otpcon, c(-5.55359, 50.11001), cents[1,], ncores = 1,
+               get_geometry = FALSE)
 #user  system elapsed 
 #4.77    2.76  874.79 
 ```
@@ -65,5 +66,11 @@ system.time({
 
 #user  system elapsed with handle
 #5.61    3.70  788.35
+asjson <- RcppSimdJson::fparse(json_example_transit)
 
+profvis::profvis({
+  for(i in 1:1000){
+    r2 <- opentripplanner:::otp_json2sf(asjson, get_elevation = FALSE)
+  }
+}, interval = 0.005)
 ```
