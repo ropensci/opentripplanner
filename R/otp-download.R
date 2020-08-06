@@ -40,6 +40,7 @@ otp_dl_jar <- function(path = NULL,
     }
     destfile <- file.path(libs,"opentripplanner","jar",file_name)
     if(checkmate::test_file_exists(destfile)){
+      message("Using cached version from ", destfile)
       return(destfile)
     }
   } else {
