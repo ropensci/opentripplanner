@@ -11,7 +11,7 @@ json
 json_example_transit
 }
 \description{
-Example JSON responce from OTP
+Example JSON response from OTP
 This is used for internal testing and has no use
 }
 \keyword{datasets}

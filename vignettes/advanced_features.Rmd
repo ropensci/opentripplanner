@@ -116,13 +116,14 @@ When using multicore routing in `otp_plan` you can optionally set `distance_bala
 
 ## Elevation Profiles
 
-For walking and cycling routes the hilliness of the route matters. If elevation data is available OTP will return the elevation profile of the route. By default, OTP returns the elevation separately from the XY coordinates, but for convenience `otp_plan()` matches the Z coordinates to the XY coordinates. This may result in some minor misalignments. To demonstrate this, let's get a walking route.
+For walking and cycling routes the hilliness of the route matters. If elevation data is available OTP will return the elevation profile of the route. By default, OTP returns the elevation separately from the XY coordinates, but for convenience `otp_plan()` has the argument `get_elevation` which matches the Z coordinates to the XY coordinates. This may result in some minor misalignments. To demonstrate this, let's get a walking route.
 
 ```{r, eval=FALSE}
 route <- otp_plan(otpcon = otpcon,
                     fromPlace = c(-1.18968, 50.60096),
                     toPlace = c(-1.19105, 50.60439),
                     mode = "WALK",
+                    get_elevation = TRUE
                     full_elevation = TRUE)
 ```
 
@@ -130,7 +131,7 @@ Notice the use of `full_elevation = TRUE` this will return the raw elevation pro
 
 We can view the raw profile. It is a data.frame of 3 columns, `first` is the distance along a leg of the route, `second` is the elevation, and `distance` is calculated by `otp_plan()` as the cumulative distance along the whole route. 
 
-As of version 0.2.3.0 the `get_elevation` argument in `otp_plan` can be set to FALSE this speeds up routing by only returning XY coordinates rather than XYZ coordinates. 
+As of version 0.3.0.0 the `get_elevation` argument in `otp_plan` is set to FALSE by default, this speeds up routing by only returning XY coordinates rather than XYZ coordinates. 
 
 ```{r, eval=FALSE}
 profile_raw <- route$elevation[[1]]

@@ -21,7 +21,7 @@ otp_plan(
   ncores = 1,
   timezone = otpcon$timezone,
   distance_balance = FALSE,
-  get_elevation = TRUE
+  get_elevation = FALSE
 )
 }
 \arguments{
@@ -70,7 +70,7 @@ local timezone}
 \item{distance_balance}{Logical, use distance balancing, default false, see
 details}
 
-\item{get_elevation}{Logical, default TRUE, if true XYZ coordinates returned
+\item{get_elevation}{Logical, default FALSE, if true XYZ coordinates returned
 else XY coordinates returned.}
 }
 \value{

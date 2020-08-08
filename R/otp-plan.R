@@ -32,7 +32,7 @@
 #'   local timezone
 #' @param distance_balance Logical, use distance balancing, default false, see
 #'   details
-#' @param get_elevation Logical, default TRUE, if true XYZ coordinates returned
+#' @param get_elevation Logical, default FALSE, if true XYZ coordinates returned
 #'   else XY coordinates returned.
 #'
 #' @export
@@ -109,7 +109,7 @@ otp_plan <- function(otpcon = NA,
                      ncores = 1,
                      timezone = otpcon$timezone,
                      distance_balance = FALSE,
-                     get_elevation = TRUE) {
+                     get_elevation = FALSE) {
   # Check Valid Inputs
 
   # Back compatability with 0.2.1
@@ -198,8 +198,8 @@ otp_plan <- function(otpcon = NA,
     dists <- order(dists, decreasing = TRUE)
     fromPlace <- fromPlace[dists, ]
     toPlace <- toPlace[dists, ]
-    fromID <- fromID[dists, ]
-    toID <- toID[dists, ]
+    fromID <- fromID[dists]
+    toID <- toID[dists]
   }
 
   if (ncores > 1) {
@@ -310,6 +310,7 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ...) {
+
   res <- otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
@@ -416,7 +417,7 @@ otp_plan_internal <- function(otpcon = NA,
                               full_elevation = FALSE,
                               get_geometry = TRUE,
                               timezone = "",
-                              get_elevation = TRUE) {
+                              get_elevation = FALSE) {
 
 
   # Construct URL
@@ -447,7 +448,8 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  asjson <- rjson::fromJSON(text)
+  #asjson <- rjson::fromJSON(text)
+  asjson <- RcppSimdJson::fparse(text)
 
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
@@ -487,30 +489,73 @@ otp_plan_internal <- function(otpcon = NA,
 #' @family internal
 #' @noRd
 
-otp_json2sf <- function(obj,
-                        full_elevation = FALSE,
-                        get_geometry = TRUE,
-                        timezone = "",
-                        get_elevation = TRUE) {
+otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
+                        timezone = "", get_elevation = TRUE) {
+  #requestParameters <- obj$requestParameters
+  #plan <- obj$plan
+  #debugOutput <- obj$debugOutput
 
-  itineraries <- lapply(obj$plan$itineraries, parse_itinerary,
-                        timezone = timezone,
-                        get_geometry = get_geometry,
-                        get_elevation = get_elevation,
-                        full_elevation = full_elevation)
+  itineraries <- obj$plan$itineraries
+
+  itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
+                                      origin = "1970-01-01", tz = timezone
+  )
+
+  itineraries$endTime <- lubridate::as_datetime(itineraries$endTime / 1000,
+                                    origin = "1970-01-01", tz = timezone
+  )
 
 
-  itineraries <- data.table::rbindlist(itineraries, idcol = "route_option")
-  itineraries <- as.data.frame(itineraries)
+  # Loop over itineraries
+  legs <- lapply(itineraries$legs, parse_leg,
+                 get_geometry = get_geometry,
+                 get_elevation = get_elevation,
+                 full_elevation = full_elevation)
+
+  legs <- legs[!is.na(legs)]
+  legs <- data.table::rbindlist(legs, fill = TRUE)
+
+  legs$startTime <- lubridate::as_datetime(legs$startTime / 1000,
+                               origin = "1970-01-01", tz = timezone
+  )
+  legs$endTime <- lubridate::as_datetime(legs$endTime / 1000,
+                             origin = "1970-01-01", tz = timezone
+  )
+
+  itineraries$legs <- NULL
+
+  # Extract Fare Info
+  fare <- itineraries$fare
+  if (!is.null(fare)) {
+    if(length(fare$fare) > 0){
+      itineraries$fare <- fare$fare$regular$cents / 100
+      itineraries$fare_currency <- fare$fare$regular$currency$currency
+    } else {
+      #warning("Unstructured fare data has been discarded")
+      itineraries$fare <- NA
+      itineraries$fare_currency <- NA
+    }
+  } else {
+    itineraries$fare <- NA
+    itineraries$fare_currency <- NA
+  }
+
+  itineraries <- list2df(itineraries)
+
+  names(legs)[names(legs) == "startTime"] <- "leg_startTime"
+  names(legs)[names(legs) == "endTime"] <- "leg_endTime"
+  names(legs)[names(legs) == "duration"] <- "leg_duration"
+  itineraries <- cbind(itineraries, legs)
+
 
   if (get_geometry) {
-    # rebuild the sf object
-    itineraries$geometry <- sf::st_sfc(itineraries$geometry, crs = 4326)
-    itineraries <- sf::st_sf(itineraries)
+    #itineraries <- sf::st_as_sf(itineraries, crs = 4326)
+    itineraries <- df2sf(itineraries)
   }
 
   return(itineraries)
 }
+
 
 #' Correct the elevation distances
 #'
@@ -560,7 +605,8 @@ correct_distances <- function(dists, err = 1) {
 
 polyline2linestring <- function(line, elevation = NULL) {
   line <- googlePolylines::decode(line)[[1]]
-  line <- as.matrix(line[, 2:1])
+  line <- matrix(c(line$lon,line$lat), ncol = 2, dimnames = list(NULL, c("lon","lat")))
+  #line <- as.matrix(line[, 2:1])
   if (!is.null(elevation)) {
     # Some modes don't have elevation e.g TRANSIT, check for this
     if (all(is.na(elevation))) {
@@ -579,7 +625,8 @@ polyline2linestring <- function(line, elevation = NULL) {
     linestring3D <- sf::st_linestring(linestring3D, dim = "XYZ")
     return(linestring3D)
   } else {
-    linestring <- sf::st_linestring(line)
+    #linestring <- sf::st_linestring(line)
+    linestring <- sfheaders::sfg_linestring(line)
     return(linestring)
   }
 }

@@ -142,9 +142,6 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
     checkmate::assert_logical(config$routingDefaults$longDistance,
       len = 1, null.ok = TRUE
     )
-    checkmate::assert_logical(config$routingDefaults$maxTransfers,
-      len = 1, null.ok = TRUE
-    )
     checkmate::assert_logical(config$routingDefaults$onlyTransitTrips,
       len = 1, null.ok = TRUE
     )
@@ -235,6 +232,9 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
       len = 1, null.ok = TRUE
     )
     checkmate::assert_integer(config$routingDefaults$maxPreTransitTime,
+      len = 1, null.ok = TRUE
+    )
+    checkmate::assert_integer(config$routingDefaults$maxTransfers,
       len = 1, null.ok = TRUE
     )
     checkmate::assert_integer(config$routingDefaults$MIN_SIMILARITY,
