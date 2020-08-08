@@ -125,8 +125,9 @@ make_url.default <- function(x) {
 #'
 make_url.otpconnect <- function(x) {
   if (is.null(x$url)) {
-    if(x$ssl){
-      url <- paste0("https://",
+    if (x$ssl) {
+      url <- paste0(
+        "https://",
         x$hostname,
         ":",
         x$port,
@@ -134,7 +135,8 @@ make_url.otpconnect <- function(x) {
         x$router
       )
     } else {
-      url <- paste0("http://",
+      url <- paste0(
+        "http://",
         x$hostname,
         ":",
         x$port,
@@ -187,4 +189,3 @@ check_router.otpconnect <- function(x) {
     return(check$status_code)
   }
 }
-

@@ -113,7 +113,7 @@ otp_plan <- function(otpcon = NA,
   # Check Valid Inputs
 
   # Back compatability with 0.2.1
-  if(is.null(timezone)){
+  if (is.null(timezone)) {
     warning("otpcon is missing the timezone variaible, assuming local timezone")
     timezone <- Sys.timezone()
   }
@@ -141,18 +141,18 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_logical(distance_balance, len = 1, null.ok = FALSE)
   checkmate::assert_logical(get_elevation, len = 1, null.ok = FALSE)
 
-  if(distance_balance & (ncores > 1)){
-    if(is.null(fromID)){
+  if (distance_balance & (ncores > 1)) {
+    if (is.null(fromID)) {
       stop("Distance balancing changes the order of the output, so fromID must not be NULL")
     }
-    if(is.null(toID)){
+    if (is.null(toID)) {
       stop("Distance balancing changes the order of the output, so toID must not be NULL")
     }
   }
 
 
   # Check Route Options
-  if(!is.null(routeOptions)){
+  if (!is.null(routeOptions)) {
     routeOptions <- otp_validate_routing_options(routeOptions)
   }
 
@@ -193,7 +193,7 @@ otp_plan <- function(otpcon = NA,
     }
   }
 
-  if(distance_balance & (ncores > 1)){
+  if (distance_balance & (ncores > 1)) {
     dists <- geodist::geodist(fromPlace, toPlace, paired = TRUE)
     dists <- order(dists, decreasing = TRUE)
     fromPlace <- fromPlace[dists, ]
@@ -310,7 +310,6 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ...) {
-
   res <- otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
@@ -351,7 +350,7 @@ otp_clean_input <- function(imp, imp_name) {
   }
 
   # For matrix inputs
-  #if (all(class(imp) == "matrix")) { # to pass CRAN checks
+  # if (all(class(imp) == "matrix")) { # to pass CRAN checks
   if ("matrix" %in% class(imp)) {
     checkmate::assert_matrix(imp,
       any.missing = FALSE,
@@ -360,10 +359,14 @@ otp_clean_input <- function(imp, imp_name) {
       max.cols = 2,
       null.ok = FALSE
     )
-    checkmate::assert_numeric(imp[, 1], lower = -180, upper = 180,
-                              any.missing = FALSE, .var.name = paste0(imp_name," Longitude"))
-    checkmate::assert_numeric(imp[, 2], lower = -90, upper = 90,
-                              any.missing = FALSE, .var.name = paste0(imp_name," Latitude"))
+    checkmate::assert_numeric(imp[, 1],
+      lower = -180, upper = 180,
+      any.missing = FALSE, .var.name = paste0(imp_name, " Longitude")
+    )
+    checkmate::assert_numeric(imp[, 2],
+      lower = -90, upper = 90,
+      any.missing = FALSE, .var.name = paste0(imp_name, " Latitude")
+    )
     imp[] <- imp[, 2:1] # Switch round lng/lat to lat/lng for OTP
     return(imp)
   }
@@ -441,14 +444,14 @@ otp_plan_internal <- function(otpcon = NA,
     numItineraries = numItineraries
   )
 
-  if(!is.null(routeOptions)){
+  if (!is.null(routeOptions)) {
     query <- c(query, routeOptions)
   }
 
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  #asjson <- rjson::fromJSON(text)
+  # asjson <- rjson::fromJSON(text)
   asjson <- RcppSimdJson::fparse(text)
 
   # Check for errors - if no error object, continue to process content
@@ -491,35 +494,36 @@ otp_plan_internal <- function(otpcon = NA,
 
 otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
                         timezone = "", get_elevation = TRUE) {
-  #requestParameters <- obj$requestParameters
-  #plan <- obj$plan
-  #debugOutput <- obj$debugOutput
+  # requestParameters <- obj$requestParameters
+  # plan <- obj$plan
+  # debugOutput <- obj$debugOutput
 
   itineraries <- obj$plan$itineraries
 
   itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
-                                      origin = "1970-01-01", tz = timezone
+    origin = "1970-01-01", tz = timezone
   )
 
   itineraries$endTime <- lubridate::as_datetime(itineraries$endTime / 1000,
-                                    origin = "1970-01-01", tz = timezone
+    origin = "1970-01-01", tz = timezone
   )
 
 
   # Loop over itineraries
   legs <- lapply(itineraries$legs, parse_leg,
-                 get_geometry = get_geometry,
-                 get_elevation = get_elevation,
-                 full_elevation = full_elevation)
+    get_geometry = get_geometry,
+    get_elevation = get_elevation,
+    full_elevation = full_elevation
+  )
 
   legs <- legs[!is.na(legs)]
   legs <- data.table::rbindlist(legs, fill = TRUE)
 
   legs$startTime <- lubridate::as_datetime(legs$startTime / 1000,
-                               origin = "1970-01-01", tz = timezone
+    origin = "1970-01-01", tz = timezone
   )
   legs$endTime <- lubridate::as_datetime(legs$endTime / 1000,
-                             origin = "1970-01-01", tz = timezone
+    origin = "1970-01-01", tz = timezone
   )
 
   itineraries$legs <- NULL
@@ -527,11 +531,11 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
   # Extract Fare Info
   fare <- itineraries$fare
   if (!is.null(fare)) {
-    if(length(fare$fare) > 0){
+    if (length(fare$fare) > 0) {
       itineraries$fare <- fare$fare$regular$cents / 100
       itineraries$fare_currency <- fare$fare$regular$currency$currency
     } else {
-      #warning("Unstructured fare data has been discarded")
+      # warning("Unstructured fare data has been discarded")
       itineraries$fare <- NA
       itineraries$fare_currency <- NA
     }
@@ -549,7 +553,7 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
 
 
   if (get_geometry) {
-    #itineraries <- sf::st_as_sf(itineraries, crs = 4326)
+    # itineraries <- sf::st_as_sf(itineraries, crs = 4326)
     itineraries <- df2sf(itineraries)
   }
 
@@ -574,12 +578,12 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
 
 correct_distances <- function(dists, err = 1) {
   lth <- length(dists)
-  if(lth <= 2){
+  if (lth <= 2) {
     return(dists) # Can't break up 2 points
   }
   brks <- dists[seq(1, lth - 1)] > (dists[seq(2, lth)] + err)
   brks <- seq(1, lth)[brks]
-  if(length(brks) == 0){
+  if (length(brks) == 0) {
     return(dists) # No places the length decreased
   }
   mxs <- dists[brks]
@@ -605,8 +609,8 @@ correct_distances <- function(dists, err = 1) {
 
 polyline2linestring <- function(line, elevation = NULL) {
   line <- googlePolylines::decode(line)[[1]]
-  line <- matrix(c(line$lon,line$lat), ncol = 2, dimnames = list(NULL, c("lon","lat")))
-  #line <- as.matrix(line[, 2:1])
+  line <- matrix(c(line$lon, line$lat), ncol = 2, dimnames = list(NULL, c("lon", "lat")))
+  # line <- as.matrix(line[, 2:1])
   if (!is.null(elevation)) {
     # Some modes don't have elevation e.g TRANSIT, check for this
     if (all(is.na(elevation))) {
@@ -625,7 +629,7 @@ polyline2linestring <- function(line, elevation = NULL) {
     linestring3D <- sf::st_linestring(linestring3D, dim = "XYZ")
     return(linestring3D)
   } else {
-    #linestring <- sf::st_linestring(line)
+    # linestring <- sf::st_linestring(line)
     linestring <- sfheaders::sfg_linestring(line)
     return(linestring)
   }

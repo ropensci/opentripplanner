@@ -78,7 +78,7 @@ otp_geocode <- function(otpcon = NULL,
     return(NA)
   } else {
     # parse text to json
-    #asjson <- jsonlite::fromJSON(text)
+    # asjson <- jsonlite::fromJSON(text)
     asjson <- rjson::fromJSON(text)
     asjson <- data.table::rbindlist(asjson)
     # parse to sf

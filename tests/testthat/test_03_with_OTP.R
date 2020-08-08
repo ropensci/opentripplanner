@@ -2,7 +2,7 @@
 
 skip_no_otp <- function() {
   if (!identical(Sys.getenv("I_have_OTP"), "TRUE")) {
-  # if (!otp_check_java()) {
+    # if (!otp_check_java()) {
     skip("Not running full test.")
   }
 }
@@ -10,7 +10,7 @@ skip_no_otp <- function() {
 context("Test the download of the LSOA file")
 
 f <- file.path(tempdir(), "centroids.gpkg")
-download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f,  mode = "wb", quiet = TRUE)
+download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f, mode = "wb", quiet = TRUE)
 lsoa <- sf::read_sf(f)
 file.remove(f)
 test_that("can get lsoa points", {
@@ -35,17 +35,17 @@ test_that("path_otp is valid", {
 
 context("download special testing data")
 url <- "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
-dir.create(file.path(path_data,"graphs","tests"))
+dir.create(file.path(path_data, "graphs", "tests"))
 utils::download.file(
   url = url,
-  destfile = file.path(path_data,"graphs","tests","test_data.zip"),
+  destfile = file.path(path_data, "graphs", "tests", "test_data.zip"),
   mode = "wb",
   quiet = TRUE
 )
-utils::unzip(file.path(path_data,"graphs","tests","test_data.zip"),
-             exdir = file.path(path_data, "graphs", "tests")
+utils::unzip(file.path(path_data, "graphs", "tests", "test_data.zip"),
+  exdir = file.path(path_data, "graphs", "tests")
 )
-unlink(file.path(path_data,"graphs","tests","test_data.zip"))
+unlink(file.path(path_data, "graphs", "tests", "test_data.zip"))
 
 context("Test the otp_build_graph function")
 
@@ -230,9 +230,7 @@ test_that("otp_stop", {
   if (checkmate::test_os("windows")) {
     expect_true(grepl("SUCCESS", foo))
   } else {
-    #expect_true(grepl("The following Java instances have been found", foo))
+    # expect_true(grepl("The following Java instances have been found", foo))
     expect_true(TRUE)
   }
 })
-
-

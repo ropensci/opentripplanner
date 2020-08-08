@@ -322,12 +322,11 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
       return(FALSE)
     }
   }
-  if(otp_check_java()){
+  if (otp_check_java()) {
     return(TRUE)
-  } else{
+  } else {
     return(FALSE)
   }
-
 }
 
 
@@ -337,7 +336,7 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
 #' @family setup
 #' @export
 #'
-otp_check_java <- function(){
+otp_check_java <- function() {
   # Check we have correct verrsion of Java
   java_version <- try(system2("java", "-version", stdout = TRUE, stderr = TRUE))
   if (class(java_version) == "try-error") {
@@ -353,7 +352,7 @@ otp_check_java <- function(){
       return(FALSE)
     }
     if (java_version < 1.8 | java_version >= 1.9) {
-      warning("OTP requires Java version 1.8 you have version ",java_version)
+      warning("OTP requires Java version 1.8 you have version ", java_version)
       return(FALSE)
     }
     return(TRUE)

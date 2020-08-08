@@ -25,21 +25,21 @@ otp_dl_jar <- function(path = NULL,
                        url = "https://repo1.maven.org/maven2/org/opentripplanner/otp",
                        quiet = FALSE,
                        cache = TRUE) {
-  if(cache){
+  if (cache) {
     # Check we can find the package
     libs <- .libPaths()[1]
-    if(!checkmate::test_directory_exists(file.path(libs,"opentripplanner"))){
+    if (!checkmate::test_directory_exists(file.path(libs, "opentripplanner"))) {
       cache <- FALSE
     }
   }
 
-  if(cache){
+  if (cache) {
     # Check for JAR folder can find the package
-    if(!checkmate::test_directory_exists(file.path(libs,"opentripplanner","jar"))){
-      dir.create(file.path(libs,"opentripplanner","jar"))
+    if (!checkmate::test_directory_exists(file.path(libs, "opentripplanner", "jar"))) {
+      dir.create(file.path(libs, "opentripplanner", "jar"))
     }
-    destfile <- file.path(libs,"opentripplanner","jar",file_name)
-    if(checkmate::test_file_exists(destfile)){
+    destfile <- file.path(libs, "opentripplanner", "jar", file_name)
+    if (checkmate::test_file_exists(destfile)) {
       message("Using cached version from ", destfile)
       return(destfile)
     }
@@ -71,11 +71,12 @@ otp_dl_jar <- function(path = NULL,
 #' @export
 
 otp_dl_demo <- function(
-  path_data = NULL,
-  url = paste0("https://github.com/ropensci/opentripplanner/",
-               "releases/download/0.1/isle-of-wight-demo.zip"),
-  quiet = FALSE
-  ) {
+                        path_data = NULL,
+                        url = paste0(
+                          "https://github.com/ropensci/opentripplanner/",
+                          "releases/download/0.1/isle-of-wight-demo.zip"
+                        ),
+                        quiet = FALSE) {
   if (!dir.exists(path_data)) {
     stop(paste0("Can't find folder ", path_data))
   }

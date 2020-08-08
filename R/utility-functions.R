@@ -19,8 +19,8 @@ list2df <- function(l) {
 #' @param df named list of equal length
 #' @family internal
 #' @noRd
-df2sf <- function(df){
-  class(df) <- c("sf","data.frame")
+df2sf <- function(df) {
+  class(df) <- c("sf", "data.frame")
   attributes(df)$sf_column <- "geometry"
   df
 }
@@ -37,10 +37,10 @@ df2sf <- function(df){
 #' @noRd
 build_url <- function(routerUrl, query) {
   secs <- unlist(query, use.names = TRUE)
-  secs <- paste0(names(secs),"=",secs)
+  secs <- paste0(names(secs), "=", secs)
   secs <- paste(secs, collapse = "&")
-  secs <- gsub(",","%2C",secs)
-  secs <- paste0(routerUrl,"?",secs)
+  secs <- gsub(",", "%2C", secs)
+  secs <- paste0(routerUrl, "?", secs)
   secs
 }
 
@@ -133,20 +133,20 @@ build_url <- function(routerUrl, query) {
 #
 # }
 parse_leg <- function(leg,
-                       get_geometry = TRUE,
-                       get_elevation = TRUE,
-                       full_elevation = FALSE){
+                      get_geometry = TRUE,
+                      get_elevation = TRUE,
+                      full_elevation = FALSE) {
   # split into parts
   leg$from <- NULL
   leg$to <- NULL
 
-  if(get_elevation | full_elevation){
+  if (get_elevation | full_elevation) {
     elevation <- lapply(leg$steps, parse_elevation)
   } else {
     elevation <- NULL
   }
 
-  if(full_elevation){
+  if (full_elevation) {
     leg$elevation <- elevation
   }
 
@@ -155,15 +155,14 @@ parse_leg <- function(leg,
   if (get_geometry) {
     # Extract geometry
     legGeometry <- list()
-    for(i in seq_len(nrow(leg))){
+    for (i in seq_len(nrow(leg))) {
       legGeometry[[i]] <- polyline2linestring(line = leg$legGeometry[[i]]$points, elevation = elevation[[i]])
     }
 
     leg$geometry <- sf::st_sfc(legGeometry, crs = 4326)
     leg$legGeometry <- NULL
-    #leg <- sf::st_sf(leg)
+    # leg <- sf::st_sf(leg)
     leg <- df2sf(leg)
-
   } else {
     leg$legGeometry <- NULL
   }
@@ -177,8 +176,8 @@ parse_leg <- function(leg,
 #' @param stp list - a step
 #' @family internal
 #' @noRd
-parse_elevation <- function(stp){
-  if(is.null(stp)){
+parse_elevation <- function(stp) {
+  if (is.null(stp)) {
     return(NA)
   }
 

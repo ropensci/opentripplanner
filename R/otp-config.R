@@ -45,13 +45,14 @@ otp_write_config <- function(config,
 
   exportJson <- rjson::toJSON(config, indent = 4)
 
-  write(exportJson,
-        file.path(
-          dir,
-          "graphs",
-          router,
-          paste0(type, "-config.json")
-        )
+  write(
+    exportJson,
+    file.path(
+      dir,
+      "graphs",
+      router,
+      paste0(type, "-config.json")
+    )
   )
 }
 
@@ -467,7 +468,7 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
     # Character
     checkmate::assert_subset(config$osmWayPropertySet,
       empty.ok = TRUE,
-      choices = c("default", "norway","uk")
+      choices = c("default", "norway", "uk")
     )
     checkmate::assert_subset(config$stopClusterMode,
       empty.ok = TRUE,
