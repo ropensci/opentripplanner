@@ -1,13 +1,17 @@
 # opentripplanner 0.3.0.0 In development
 
-* Significant refactor of code giving a 15-45% reduction to routing time
+Note that this version makes minor changes to how results are returned, for example column order. These changes are due to the new json parser and should not affect the overall results but may affect any dependant code.
+
+* Significant refactor of code giving up to 50% reduction in routing time
 * replaced `dplyr` with `data.table`
 * replaced `httr` with `curl`
-* replaced `rjson` with `RcppSimdJson`
+* replaced many `rjson` functions with `RcppSimdJson` equivalents
+* replaced many `sf` functions with `sfheaders` equivalents
 * fixed bug in `otp_plan` when `distance_balancing = TRUE`
-* fixed bug #69 
+* fixed bug #69
+* In `otp_plan` will now return `fromPlace` and `toPlace` as the first two columns
+* In `otp_plan` set `get_elevation = FALSE` as default this boosts performance
 
-Note that this version makes minor changes to how results are returned, for example column order. These changes are due to the new json parser and should not affect the overall results but may affect any dependant code.
 
 # opentripplanner 0.2.3.0
 

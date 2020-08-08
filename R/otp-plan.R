@@ -56,9 +56,10 @@
 #'
 #'   When using multicore routing each task does not take the same amount of
 #'   time. This can result in wasted time between batches. Distance Balancing
-#'   sorts the routing by the euclidean distance between fromPlace and toPlace,
-#'   this offers a small performance improvement of around five percent. As the
-#'   original order of the inputs is lost so fromID and toID must be provided.
+#'   sorts the routing by the euclidean distance between fromPlace and toPlace
+#'   before routing. This offers a small performance improvement of around five
+#'   percent. As the original order of the inputs is lost fromID and toID must
+#'   be provided.
 #'
 #'   ## Elevation
 #'
@@ -112,7 +113,7 @@ otp_plan <- function(otpcon = NA,
                      get_elevation = FALSE) {
   # Check Valid Inputs
 
-  # Back compatability with 0.2.1
+  # Back compatibility with 0.2.1
   if (is.null(timezone)) {
     warning("otpcon is missing the timezone variaible, assuming local timezone")
     timezone <- Sys.timezone()
@@ -280,8 +281,10 @@ otp_plan <- function(otpcon = NA,
     }), use.names = FALSE))) {
       results_routes <- data.table::rbindlist(results_routes)
       results_routes <- as.data.frame(results_routes)
-      results_routes$geometry <- sf::st_sfc(results_routes$geometry)
-      results_routes <- sf::st_sf(results_routes, crs = 4326)
+      results_routes <- df2sf(results_routes)
+      colnms <- names(results_routes)
+      colnms <- colnms[colnms %in% c("fromPlace","toPlace","geometry")]
+      results_routes <- results_routes[c("fromPlace","toPlace",colnms,"geometry")]
     } else {
       results_routes <- data.table::rbindlist(results_routes)
     }
@@ -451,7 +454,6 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  # asjson <- rjson::fromJSON(text)
   asjson <- RcppSimdJson::fparse(text)
 
   # Check for errors - if no error object, continue to process content
@@ -553,7 +555,6 @@ otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
 
 
   if (get_geometry) {
-    # itineraries <- sf::st_as_sf(itineraries, crs = 4326)
     itineraries <- df2sf(itineraries)
   }
 
