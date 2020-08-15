@@ -25,29 +25,6 @@ df2sf <- function(df) {
   df
 }
 
-#' Convert list of linestrings to sfc
-#'
-#' A faster alternative to sf::st_as_sfc() but without the checks
-#'
-#' @param l list of linestrings
-#' @family internal
-#' @noRd
-list2sfc <- function(l) {
-  class(l) <- c("sfc_LINESTRING","sfc")
-  attributes(l)$precision <- 0
-  attributes(l)$bbox <- NA
-
-  crs <- list()
-  class(crs) <- "crs"
-  crs$input <- "EPSG:4326"
-  crs$wkt <- "GEOGCRS[\"WGS 84\",\n    DATUM[\"World Geodetic System 1984\",\n        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n            LENGTHUNIT[\"metre\",1]]],\n    PRIMEM[\"Greenwich\",0,\n        ANGLEUNIT[\"degree\",0.0174532925199433]],\n    CS[ellipsoidal,2],\n        AXIS[\"geodetic latitude (Lat)\",north,\n            ORDER[1],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        AXIS[\"geodetic longitude (Lon)\",east,\n            ORDER[2],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n    USAGE[\n        SCOPE[\"unknown\"],\n        AREA[\"World\"],\n        BBOX[-90,-180,90,180]],\n    ID[\"EPSG\",4326]]"
-
-  attributes(l)$crs <- crs
-  attributes(l)$n_empty <- 0
-  l
-}
-
-
 #' Build URL for otp_plan
 #'
 #' A faster alternative to as.data.frame(list), similar to base::list2DF() added
