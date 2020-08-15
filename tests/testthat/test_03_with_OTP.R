@@ -21,7 +21,7 @@ test_that("can get lsoa points", {
 context("Check previous tests have left the files we need")
 
 path_data <- file.path(tempdir(), "otptests")
-path_otp <- file.path(path_data, "otp.jar")
+path_otp <- file.path(path_data, "otp-1.4.0-shaded.jar")
 
 test_that("path_data is valid", {
   skip_no_otp()
@@ -34,28 +34,28 @@ test_that("path_otp is valid", {
 })
 
 context("download special testing data")
-url <- "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
-dir.create(file.path(path_data, "graphs", "tests"))
-utils::download.file(
-  url = url,
-  destfile = file.path(path_data, "graphs", "tests", "test_data.zip"),
-  mode = "wb",
-  quiet = TRUE
-)
-utils::unzip(file.path(path_data, "graphs", "tests", "test_data.zip"),
-  exdir = file.path(path_data, "graphs", "tests")
-)
-unlink(file.path(path_data, "graphs", "tests", "test_data.zip"))
+# url <- "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
+# dir.create(file.path(path_data, "graphs", "tests"))
+# utils::download.file(
+#   url = url,
+#   destfile = file.path(path_data, "graphs", "tests", "test_data.zip"),
+#   mode = "wb",
+#   quiet = TRUE
+# )
+# utils::unzip(file.path(path_data, "graphs", "tests", "test_data.zip"),
+#   exdir = file.path(path_data, "graphs", "tests")
+# )
+# unlink(file.path(path_data, "graphs", "tests", "test_data.zip"))
 
 context("Test the otp_build_graph function")
 
 test_that("We can build an otp graph", {
   skip_no_otp()
-  log <- otp_build_graph(otp = path_otp, dir = path_data, router = "tests")
+  log <- otp_build_graph(otp = path_otp, dir = path_data, router = "default")
   expect_true(file.exists(file.path(
     path_data,
     "graphs",
-    "tests",
+    "default",
     "Graph.obj"
   )))
 })
@@ -64,7 +64,7 @@ context("Test the otp_setup function")
 
 test_that("We can startup OTP", {
   skip_no_otp()
-  expect_message(otp_setup(otp = path_otp, dir = path_data, router = "tests"),
+  expect_message(otp_setup(otp = path_otp, dir = path_data, router = "default"),
     regexp = "OTP is ready to use"
   )
 })
@@ -74,15 +74,15 @@ context("Test the otp_connect function")
 
 test_that("object returned when check is TRUE and router exists", {
   skip_no_otp()
-  otpcon <- otp_connect(router = "tests")
+  otpcon <- otp_connect(router = "default")
   expect_is(otpcon, "otpconnect")
 })
 
 test_that("correct message when check is TRUE and router exists", {
   skip_no_otp()
   expect_message(
-    otp_connect(router = "tests"),
-    "Router http://localhost:8080/otp/routers/tests exists"
+    otp_connect(router = "default"),
+    "Router http://localhost:8080/otp/routers/default exists"
   )
 })
 
@@ -95,7 +95,7 @@ test_that("correct error when check is TRUE and router does not exist", {
 })
 
 if (identical(Sys.getenv("I_have_OTP"), "TRUE")) {
-  otpcon <- otp_connect(router = "tests")
+  otpcon <- otp_connect(router = "default")
 }
 
 context("Test the otp_plan function")
@@ -155,7 +155,7 @@ test_that("batch routing", {
     toPlace = lsoa[11:20, ]
   )
   expect_is(routes, "sf")
-  expect_true(nrow(routes) == 2)
+  expect_true(nrow(routes) == 10)
 })
 
 

@@ -283,7 +283,7 @@ otp_plan <- function(otpcon = NA,
       results_routes <- as.data.frame(results_routes)
       results_routes <- df2sf(results_routes)
       colnms <- names(results_routes)
-      colnms <- colnms[colnms %in% c("fromPlace","toPlace","geometry")]
+      colnms <- colnms[!colnms %in% c("fromPlace","toPlace","geometry")]
       results_routes <- results_routes[c("fromPlace","toPlace",colnms,"geometry")]
     } else {
       results_routes <- data.table::rbindlist(results_routes)
@@ -293,6 +293,7 @@ otp_plan <- function(otpcon = NA,
 
   if (!all(class(results_errors) == "logical")) {
     results_errors <- unlist(results_errors, use.names = FALSE)
+    results_errors <- paste0(results_errors,"\n")
     warning(results_errors)
   }
   return(results_routes)
@@ -454,7 +455,7 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  asjson <- RcppSimdJson::fparse(text)
+  asjson <- RcppSimdJson::fparse(text, query = "plan/itineraries")
 
   # Check for errors - if no error object, continue to process content
   if (is.null(asjson$error$id)) {
@@ -486,7 +487,7 @@ otp_plan_internal <- function(otpcon = NA,
 
 #' Convert output from OpenTripPlanner into sf object
 #'
-#' @param obj Object from the OTP API to process
+#' @param itineraries Object from the OTP API to process
 #' @param full_elevation logical should the full elevation profile be returned (if available)
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone character, which timezone to use, default "" means local time
@@ -494,13 +495,13 @@ otp_plan_internal <- function(otpcon = NA,
 #' @family internal
 #' @noRd
 
-otp_json2sf <- function(obj, full_elevation = FALSE, get_geometry = TRUE,
+otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE,
                         timezone = "", get_elevation = TRUE) {
   # requestParameters <- obj$requestParameters
   # plan <- obj$plan
   # debugOutput <- obj$debugOutput
 
-  itineraries <- obj$plan$itineraries
+  #itineraries <- obj$plan$itineraries
 
   itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
     origin = "1970-01-01", tz = timezone
@@ -627,10 +628,9 @@ polyline2linestring <- function(line, elevation = NULL) {
       ele <- elevation$second[c(1, vals)]
     }
     linestring3D <- cbind(line, ele)
-    linestring3D <- sf::st_linestring(linestring3D, dim = "XYZ")
+    linestring3D <- sfheaders::sfg_linestring(linestring3D)
     return(linestring3D)
   } else {
-    # linestring <- sf::st_linestring(line)
     linestring <- sfheaders::sfg_linestring(line)
     return(linestring)
   }

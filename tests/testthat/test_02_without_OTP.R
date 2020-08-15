@@ -45,7 +45,7 @@ test_that("download example data", {
 
 
 
-path_otp <- otp_dl_jar(path_data, quiet = TRUE)
+path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE)
 
 test_that("download otp", {
   expect_true(file.exists(file.path(path_otp)))

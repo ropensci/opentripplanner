@@ -43,13 +43,15 @@ test_that("test otp_clean_input", {
 })
 
 test_that("test otp_json2sf", {
-  r1 <- otp_json2sf(obj = RcppSimdJson::fparse(json_example_drive))
+  r1 <- otp_json2sf(RcppSimdJson::fparse(json_example_drive,
+                    query = "plan/itineraries"))
   expect_true("data.frame" %in% class(r1))
   expect_true(nrow(r1) == 1)
   expect_true("sf" %in% class(r1))
 
   r2 <- otp_json2sf(
-    obj = RcppSimdJson::fparse(json_example_drive),
+    RcppSimdJson::fparse(json_example_drive,
+                         query = "plan/itineraries"),
     get_geometry = FALSE
   )
   expect_true("data.frame" %in% class(r2))
@@ -57,7 +59,8 @@ test_that("test otp_json2sf", {
   expect_false("sf" %in% class(r2))
 
   r3 <- otp_json2sf(
-    obj = RcppSimdJson::fparse(json_example_drive),
+    RcppSimdJson::fparse(json_example_drive,
+                         query = "plan/itineraries"),
     get_geometry = TRUE, full_elevation = TRUE
   )
   expect_true("data.frame" %in% class(r3))
@@ -66,7 +69,8 @@ test_that("test otp_json2sf", {
   expect_true("elevation" %in% names(r3))
   expect_true(class(r3$elevation) == "list")
 
-  r4 <- otp_json2sf(obj = RcppSimdJson::fparse(json_example_transit))
+  r4 <- otp_json2sf(RcppSimdJson::fparse(json_example_transit,
+                                         query = "plan/itineraries"))
   expect_true("data.frame" %in% class(r4))
   expect_true(nrow(r4) == 9)
   expect_true("sf" %in% class(r4))
