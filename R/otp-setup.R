@@ -73,7 +73,8 @@ otp_build_graph <- function(otp = NULL,
 
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
   if (!check) {
-    stop()
+    warnings()
+    stop("Checks failed, can't build graph")
   }
   message(paste0(
     Sys.time(),
@@ -161,14 +162,26 @@ otp_setup <- function(otp = NULL,
   memory <- floor(memory)
 
   # Setup request
-  text <- paste0(
-    "java -Xmx", memory, 'M -jar "',
-    otp,
-    '" --router ', router,
-    ' --graphs "', dir, '/graphs"',
-    " --server --port ", port,
-    " --securePort ", securePort
-  )
+  if(TRUE){
+    text <- paste0(
+      "java -Xmx", memory, "M -jar '",
+      otp,
+      "' --router '", router,
+      "' --graphs '", dir, "/graphs'",
+      " --server --port ", port,
+      " --securePort ", securePort
+    )
+  } else {
+    text <- paste0(
+      "java -Xmx", memory, "M -jar '",
+      otp,
+      "' --load --serve --port ", port,
+      " --securePort ", securePort,
+      " '",dir, "/graphs/",router,"'"
+    )
+  }
+
+
 
   if (analyst) {
     text <- paste0(text, " --analyst")
@@ -351,10 +364,17 @@ otp_check_java <- function() {
       warning("OTP requires Java version 8, unable to tell what version you have")
       return(FALSE)
     }
-    if (java_version < 1.8 | java_version >= 1.9) {
-      warning("OTP requires Java version 1.8 you have version ", java_version)
-      return(FALSE)
+    if (java_version >= 1.8 & java_version < 1.9) {
+      message("You have the correct version of Java for OTP 1.x")
+      return(TRUE)
     }
-    return(TRUE)
+
+    if (java_version == 11) {
+      message("You have the correct version of Java for OTP 2.x")
+      return(TRUE)
+    }
+
+    warning("OTP requires Java version 1.8 you have version ", java_version)
+    return(FALSE)
   }
 }
