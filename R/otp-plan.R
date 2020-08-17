@@ -196,6 +196,15 @@ otp_plan <- function(otpcon = NA,
 
   if (distance_balance & (ncores > 1)) {
     dists <- geodist::geodist(fromPlace, toPlace, paired = TRUE)
+
+    # Remove 0m pairs as OTP will fail on them anyway
+    dists_0 <- dists != 0
+    fromPlace <- fromPlace[dists_0, ]
+    toPlace <- toPlace[dists_0, ]
+    fromID <- fromID[dists_0]
+    toID <- toID[dists_0]
+    dists <- dists[dists_0]
+
     dists <- order(dists, decreasing = TRUE)
     fromPlace <- fromPlace[dists, ]
     toPlace <- toPlace[dists, ]
@@ -372,6 +381,7 @@ otp_clean_input <- function(imp, imp_name) {
       any.missing = FALSE, .var.name = paste0(imp_name, " Latitude")
     )
     imp[] <- imp[, 2:1] # Switch round lng/lat to lat/lng for OTP
+    colnames(imp) <- c("lat","lon")
     return(imp)
   }
   # Otherwise stop as invalid input
