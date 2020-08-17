@@ -455,10 +455,11 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  asjson <- RcppSimdJson::fparse(text, query = "plan/itineraries")
+  asjson <- try(RcppSimdJson::fparse(text, query = "plan/itineraries"),
+                silent = TRUE)
 
   # Check for errors - if no error object, continue to process content
-  if (is.null(asjson$error$id)) {
+  if (!"try-error" %in% class(asjson)) {
     response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone, get_elevation)
     # Add Ids
     if (is.null(fromID)) {
@@ -473,6 +474,7 @@ otp_plan_internal <- function(otpcon = NA,
     }
     return(response)
   } else {
+    asjson <- RcppSimdJson::fparse(text)
     # there is an error - return the error code and message
     response <- paste0(
       "Error: ", asjson$error$id,
