@@ -291,6 +291,8 @@ otp_plan <- function(otpcon = NA,
       results_routes <- data.table::rbindlist(results_routes)
       results_routes <- as.data.frame(results_routes)
       results_routes <- df2sf(results_routes)
+      # fix for bbox error from data.table
+      results_routes <- results_routes[seq_len(nrow(results_routes)),]
       colnms <- names(results_routes)
       colnms <- colnms[!colnms %in% c("fromPlace","toPlace","geometry")]
       results_routes <- results_routes[c("fromPlace","toPlace",colnms,"geometry")]
