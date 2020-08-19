@@ -509,11 +509,6 @@ otp_plan_internal <- function(otpcon = NA,
 
 otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE,
                         timezone = "", get_elevation = TRUE) {
-  # requestParameters <- obj$requestParameters
-  # plan <- obj$plan
-  # debugOutput <- obj$debugOutput
-
-  #itineraries <- obj$plan$itineraries
 
   itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
     origin = "1970-01-01", tz = timezone
@@ -531,8 +526,9 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
     full_elevation = full_elevation
   )
 
+  names(legs) <- seq_len(length(legs))
   legs <- legs[!is.na(legs)]
-  legs <- data.table::rbindlist(legs, fill = TRUE)
+  legs <- data.table::rbindlist(legs, fill = TRUE, idcol = "route_option")
 
   legs$startTime <- lubridate::as_datetime(legs$startTime / 1000,
     origin = "1970-01-01", tz = timezone
@@ -559,11 +555,11 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
     itineraries$fare_currency <- NA
   }
 
-  itineraries <- list2df(itineraries)
-
   names(legs)[names(legs) == "startTime"] <- "leg_startTime"
   names(legs)[names(legs) == "endTime"] <- "leg_endTime"
   names(legs)[names(legs) == "duration"] <- "leg_duration"
+
+  itineraries <- itineraries[legs$route_option,]
   itineraries <- cbind(itineraries, legs)
 
 

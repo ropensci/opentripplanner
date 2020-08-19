@@ -11,6 +11,8 @@ Note that this version makes minor changes to how results are returned, for exam
 * fixed bug #69
 * In `otp_plan` will now return `fromPlace` and `toPlace` as the first two columns
 * In `otp_plan` set `get_elevation = FALSE` as default this boosts performance
+* Fixed bug in `distance_balancing` that gave sub-optimal balancing
+* When `distance_balancing = TRUE` zero distance routes will not be found, as OTP will reject these in anycase, this saves time with no impact on results.
 
 
 # opentripplanner 0.2.3.0
