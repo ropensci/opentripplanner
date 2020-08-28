@@ -531,6 +531,7 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
   names(legs) <- seq_len(length(legs))
   legs <- legs[!is.na(legs)]
   legs <- data.table::rbindlist(legs, fill = TRUE, idcol = "route_option")
+  legs$route_option <- as.integer(legs$route_option)
 
   legs$startTime <- lubridate::as_datetime(legs$startTime / 1000,
     origin = "1970-01-01", tz = timezone
