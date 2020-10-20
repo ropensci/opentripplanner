@@ -288,7 +288,7 @@ otp_plan <- function(otpcon = NA,
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
     }), use.names = FALSE))) {
-      results_routes <- data.table::rbindlist(results_routes)
+      results_routes <- data.table::rbindlist(results_routes, fill=TRUE)
       results_routes <- as.data.frame(results_routes)
       results_routes <- df2sf(results_routes)
       # fix for bbox error from data.table
@@ -297,7 +297,7 @@ otp_plan <- function(otpcon = NA,
       colnms <- colnms[!colnms %in% c("fromPlace","toPlace","geometry")]
       results_routes <- results_routes[c("fromPlace","toPlace",colnms,"geometry")]
     } else {
-      results_routes <- data.table::rbindlist(results_routes)
+      results_routes <- data.table::rbindlist(results_routes, fill=TRUE)
     }
   }
 
@@ -467,7 +467,7 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  asjson <- try(RcppSimdJson::fparse(text, query = "plan/itineraries"),
+  asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
                 silent = TRUE)
 
   # Check for errors - if no error object, continue to process content

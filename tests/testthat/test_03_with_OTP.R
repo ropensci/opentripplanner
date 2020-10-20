@@ -33,7 +33,7 @@ test_that("path_otp is valid", {
   expect_true(file.exists(path_otp))
 })
 
-context("download special testing data")
+# context("download special testing data")
 # url <- "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
 # dir.create(file.path(path_data, "graphs", "tests"))
 # utils::download.file(
@@ -108,6 +108,17 @@ test_that("basic routing", {
   )
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
+  expect_true(ncol(route) == 33)
+  expect_true(all(names(route) %in%
+                    c("duration","startTime","endTime","walkTime",
+                      "transitTime","waitingTime","walkDistance","walkLimitExceeded",
+                      "elevationLost","elevationGained","transfers","tooSloped",
+                      "fare","fare_currency","leg_startTime","leg_endTime",
+                      "departureDelay","arrivalDelay","realTime","distance",
+                      "pathway","mode","route","agencyTimeZoneOffset",
+                      "interlineWithPreviousLeg", "rentedBike","flexDrtAdvanceBookMin","leg_duration",
+                      "transitLeg","route_option","fromPlace","toPlace",
+                      "geometry")))
 })
 
 
@@ -121,6 +132,19 @@ test_that("transit routing", {
   )
   expect_is(route, "sf")
   expect_true(nrow(route) == 9)
+  expect_true(ncol(route) == 42)
+  expect_true(all(names(route) %in%
+                    c("duration","startTime","endTime","walkTime",
+                      "transitTime","waitingTime","walkDistance","walkLimitExceeded",
+                      "elevationLost","elevationGained","transfers","fare",
+                      "tooSloped","fare_currency","leg_startTime","leg_endTime",
+                      "departureDelay","arrivalDelay","realTime","distance",
+                      "pathway","mode","route","agencyTimeZoneOffset",
+                      "interlineWithPreviousLeg", "rentedBike","flexDrtAdvanceBookMin","leg_duration",
+                      "transitLeg","agencyName","agencyUrl","routeType",
+                      "routeId","agencyId","tripId","serviceDate",
+                      "routeShortName","routeLongName","route_option","fromPlace",
+                      "toPlace","geometry")))
 })
 
 
@@ -133,6 +157,7 @@ test_that("no geometry routing", {
   )
   expect_is(route, "data.frame")
   expect_true(nrow(route) == 1)
+  expect_true(ncol(route) == 32)
 })
 
 test_that("full elevation routing", {
@@ -143,6 +168,8 @@ test_that("full elevation routing", {
     full_elevation = TRUE
   )
   expect_is(route, "sf")
+  expect_true(nrow(route) == 1)
+  expect_true(ncol(route) == 34)
   expect_is(route$elevation, "list")
 })
 
@@ -156,6 +183,17 @@ test_that("batch routing", {
   )
   expect_is(routes, "sf")
   expect_true(nrow(routes) == 10)
+  expect_true(ncol(routes) == 33)
+  expect_true(all(names(routes) %in%
+                    c("duration","startTime","endTime","walkTime",
+                      "transitTime","waitingTime","walkDistance","walkLimitExceeded",
+                      "elevationLost","elevationGained","transfers","tooSloped",
+                      "fare","fare_currency","leg_startTime","leg_endTime",
+                      "departureDelay","arrivalDelay","realTime","distance",
+                      "pathway","mode","route","agencyTimeZoneOffset",
+                      "interlineWithPreviousLeg", "rentedBike","flexDrtAdvanceBookMin","leg_duration",
+                      "transitLeg","route_option","fromPlace","toPlace",
+                      "geometry")))
 })
 
 
@@ -173,6 +211,10 @@ test_that("basic isochrone", {
   ) # Cut offs in seconds
   expect_is(ferry_current, "sf")
   expect_true(nrow(ferry_current) == 6)
+  expect_true(ncol(ferry_current) == 4)
+  expect_true(all(names(ferry_current) %in%
+                    c("id","time","fromPlace","geometry")))
+  expect_true(all(ferry_current$time == c(90, 75, 60, 45, 30, 15) * 60))
 })
 
 test_that("nonsence isochrone", {
@@ -193,6 +235,7 @@ test_that("basic geocode", {
   )
   expect_is(stations, "sf")
   expect_true(nrow(stations) == 10)
+  expect_true(ncol(stations) == 3)
 })
 
 
