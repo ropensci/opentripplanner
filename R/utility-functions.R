@@ -27,8 +27,6 @@ df2sf <- function(df) {
 
 #' Build URL for otp_plan
 #'
-#' A faster alternative to as.data.frame(list), similar to base::list2DF() added
-#' in R 4.0.0 but back compatible
 #'
 #' @param routerUrl output of make_url
 #' @param query namesd list
