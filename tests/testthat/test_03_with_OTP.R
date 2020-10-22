@@ -64,7 +64,7 @@ context("Test the otp_setup function")
 
 test_that("We can startup OTP", {
   skip_no_otp()
-  expect_message(otp_setup(otp = path_otp, dir = path_data, router = "default"),
+  expect_message(log <- otp_setup(otp = path_otp, dir = path_data, router = "default"),
     regexp = "OTP is ready to use"
   )
 })
