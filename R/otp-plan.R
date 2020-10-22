@@ -288,23 +288,23 @@ otp_plan <- function(otpcon = NA,
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
     }), use.names = FALSE))) {
-      results_routes <- data.table::rbindlist(results_routes, fill=TRUE)
+      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
       results_routes <- as.data.frame(results_routes)
       results_routes <- df2sf(results_routes)
       # fix for bbox error from data.table
-      results_routes <- results_routes[seq_len(nrow(results_routes)),]
+      results_routes <- results_routes[seq_len(nrow(results_routes)), ]
       colnms <- names(results_routes)
-      colnms <- colnms[!colnms %in% c("fromPlace","toPlace","geometry")]
-      results_routes <- results_routes[c("fromPlace","toPlace",colnms,"geometry")]
+      colnms <- colnms[!colnms %in% c("fromPlace", "toPlace", "geometry")]
+      results_routes <- results_routes[c("fromPlace", "toPlace", colnms, "geometry")]
     } else {
-      results_routes <- data.table::rbindlist(results_routes, fill=TRUE)
+      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
     }
   }
 
 
   if (!all(class(results_errors) == "logical")) {
     results_errors <- unlist(results_errors, use.names = FALSE)
-    results_errors <- paste0(results_errors,"\n")
+    results_errors <- paste0(results_errors, "\n")
     warning(results_errors)
   }
   return(results_routes)
@@ -383,7 +383,7 @@ otp_clean_input <- function(imp, imp_name) {
       any.missing = FALSE, .var.name = paste0(imp_name, " Latitude")
     )
     imp[] <- imp[, 2:1] # Switch round lng/lat to lat/lng for OTP
-    colnames(imp) <- c("lat","lon")
+    colnames(imp) <- c("lat", "lon")
     return(imp)
   }
   # Otherwise stop as invalid input
@@ -468,7 +468,8 @@ otp_plan_internal <- function(otpcon = NA,
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
   asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
-                silent = TRUE)
+    silent = TRUE
+  )
 
   # Check for errors - if no error object, continue to process content
   if (!"try-error" %in% class(asjson)) {
@@ -511,7 +512,6 @@ otp_plan_internal <- function(otpcon = NA,
 
 otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE,
                         timezone = "", get_elevation = TRUE) {
-
   itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
     origin = "1970-01-01", tz = timezone
   )
@@ -546,8 +546,12 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
   fare <- itineraries$fare
   if (!is.null(fare)) {
     if (length(fare) == nrow(itineraries)) {
-      itineraries$fare <- vapply(fare, function(x){x$fare$regular$cents/100}, 1)
-      itineraries$fare_currency <- vapply(fare, function(x){x$fare$regular$currency$currency}, "char")
+      itineraries$fare <- vapply(fare, function(x) {
+        x$fare$regular$cents / 100
+      }, 1)
+      itineraries$fare_currency <- vapply(fare, function(x) {
+        x$fare$regular$currency$currency
+      }, "char")
     } else {
       # warning("Unstructured fare data has been discarded")
       itineraries$fare <- NA
@@ -562,7 +566,7 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
   names(legs)[names(legs) == "endTime"] <- "leg_endTime"
   names(legs)[names(legs) == "duration"] <- "leg_duration"
 
-  itineraries <- itineraries[legs$route_option,]
+  itineraries <- itineraries[legs$route_option, ]
   itineraries <- cbind(itineraries, legs)
 
 

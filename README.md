@@ -11,7 +11,7 @@ Status](https://ci.appveyor.com/api/projects/status/github/ropensci/opentripplan
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
+[![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/software-review/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
 [![status](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736/status.svg)](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/opentripplanner)](https://cran.r-project.org/package=opentripplanner)

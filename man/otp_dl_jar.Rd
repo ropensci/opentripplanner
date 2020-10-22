@@ -20,7 +20,7 @@ otp_dl_jar(
 
 \item{file_name}{file name to give the otp default "otp.jar"}
 
-\item{url}{URL to the dowload server}
+\item{url}{URL to the download server}
 
 \item{quiet}{logical, passed to download.file, default FALSE}
 

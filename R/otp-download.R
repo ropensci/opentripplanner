@@ -5,7 +5,7 @@
 #' @param path path to folder where OTP is to be stored
 #' @param version a character string of the version number default is "1.4.0"
 #' @param file_name file name to give the otp default "otp.jar"
-#' @param url URL to the dowload server
+#' @param url URL to the download server
 #' @param quiet logical, passed to download.file, default FALSE
 #' @param cache logical, default TRUE, see details
 #' @return The path to the OTP file

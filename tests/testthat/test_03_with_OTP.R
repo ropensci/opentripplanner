@@ -110,15 +110,17 @@ test_that("basic routing", {
   expect_true(nrow(route) == 1)
   expect_true(ncol(route) == 33)
   expect_true(all(names(route) %in%
-                    c("duration","startTime","endTime","walkTime",
-                      "transitTime","waitingTime","walkDistance","walkLimitExceeded",
-                      "elevationLost","elevationGained","transfers","tooSloped",
-                      "fare","fare_currency","leg_startTime","leg_endTime",
-                      "departureDelay","arrivalDelay","realTime","distance",
-                      "pathway","mode","route","agencyTimeZoneOffset",
-                      "interlineWithPreviousLeg", "rentedBike","flexDrtAdvanceBookMin","leg_duration",
-                      "transitLeg","route_option","fromPlace","toPlace",
-                      "geometry")))
+    c(
+      "duration", "startTime", "endTime", "walkTime",
+      "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
+      "elevationLost", "elevationGained", "transfers", "tooSloped",
+      "fare", "fare_currency", "leg_startTime", "leg_endTime",
+      "departureDelay", "arrivalDelay", "realTime", "distance",
+      "pathway", "mode", "route", "agencyTimeZoneOffset",
+      "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
+      "transitLeg", "route_option", "fromPlace", "toPlace",
+      "geometry"
+    )))
 })
 
 
@@ -134,17 +136,19 @@ test_that("transit routing", {
   expect_true(nrow(route) == 9)
   expect_true(ncol(route) == 42)
   expect_true(all(names(route) %in%
-                    c("duration","startTime","endTime","walkTime",
-                      "transitTime","waitingTime","walkDistance","walkLimitExceeded",
-                      "elevationLost","elevationGained","transfers","fare",
-                      "tooSloped","fare_currency","leg_startTime","leg_endTime",
-                      "departureDelay","arrivalDelay","realTime","distance",
-                      "pathway","mode","route","agencyTimeZoneOffset",
-                      "interlineWithPreviousLeg", "rentedBike","flexDrtAdvanceBookMin","leg_duration",
-                      "transitLeg","agencyName","agencyUrl","routeType",
-                      "routeId","agencyId","tripId","serviceDate",
-                      "routeShortName","routeLongName","route_option","fromPlace",
-                      "toPlace","geometry")))
+    c(
+      "duration", "startTime", "endTime", "walkTime",
+      "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
+      "elevationLost", "elevationGained", "transfers", "fare",
+      "tooSloped", "fare_currency", "leg_startTime", "leg_endTime",
+      "departureDelay", "arrivalDelay", "realTime", "distance",
+      "pathway", "mode", "route", "agencyTimeZoneOffset",
+      "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
+      "transitLeg", "agencyName", "agencyUrl", "routeType",
+      "routeId", "agencyId", "tripId", "serviceDate",
+      "routeShortName", "routeLongName", "route_option", "fromPlace",
+      "toPlace", "geometry"
+    )))
 })
 
 
@@ -185,15 +189,17 @@ test_that("batch routing", {
   expect_true(nrow(routes) == 10)
   expect_true(ncol(routes) == 33)
   expect_true(all(names(routes) %in%
-                    c("duration","startTime","endTime","walkTime",
-                      "transitTime","waitingTime","walkDistance","walkLimitExceeded",
-                      "elevationLost","elevationGained","transfers","tooSloped",
-                      "fare","fare_currency","leg_startTime","leg_endTime",
-                      "departureDelay","arrivalDelay","realTime","distance",
-                      "pathway","mode","route","agencyTimeZoneOffset",
-                      "interlineWithPreviousLeg", "rentedBike","flexDrtAdvanceBookMin","leg_duration",
-                      "transitLeg","route_option","fromPlace","toPlace",
-                      "geometry")))
+    c(
+      "duration", "startTime", "endTime", "walkTime",
+      "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
+      "elevationLost", "elevationGained", "transfers", "tooSloped",
+      "fare", "fare_currency", "leg_startTime", "leg_endTime",
+      "departureDelay", "arrivalDelay", "realTime", "distance",
+      "pathway", "mode", "route", "agencyTimeZoneOffset",
+      "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
+      "transitLeg", "route_option", "fromPlace", "toPlace",
+      "geometry"
+    )))
 })
 
 
@@ -213,7 +219,7 @@ test_that("basic isochrone", {
   expect_true(nrow(ferry_current) == 6)
   expect_true(ncol(ferry_current) == 4)
   expect_true(all(names(ferry_current) %in%
-                    c("id","time","fromPlace","geometry")))
+    c("id", "time", "fromPlace", "geometry")))
   expect_true(all(ferry_current$time == c(90, 75, 60, 45, 30, 15) * 60))
 })
 
