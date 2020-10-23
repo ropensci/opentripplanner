@@ -231,8 +231,11 @@ otp_isochrone_internal <- function(otpcon = NA,
 
   # convert response content into text
   url <- build_url(routerUrl, query)
-  text <- curl::curl_fetch_memory(url)
-  text <- rawToChar(text$content)
+  h <- curl::new_handle()
+  h <- curl::handle_setheaders(h,"Accept" = "application/json")
+  text <- curl::curl_fetch_memory(url, h)
+  text <- text$content
+  text <- rawToChar(text)
 
   if (nchar(text) < 200) {
     return(paste0("Failed to get isochrone with error: ", text))
