@@ -1,10 +1,9 @@
 # This tests will run without OTP setup.
 context("Test function without an OTP connection")
-# make sure no OTP
-# foo <- suppressWarnings(otp_stop(warn = FALSE))
-# rm(foo)
 
-# setup empy files
+# setup empty files
+on_cran <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
+
 otpcon <- otp_connect(check = FALSE)
 
 context("Download required files")
@@ -19,10 +18,14 @@ test_that("need valid path to download", {
   )
 })
 
+if(!on_cran()){
+  otp_dl_demo(path_data, quiet = TRUE)
+}
 
-otp_dl_demo(path_data, quiet = TRUE)
+
 
 test_that("download example data", {
+  skip_on_cran()
   expect_true(file.exists(file.path(
     path_data, "graphs", "default", "isle-of-wight.osm.pbf"
   )))
@@ -43,16 +46,20 @@ test_that("download example data", {
   expect_true(!file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
 })
 
+if(!on_cran()){
+  path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE)
+}
 
 
-path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE)
 
 test_that("download otp", {
+  skip_on_cran()
   expect_true(file.exists(file.path(path_otp)))
 })
 
 
 test_that("default object is created and make_url method works", {
+  skip_on_cran()
   expect_is(otpcon, "otpconnect")
   expect_match(make_url(otpcon), "http://localhost:8080/otp/routers/default")
   # warnings
@@ -62,18 +69,22 @@ test_that("default object is created and make_url method works", {
 })
 
 test_that("can't connect to non-existant router", {
+  skip_on_cran()
   expect_error(otp_connect(router = "bananas"))
 })
 
 test_that("can't build graph without opt", {
+  skip_on_cran()
   expect_error(otp_build_graph(otp = path_otp))
 })
 
 test_that("can't setup without opt", {
+  skip_on_cran()
   expect_error(otp_setup(otp = path_otp, dir = path_data))
 })
 
 test_that("otp_plan input validation", {
+  skip_on_cran()
   expect_error(otp_plan(otpcon),
     regexp = "fromPlace is not in a valid format"
   )
@@ -143,6 +154,7 @@ test_that("otp_plan input validation", {
 })
 
 test_that("otp_geocode input validation", {
+  skip_on_cran()
   expect_error(otp_geocode(otpcon),
     regexp = "Assertion on 'query' failed: Must be of type 'character', not 'NULL'."
   )
@@ -153,6 +165,7 @@ test_that("otp_geocode input validation", {
 })
 
 test_that("otp_isochrone input validation", {
+  skip_on_cran()
   expect_error(otp_isochrone(otpcon),
     regexp = "fromPlace is not in a valid format"
   )
@@ -163,6 +176,7 @@ test_that("otp_isochrone input validation", {
 })
 
 test_that("otp_make_config tests", {
+  skip_on_cran()
   config_router <- otp_make_config("router")
   config_build <- otp_make_config("build")
   config_otp <- otp_make_config("otp")
@@ -194,18 +208,21 @@ test_that("otp_make_config tests", {
 })
 
 test_that("otp_build_graph input validation", {
+  skip_on_cran()
   expect_error(otp_build_graph(otp = paste0(path_otp, "Z"), dir = path_data),
     regexp = "File does not exist:"
   )
 })
 
 test_that("otp_setup input validation", {
+  skip_on_cran()
   expect_error(otp_setup(otp = paste0(path_otp, "Z"), dir = path_data),
     regexp = "File does not exist:"
   )
 })
 
 test_that("otp_routing_options creation", {
+  skip_on_cran()
   routingOptions <- otp_routing_options()
   expect_true(class(routingOptions) == "list")
   routingOptions$walkSpeed <- 999
@@ -216,6 +233,7 @@ test_that("otp_routing_options creation", {
 
 
 test_that("otp_stop tests", {
+  skip_on_cran()
   # Don't know how to test this
   expect_true(TRUE)
 })

@@ -1,56 +1,42 @@
 # Check that require OTP to work
 
-skip_no_otp <- function() {
-  if (!identical(Sys.getenv("I_have_OTP"), "TRUE")) {
-    # if (!otp_check_java()) {
-    skip("Not running full test.")
-  }
+on_cran <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
+
+if(!on_cran()){
+  context("Test the download of the LSOA file")
+
+  f <- file.path(tempdir(), "centroids.gpkg")
+  download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f, mode = "wb", quiet = TRUE)
+  lsoa <- sf::read_sf(f)
+  file.remove(f)
+  test_that("can get lsoa points", {
+    expect_is(lsoa, "sf")
+    expect_true(nrow(lsoa) == 89)
+  })
+
+  context("Check previous tests have left the files we need")
+
+  path_data <- file.path(tempdir(), "otptests")
+  path_otp <- file.path(path_data, "otp-1.4.0-shaded.jar")
 }
 
-context("Test the download of the LSOA file")
 
-f <- file.path(tempdir(), "centroids.gpkg")
-download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f, mode = "wb", quiet = TRUE)
-lsoa <- sf::read_sf(f)
-file.remove(f)
-test_that("can get lsoa points", {
-  expect_is(lsoa, "sf")
-  expect_true(nrow(lsoa) == 89)
-})
 
-context("Check previous tests have left the files we need")
-
-path_data <- file.path(tempdir(), "otptests")
-path_otp <- file.path(path_data, "otp-1.4.0-shaded.jar")
 
 test_that("path_data is valid", {
-  skip_no_otp()
+  skip_on_cran()
   expect_true(dir.exists(file.path(path_data)))
 })
 
 test_that("path_otp is valid", {
-  skip_no_otp()
+  skip_on_cran()
   expect_true(file.exists(path_otp))
 })
-
-# context("download special testing data")
-# url <- "https://github.com/ropensci/opentripplanner/releases/download/0.1/test_data.zip"
-# dir.create(file.path(path_data, "graphs", "tests"))
-# utils::download.file(
-#   url = url,
-#   destfile = file.path(path_data, "graphs", "tests", "test_data.zip"),
-#   mode = "wb",
-#   quiet = TRUE
-# )
-# utils::unzip(file.path(path_data, "graphs", "tests", "test_data.zip"),
-#   exdir = file.path(path_data, "graphs", "tests")
-# )
-# unlink(file.path(path_data, "graphs", "tests", "test_data.zip"))
 
 context("Test the otp_build_graph function")
 
 test_that("We can build an otp graph", {
-  skip_no_otp()
+  skip_on_cran()
   log <- otp_build_graph(otp = path_otp, dir = path_data, router = "default")
   expect_true(file.exists(file.path(
     path_data,
@@ -63,7 +49,7 @@ test_that("We can build an otp graph", {
 context("Test the otp_setup function")
 
 test_that("We can startup OTP", {
-  skip_no_otp()
+  skip_on_cran()
   expect_message(log <- otp_setup(otp = path_otp, dir = path_data, router = "default"),
     regexp = "OTP is ready to use"
   )
@@ -73,13 +59,13 @@ context("Test the otp_connect function")
 
 
 test_that("object returned when check is TRUE and router exists", {
-  skip_no_otp()
+  skip_on_cran()
   otpcon <- otp_connect(router = "default")
   expect_is(otpcon, "otpconnect")
 })
 
 test_that("correct message when check is TRUE and router exists", {
-  skip_no_otp()
+  skip_on_cran()
   expect_message(
     otp_connect(router = "default"),
     "Router http://localhost:8080/otp/routers/default exists"
@@ -87,21 +73,21 @@ test_that("correct message when check is TRUE and router exists", {
 })
 
 test_that("correct error when check is TRUE and router does not exist", {
-  skip_no_otp()
+  skip_on_cran()
   expect_error(
     otp_connect(router = "not"),
     "Router http://localhost:8080/otp/routers/not does not exist"
   )
 })
 
-if (identical(Sys.getenv("I_have_OTP"), "TRUE")) {
+if (!on_cran()) {
   otpcon <- otp_connect(router = "default")
 }
 
 context("Test the otp_plan function")
 
 test_that("basic routing", {
-  skip_no_otp()
+  skip_on_cran()
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515)
@@ -125,7 +111,7 @@ test_that("basic routing", {
 
 
 test_that("transit routing", {
-  skip_no_otp()
+  skip_on_cran()
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515),
@@ -153,7 +139,7 @@ test_that("transit routing", {
 
 
 test_that("no geometry routing", {
-  skip_no_otp()
+  skip_on_cran()
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515),
@@ -165,7 +151,7 @@ test_that("no geometry routing", {
 })
 
 test_that("full elevation routing", {
-  skip_no_otp()
+  skip_on_cran()
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515),
@@ -179,7 +165,7 @@ test_that("full elevation routing", {
 
 
 test_that("batch routing", {
-  skip_no_otp()
+  skip_on_cran()
   routes <- otp_plan(
     otpcon = otpcon,
     fromPlace = lsoa[1:10, ],
@@ -206,7 +192,7 @@ test_that("batch routing", {
 context("Test the otp_isochone function")
 
 test_that("basic isochrone", {
-  skip_no_otp()
+  skip_on_cran()
   ferry_current <- otp_isochrone(
     otpcon = otpcon,
     fromPlace = c(-1.159494, 50.732429), # lng/lat of Ryde ferry
@@ -224,7 +210,7 @@ test_that("basic isochrone", {
 })
 
 test_that("nonsence isochrone", {
-  skip_no_otp()
+  skip_on_cran()
   expect_warning(otp_isochrone(
     otpcon = otpcon,
     fromPlace = c(-5, 5)
@@ -234,7 +220,7 @@ test_that("nonsence isochrone", {
 context("Test the otp_geocode function")
 
 test_that("basic geocode", {
-  skip_no_otp()
+  skip_on_cran()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station"
@@ -246,7 +232,7 @@ test_that("basic geocode", {
 
 
 test_that("geocode coords", {
-  skip_no_otp()
+  skip_on_cran()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station", type = "Coordinates"
@@ -256,7 +242,7 @@ test_that("geocode coords", {
 })
 
 test_that("geocode both", {
-  skip_no_otp()
+  skip_on_cran()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station", type = "Both"
@@ -266,7 +252,7 @@ test_that("geocode both", {
 })
 
 test_that("geocode nonsence", {
-  skip_no_otp()
+  skip_on_cran()
   expect_warning(otp_geocode(
     otpcon = otpcon,
     query = "jhgfdhgdcmhxgfxgfx"
@@ -274,7 +260,7 @@ test_that("geocode nonsence", {
 })
 # Stop otp
 test_that("otp_stop", {
-  skip_no_otp()
+  skip_on_cran()
   foo <- otp_stop(FALSE)
   if (checkmate::test_os("windows")) {
     expect_true(grepl("SUCCESS", foo))
