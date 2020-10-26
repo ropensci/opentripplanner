@@ -30,9 +30,9 @@ jobs:
           - {os: macOS-latest,   r: 'oldrel'}
           - {os: windows-latest, r: 'release'}
           - {os: windows-latest, r: 'oldrel'}
-          - {os: ubuntu-latest,   r: 'devel'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel'}
+          - {os: ubuntu-latest,  r: 'devel'}
+          - {os: ubuntu-latest,  r: 'release'}
+          - {os: ubuntu-latest,  r: 'oldrel'}
 
 
     env:
@@ -88,10 +88,10 @@ jobs:
 
       - name: Check
         env:
-          _R_CHECK_CRAN_INCOMING_: false
+          _R_CHECK_CRAN_INCOMING_: true
         run: |
           remotes::install_github("ropensci/opentripplanner")
-          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "error", check_dir = "check")
         shell: Rscript {0}
 
       - name: Show testthat output
