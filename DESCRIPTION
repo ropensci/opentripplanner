@@ -31,7 +31,7 @@ Imports:
     googlePolylines,
     curl,
     rjson,
-    RcppSimdJson (>= 0.1.2),
+    RcppSimdJson,
     pbapply,
     lubridate,
     sf (>= 0.9.3),

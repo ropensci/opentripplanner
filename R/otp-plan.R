@@ -118,6 +118,14 @@ otp_plan <- function(otpcon = NA,
     warning("otpcon is missing the timezone variaible, assuming local timezone")
     timezone <- Sys.timezone()
   }
+
+  # Back compatibility with RcppSimdJson <= 0.1.1
+  if(utils::packageVersion("RcppSimdJson") >= "0.1.2"){
+    RcppSimdJsonVersion <- TRUE
+  } else {
+    RcppSimdJsonVersion <- FALSE
+  }
+
   checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
 
   checkmate::assert_class(otpcon, "otpconnect")
@@ -241,6 +249,7 @@ otp_plan <- function(otpcon = NA,
       get_geometry = get_geometry,
       timezone = timezone,
       get_elevation = get_elevation,
+      RcppSimdJsonVersion = RcppSimdJsonVersion,
       cl = cl
     )
     parallel::stopCluster(cl)
@@ -263,7 +272,8 @@ otp_plan <- function(otpcon = NA,
       full_elevation = full_elevation,
       get_geometry = get_geometry,
       get_elevation = get_elevation,
-      timezone = timezone
+      timezone = timezone,
+      RcppSimdJsonVersion = RcppSimdJsonVersion
     )
   }
 
@@ -413,6 +423,7 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone timezone to use
 #' @param get_elevation Logical, should you get elevation
+#' @param RcppSimdJsonVersion Logical, is RcppSimdJson Version >= 0.1.2
 #' @family internal
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -436,7 +447,8 @@ otp_plan_internal <- function(otpcon = NA,
                               full_elevation = FALSE,
                               get_geometry = TRUE,
                               timezone = "",
-                              get_elevation = FALSE) {
+                              get_elevation = FALSE,
+                              RcppSimdJsonVersion = TRUE) {
 
 
   # Construct URL
@@ -467,9 +479,18 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
-    silent = TRUE
-  )
+
+  if(RcppSimdJsonVersion){
+    asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
+                  silent = TRUE
+    )
+  } else {
+    asjson <- try(RcppSimdJson::fparse(text, query = "plan/itineraries"),
+                  silent = TRUE
+    )
+  }
+
+
 
   # Check for errors - if no error object, continue to process content
   if (!"try-error" %in% class(asjson)) {
