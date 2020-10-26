@@ -15,3 +15,4 @@
 ^vignettes/lucene/
 ^tests/testthat/lucene/
 ^lucene/
+^\.github$

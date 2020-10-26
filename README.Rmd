@@ -15,9 +15,8 @@ knitr::opts_chunk$set(
 
 # OpenTripPlanner for R <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=180/></a>
 
-[![Travis build status](https://travis-ci.org/ropensci/opentripplanner.svg?branch=master)](https://travis-ci.org/ropensci/opentripplanner) 
+[![R build status](https://github.com/ropensci/opentripplanner/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/opentripplanner/actions)
 [![codecov](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/opentripplanner) 
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/ropensci/opentripplanner?branch=master&svg=true)](https://ci.appveyor.com/project/mem48/opentripplanner)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/software-review/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
