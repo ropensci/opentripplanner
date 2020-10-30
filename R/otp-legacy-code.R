@@ -14,10 +14,10 @@
 #' @param maxWalkDistance Numeric passed to OTP
 #' @param routeOptions names list passed to OTP
 #' @param numItineraries The maximum number of possible itineraries to return
-#' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
+#' @param full_elevation Logical, FALSE
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone timezone to use
-#' @param get_elevation Logical, should you get elevation
+#' @param get_elevation Logical, FASLE
 #' @family internal
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -77,27 +77,8 @@ otp_plan_internal_legacy <- function(otpcon = NA,
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
 
-  asjson <- rjson::fromJSON(text)
-  asjson <- asjson$plan$itineraries[[1]]
-  legs <- asjson$legs
-  asjson$legs <- NULL
-  asjson <- as.data.frame(asjson)
-  for(i in seq_len(length(legs))){
-    legs[[i]]$from <- NULL
-    legs[[i]]$to <- NULL
-    legs[[i]]$steps <- NULL
-    lg <- list(legs[[i]]$legGeometry)
-    legs[[i]] <- as.data.frame(legs[[i]])
-    legs[[i]]$legGeometry <- lg
+  asjson <- json_parse_legacy(text)
 
-
-  }
-
-  asjson$legs <- legs
-
-
-
-  itineraries = asjson
   # Check for errors - if no error object, continue to process content
   if (!"try-error" %in% class(asjson)) {
     response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone, get_elevation)
@@ -144,7 +125,7 @@ otp_plan_internal_legacy <- function(otpcon = NA,
 #' @noRd
 otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ...) {
-  res <- otp_plan_internal(
+  res <- otp_plan_internal_legacy(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
     toPlace = toPlace[x, ],
@@ -156,8 +137,32 @@ otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
   return(res)
 }
 
+#' Parse Json without rcppsimdjson
+#'
+#'
+#' @param text object
+#'
+#' @noRd
+json_parse_legacy <- function(text){
+  asjson <- rjson::fromJSON(text)
+  asjson <- asjson$plan$itineraries[[1]]
+  legs <- asjson$legs
+  asjson$legs <- NULL
+  asjson <- as.data.frame(asjson)
+  for(i in seq_len(length(legs))){
+    legs[[i]]$from <- NULL
+    legs[[i]]$to <- NULL
+    legs[[i]]$steps <- NULL
+    lg <- list(legs[[i]]$legGeometry)
+    legs[[i]] <- as.data.frame(legs[[i]])
+    legs[[i]]$legGeometry <- lg
 
 
+  }
+
+  asjson$legs <- legs
+  return(asjson)
+}
 
 
 
