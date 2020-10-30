@@ -59,6 +59,20 @@ remotes::install_github("ropensci/opentripplanner")
 library(opentripplanner)
 ```
 
+#### RcppSimdJson
+
+From version 0.3.0 of `opentripplanner` the package `RcppSimdJson` is
+used for JSON parsing. This package is not supported on some older
+versions or R (\<= 3.6) and some older Operating Systems. To meet CRAN
+requirements version 0.3.1 added a legacy mode for older versions of R.
+This legacy mode has reduced functionality and users on old systems may
+get better results using version 0.2.3 of the package. You can install
+older versions using **remotes**.
+
+``` r
+remotes::install_version("opentripplanner", "0.2.3")
+```
+
 ## Usage
 
 The package contains three groups of functions:

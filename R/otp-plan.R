@@ -120,10 +120,15 @@ otp_plan <- function(otpcon = NA,
   }
 
   # Back compatibility with RcppSimdJson <= 0.1.1
-  if(utils::packageVersion("RcppSimdJson") >= "0.1.2"){
-    RcppSimdJsonVersion <- TRUE
-  } else {
+  RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
+  if(class(RcppSimdJsonVersion) == "try-error"){
     RcppSimdJsonVersion <- FALSE
+  }
+
+  if(!RcppSimdJsonVersion){
+    message("NOTE: You do not have 'RcppSimdJson' >= 0.1.2 installed")
+    message("'opentripplanner' is in legacy mode with some features disabled")
+    message("Either update 'RcppSimdJson' or revert to 'opentripplanner' v0.2.3")
   }
 
   checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
@@ -220,62 +225,81 @@ otp_plan <- function(otpcon = NA,
     toID <- toID[dists]
   }
 
-  if (ncores > 1) {
-    cl <- parallel::makeCluster(ncores)
-    parallel::clusterExport(
-      cl = cl,
-      varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
-      envir = environment()
-    )
-    parallel::clusterEvalQ(cl, {
-      loadNamespace("opentripplanner")
-    })
-    pbapply::pboptions(use_lb = TRUE)
-    results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      otp_get_results,
-      otpcon = otpcon,
-      fromPlace = fromPlace,
-      toPlace = toPlace,
-      fromID = fromID,
-      toID = toID,
-      mode = mode,
-      date = date,
-      time = time,
-      arriveBy = arriveBy,
-      maxWalkDistance = maxWalkDistance,
-      numItineraries = numItineraries,
-      routeOptions = routeOptions,
-      full_elevation = full_elevation,
-      get_geometry = get_geometry,
-      timezone = timezone,
-      get_elevation = get_elevation,
-      RcppSimdJsonVersion = RcppSimdJsonVersion,
-      cl = cl
-    )
-    parallel::stopCluster(cl)
-    rm(cl)
+  if(RcppSimdJsonVersion){
+    if (ncores > 1) {
+      cl <- parallel::makeCluster(ncores)
+      parallel::clusterExport(
+        cl = cl,
+        varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
+        envir = environment()
+      )
+      parallel::clusterEvalQ(cl, {
+        loadNamespace("opentripplanner")
+      })
+      pbapply::pboptions(use_lb = TRUE)
+      results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+                                   otp_get_results,
+                                   otpcon = otpcon,
+                                   fromPlace = fromPlace,
+                                   toPlace = toPlace,
+                                   fromID = fromID,
+                                   toID = toID,
+                                   mode = mode,
+                                   date = date,
+                                   time = time,
+                                   arriveBy = arriveBy,
+                                   maxWalkDistance = maxWalkDistance,
+                                   numItineraries = numItineraries,
+                                   routeOptions = routeOptions,
+                                   full_elevation = full_elevation,
+                                   get_geometry = get_geometry,
+                                   timezone = timezone,
+                                   get_elevation = get_elevation,
+                                   cl = cl)
+      parallel::stopCluster(cl)
+      rm(cl)
+    } else {
+      results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+                                   otp_get_results,
+                                   otpcon = otpcon,
+                                   fromPlace = fromPlace,
+                                   toPlace = toPlace,
+                                   fromID = fromID,
+                                   toID = toID,
+                                   mode = mode,
+                                   date = date,
+                                   time = time,
+                                   arriveBy = arriveBy,
+                                   maxWalkDistance = maxWalkDistance,
+                                   numItineraries = numItineraries,
+                                   routeOptions = routeOptions,
+                                   full_elevation = full_elevation,
+                                   get_geometry = get_geometry,
+                                   get_elevation = get_elevation,
+                                   timezone = timezone)
+    }
   } else {
     results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      otp_get_results,
-      otpcon = otpcon,
-      fromPlace = fromPlace,
-      toPlace = toPlace,
-      fromID = fromID,
-      toID = toID,
-      mode = mode,
-      date = date,
-      time = time,
-      arriveBy = arriveBy,
-      maxWalkDistance = maxWalkDistance,
-      numItineraries = numItineraries,
-      routeOptions = routeOptions,
-      full_elevation = full_elevation,
-      get_geometry = get_geometry,
-      get_elevation = get_elevation,
-      timezone = timezone,
-      RcppSimdJsonVersion = RcppSimdJsonVersion
-    )
+                                 otp_get_results_legacy,
+                                 otpcon = otpcon,
+                                 fromPlace = fromPlace,
+                                 toPlace = toPlace,
+                                 fromID = fromID,
+                                 toID = toID,
+                                 mode = mode,
+                                 date = date,
+                                 time = time,
+                                 arriveBy = arriveBy,
+                                 maxWalkDistance = maxWalkDistance,
+                                 numItineraries = numItineraries,
+                                 routeOptions = routeOptions,
+                                 full_elevation = full_elevation,
+                                 get_geometry = get_geometry,
+                                 get_elevation = get_elevation,
+                                 timezone = timezone)
   }
+
+
 
 
 
@@ -447,8 +471,7 @@ otp_plan_internal <- function(otpcon = NA,
                               full_elevation = FALSE,
                               get_geometry = TRUE,
                               timezone = "",
-                              get_elevation = FALSE,
-                              RcppSimdJsonVersion = TRUE) {
+                              get_elevation = FALSE) {
 
 
   # Construct URL
@@ -480,17 +503,9 @@ otp_plan_internal <- function(otpcon = NA,
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
 
-  if(RcppSimdJsonVersion){
-    asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
+  asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
                   silent = TRUE
-    )
-  } else {
-    asjson <- try(RcppSimdJson::fparse(text, query = "plan/itineraries"),
-                  silent = TRUE
-    )
-  }
-
-
+  )
 
   # Check for errors - if no error object, continue to process content
   if (!"try-error" %in% class(asjson)) {

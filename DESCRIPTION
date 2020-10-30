@@ -26,18 +26,18 @@ LazyData: true
 Imports:
     checkmate,
     data.table,
-    tibble,
     geodist,
     googlePolylines,
     curl,
     rjson,
-    RcppSimdJson,
     pbapply,
     lubridate,
     sf (>= 0.9.3),
-    sfheaders
+    sfheaders,
+    tibble
 RoxygenNote: 7.1.0
-Suggests: 
+Suggests:
+    RcppSimdJson (>= 0.1.2),
     covr,
     knitr,
     rmarkdown,
