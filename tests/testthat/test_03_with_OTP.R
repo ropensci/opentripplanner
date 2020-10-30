@@ -6,7 +6,8 @@ if(!on_cran()){
   context("Test the download of the LSOA file")
 
   f <- file.path(tempdir(), "centroids.gpkg")
-  download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", f, mode = "wb", quiet = TRUE)
+  download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg",
+                f, mode = "wb", quiet = TRUE)
   lsoa <- sf::read_sf(f)
   file.remove(f)
   test_that("can get lsoa points", {
