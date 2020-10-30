@@ -233,7 +233,7 @@ test_that("test otp_checks with graph, missing files", {
 context("Test legacy mode")
 
 
-test_that("test otp_check_java", {
+test_that("test legacy mode", {
 
   if(!has_rcppsimdjson()){
     skip("Skip wihtout RcppSimdJson")
@@ -245,7 +245,7 @@ test_that("test otp_check_java", {
 
   rnew <- otp_json2sf(rnew)
   rold <- otp_json2sf(rold)
-  expect_true(identical(rnew, rold))
-
-
+  expect_true(identical(nrow(rnew), nrow(rold)))
+  expect_true(identical(names(rnew), names(rold)))
+  expect_true(identical(names(rnew$geometry), names(rold$geometry)))
 })
