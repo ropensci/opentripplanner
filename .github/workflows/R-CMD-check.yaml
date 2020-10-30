@@ -89,6 +89,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: true
+          _R_CHECK_FORCE_SUGGESTS_ : false
         run: |
           remotes::install_github("ropensci/opentripplanner")
           rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "error", check_dir = "check")
