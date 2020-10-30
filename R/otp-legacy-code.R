@@ -81,7 +81,7 @@ otp_plan_internal_legacy <- function(otpcon = NA,
 
   # Check for errors - if no error object, continue to process content
   if (!"try-error" %in% class(asjson)) {
-    response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone, get_elevation)
+    response <- otp_json2sf(asjson, full_elevation = FALSE, get_geometry, timezone, get_elevation = FALSE)
     response$legGeometry.length <- NULL
     response$legGeometry.points <- NULL
     # Add Ids
@@ -148,7 +148,9 @@ json_parse_legacy <- function(text){
   asjson <- asjson$plan$itineraries[[1]]
   legs <- asjson$legs
   asjson$legs <- NULL
+  asjson$fare <- NULL
   asjson <- as.data.frame(asjson)
+
   for(i in seq_len(length(legs))){
     legs[[i]]$from <- NULL
     legs[[i]]$to <- NULL
@@ -156,14 +158,29 @@ json_parse_legacy <- function(text){
     lg <- list(legs[[i]]$legGeometry)
     legs[[i]] <- as.data.frame(legs[[i]])
     legs[[i]]$legGeometry <- lg
-
-
+    legs[[i]]$legGeometry.points <- NULL
+    legs[[i]]$legGeometry.length <- NULL
   }
 
-  asjson$legs <- legs
+  # Get all names
+  nms <- list()
+  for(i in seq_len(length(legs))){
+    nms[[i]] <- names(legs[[i]])
+  }
+  nms <- unique(unlist(nms))
+
+  # Add empty names
+  for(i in seq_len(length(legs))){
+    sub <- legs[[i]]
+    nms_miss <- nms[!nms %in% names(sub)]
+    sub[,nms_miss] <- NA
+    sub <- sub[,nms]
+    legs[[i]] <- sub
+  }
+
+  legs <- do.call("rbind",legs)
+  asjson$legs <- list(legs)
   return(asjson)
 }
-
-
 
 

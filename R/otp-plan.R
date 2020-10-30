@@ -547,7 +547,7 @@ otp_plan_internal <- function(otpcon = NA,
 #' @noRd
 
 otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE,
-                        timezone = "", get_elevation = TRUE) {
+                        timezone = "", get_elevation = FALSE) {
   itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
     origin = "1970-01-01", tz = timezone
   )
