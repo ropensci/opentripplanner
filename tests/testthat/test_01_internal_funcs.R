@@ -90,7 +90,7 @@ test_that("test otp_json2sf", {
     r4 <- json_parse_legacy(json_example_transit)
   }
 
-  r4 <- otp_json2sf(r4)
+  r4 <- otp_json2sf( itineraries = r4)
   expect_true("data.frame" %in% class(r4))
   expect_true(nrow(r4) == 9)
   expect_true("sf" %in% class(r4))

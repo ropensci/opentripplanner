@@ -145,41 +145,49 @@ otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
 #' @noRd
 json_parse_legacy <- function(text){
   asjson <- rjson::fromJSON(text)
-  asjson <- asjson$plan$itineraries[[1]]
-  legs <- asjson$legs
-  asjson$legs <- NULL
-  asjson$fare <- NULL
-  asjson <- as.data.frame(asjson)
+  asjson <- asjson$plan$itineraries
 
-  for(i in seq_len(length(legs))){
-    legs[[i]]$from <- NULL
-    legs[[i]]$to <- NULL
-    legs[[i]]$steps <- NULL
-    lg <- list(legs[[i]]$legGeometry)
-    legs[[i]] <- as.data.frame(legs[[i]])
-    legs[[i]]$legGeometry <- lg
-    legs[[i]]$legGeometry.points <- NULL
-    legs[[i]]$legGeometry.length <- NULL
+  for(j in seq_len(length(asjson))){
+    fizz <- asjson[[j]]
+    legs <- fizz$legs
+    fizz$legs <- NULL
+    fizz$fare <- NULL
+    fizz <- as.data.frame(fizz)
+
+    for(i in seq_len(length(legs))){
+      legs[[i]]$from <- NULL
+      legs[[i]]$to <- NULL
+      legs[[i]]$steps <- NULL
+      lg <- list(legs[[i]]$legGeometry)
+      legs[[i]] <- as.data.frame(legs[[i]])
+      legs[[i]]$legGeometry <- lg
+      legs[[i]]$legGeometry.points <- NULL
+      legs[[i]]$legGeometry.length <- NULL
+    }
+
+    # Get all names
+    nms <- list()
+    for(i in seq_len(length(legs))){
+      nms[[i]] <- names(legs[[i]])
+    }
+    nms <- unique(unlist(nms))
+
+    # Add empty names
+    for(i in seq_len(length(legs))){
+      sub <- legs[[i]]
+      nms_miss <- nms[!nms %in% names(sub)]
+      sub[,nms_miss] <- NA
+      sub <- sub[,nms]
+      legs[[i]] <- sub
+    }
+
+    legs <- do.call("rbind",legs)
+    fizz$legs <- list(legs)
+    asjson[[j]] <- fizz
   }
 
-  # Get all names
-  nms <- list()
-  for(i in seq_len(length(legs))){
-    nms[[i]] <- names(legs[[i]])
-  }
-  nms <- unique(unlist(nms))
+  asjson <- do.call("rbind",asjson)
 
-  # Add empty names
-  for(i in seq_len(length(legs))){
-    sub <- legs[[i]]
-    nms_miss <- nms[!nms %in% names(sub)]
-    sub[,nms_miss] <- NA
-    sub <- sub[,nms]
-    legs[[i]] <- sub
-  }
-
-  legs <- do.call("rbind",legs)
-  asjson$legs <- list(legs)
   return(asjson)
 }
 
