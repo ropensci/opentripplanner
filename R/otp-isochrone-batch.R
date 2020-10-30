@@ -136,12 +136,12 @@ otp_isochrone <- function(otpcon = NA,
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
     }), use.names = FALSE))) {
-      results_routes <- data.table::rbindlist(results_routes)
+      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
       results_routes <- as.data.frame(results_routes)
       results_routes$geometry <- sf::st_sfc(results_routes$geometry)
       results_routes <- sf::st_sf(results_routes, crs = 4326)
     } else {
-      results_routes <- data.table::rbindlist(results_routes)
+      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
     }
   }
 

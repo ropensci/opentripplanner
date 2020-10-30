@@ -102,17 +102,6 @@ Functions for retrieving data from OTP:
 Results are returned as [sf
 objects](https://CRAN.R-project.org/package=sf).
 
-## Tests
-
-As this package does not work without a working connection to OTP, tests
-only run on machines that have the environment variable `I_have_OTP`
-with the value `TRUE`. You can add this with
-`usethis::edit_r_environ()`.
-
-``` r
-Sys.getenv("I_have_OTP")
-```
-
 ## Acknowledgement
 
 This package was built off the [tutorial by Marcus

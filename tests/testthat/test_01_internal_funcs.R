@@ -2,7 +2,7 @@
 
 # Skip if no rcppsimdjson
 has_rcppsimdjson <- function() {
-  RcppSimdJsonVersion <- try(has_rcppsimdjson(), silent = TRUE)
+  RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
   if(class(RcppSimdJsonVersion) == "try-error"){
     RcppSimdJsonVersion <- FALSE
   }
@@ -229,3 +229,23 @@ test_that("test otp_checks with graph, missing files", {
   )
 })
 
+
+context("Test legacy mode")
+
+
+test_that("test otp_check_java", {
+
+  if(!has_rcppsimdjson()){
+    skip("Skip wihtout RcppSimdJson")
+  }
+
+  rnew <- RcppSimdJson::fparse(json_example_drive,
+                               query = "/plan/itineraries")
+  rold <- json_parse_legacy(json_example_drive)
+
+  rnew <- otp_json2sf(rnew)
+  rold <- otp_json2sf(rold)
+  expect_true(identical(rnew, rold))
+
+
+})

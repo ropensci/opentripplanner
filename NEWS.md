@@ -1,6 +1,6 @@
 # opentripplanner 0.3.1
 
-Support for `RcppSimdJson` <= 0.1.1 to allow the package to work on older versions of R and some legacy OS.
+Limited support for version of R than can't install `RcppSimdJson`
 
 # opentripplanner 0.3.0
 

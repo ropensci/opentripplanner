@@ -2,6 +2,15 @@
 
 on_cran <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
 
+has_rcppsimdjson <- function() {
+  RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
+  if(class(RcppSimdJsonVersion) == "try-error"){
+    RcppSimdJsonVersion <- FALSE
+  }
+  return(RcppSimdJsonVersion)
+}
+
+
 if(!on_cran()){
   context("Test the download of the LSOA file")
 
@@ -153,6 +162,9 @@ test_that("no geometry routing", {
 
 test_that("full elevation routing", {
   skip_on_cran()
+  if(!has_rcppsimdjson()){
+    skip("Skip wihtout RcppSimdJson")
+  }
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515),
@@ -169,11 +181,14 @@ test_that("batch routing", {
   skip_on_cran()
   routes <- otp_plan(
     otpcon = otpcon,
-    fromPlace = lsoa[1:10, ],
-    toPlace = lsoa[11:20, ]
+    fromPlace = lsoa[1:9, ],
+    toPlace = lsoa[19:11, ],
+    fromID = as.character(1:9),
+    toID = as.character(11:19),
+    ncores = 2
   )
   expect_is(routes, "sf")
-  expect_true(nrow(routes) == 10)
+  expect_true(nrow(routes) == 9)
   expect_true(ncol(routes) == 33)
   expect_true(all(names(routes) %in%
     c(
@@ -187,6 +202,26 @@ test_that("batch routing", {
       "transitLeg", "route_option", "fromPlace", "toPlace",
       "geometry"
     )))
+
+  routesdb <- otp_plan(
+    otpcon = otpcon,
+    fromPlace = lsoa[1:9, ],
+    toPlace = lsoa[19:11, ],
+    fromID = as.character(1:9),
+    toID = as.character(11:19),
+    distance_balance = TRUE,
+    ncores = 2
+  )
+  expect_is(routesdb, "sf")
+  expect_true(nrow(routesdb) == 9)
+  expect_true(ncol(routesdb) == 33)
+  expect_true(!identical(routes, routesdb))
+
+  routesdb <- routesdb[order(routesdb$fromPlace),]
+  row.names(routesdb) <- 1:9
+
+  expect_true(identical(routes, routesdb))
+
 })
 
 
@@ -206,9 +241,32 @@ test_that("basic isochrone", {
   expect_true(nrow(ferry_current) == 6)
   expect_true(ncol(ferry_current) == 4)
   expect_true(all(names(ferry_current) %in%
-    c("id", "time", "fromPlace", "geometry")))
+                    c("id", "time", "fromPlace", "geometry")))
   expect_true(all(ferry_current$time == c(90, 75, 60, 45, 30, 15) * 60))
 })
+
+# test_that("multicore isochrone", {
+#   skip_on_cran()
+#   isobatch <- otp_isochrone(
+#     otpcon = otpcon,
+#     fromPlace = lsoa[1:3, ], # lng/lat of Ryde ferry
+#     mode = c("WALK"),
+#     maxWalkDistance = 2000,
+#     ncores = 2,
+#     date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")),
+#     cutoffSec = c(15, 30, 45, 60, 75, 90) * 60
+#   ) # Cut offs in seconds
+#   expect_is(isobatch, "sf")
+#   expect_true(nrow(isobatch) == 18)
+#   expect_true(ncol(isobatch) == 4)
+#   expect_true(all(names(isobatch) %in%
+#     c("id", "time", "fromPlace", "geometry")))
+#   expect_true(all(isobatch$time %in% c(90, 75, 60, 45, 30, 15) * 60))
+# })
+
+
+
+
 
 test_that("nonsence isochrone", {
   skip_on_cran()
