@@ -58,6 +58,13 @@ test_that("download otp", {
 })
 
 
+test_that("download otp and cache", {
+  skip_on_cran()
+  otp_cache <- otp_dl_jar(path_data, quiet = TRUE, cache = TRUE)
+  expect_true(file.exists(file.path(otp_cache)))
+})
+
+
 test_that("default object is created and make_url method works", {
   skip_on_cran()
   expect_is(otpcon, "otpconnect")
