@@ -150,6 +150,19 @@ test_that("transit routing", {
 })
 
 
+test_that("legacy code", {
+  skip_on_cran()
+  route <- otp_plan_internal_legacy (otpcon,
+                    fromPlace = matrix(c(50.64990, -1.16489), ncol = 2),
+                    toPlace = matrix(c(50.72515, -1.15803), ncol = 2),
+                    date = "2018-06-03",
+                    time = "13:30")
+
+  expect_is(route, "sf")
+  expect_true(nrow(route) == 1)
+})
+
+
 test_that("no geometry routing", {
   skip_on_cran()
   route <- otp_plan(otpcon,
