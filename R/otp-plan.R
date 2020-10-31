@@ -121,11 +121,11 @@ otp_plan <- function(otpcon = NA,
 
   # Back compatibility with RcppSimdJson <= 0.1.1
   RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
-  if(class(RcppSimdJsonVersion) == "try-error"){
+  if (class(RcppSimdJsonVersion) == "try-error") {
     RcppSimdJsonVersion <- FALSE
   }
 
-  if(!RcppSimdJsonVersion){
+  if (!RcppSimdJsonVersion) {
     message("NOTE: You do not have 'RcppSimdJson' >= 0.1.2 installed")
     message("'opentripplanner' is in legacy mode with some features disabled")
     message("Either update 'RcppSimdJson' or revert to 'opentripplanner' v0.2.3")
@@ -225,7 +225,7 @@ otp_plan <- function(otpcon = NA,
     toID <- toID[dists]
   }
 
-  if(RcppSimdJsonVersion){
+  if (RcppSimdJsonVersion) {
     if (ncores > 1) {
       cl <- parallel::makeCluster(ncores)
       parallel::clusterExport(
@@ -238,65 +238,68 @@ otp_plan <- function(otpcon = NA,
       })
       pbapply::pboptions(use_lb = TRUE)
       results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-                                   otp_get_results,
-                                   otpcon = otpcon,
-                                   fromPlace = fromPlace,
-                                   toPlace = toPlace,
-                                   fromID = fromID,
-                                   toID = toID,
-                                   mode = mode,
-                                   date = date,
-                                   time = time,
-                                   arriveBy = arriveBy,
-                                   maxWalkDistance = maxWalkDistance,
-                                   numItineraries = numItineraries,
-                                   routeOptions = routeOptions,
-                                   full_elevation = full_elevation,
-                                   get_geometry = get_geometry,
-                                   timezone = timezone,
-                                   get_elevation = get_elevation,
-                                   cl = cl)
+        otp_get_results,
+        otpcon = otpcon,
+        fromPlace = fromPlace,
+        toPlace = toPlace,
+        fromID = fromID,
+        toID = toID,
+        mode = mode,
+        date = date,
+        time = time,
+        arriveBy = arriveBy,
+        maxWalkDistance = maxWalkDistance,
+        numItineraries = numItineraries,
+        routeOptions = routeOptions,
+        full_elevation = full_elevation,
+        get_geometry = get_geometry,
+        timezone = timezone,
+        get_elevation = get_elevation,
+        cl = cl
+      )
       parallel::stopCluster(cl)
       rm(cl)
     } else {
       results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-                                   otp_get_results,
-                                   otpcon = otpcon,
-                                   fromPlace = fromPlace,
-                                   toPlace = toPlace,
-                                   fromID = fromID,
-                                   toID = toID,
-                                   mode = mode,
-                                   date = date,
-                                   time = time,
-                                   arriveBy = arriveBy,
-                                   maxWalkDistance = maxWalkDistance,
-                                   numItineraries = numItineraries,
-                                   routeOptions = routeOptions,
-                                   full_elevation = full_elevation,
-                                   get_geometry = get_geometry,
-                                   get_elevation = get_elevation,
-                                   timezone = timezone)
+        otp_get_results,
+        otpcon = otpcon,
+        fromPlace = fromPlace,
+        toPlace = toPlace,
+        fromID = fromID,
+        toID = toID,
+        mode = mode,
+        date = date,
+        time = time,
+        arriveBy = arriveBy,
+        maxWalkDistance = maxWalkDistance,
+        numItineraries = numItineraries,
+        routeOptions = routeOptions,
+        full_elevation = full_elevation,
+        get_geometry = get_geometry,
+        get_elevation = get_elevation,
+        timezone = timezone
+      )
     }
   } else {
     results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-                                 otp_get_results_legacy,
-                                 otpcon = otpcon,
-                                 fromPlace = fromPlace,
-                                 toPlace = toPlace,
-                                 fromID = fromID,
-                                 toID = toID,
-                                 mode = mode,
-                                 date = date,
-                                 time = time,
-                                 arriveBy = arriveBy,
-                                 maxWalkDistance = maxWalkDistance,
-                                 numItineraries = numItineraries,
-                                 routeOptions = routeOptions,
-                                 full_elevation = full_elevation,
-                                 get_geometry = get_geometry,
-                                 get_elevation = get_elevation,
-                                 timezone = timezone)
+      otp_get_results_legacy,
+      otpcon = otpcon,
+      fromPlace = fromPlace,
+      toPlace = toPlace,
+      fromID = fromID,
+      toID = toID,
+      mode = mode,
+      date = date,
+      time = time,
+      arriveBy = arriveBy,
+      maxWalkDistance = maxWalkDistance,
+      numItineraries = numItineraries,
+      routeOptions = routeOptions,
+      full_elevation = full_elevation,
+      get_geometry = get_geometry,
+      get_elevation = get_elevation,
+      timezone = timezone
+    )
   }
 
 
@@ -504,7 +507,7 @@ otp_plan_internal <- function(otpcon = NA,
   text <- rawToChar(text$content)
 
   asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
-                  silent = TRUE
+    silent = TRUE
   )
 
   # Check for errors - if no error object, continue to process content

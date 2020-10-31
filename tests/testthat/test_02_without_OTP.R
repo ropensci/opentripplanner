@@ -18,7 +18,7 @@ test_that("need valid path to download", {
   )
 })
 
-if(!on_cran()){
+if (!on_cran()) {
   otp_dl_demo(path_data, quiet = TRUE)
 }
 
@@ -46,7 +46,7 @@ test_that("download example data", {
   expect_true(!file.exists(file.path(path_data, "isle-of-wight-demo.zip")))
 })
 
-if(!on_cran()){
+if (!on_cran()) {
   path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE)
 }
 

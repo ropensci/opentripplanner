@@ -27,21 +27,21 @@
 #' @noRd
 
 otp_plan_internal_legacy <- function(otpcon = NA,
-                              fromPlace = NA,
-                              toPlace = NA,
-                              fromID = NULL,
-                              toID = NULL,
-                              mode = "CAR",
-                              date = date,
-                              time = time,
-                              arriveBy = FALSE,
-                              maxWalkDistance = 1000,
-                              numItineraries = 3,
-                              routeOptions = NULL,
-                              full_elevation = FALSE,
-                              get_geometry = TRUE,
-                              timezone = "",
-                              get_elevation = FALSE) {
+                                     fromPlace = NA,
+                                     toPlace = NA,
+                                     fromID = NULL,
+                                     toID = NULL,
+                                     mode = "CAR",
+                                     date = date,
+                                     time = time,
+                                     arriveBy = FALSE,
+                                     maxWalkDistance = 1000,
+                                     numItineraries = 3,
+                                     routeOptions = NULL,
+                                     full_elevation = FALSE,
+                                     get_geometry = TRUE,
+                                     timezone = "",
+                                     get_elevation = FALSE) {
 
 
   # Disabled in Legacy mode
@@ -124,7 +124,7 @@ otp_plan_internal_legacy <- function(otpcon = NA,
 #'
 #' @noRd
 otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
-                            ...) {
+                                   ...) {
   res <- otp_plan_internal_legacy(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
@@ -143,18 +143,18 @@ otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
 #' @param text object
 #'
 #' @noRd
-json_parse_legacy <- function(text){
+json_parse_legacy <- function(text) {
   asjson <- rjson::fromJSON(text)
   asjson <- asjson$plan$itineraries
 
-  for(j in seq_len(length(asjson))){
+  for (j in seq_len(length(asjson))) {
     fizz <- asjson[[j]]
     legs <- fizz$legs
     fizz$legs <- NULL
     fizz$fare <- NULL
     fizz <- as.data.frame(fizz)
 
-    for(i in seq_len(length(legs))){
+    for (i in seq_len(length(legs))) {
       legs[[i]]$from <- NULL
       legs[[i]]$to <- NULL
       legs[[i]]$steps <- NULL
@@ -167,28 +167,26 @@ json_parse_legacy <- function(text){
 
     # Get all names
     nms <- list()
-    for(i in seq_len(length(legs))){
+    for (i in seq_len(length(legs))) {
       nms[[i]] <- names(legs[[i]])
     }
     nms <- unique(unlist(nms))
 
     # Add empty names
-    for(i in seq_len(length(legs))){
+    for (i in seq_len(length(legs))) {
       sub <- legs[[i]]
       nms_miss <- nms[!nms %in% names(sub)]
-      sub[,nms_miss] <- NA
-      sub <- sub[,nms]
+      sub[, nms_miss] <- NA
+      sub <- sub[, nms]
       legs[[i]] <- sub
     }
 
-    legs <- do.call("rbind",legs)
+    legs <- do.call("rbind", legs)
     fizz$legs <- list(legs)
     asjson[[j]] <- fizz
   }
 
-  asjson <- do.call("rbind",asjson)
+  asjson <- do.call("rbind", asjson)
 
   return(asjson)
 }
-
-

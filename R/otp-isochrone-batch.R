@@ -232,7 +232,7 @@ otp_isochrone_internal <- function(otpcon = NA,
   # convert response content into text
   url <- build_url(routerUrl, query)
   h <- curl::new_handle()
-  h <- curl::handle_setheaders(h,"Accept" = "application/json")
+  h <- curl::handle_setheaders(h, "Accept" = "application/json")
   text <- curl::curl_fetch_memory(url, h)
   text <- text$content
   text <- rawToChar(text)

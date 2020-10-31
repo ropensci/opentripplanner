@@ -4,19 +4,21 @@ on_cran <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
 
 has_rcppsimdjson <- function() {
   RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
-  if(class(RcppSimdJsonVersion) == "try-error"){
+  if (class(RcppSimdJsonVersion) == "try-error") {
     RcppSimdJsonVersion <- FALSE
   }
   return(RcppSimdJsonVersion)
 }
 
 
-if(!on_cran()){
+if (!on_cran()) {
   context("Test the download of the LSOA file")
 
   f <- file.path(tempdir(), "centroids.gpkg")
   download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg",
-                f, mode = "wb", quiet = TRUE)
+    f,
+    mode = "wb", quiet = TRUE
+  )
   lsoa <- sf::read_sf(f)
   file.remove(f)
   test_that("can get lsoa points", {
@@ -162,7 +164,7 @@ test_that("no geometry routing", {
 
 test_that("full elevation routing", {
   skip_on_cran()
-  if(!has_rcppsimdjson()){
+  if (!has_rcppsimdjson()) {
     skip("Skip wihtout RcppSimdJson")
   }
   route <- otp_plan(otpcon,
@@ -202,6 +204,19 @@ test_that("batch routing", {
       "transitLeg", "route_option", "fromPlace", "toPlace",
       "geometry"
     )))
+})
+
+
+test_that("ditance balancing works", {
+  skip_on_cran()
+  routes <- otp_plan(
+    otpcon = otpcon,
+    fromPlace = lsoa[1:9, ],
+    toPlace = lsoa[19:11, ],
+    fromID = as.character(1:9),
+    toID = as.character(11:19),
+    ncores = 2
+  )
 
   routesdb <- otp_plan(
     otpcon = otpcon,
@@ -212,16 +227,13 @@ test_that("batch routing", {
     distance_balance = TRUE,
     ncores = 2
   )
-  expect_is(routesdb, "sf")
-  expect_true(nrow(routesdb) == 9)
-  expect_true(ncol(routesdb) == 33)
+
   expect_true(!identical(routes, routesdb))
 
-  routesdb <- routesdb[order(routesdb$fromPlace),]
+  routesdb <- routesdb[order(routesdb$fromPlace), ]
   row.names(routesdb) <- 1:9
 
   expect_true(identical(routes, routesdb))
-
 })
 
 
@@ -241,7 +253,7 @@ test_that("basic isochrone", {
   expect_true(nrow(ferry_current) == 6)
   expect_true(ncol(ferry_current) == 4)
   expect_true(all(names(ferry_current) %in%
-                    c("id", "time", "fromPlace", "geometry")))
+    c("id", "time", "fromPlace", "geometry")))
   expect_true(all(ferry_current$time == c(90, 75, 60, 45, 30, 15) * 60))
 })
 
