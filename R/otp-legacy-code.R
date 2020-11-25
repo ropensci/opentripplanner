@@ -125,14 +125,26 @@ otp_plan_internal_legacy <- function(otpcon = NA,
 #' @noRd
 otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                                    ...) {
-  res <- otp_plan_internal_legacy(
+
+
+  res <- try(otp_plan_internal_legacy(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
     toPlace = toPlace[x, ],
     fromID = fromID[x],
     toID = toID[x],
     ...
-  )
+  ), silent = TRUE)
+
+  if ("try-error" %in% class(res)) {
+    res <- paste0("Try Error occured for ",
+                  paste(fromPlace, collapse = ","),
+                  " ",
+                  paste(toPlace, collapse = ","),
+                  " ",
+                  res[[1]])
+    warning(res)
+  }
 
   return(res)
 }
