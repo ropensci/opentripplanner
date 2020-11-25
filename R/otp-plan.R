@@ -606,6 +606,7 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
         if(length(x) == 0){
           x <- as.character(NA)
         }
+        x
       }, "char")
     } else {
       # warning("Unstructured fare data has been discarded")
