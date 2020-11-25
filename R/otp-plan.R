@@ -586,10 +586,18 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
   if (!is.null(fare)) {
     if (length(fare) == nrow(itineraries)) {
       itineraries$fare <- vapply(fare, function(x) {
-        x$fare$regular$cents / 100
+        x <- x$fare$regular$cents
+        if(length(x) == 0){
+          x <- as.numeric(NA)
+        } else {
+          x / 100
+        }
       }, 1)
       itineraries$fare_currency <- vapply(fare, function(x) {
-        x$fare$regular$currency$currency
+        x <- x$fare$regular$currency$currency
+        if(length(x) == 0){
+          x <- as.character(NA)
+        }
       }, "char")
     } else {
       # warning("Unstructured fare data has been discarded")

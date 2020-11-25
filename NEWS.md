@@ -1,3 +1,7 @@
+# opentripplanner 0.3.2 In Development
+
+* Fix a bug with parsing fare data
+
 # opentripplanner 0.3.1
 
 Limited support for version of R than can't install `RcppSimdJson`
