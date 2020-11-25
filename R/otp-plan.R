@@ -376,7 +376,10 @@ otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
     res <- paste0("Try Error occured for ",
                   paste(fromPlace, collapse = ","),
                   " ",
-                  paste(toPlace, collapse = ","))
+                  paste(toPlace, collapse = ","),
+                  " ",
+                  res[[1]])
+    warning(res)
   }
 
   return(res)
