@@ -227,7 +227,7 @@ otp_plan <- function(otpcon = NA,
 
   if (RcppSimdJsonVersion) {
     if (ncores > 1) {
-      cl <- parallel::makeCluster(ncores)
+      cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
       parallel::clusterExport(
         cl = cl,
         varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
@@ -362,14 +362,22 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ...) {
-  res <- otp_plan_internal(
+
+  res <- try(otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
     toPlace = toPlace[x, ],
     fromID = fromID[x],
     toID = toID[x],
     ...
-  )
+  ), silent = TRUE)
+
+  if ("try-error" %in% class(res)) {
+    res <- paste0("Try Error occured for ",
+                  paste(fromPlace, collapse = ","),
+                  " ",
+                  paste(toPlace, collapse = ","))
+  }
 
   return(res)
 }
