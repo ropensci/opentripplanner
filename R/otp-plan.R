@@ -236,7 +236,7 @@ otp_plan <- function(otpcon = NA,
       parallel::clusterEvalQ(cl, {
         loadNamespace("opentripplanner")
       })
-      pbapply::pboptions(use_lb = TRUE)
+      pbapply::pboptions(use_lb = FALSE)
       results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
         otp_get_results,
         otpcon = otpcon,
