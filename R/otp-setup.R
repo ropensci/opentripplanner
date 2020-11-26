@@ -15,6 +15,7 @@
 #'     subfolder of  dir/graphs, default "default". See vignettes for details.
 #' @param analyst Logical, should analyst feature be built, default FALSE. See advanced vignette for details.
 #' @param flag64bit Logical, if true the -d64 flag is added to Java instructions
+#' @param quiet Logical, if FALSE the Java commands will be printed to console
 #' @return
 #' Character vector of messages produced by OTP, and will return the message
 #'     "Graph built" if successful
@@ -52,7 +53,8 @@ otp_build_graph <- function(otp = NULL,
                             memory = 2048,
                             router = "default",
                             analyst = FALSE,
-                            flag64bit = TRUE) {
+                            flag64bit = TRUE,
+                            quiet = TRUE) {
 
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
@@ -78,11 +80,6 @@ otp_build_graph <- function(otp = NULL,
   }
 
 
-  if (analyst) {
-    text <- paste0(text, " --analyst")
-  }
-
-
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
   if (!check) {
     stop()
@@ -91,7 +88,13 @@ otp_build_graph <- function(otp = NULL,
     Sys.time(),
     " Basic checks completed, building graph, this may take a few minutes"
   ))
-  message("The graph will be saved to ", dir)
+  message("The graph will be saved to ", dir, "/graphs/", router)
+
+  if(!quiet){
+    message("Command Sent to Java:")
+    message(text)
+  }
+
   set_up <- try(system(text, intern = TRUE))
 
   # Check for errors
