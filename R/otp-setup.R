@@ -226,7 +226,7 @@ otp_setup <- function(otp = NULL,
   ))
 
   if (wait) {
-    Sys.sleep(60)
+    Sys.sleep(30)
 
     # Check if connected
     for (i in 1:30) {

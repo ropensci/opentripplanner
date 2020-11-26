@@ -1,6 +1,12 @@
-# opentripplanner 0.3.2 In Development
+# opentripplanner 0.3.2 (In Development)
 
 * Fix a bug with parsing fare data
+* Fix bug with latest version of Java defaulting to 32Bit even when 64bit is available.
+* Added more `try()` functions to reduce risk of crashes in large scale batch routing
+* Added `flag64bit` argument to `otp_build_graph()` and `otp_setup()`
+* Added `quiet` argument to `otp_build_graph()`
+* Updated the Known Issues Vignette
+* reduce initial wait time for `otp_setup()` from 60 seconds to 30 seconds
 
 # opentripplanner 0.3.1
 
