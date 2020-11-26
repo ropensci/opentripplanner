@@ -12,7 +12,8 @@ otp_setup(
   port = 8080,
   securePort = 8081,
   analyst = FALSE,
-  wait = TRUE
+  wait = TRUE,
+  flag64bit = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ Default FALSE}
 
 \item{wait}{Logical, Should R wait until OTP has loaded before
 running next line of code, default TRUE}
+
+\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions}
 }
 \value{
 This function does not return a value to R. If wait is TRUE R

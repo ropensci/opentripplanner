@@ -9,7 +9,8 @@ otp_build_graph(
   dir = NULL,
   memory = 2048,
   router = "default",
-  analyst = FALSE
+  analyst = FALSE,
+  flag64bit = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ the OTP in MB, default is 2048}
 subfolder of  dir/graphs, default "default". See vignettes for details.}
 
 \item{analyst}{Logical, should analyst feature be built, default FALSE. See advanced vignette for details.}
+
+\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions}
 }
 \value{
 Character vector of messages produced by OTP, and will return the message
