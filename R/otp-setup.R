@@ -82,7 +82,7 @@ otp_build_graph <- function(otp = NULL,
 
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
   if (!check) {
-    stop()
+    stop("Basic checks have failed, please check your inputs")
   }
   message(paste0(
     Sys.time(),
@@ -202,7 +202,7 @@ otp_setup <- function(otp = NULL,
   # Run extra checks
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
   if (!check) {
-    stop()
+    stop("Basic checks have failed, please check your inputs")
   }
 
   # Set up OTP
