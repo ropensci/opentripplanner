@@ -58,24 +58,30 @@ otp_build_graph <- function(otp = NULL,
   checkmate::assert_numeric(memory, lower = 500)
 
   text <- paste0(
-    "java -Xmx",
-    memory,
-    'M -jar "',
-    otp,
-    '" --build "',
-    dir,
-    "/graphs/",
-    router,
-    '"'
+    "java -Xmx", memory, 'M')
+
+  if (flag64bit) {
+    text <- paste0(text, ' -d64 ')
+  }
+
+  text <- paste0(text, '-jar "',
+                 otp,
+                 '" --build "',
+                 dir,
+                 "/graphs/",
+                 router,
+                 '"'
   )
 
   if (analyst) {
     text <- paste0(text, " --analyst")
   }
 
-  if (flag64bit) {
-    text <- paste0(text, " -d64")
+
+  if (analyst) {
+    text <- paste0(text, " --analyst")
   }
+
 
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
   if (!check) {
@@ -170,7 +176,13 @@ otp_setup <- function(otp = NULL,
 
   # Setup request
   text <- paste0(
-    "java -Xmx", memory, 'M -jar "',
+    "java -Xmx", memory, 'M')
+
+  if (flag64bit) {
+    text <- paste0(text, ' -d64 ')
+  }
+
+  text <- paste0(text, '-jar "',
     otp,
     '" --router ', router,
     ' --graphs "', dir, '/graphs"',
@@ -182,9 +194,7 @@ otp_setup <- function(otp = NULL,
     text <- paste0(text, " --analyst")
   }
 
-  if (flag64bit) {
-    text <- paste0(text, " -d64")
-  }
+
 
   # Run extra checks
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
