@@ -97,13 +97,22 @@ otp_build_graph <- function(otp = NULL,
 
   set_up <- try(system(text, intern = TRUE))
 
-  # Check for errors
-  if (any(grepl("ERROR", set_up, ignore.case = TRUE)) & length(set_up) < 10) {
-    message(paste0(Sys.time(), " Failed to build graph with message:"))
-    message(set_up)
-  } else {
-    message(paste0(Sys.time(), " Graph built"))
+  if("try-error" %in% class(set_up)){
+    stop(paste0("Graph Build Failed: ", set_up[1]))
   }
+
+  # Check for errors
+  msg <- set_up[grepl("Graph building took", set_up, ignore.case = TRUE)]
+  if(length(msg) == 0){
+    message("Error: OTP did not report a sucessfull graph build")
+    message("Last reported steps:")
+    for(i in seq(length(set_up)-2, length(set_up))){
+      message(set_up[i])
+    }
+  } else{
+    message(substr(msg, 42, nchar(msg)))
+  }
+
   return(set_up)
 }
 
