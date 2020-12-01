@@ -74,7 +74,7 @@ otp_connect <- function(hostname = "localhost",
     url = url,
     port = port,
     ssl = ssl,
-    timezone = timezone
+    timezone = timezone,
     otp_version = otp_version
   )
 

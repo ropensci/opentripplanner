@@ -60,6 +60,8 @@ Get the Isochrones from a location
 Isochrones are maps of equal travel time,
 for a given location a map is produced showing how long it takes to reach
 each location.
+
+Isochrones are only available from OTP v1.x and will not work with v2.0
 }
 \examples{
 \dontrun{
