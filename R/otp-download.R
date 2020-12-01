@@ -48,7 +48,13 @@ otp_dl_jar <- function(path = NULL,
     destfile <- file.path(path, file_name)
   }
 
-  url <- paste0(url, "/", version, "/otp-", version, "-shaded.jar")
+  if(version == "2.0.0"){
+    warning("downloading beta version of OTP 2.0")
+    url <- "https://github.com/ropensci/opentripplanner/releases/download/0.1/otp-2.0.0-20191023.112543-1-shaded.jar"
+  } else {
+    url <- paste0(url, "/", version, "/otp-", version, "-shaded.jar")
+  }
+
   message("The OTP will be saved to ", destfile)
   utils::download.file(url = url, destfile = destfile, mode = "wb", quiet = quiet)
   return(destfile)
