@@ -20,7 +20,7 @@
 #' @export
 
 otp_dl_jar <- function(path = NULL,
-                       version = "1.4.0",
+                       version = "1.5.0",
                        file_name = paste0("otp-", version, "-shaded.jar"),
                        url = "https://repo1.maven.org/maven2/org/opentripplanner/otp",
                        quiet = FALSE,

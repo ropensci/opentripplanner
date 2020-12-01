@@ -7,6 +7,7 @@
 * Added `quiet` argument to `otp_build_graph()`
 * Updated the Known Issues Vignette
 * reduce initial wait time for `otp_setup()` from 60 seconds to 30 seconds
+* switch to OTP 1.5.0 as default version in `otp_dl_jar()`
 
 # opentripplanner 0.3.1
 
