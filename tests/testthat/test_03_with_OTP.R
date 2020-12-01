@@ -29,7 +29,7 @@ if (!on_cran()) {
   context("Check previous tests have left the files we need")
 
   path_data <- file.path(tempdir(), "otptests")
-  path_otp <- file.path(path_data, "otp-1.4.0-shaded.jar")
+  path_otp <- file.path(path_data, "otp-1.5.0-shaded.jar")
 }
 
 
