@@ -35,6 +35,8 @@
 #' for a given location a map is produced showing how long it takes to reach
 #' each location.
 #'
+#' Isochrones are only available from OTP v1.x and will not work with v2.0
+#'
 #' @export
 otp_isochrone <- function(otpcon = NA,
                           fromPlace = NA,
@@ -47,6 +49,13 @@ otp_isochrone <- function(otpcon = NA,
                           cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
                           ncores = 1,
                           timezone = otpcon$timezone) {
+  # Check for OTP2
+  if(!is.null(otpcon$otp_version)){
+    if(otpcon$otp_version >= 2){
+      stop("Isochrones are not supported by OTP v2.X")
+    }
+  }
+
   # Check Valid Inputs
   checkmate::assert_class(otpcon, "otpconnect")
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
