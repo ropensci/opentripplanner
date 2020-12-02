@@ -61,9 +61,6 @@ otp_build_graph <- function(otp = NULL,
   checkmate::assert_numeric(memory, lower = 500)
   checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999)
 
-  otp <- file.path(otp)
-  dir <- file.path(dir)
-
   # Check OTP version
   if(is.null(otp_version)){
     otp_version <- otp_version_check(otp)
@@ -111,7 +108,8 @@ otp_build_graph <- function(otp = NULL,
     Sys.time(),
     " Basic checks completed, building graph, this may take a few minutes"
   ))
-  message("The graph will be saved to ", dir)
+
+  message("The graph will be saved to ", dir, "/graphs/", router)
 
   if(!quiet){
     message("Command Sent to Java:")
@@ -209,6 +207,7 @@ otp_setup <- function(otp = NULL,
                       wait = TRUE,
                       flag64bit = TRUE,
                       otp_version = NULL) {
+
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
   memory <- floor(memory)
@@ -223,16 +222,23 @@ otp_setup <- function(otp = NULL,
   }
 
   # Setup request
-  if(TRUE){
-    text <- paste0(
-      "java -Xmx", memory, "M -jar '",
-      otp,
-      "' --router '", router,
-      "' --graphs '", dir, "/graphs'",
-      " --server --port ", port,
-      " --securePort ", securePort
-    )
-  } else {
+
+  text <- paste0(
+    "java -Xmx", memory, 'M')
+
+  if (flag64bit) {
+    text <- paste0(text, ' -d64 ')
+  }
+
+  text <- paste0(text, '-jar "',
+    otp,
+    '" --router ', router,
+    ' --graphs "', dir, '/graphs"',
+    " --server --port ", port,
+    " --securePort ", securePort
+  )
+
+  if(FALSE){
     text <- paste0(
       "java -Xmx", memory, "M -jar '",
       otp,
@@ -276,8 +282,7 @@ otp_setup <- function(otp = NULL,
     )
   }
 
-
-  if (analyst) {
+ if (analyst) {
     if(otp_version >= 2){
       message("Analyst is not supported by OTP 2.x")
     } else {
@@ -285,10 +290,12 @@ otp_setup <- function(otp = NULL,
     }
   }
 
+
+
   # Run extra checks
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
   if (!check) {
-    stop()
+    stop("Basic checks have failed, please check your inputs")
   }
 
   # Set up OTP
@@ -312,7 +319,7 @@ otp_setup <- function(otp = NULL,
   ))
 
   if (wait) {
-    Sys.sleep(60)
+    Sys.sleep(30)
 
     # Check if connected
     for (i in 1:30) {

@@ -84,7 +84,7 @@ OTP is optimised for city-scale routing and performance will degrade with larger
 The OpenTripPlanner for R package requires:
 
 * R - [download R](https://cran.r-project.org/mirrors.html) selecting your country (or nearest available country)
-* RStudio - [download free version](https://www.rstudio.com/products/rstudio/download/) for personal use. RStudio is not essential but is strongly recommended.
+* RStudio - [download free version](https://rstudio.com/products/rstudio/download/) for personal use. RStudio is not essential but is strongly recommended.
 * Java 8 **Note** OTP does not work with later versions of Java such as Java 11.
 
 Download and install Java 8. You will need the correct version for your operating system. If possible the 64 Bit version of Java is preferable, especially if you want to use OTP over large areas.
@@ -97,7 +97,7 @@ To get Java:
 
 * **Linux**  we recommend instructions at [StackOverflow](https://askubuntu.com/questions/740757/switch-between-multiple-java-versions).
 
-For Debian based Linux including Ubuntu and Linux Mint, the follwoing commands in the terminal will install the correct version.
+For Debian based Linux including Ubuntu and Linux Mint, the following commands in the terminal will install the correct version.
 
 ```{eval = FALSE}
 sudo apt install openjdk-8-jdk

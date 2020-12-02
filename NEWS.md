@@ -1,6 +1,21 @@
-# opentripplanner 0.3.0.0 In development
+# opentripplanner 0.3.2 (In Development)
 
-Note that this version makes minor changes to how results are returned, for example column order. These changes are due to the new json parser and should not affect the overall results but may affect any dependant code.
+* Fix a bug with parsing fare data
+* Fix bug with latest version of Java defaulting to 32Bit even when 64bit is available.
+* Added more `try()` functions to reduce risk of crashes in large scale batch routing
+* Added `flag64bit` argument to `otp_build_graph()` and `otp_setup()`
+* Added `quiet` argument to `otp_build_graph()`
+* Updated the Known Issues Vignette
+* reduce initial wait time for `otp_setup()` from 60 seconds to 30 seconds
+* switch to OTP 1.5.0 as default version in `otp_dl_jar()`
+
+# opentripplanner 0.3.1
+
+Limited support for version of R than can't install `RcppSimdJson`
+
+# opentripplanner 0.3.0
+
+Note that this version makes minor changes to how results are returned, for example column order. These changes are due to the new json parser and should not affect the overall results but may affect any dependent code.
 
 * Significant refactor of code giving up to 50% reduction in routing time
 * replaced `dplyr` with `data.table`
@@ -11,12 +26,14 @@ Note that this version makes minor changes to how results are returned, for exam
 * fixed bug #69
 * In `otp_plan` will now return `fromPlace` and `toPlace` as the first two columns
 * In `otp_plan` set `get_elevation = FALSE` as default this boosts performance
+* Fixed bug in `distance_balancing` that gave sub-optimal balancing
+* When `distance_balancing = TRUE` zero distance routes will not be found, as OTP will reject these in any case, this saves time with no impact on results.
 
 
 # opentripplanner 0.2.3.0
 
-* Added `distance_balancing` argument to `otp_plan` gives a small perfomance boost to multicore routing
-* Added `get_elevation` argument to `otp_plan` default TRUE, when FALSE returns XY coordinates rather than XYZ coordiantes and gives a 4% performance boost.
+* Added `distance_balancing` argument to `otp_plan` gives a small performance boost to multicore routing
+* Added `get_elevation` argument to `otp_plan` default TRUE, when FALSE returns XY coordinates rather than XYZ coordinates and gives a 4% performance boost.
 * Removed helper code for `dplyr::bind_rows` as no longer required for `dplyr 1.0.0`
 
 # opentripplanner 0.2.2.0
@@ -45,7 +62,7 @@ Note that this version makes minor changes to how results are returned, for exam
 
 # opentripplanner 0.2.0.6
 
-* Fixed bug where routing failes due to missing fare data
+* Fixed bug where routing fails due to missing fare data
 
 # opentripplanner 0.2.0.4
 

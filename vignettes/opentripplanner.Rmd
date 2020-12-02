@@ -230,11 +230,11 @@ Note that OTP only really needs the road network from the OSM, but the Geofabrik
 
 #### Public Transport Timetables
 
-OTP can use public transport timetable data in the [GTFS format](https://developers.google.com/transit/gtfs/). You can find GTFS data for many regions at [transitland](https://transit.land/). For users in the UK see [UK2GTFS](https://itsleeds.github.io/UK2GTFS/)
+OTP can use public transport timetable data in the [GTFS format](https://developers.google.com/transit/gtfs/). You can find GTFS data for many regions at [transitland](https://www.transit.land/). For users in the UK see [UK2GTFS](https://itsleeds.github.io/UK2GTFS/)
 
 #### Elevation Data
 
-You can add terrain information to your routes, especially useful for walking and cycling, using [GeoTIFF images](http://trac.osgeo.org/geotiff). You can find worldwide elevation data from [NASA](https://www2.jpl.nasa.gov/srtm/).
+You can add terrain information to your routes, especially useful for walking and cycling, using [GeoTIFF images](https://trac.osgeo.org/geotiff). You can find worldwide elevation data from [NASA](https://www2.jpl.nasa.gov/srtm/).
 
 **Warning** It is common for GeoTIFF to have a no data value often the maximum possible value. OTP can misinterpret this as an elevation value. So set your no data values in your elevation data to something more plausible like 0.
 

@@ -33,6 +33,7 @@ ignored if otp_version >= 2}
 
 \item{otp_version}{Numeric, version of OTP to build, default NULL when version
 is auto-detected}
+
 }
 \value{
 Character vector of messages produced by OTP, and will return the

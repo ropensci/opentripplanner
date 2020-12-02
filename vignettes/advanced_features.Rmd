@@ -32,7 +32,7 @@ otpcon <- otp_connect(timezone = "Europe/London")
 
 ## Batch Routing
 
-The `otp_plan()` function can produce multiple routes at once. In this example, we will gather data on travel times between each of the [LSOAs](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography) on the Isle of White and the [Ryde Ferry](https://www.wightlink.co.uk/go/isle-of-wight-ferry-routes-destinations/).
+The `otp_plan()` function can produce multiple routes at once. In this example, we will gather data on travel times between each of the [LSOAs](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography) on the Isle of White and the [Ryde Ferry](https://www.wightlink.co.uk/plan-your-journey/routes).
 
 `otp_plan()` accepts three types of input for the `fromPlace` and `toPlace`: a numeric longitude/latitude pair; a 2 x m matrix where each row is a longitude/latitude pair; or an SF data.frame of only POINTS. The number of `fromPlace` and `toPlace` must be the same or equal one (in which case `otp_plan()` will repeat the single location to match the length of the longer locations.
 
@@ -112,6 +112,8 @@ knitr::include_graphics("images/multicore.jpeg")
 ### Distance Balancing
 
 When using multicore routing in `otp_plan` you can optionally set `distance_balance = TRUE`. Distance Balancing sorts the routes by decreasing euclidean distance before sending them to OTP to route. This results in more efficient [load balancing](https://en.wikipedia.org/wiki/Load_balancing_(computing)) between the cores and thus a small reduction in routing time (around five percent). As the original order of the inputs is lost `fromID` and `toID` must be specified to use distance balancing.
+
+
 
 
 ## Elevation Profiles

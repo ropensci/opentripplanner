@@ -118,6 +118,19 @@ otp_plan <- function(otpcon = NA,
     warning("otpcon is missing the timezone variaible, assuming local timezone")
     timezone <- Sys.timezone()
   }
+
+  # Back compatibility with RcppSimdJson <= 0.1.1
+  RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
+  if (class(RcppSimdJsonVersion) == "try-error") {
+    RcppSimdJsonVersion <- FALSE
+  }
+
+  if (!RcppSimdJsonVersion) {
+    message("NOTE: You do not have 'RcppSimdJson' >= 0.1.2 installed")
+    message("'opentripplanner' is in legacy mode with some features disabled")
+    message("Either update 'RcppSimdJson' or revert to 'opentripplanner' v0.2.3")
+  }
+
   checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
 
   checkmate::assert_class(otpcon, "otpconnect")
@@ -196,6 +209,15 @@ otp_plan <- function(otpcon = NA,
 
   if (distance_balance & (ncores > 1)) {
     dists <- geodist::geodist(fromPlace, toPlace, paired = TRUE)
+
+    # Remove 0m pairs as OTP will fail on them anyway
+    dists_0 <- dists != 0
+    fromPlace <- fromPlace[dists_0, ]
+    toPlace <- toPlace[dists_0, ]
+    fromID <- fromID[dists_0]
+    toID <- toID[dists_0]
+    dists <- dists[dists_0]
+
     dists <- order(dists, decreasing = TRUE)
     fromPlace <- fromPlace[dists, ]
     toPlace <- toPlace[dists, ]
@@ -203,42 +225,64 @@ otp_plan <- function(otpcon = NA,
     toID <- toID[dists]
   }
 
-  if (ncores > 1) {
-    cl <- parallel::makeCluster(ncores)
-    parallel::clusterExport(
-      cl = cl,
-      varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
-      envir = environment()
-    )
-    parallel::clusterEvalQ(cl, {
-      loadNamespace("opentripplanner")
-    })
-    pbapply::pboptions(use_lb = TRUE)
-    results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      otp_get_results,
-      otpcon = otpcon,
-      fromPlace = fromPlace,
-      toPlace = toPlace,
-      fromID = fromID,
-      toID = toID,
-      mode = mode,
-      date = date,
-      time = time,
-      arriveBy = arriveBy,
-      maxWalkDistance = maxWalkDistance,
-      numItineraries = numItineraries,
-      routeOptions = routeOptions,
-      full_elevation = full_elevation,
-      get_geometry = get_geometry,
-      timezone = timezone,
-      get_elevation = get_elevation,
-      cl = cl
-    )
-    parallel::stopCluster(cl)
-    rm(cl)
+  if (RcppSimdJsonVersion) {
+    if (ncores > 1) {
+      cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
+      parallel::clusterExport(
+        cl = cl,
+        varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
+        envir = environment()
+      )
+      parallel::clusterEvalQ(cl, {
+        loadNamespace("opentripplanner")
+      })
+      pbapply::pboptions(use_lb = TRUE)
+      results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+        otp_get_results,
+        otpcon = otpcon,
+        fromPlace = fromPlace,
+        toPlace = toPlace,
+        fromID = fromID,
+        toID = toID,
+        mode = mode,
+        date = date,
+        time = time,
+        arriveBy = arriveBy,
+        maxWalkDistance = maxWalkDistance,
+        numItineraries = numItineraries,
+        routeOptions = routeOptions,
+        full_elevation = full_elevation,
+        get_geometry = get_geometry,
+        timezone = timezone,
+        get_elevation = get_elevation,
+        cl = cl
+      )
+      parallel::stopCluster(cl)
+      rm(cl)
+    } else {
+      results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+        otp_get_results,
+        otpcon = otpcon,
+        fromPlace = fromPlace,
+        toPlace = toPlace,
+        fromID = fromID,
+        toID = toID,
+        mode = mode,
+        date = date,
+        time = time,
+        arriveBy = arriveBy,
+        maxWalkDistance = maxWalkDistance,
+        numItineraries = numItineraries,
+        routeOptions = routeOptions,
+        full_elevation = full_elevation,
+        get_geometry = get_geometry,
+        get_elevation = get_elevation,
+        timezone = timezone
+      )
+    }
   } else {
     results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      otp_get_results,
+      otp_get_results_legacy,
       otpcon = otpcon,
       fromPlace = fromPlace,
       toPlace = toPlace,
@@ -257,6 +301,8 @@ otp_plan <- function(otpcon = NA,
       timezone = timezone
     )
   }
+
+
 
 
 
@@ -279,21 +325,23 @@ otp_plan <- function(otpcon = NA,
     if (any(unlist(lapply(results, function(x) {
       "sf" %in% class(x)
     }), use.names = FALSE))) {
-      results_routes <- data.table::rbindlist(results_routes)
-      results_routes <- as.data.frame(results_routes)
+      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
+      results_routes <- list2df(results_routes)
       results_routes <- df2sf(results_routes)
+      # fix for bbox error from data.table
+      results_routes <- results_routes[seq_len(nrow(results_routes)), ]
       colnms <- names(results_routes)
-      colnms <- colnms[!colnms %in% c("fromPlace","toPlace","geometry")]
-      results_routes <- results_routes[c("fromPlace","toPlace",colnms,"geometry")]
+      colnms <- colnms[!colnms %in% c("fromPlace", "toPlace", "geometry")]
+      results_routes <- results_routes[c("fromPlace", "toPlace", colnms, "geometry")]
     } else {
-      results_routes <- data.table::rbindlist(results_routes)
+      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
     }
   }
 
 
   if (!all(class(results_errors) == "logical")) {
     results_errors <- unlist(results_errors, use.names = FALSE)
-    results_errors <- paste0(results_errors,"\n")
+    results_errors <- paste0(results_errors, "\n")
     warning(results_errors)
   }
   return(results_routes)
@@ -314,14 +362,25 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ...) {
-  res <- otp_plan_internal(
+
+  res <- try(otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
     toPlace = toPlace[x, ],
     fromID = fromID[x],
     toID = toID[x],
     ...
-  )
+  ), silent = TRUE)
+
+  if ("try-error" %in% class(res)) {
+    res <- paste0("Try Error occured for ",
+                  paste(fromPlace, collapse = ","),
+                  " ",
+                  paste(toPlace, collapse = ","),
+                  " ",
+                  res[[1]])
+    warning(res)
+  }
 
   return(res)
 }
@@ -372,6 +431,7 @@ otp_clean_input <- function(imp, imp_name) {
       any.missing = FALSE, .var.name = paste0(imp_name, " Latitude")
     )
     imp[] <- imp[, 2:1] # Switch round lng/lat to lat/lng for OTP
+    colnames(imp) <- c("lat", "lon")
     return(imp)
   }
   # Otherwise stop as invalid input
@@ -401,6 +461,7 @@ otp_clean_input <- function(imp, imp_name) {
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone timezone to use
 #' @param get_elevation Logical, should you get elevation
+#' @param RcppSimdJsonVersion Logical, is RcppSimdJson Version >= 0.1.2
 #' @family internal
 #' @details
 #' This function returns a SF data.frame with one row for each leg of the journey
@@ -455,10 +516,13 @@ otp_plan_internal <- function(otpcon = NA,
   url <- build_url(routerUrl, query)
   text <- curl::curl_fetch_memory(url)
   text <- rawToChar(text$content)
-  asjson <- RcppSimdJson::fparse(text, query = "plan/itineraries")
+
+  asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
+    silent = TRUE
+  )
 
   # Check for errors - if no error object, continue to process content
-  if (is.null(asjson$error$id)) {
+  if (!"try-error" %in% class(asjson)) {
     response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone, get_elevation)
     # Add Ids
     if (is.null(fromID)) {
@@ -473,6 +537,7 @@ otp_plan_internal <- function(otpcon = NA,
     }
     return(response)
   } else {
+    asjson <- RcppSimdJson::fparse(text)
     # there is an error - return the error code and message
     response <- paste0(
       "Error: ", asjson$error$id,
@@ -496,13 +561,7 @@ otp_plan_internal <- function(otpcon = NA,
 #' @noRd
 
 otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE,
-                        timezone = "", get_elevation = TRUE) {
-  # requestParameters <- obj$requestParameters
-  # plan <- obj$plan
-  # debugOutput <- obj$debugOutput
-
-  #itineraries <- obj$plan$itineraries
-
+                        timezone = "", get_elevation = FALSE) {
   itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
     origin = "1970-01-01", tz = timezone
   )
@@ -519,8 +578,10 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
     full_elevation = full_elevation
   )
 
+  names(legs) <- seq_len(length(legs))
   legs <- legs[!is.na(legs)]
-  legs <- data.table::rbindlist(legs, fill = TRUE)
+  legs <- data.table::rbindlist(legs, fill = TRUE, idcol = "route_option")
+  legs$route_option <- as.integer(legs$route_option)
 
   legs$startTime <- lubridate::as_datetime(legs$startTime / 1000,
     origin = "1970-01-01", tz = timezone
@@ -534,9 +595,22 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
   # Extract Fare Info
   fare <- itineraries$fare
   if (!is.null(fare)) {
-    if (length(fare$fare) > 0) {
-      itineraries$fare <- fare$fare$regular$cents / 100
-      itineraries$fare_currency <- fare$fare$regular$currency$currency
+    if (length(fare) == nrow(itineraries)) {
+      itineraries$fare <- vapply(fare, function(x) {
+        x <- x$fare$regular$cents
+        if(length(x) == 0){
+          x <- as.numeric(NA)
+        } else {
+          x / 100
+        }
+      }, 1)
+      itineraries$fare_currency <- vapply(fare, function(x) {
+        x <- x$fare$regular$currency$currency
+        if(length(x) == 0){
+          x <- as.character(NA)
+        }
+        x
+      }, "char")
     } else {
       # warning("Unstructured fare data has been discarded")
       itineraries$fare <- NA
@@ -547,11 +621,11 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
     itineraries$fare_currency <- NA
   }
 
-  itineraries <- list2df(itineraries)
-
   names(legs)[names(legs) == "startTime"] <- "leg_startTime"
   names(legs)[names(legs) == "endTime"] <- "leg_endTime"
   names(legs)[names(legs) == "duration"] <- "leg_duration"
+
+  itineraries <- itineraries[legs$route_option, ]
   itineraries <- cbind(itineraries, legs)
 
 

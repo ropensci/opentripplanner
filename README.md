@@ -3,17 +3,15 @@
 
 # OpenTripPlanner for R <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=180/></a>
 
-[![Travis build
-status](https://travis-ci.org/ropensci/opentripplanner.svg?branch=master)](https://travis-ci.org/ropensci/opentripplanner)
+[![R build
+status](https://github.com/ropensci/opentripplanner/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/opentripplanner/actions)
 [![codecov](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/opentripplanner)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/ropensci/opentripplanner?branch=master&svg=true)](https://ci.appveyor.com/project/mem48/opentripplanner)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
+[![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/software-review/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
-[![status](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736/status.svg)](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736)
+[![status](https://joss.theoj.org/papers/10.21105/joss.01926/status.svg)](https://joss.theoj.org/papers/10.21105/joss.01926)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
 
@@ -61,6 +59,20 @@ remotes::install_github("ropensci/opentripplanner")
 library(opentripplanner)
 ```
 
+#### RcppSimdJson
+
+From version 0.3.0 of `opentripplanner` the package `RcppSimdJson` is
+used for JSON parsing. This package is not supported on some older
+versions of R (\<= 3.6) and some older Operating Systems. To meet CRAN
+requirements version 0.3.1 added a legacy mode for older versions of R.
+This legacy mode has reduced functionality and users on old systems may
+get better results using version 0.2.3 of the package. You can install
+older versions using **remotes**.
+
+``` r
+remotes::install_version("opentripplanner", "0.2.3")
+```
+
 ## Usage
 
 The package contains three groups of functions:
@@ -90,17 +102,6 @@ Functions for retrieving data from OTP:
 Results are returned as [sf
 objects](https://CRAN.R-project.org/package=sf).
 
-## Tests
-
-As this package does not work without a working connection to OTP, tests
-only run on machines that have the environment variable `I_have_OTP`
-with the value `TRUE`. You can add this with
-`usethis::edit_r_environ()`.
-
-``` r
-Sys.getenv("I_have_OTP")
-```
-
 ## Acknowledgement
 
 This package was built off the [tutorial by Marcus
@@ -122,7 +123,6 @@ Requests](https://github.com/ropensci/opentripplanner/pulls).
 Please cite the JOSS paper in publications:
 
 Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source
-Software, 4(44), 1926,
-<https://doi.org/10.21105/joss.01926>
+Software, 4(44), 1926, <https://doi.org/10.21105/joss.01926>
 
 [![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
