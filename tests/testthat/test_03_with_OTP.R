@@ -10,6 +10,11 @@ has_rcppsimdjson <- function() {
   return(RcppSimdJsonVersion)
 }
 
+skip_on_j11 <- function() {
+  if(otp_check_java(2)){
+    skip("Skip this test with Java 11")
+  }
+}
 
 if (!on_cran()) {
   context("Test the download of the LSOA file")
@@ -254,6 +259,7 @@ context("Test the otp_isochone function")
 
 test_that("basic isochrone", {
   skip_on_cran()
+  skip_on_j11()
   ferry_current <- otp_isochrone(
     otpcon = otpcon,
     fromPlace = c(-1.159494, 50.732429), # lng/lat of Ryde ferry
@@ -295,6 +301,7 @@ test_that("basic isochrone", {
 
 test_that("nonsence isochrone", {
   skip_on_cran()
+  skip_on_j11()
   expect_warning(otp_isochrone(
     otpcon = otpcon,
     fromPlace = c(-5, 5)
