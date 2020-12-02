@@ -47,14 +47,14 @@ test_that("download example data", {
 })
 
 if (!on_cran()) {
-  if(otp_check_java(1)){
+  if (otp_check_java(1)) {
     path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE)
   } else {
-    path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE,
-                           version = "2.0.0")
+    path_otp <- otp_dl_jar(path_data,
+      quiet = TRUE, cache = FALSE,
+      version = "2.0.0"
+    )
   }
-
-
 }
 
 

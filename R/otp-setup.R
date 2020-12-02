@@ -62,7 +62,7 @@ otp_build_graph <- function(otp = NULL,
   checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999, null.ok = TRUE)
 
   # Check OTP version
-  if(is.null(otp_version)){
+  if (is.null(otp_version)) {
     otp_version <- otp_version_check(otp)
   }
 
@@ -72,35 +72,37 @@ otp_build_graph <- function(otp = NULL,
     stop("Basic checks failed, please check your inputs")
   }
 
-  if(otp_version >= 2){
+  if (otp_version >= 2) {
     text <- paste0(
-      "java -Xmx", memory, 'M')
+      "java -Xmx", memory, "M"
+    )
 
     text <- paste0(
       text, ' -jar "',
       otp,
       '" --build --save "',
       dir,
-      '/graphs/',
+      "/graphs/",
       router,
       '"'
     )
-
   } else {
     text <- paste0(
-      "java -Xmx", memory, 'M')
+      "java -Xmx", memory, "M"
+    )
 
     if (flag64bit) {
-      text <- paste0(text, ' -d64')
+      text <- paste0(text, " -d64")
     }
 
-    text <- paste0(text, ' -jar "',
-                   otp,
-                   '" --build "',
-                   dir,
-                   "/graphs/",
-                   router,
-                   '"'
+    text <- paste0(
+      text, ' -jar "',
+      otp,
+      '" --build "',
+      dir,
+      "/graphs/",
+      router,
+      '"'
     )
   }
 
@@ -111,26 +113,26 @@ otp_build_graph <- function(otp = NULL,
 
   message("The graph will be saved to ", dir, "/graphs/", router)
 
-  if(!quiet){
+  if (!quiet) {
     message("Command Sent to Java:")
     message(text)
   }
 
   set_up <- try(system(text, intern = TRUE))
 
-  if("try-error" %in% class(set_up)){
+  if ("try-error" %in% class(set_up)) {
     stop(paste0("Graph Build Failed: ", set_up[1]))
   }
 
   # Check for errors
   msg <- set_up[grepl("Graph building took", set_up, ignore.case = TRUE)]
-  if(length(msg) == 0){
+  if (length(msg) == 0) {
     message("Error: OTP did not report a sucessfull graph build")
     message("Last reported steps:")
-    for(i in seq(length(set_up)-2, length(set_up))){
+    for (i in seq(length(set_up) - 2, length(set_up))) {
       message(set_up[i])
     }
-  } else{
+  } else {
     message(substr(msg, 42, nchar(msg)))
   }
 
@@ -210,71 +212,52 @@ otp_setup <- function(otp = NULL,
 
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
+  checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999, null.ok = TRUE)
+  checkmate::assert_numeric(port)
+  checkmate::assert_numeric(securePort)
+  checkmate::assert_logical(analyst)
+  checkmate::assert_logical(wait)
+  checkmate::assert_logical(flag64bit)
   memory <- floor(memory)
 
   # Check OTP version
-  if(is.null(otp_version)){
+  if (is.null(otp_version)) {
     otp_version <- otp_version_check(otp)
   }
 
-  if(otp_version >= 2){
+  if (otp_version >= 2) {
     flag64bit <- FALSE
   }
 
   # Setup request
-
-  text <- paste0(
-    "java -Xmx", memory, 'M')
-
-  if (flag64bit) {
-    text <- paste0(text, ' -d64 ')
-  }
-
-  text <- paste0(text, '-jar "',
-    otp,
-    '" --router ', router,
-    ' --graphs "', dir, '/graphs"',
-    " --server --port ", port,
-    " --securePort ", securePort
-  )
-
-  if(FALSE){
+  if (otp_version >= 2) {
     text <- paste0(
-      "java -Xmx", memory, "M -jar '",
-      otp,
-      "' --load --serve --port ", port,
-      " --securePort ", securePort,
-      " '",dir, "/graphs/",router,"'"
+      "java -Xmx", memory, "M"
     )
-  }
-
-  if(otp_version >= 2){
-    text <- paste0(
-      "java -Xmx", memory, 'M')
 
     text <- paste0(
       text, ' -jar "',
       otp,
       '" --load "',
       dir,
-      '/graphs/',
+      "/graphs/",
       router,
       '"'
     )
-
   } else {
     text <- paste0(
-      "java -Xmx", memory, 'M')
+      "java -Xmx", memory, "M"
+    )
 
     if (flag64bit) {
-      text <- paste0(text, ' -d64')
+      text <- paste0(text, " -d64")
     }
     text <- paste0(
       " -jar '",
       otp,
       "' --load '",
       dir,
-      '/graphs/',
+      "/graphs/",
       router,
       "' --graphs '", dir, "/graphs'",
       " --server --port ", port,
@@ -282,8 +265,8 @@ otp_setup <- function(otp = NULL,
     )
   }
 
- if (analyst) {
-    if(otp_version >= 2){
+  if (analyst) {
+    if (otp_version >= 2) {
       message("Analyst is not supported by OTP 2.x")
     } else {
       text <- paste0(text, " --analyst")
@@ -293,7 +276,7 @@ otp_setup <- function(otp = NULL,
 
 
   # Run extra checks
-  check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE)
+  check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE, otp_version = otp_version)
   if (!check) {
     stop("Basic checks have failed, please check your inputs")
   }
@@ -462,7 +445,6 @@ otp_checks <- function(otp = NULL,
 #' @export
 #'
 otp_check_java <- function(otp_version = 1.5) {
-
   checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999)
   # Check we have correct verrsion of Java
   java_version <- try(system2("java", "-version", stdout = TRUE, stderr = TRUE))
@@ -479,7 +461,7 @@ otp_check_java <- function(otp_version = 1.5) {
       return(FALSE)
     }
 
-    if(otp_version < 2){
+    if (otp_version < 2) {
       if (java_version >= 1.8 & java_version < 1.9) {
         message("You have the correct version of Java for OTP 1.x")
         return(TRUE)
@@ -494,7 +476,7 @@ otp_check_java <- function(otp_version = 1.5) {
       return(FALSE)
     }
 
-    if(otp_version >= 2){
+    if (otp_version >= 2) {
       if (java_version >= 1.8 & java_version < 1.9) {
         warning("You have OTP 2.x but the version of Java for OTP 1.x")
         return(FALSE)
@@ -520,14 +502,14 @@ otp_check_java <- function(otp_version = 1.5) {
 #' @family internal
 #' @noRd
 #'
-otp_version_check <- function(otp){
+otp_version_check <- function(otp) {
   otp_version <- strsplit(otp, "/")[[1]]
   otp_version <- otp_version[length(otp_version)]
-  otp_version <- gsub("[^[:digit:]., ]","",otp_version)
+  otp_version <- gsub("[^[:digit:]., ]", "", otp_version)
   otp_version <- substr(otp_version, 1, 1)
-  if(otp_version == "1"){
+  if (otp_version == "1") {
     return(1)
-  } else if (otp_version == "2"){
+  } else if (otp_version == "2") {
     return(2)
   } else {
     stop("Unable to detect OTP version, please specify using otp_version")

@@ -68,8 +68,9 @@ otp_connect <- function(hostname = "localhost",
   checkmate::assert_logical(check, add = coll)
   checkmate::reportAssertions(coll)
   checkmate::assert_subset(timezone,
-                           choices = OlsonNames(tzdir = NULL),
-                           add = coll)
+    choices = OlsonNames(tzdir = NULL),
+    add = coll
+  )
 
   otpcon <- list(
     hostname = hostname,
@@ -205,14 +206,15 @@ check_router.otpconnect <- function(x) {
 #' @family setup
 #' @export
 #'
-otp_check_version <- function(otpcon, warn = TRUE){
-
+otp_check_version <- function(otpcon, warn = TRUE) {
   if (is.null(otpcon$url)) {
-    url <- paste0(ifelse(isTRUE(otpcon$ssl), 'https://', 'http://'),
-              otpcon$hostname,
-              ':',
-              otpcon$port,
-              '/otp')
+    url <- paste0(
+      ifelse(isTRUE(otpcon$ssl), "https://", "http://"),
+      otpcon$hostname,
+      ":",
+      otpcon$port,
+      "/otp"
+    )
   } else {
     url <- otpcon$url
   }
@@ -224,15 +226,16 @@ otp_check_version <- function(otpcon, warn = TRUE){
 
   ver <- rawToChar(ver$content)
   ver <- RcppSimdJson::fparse(ver)
-  ver <- as.numeric(paste0(ver$serverVersion$major,
-                           ".",
-                           ver$serverVersion$minor))
-  if(warn){
-    if(ver != otpcon$otp_version){
+  ver <- as.numeric(paste0(
+    ver$serverVersion$major,
+    ".",
+    ver$serverVersion$minor
+  ))
+  if (warn) {
+    if (ver != otpcon$otp_version) {
       warning("The version of OTP running does not match otpcon$otp_version")
     }
   }
 
   return(ver)
 }
-

@@ -362,7 +362,6 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                             ...) {
-
   res <- try(otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
@@ -373,12 +372,14 @@ otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
   ), silent = TRUE)
 
   if ("try-error" %in% class(res)) {
-    res <- paste0("Try Error occured for ",
-                  paste(fromPlace, collapse = ","),
-                  " ",
-                  paste(toPlace, collapse = ","),
-                  " ",
-                  res[[1]])
+    res <- paste0(
+      "Try Error occured for ",
+      paste(fromPlace, collapse = ","),
+      " ",
+      paste(toPlace, collapse = ","),
+      " ",
+      res[[1]]
+    )
     warning(res)
   }
 
@@ -509,9 +510,9 @@ otp_plan_internal <- function(otpcon = NA,
     numItineraries = numItineraries
   )
 
-  if(otpcon$otp_version >= 2){
+  if (otpcon$otp_version >= 2) {
     # maxWalkDistance causes itinaries to fail
-    if(mode == "CAR"){
+    if (mode == "CAR") {
       query$maxWalkDistance <- NULL
     }
   }
@@ -525,7 +526,7 @@ otp_plan_internal <- function(otpcon = NA,
   text <- rawToChar(text$content)
 
   asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
-                silent = TRUE
+    silent = TRUE
   )
 
   # Check for errors - if no error object, continue to process content
@@ -546,7 +547,7 @@ otp_plan_internal <- function(otpcon = NA,
   } else {
     asjson <- RcppSimdJson::fparse(text)
     # there is an error - return the error code and message
-    if(is.null(asjson$error)){
+    if (is.null(asjson$error)) {
       response <- paste0(
         "Error: No itinary returned",
         " from ", asjson$`requestParameters`$fromPlace,
@@ -613,7 +614,7 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
     if (length(fare) == nrow(itineraries)) {
       itineraries$fare <- vapply(fare, function(x) {
         x <- x$fare$regular$cents
-        if(length(x) == 0){
+        if (length(x) == 0) {
           x <- as.numeric(NA)
         } else {
           x / 100
@@ -621,7 +622,7 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
       }, 1)
       itineraries$fare_currency <- vapply(fare, function(x) {
         x <- x$fare$regular$currency$currency
-        if(length(x) == 0){
+        if (length(x) == 0) {
           x <- as.character(NA)
         }
         x

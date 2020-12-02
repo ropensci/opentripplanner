@@ -50,8 +50,8 @@ otp_isochrone <- function(otpcon = NA,
                           ncores = 1,
                           timezone = otpcon$timezone) {
   # Check for OTP2
-  if(!is.null(otpcon$otp_version)){
-    if(otpcon$otp_version >= 2){
+  if (!is.null(otpcon$otp_version)) {
+    if (otpcon$otp_version >= 2) {
       stop("Isochrones are not supported by OTP v2.X")
     }
   }

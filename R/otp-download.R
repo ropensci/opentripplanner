@@ -48,7 +48,7 @@ otp_dl_jar <- function(path = NULL,
     destfile <- file.path(path, file_name)
   }
 
-  if(version == "2.0.0"){
+  if (version == "2.0.0") {
     warning("OTP2 support is in beta")
   }
 

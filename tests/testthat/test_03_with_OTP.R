@@ -11,7 +11,7 @@ has_rcppsimdjson <- function() {
 }
 
 skip_on_j11 <- function() {
-  if(otp_check_java(2)){
+  if (otp_check_java(2)) {
     skip("Skip this test with Java 11")
   }
 }
@@ -35,12 +35,11 @@ if (!on_cran()) {
 
   path_data <- file.path(tempdir(), "otptests")
 
-  if(otp_check_java(2)){
+  if (otp_check_java(2)) {
     path_otp <- file.path(path_data, "otp-2.0.0-shaded.jar")
   } else {
     path_otp <- file.path(path_data, "otp-1.5.0-shaded.jar")
   }
-
 }
 
 
@@ -163,11 +162,13 @@ test_that("transit routing", {
 
 test_that("legacy code", {
   skip_on_cran()
-  route <- otp_plan_internal_legacy (otpcon,
-                    fromPlace = matrix(c(50.64990, -1.16489), ncol = 2),
-                    toPlace = matrix(c(50.72515, -1.15803), ncol = 2),
-                    date = "2018-06-03",
-                    time = "13:30")
+  skip_on_j11()
+  route <- otp_plan_internal_legacy(otpcon,
+    fromPlace = matrix(c(50.64990, -1.16489), ncol = 2),
+    toPlace = matrix(c(50.72515, -1.15803), ncol = 2),
+    date = "2018-06-03",
+    time = "13:30"
+  )
 
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
@@ -301,10 +302,6 @@ test_that("basic isochrone", {
 #   expect_true(all(isobatch$time %in% c(90, 75, 60, 45, 30, 15) * 60))
 # })
 
-
-
-
-
 test_that("nonsence isochrone", {
   skip_on_cran()
   skip_on_j11()
@@ -318,6 +315,7 @@ context("Test the otp_geocode function")
 
 test_that("basic geocode", {
   skip_on_cran()
+  skip_on_j11()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station"
@@ -330,6 +328,7 @@ test_that("basic geocode", {
 
 test_that("geocode coords", {
   skip_on_cran()
+  skip_on_j11()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station", type = "Coordinates"
@@ -340,6 +339,7 @@ test_that("geocode coords", {
 
 test_that("geocode both", {
   skip_on_cran()
+  skip_on_j11()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station", type = "Both"
@@ -350,6 +350,7 @@ test_that("geocode both", {
 
 test_that("geocode nonsence", {
   skip_on_cran()
+  skip_on_j11()
   expect_warning(otp_geocode(
     otpcon = otpcon,
     query = "jhgfdhgdcmhxgfxgfx"
