@@ -59,7 +59,7 @@ otp_build_graph <- function(otp = NULL,
 
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
-  checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999)
+  checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999, null.ok = TRUE)
 
   # Check OTP version
   if(is.null(otp_version)){
