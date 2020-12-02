@@ -529,7 +529,7 @@ otp_plan_internal <- function(otpcon = NA,
   )
 
   # Check for errors - if no error object, continue to process content
-  if (!"try-error" %in% class(asjson)) {
+  if (!"try-error" %in% class(asjson) & !is.null(asjson)) {
     response <- otp_json2sf(asjson, full_elevation, get_geometry, timezone, get_elevation)
     # Add Ids
     if (is.null(fromID)) {
@@ -546,12 +546,20 @@ otp_plan_internal <- function(otpcon = NA,
   } else {
     asjson <- RcppSimdJson::fparse(text)
     # there is an error - return the error code and message
-    response <- paste0(
-      "Error: ", asjson$error$id,
-      " from ", asjson$`requestParameters`$fromPlace,
-      " to ", asjson$`requestParameters`$toPlace,
-      " ", asjson$error$msg
-    )
+    if(is.null(asjson$error)){
+      response <- paste0(
+        "Error: No itinary returned",
+        " from ", asjson$`requestParameters`$fromPlace,
+        " to ", asjson$`requestParameters`$toPlace
+      )
+    } else {
+      response <- paste0(
+        "Error: ", asjson$error$id,
+        " from ", asjson$`requestParameters`$fromPlace,
+        " to ", asjson$`requestParameters`$toPlace,
+        " ", asjson$error$msg
+      )
+    }
     return(response)
   }
 }
