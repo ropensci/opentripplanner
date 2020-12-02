@@ -9,62 +9,67 @@ otp_build_graph(
   dir = NULL,
   memory = 2048,
   router = "default",
-  analyst = FALSE,
   flag64bit = TRUE,
-  quiet = TRUE
+  quiet = TRUE,
+  otp_version = NULL
 )
 }
 \arguments{
 \item{otp}{A character string, path to the OTP .jar file}
 
-\item{dir}{A character string, path to a directory containing the
-necessary files, see details}
+\item{dir}{A character string, path to a directory containing the necessary
+files, see details}
 
-\item{memory}{A positive integer. Amount of memory to assign to
-the OTP in MB, default is 2048}
+\item{memory}{A positive integer. Amount of memory to assign to the OTP in
+MB, default is 2048}
 
-\item{router}{A character string for the name of the router, must
-subfolder of  dir/graphs, default "default". See vignettes for details.}
+\item{router}{A character string for the name of the router, must subfolder
+of  dir/graphs, default "default". See vignettes for details.}
 
-\item{analyst}{Logical, should analyst feature be built, default FALSE. See advanced vignette for details.}
-
-\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions}
+\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions,
+ignored if otp_version >= 2}
 
 \item{quiet}{Logical, if FALSE the Java commands will be printed to console}
+
+\item{otp_version}{Numeric, version of OTP to build, default NULL when version
+is auto-detected}
+
 }
 \value{
-Character vector of messages produced by OTP, and will return the message
-    "Graph built" if successful
+Character vector of messages produced by OTP, and will return the
+  message "Graph built" if successful
 }
 \description{
-OTP is run in Java and requires Java commands to be typed into the
-command line. The function allows the parameters to be defined in
-R and automatically passed to Java. This function builds a OTP
-graph from the Open Street Map and other files.
+OTP is run in Java and requires Java commands to be typed into
+  the command line. The function allows the parameters to be defined in R and
+  automatically passed to Java. This function builds a OTP graph from the
+  Open Street Map and other files.
 }
 \details{
 The OTP .jar file can be downloaded from
-    https://repo1.maven.org/maven2/org/opentripplanner/otp/
+  https://repo1.maven.org/maven2/org/opentripplanner/otp/
 
-To build an OTP graph requires the following files to be in the directory
-specified by the dir variable.
+  To build an OTP graph requires the following files to be in the directory
+  specified by the dir variable.
 
-/graphs - A sub-directory
+  /graphs - A sub-directory
 
-  /default - A sub-directory with the name of the OTP router used in router' variable
+  /default - A sub-directory with the name of the OTP router used in router'
+  variable
 
-    osm.pbf - Required, pbf file containing the Open Street Map
+  osm.pbf - Required, pbf file containing the Open Street Map
 
-    router-config.json - Required, json file containing configurations settings for the OTP
+  router-config.json - Required, json file containing configurations settings
+  for the OTP
 
-    gtfs.zip - Optional, and number of GTFS files with transit timetables
+  gtfs.zip - Optional, and number of GTFS files with transit timetables
 
-    terrain.tif - Optional, GeoTiff image of terrain map
+  terrain.tif - Optional, GeoTiff image of terrain map
 
-The function will accept any file name for the .jar file, but it must be
-the only .jar file in that directory OTP can support multiple routers
-(e.g. different regions), each router must have its own sub-directory in
-the graphs directory
+  The function will accept any file name for the .jar file, but it must be
+  the only .jar file in that directory OTP can support multiple routers (e.g.
+  different regions), each router must have its own sub-directory in the
+  graphs directory
 }
 \examples{
 \dontrun{
@@ -74,6 +79,7 @@ log <- otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
 \seealso{
 Other setup: 
 \code{\link{otp_check_java}()},
+\code{\link{otp_check_version}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_make_config}()},

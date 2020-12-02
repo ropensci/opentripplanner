@@ -1,47 +1,48 @@
 #' Build an OTP Graph
 #'
-#' @description
-#' OTP is run in Java and requires Java commands to be typed into the
-#' command line. The function allows the parameters to be defined in
-#' R and automatically passed to Java. This function builds a OTP
-#' graph from the Open Street Map and other files.
+#' @description OTP is run in Java and requires Java commands to be typed into
+#'   the command line. The function allows the parameters to be defined in R and
+#'   automatically passed to Java. This function builds a OTP graph from the
+#'   Open Street Map and other files.
 #'
 #' @param otp A character string, path to the OTP .jar file
-#' @param dir A character string, path to a directory containing the
-#'     necessary files, see details
-#' @param memory A positive integer. Amount of memory to assign to
-#'     the OTP in MB, default is 2048
-#' @param router A character string for the name of the router, must
-#'     subfolder of  dir/graphs, default "default". See vignettes for details.
-#' @param analyst Logical, should analyst feature be built, default FALSE. See advanced vignette for details.
-#' @param flag64bit Logical, if true the -d64 flag is added to Java instructions
+#' @param dir A character string, path to a directory containing the necessary
+#'   files, see details
+#' @param memory A positive integer. Amount of memory to assign to the OTP in
+#'   MB, default is 2048
+#' @param router A character string for the name of the router, must subfolder
+#'   of  dir/graphs, default "default". See vignettes for details.
+#' @param flag64bit Logical, if true the -d64 flag is added to Java instructions,
+#'   ignored if otp_version >= 2
 #' @param quiet Logical, if FALSE the Java commands will be printed to console
-#' @return
-#' Character vector of messages produced by OTP, and will return the message
-#'     "Graph built" if successful
-#' @details
-#' The OTP .jar file can be downloaded from
-#'     https://repo1.maven.org/maven2/org/opentripplanner/otp/
+#' @param otp_version Numeric, version of OTP to build, default NULL when version
+#'   is auto-detected
+#' @return Character vector of messages produced by OTP, and will return the
+#'   message "Graph built" if successful
+#' @details The OTP .jar file can be downloaded from
+#'   https://repo1.maven.org/maven2/org/opentripplanner/otp/
 #'
-#' To build an OTP graph requires the following files to be in the directory
-#' specified by the dir variable.
+#'   To build an OTP graph requires the following files to be in the directory
+#'   specified by the dir variable.
 #'
-#' /graphs - A sub-directory
+#'   /graphs - A sub-directory
 #'
-#'   /default - A sub-directory with the name of the OTP router used in router' variable
+#'   /default - A sub-directory with the name of the OTP router used in router'
+#'   variable
 #'
-#'     osm.pbf - Required, pbf file containing the Open Street Map
+#'   osm.pbf - Required, pbf file containing the Open Street Map
 #'
-#'     router-config.json - Required, json file containing configurations settings for the OTP
+#'   router-config.json - Required, json file containing configurations settings
+#'   for the OTP
 #'
-#'     gtfs.zip - Optional, and number of GTFS files with transit timetables
+#'   gtfs.zip - Optional, and number of GTFS files with transit timetables
 #'
-#'     terrain.tif - Optional, GeoTiff image of terrain map
+#'   terrain.tif - Optional, GeoTiff image of terrain map
 #'
-#' The function will accept any file name for the .jar file, but it must be
-#' the only .jar file in that directory OTP can support multiple routers
-#' (e.g. different regions), each router must have its own sub-directory in
-#' the graphs directory
+#'   The function will accept any file name for the .jar file, but it must be
+#'   the only .jar file in that directory OTP can support multiple routers (e.g.
+#'   different regions), each router must have its own sub-directory in the
+#'   graphs directory
 #' @family setup
 #' @examples
 #' \dontrun{
@@ -52,43 +53,62 @@ otp_build_graph <- function(otp = NULL,
                             dir = NULL,
                             memory = 2048,
                             router = "default",
-                            analyst = FALSE,
                             flag64bit = TRUE,
-                            quiet = TRUE) {
+                            quiet = TRUE,
+                            otp_version = NULL) {
 
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
+  checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999)
 
-  text <- paste0(
-    "java -Xmx", memory, 'M')
-
-  if (flag64bit) {
-    text <- paste0(text, ' -d64 ')
+  # Check OTP version
+  if(is.null(otp_version)){
+    otp_version <- otp_version_check(otp)
   }
 
-  text <- paste0(text, '-jar "',
-                 otp,
-                 '" --build "',
-                 dir,
-                 "/graphs/",
-                 router,
-                 '"'
-  )
-
-  if (analyst) {
-    text <- paste0(text, " --analyst")
-  }
-
-
-  check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE)
+  check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE, otp_version = otp_version)
   if (!check) {
     warnings()
-    stop("Basic checks have failed, please check your inputs")
+    stop("Basic checks failed, please check your inputs")
   }
+
+  if(otp_version >= 2){
+    text <- paste0(
+      "java -Xmx", memory, 'M')
+
+    text <- paste0(
+      text, ' -jar "',
+      otp,
+      '" --build --save "',
+      dir,
+      '/graphs/',
+      router,
+      '"'
+    )
+
+  } else {
+    text <- paste0(
+      "java -Xmx", memory, 'M')
+
+    if (flag64bit) {
+      text <- paste0(text, ' -d64')
+    }
+
+    text <- paste0(text, ' -jar "',
+                   otp,
+                   '" --build "',
+                   dir,
+                   "/graphs/",
+                   router,
+                   '"'
+    )
+  }
+
   message(paste0(
     Sys.time(),
     " Basic checks completed, building graph, this may take a few minutes"
   ))
+
   message("The graph will be saved to ", dir, "/graphs/", router)
 
   if(!quiet){
@@ -141,7 +161,10 @@ otp_build_graph <- function(otp = NULL,
 #'     Default FALSE
 #' @param wait Logical, Should R wait until OTP has loaded before
 #'     running next line of code, default TRUE
-#' @param flag64bit Logical, if true the -d64 flag is added to Java instructions
+#' @param flag64bit Logical, if true the -d64 flag is added to Java instructions,
+#'     ignored if otp_version >= 2
+#' @param otp_version Numeric, version of OTP to build, default NULL when version
+#'     is auto-detected
 #' @family setup
 #' @return
 #' This function does not return a value to R. If wait is TRUE R
@@ -182,10 +205,21 @@ otp_setup <- function(otp = NULL,
                       securePort = 8081,
                       analyst = FALSE,
                       wait = TRUE,
-                      flag64bit = TRUE) {
+                      flag64bit = TRUE,
+                      otp_version = NULL) {
+
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
   memory <- floor(memory)
+
+  # Check OTP version
+  if(is.null(otp_version)){
+    otp_version <- otp_version_check(otp)
+  }
+
+  if(otp_version >= 2){
+    flag64bit <- FALSE
+  }
 
   # Setup request
 
@@ -214,8 +248,46 @@ otp_setup <- function(otp = NULL,
     )
   }
 
-  if (analyst) {
-    text <- paste0(text, " --analyst")
+  if(otp_version >= 2){
+    text <- paste0(
+      "java -Xmx", memory, 'M')
+
+    text <- paste0(
+      text, ' -jar "',
+      otp,
+      '" --load "',
+      dir,
+      '/graphs/',
+      router,
+      '"'
+    )
+
+  } else {
+    text <- paste0(
+      "java -Xmx", memory, 'M')
+
+    if (flag64bit) {
+      text <- paste0(text, ' -d64')
+    }
+    text <- paste0(
+      " -jar '",
+      otp,
+      "' --load '",
+      dir,
+      '/graphs/',
+      router,
+      "' --graphs '", dir, "/graphs'",
+      " --server --port ", port,
+      " --securePort ", securePort
+    )
+  }
+
+ if (analyst) {
+    if(otp_version >= 2){
+      message("Analyst is not supported by OTP 2.x")
+    } else {
+      text <- paste0(text, " --analyst")
+    }
   }
 
 
@@ -343,16 +415,21 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
 #'
 #' Checks to run before setting up the OTP
 #'
+#' @param otp Path to otp.jar
 #' @param dir A character string path to a folder containing the necessary
 #'     files, see details
 #' @param router A character string for the name of the router, must be a
 #'     subfolder of dir/graphs, default "default"
 #' @param graph Logical, check for graph, default = FALSE
-#' @param otp Path to otp.jar
+#' @param otp_version Numeric, OTP version number e.g. 1.5
 #' @family internal
 #' @noRd
 
-otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
+otp_checks <- function(otp = NULL,
+                       dir = NULL,
+                       router = NULL,
+                       graph = FALSE,
+                       otp_version = NULL) {
   # Checks
   checkmate::assertDirectoryExists(dir)
   checkmate::assertDirectoryExists(paste0(dir, "/graphs/", router))
@@ -368,7 +445,8 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
       return(FALSE)
     }
   }
-  if (otp_check_java()) {
+
+  if (otp_check_java(otp_version = otp_version)) {
     return(TRUE)
   } else {
     return(FALSE)
@@ -379,10 +457,13 @@ otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE) {
 #' Check Java version
 #'
 #' Check if you have the correct version of Java for running OTP locally
+#' @param otp_version numeric, OTP version number default 1.5
 #' @family setup
 #' @export
 #'
-otp_check_java <- function() {
+otp_check_java <- function(otp_version = 1.5) {
+
+  checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999)
   # Check we have correct verrsion of Java
   java_version <- try(system2("java", "-version", stdout = TRUE, stderr = TRUE))
   if (class(java_version) == "try-error") {
@@ -394,20 +475,61 @@ otp_check_java <- function() {
     java_version <- strsplit(java_version, "\\.")[[1]][1:2]
     java_version <- as.numeric(paste0(java_version[1], ".", java_version[2]))
     if (is.na(java_version)) {
-      warning("OTP requires Java version 8, unable to tell what version you have")
+      warning("R is unable to tell what version of Java you have")
       return(FALSE)
     }
-    if (java_version >= 1.8 & java_version < 1.9) {
-      message("You have the correct version of Java for OTP 1.x")
-      return(TRUE)
+
+    if(otp_version < 2){
+      if (java_version >= 1.8 & java_version < 1.9) {
+        message("You have the correct version of Java for OTP 1.x")
+        return(TRUE)
+      }
+
+      if (java_version == 11) {
+        warning("You have OTP 1.x but the version of Java for OTP 2.x")
+        return(FALSE)
+      }
+
+      warning("OTP 1.x requires Java version 1.8 you have version ", java_version)
+      return(FALSE)
     }
 
-    if (java_version == 11) {
-      message("You have the correct version of Java for OTP 2.x")
-      return(TRUE)
+    if(otp_version >= 2){
+      if (java_version >= 1.8 & java_version < 1.9) {
+        warning("You have OTP 2.x but the version of Java for OTP 1.x")
+        return(FALSE)
+      }
+
+      if (java_version == 11) {
+        message("You have the correct version of Java for OTP 2.x")
+        return(TRUE)
+      }
+
+      warning("OTP 2.x requires Java version 11 you have version ", java_version)
+      return(FALSE)
     }
 
     warning("OTP requires Java version 1.8 you have version ", java_version)
     return(FALSE)
+  }
+}
+
+#' Check OPT Version from file path
+#'
+#' @param otp character
+#' @family internal
+#' @noRd
+#'
+otp_version_check <- function(otp){
+  otp_version <- strsplit(otp, "/")[[1]]
+  otp_version <- otp_version[length(otp_version)]
+  otp_version <- gsub("[^[:digit:]., ]","",otp_version)
+  otp_version <- substr(otp_version, 1, 1)
+  if(otp_version == "1"){
+    return(1)
+  } else if (otp_version == "2"){
+    return(2)
+  } else {
+    stop("Unable to detect OTP version, please specify using otp_version")
   }
 }

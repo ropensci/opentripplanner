@@ -11,48 +11,52 @@ otp_connect(
   port = 8080,
   ssl = FALSE,
   check = TRUE,
-  timezone = Sys.timezone()
+  timezone = Sys.timezone(),
+  otp_version = 1.5
 )
 }
 \arguments{
-\item{hostname}{A string, e.g. "ec2-34-217-73-26.us-west-2.compute.amazonaws.com".
-Optional, default is "localhost".}
+\item{hostname}{A string, e.g.
+"ec2-34-217-73-26.us-west-2.compute.amazonaws.com". Optional, default is
+"localhost".}
 
-\item{router}{A string, e.g. "UK2018". Optional, default is "default". OTP can support multiple routers see advanced vignette for details.}
+\item{router}{A string, e.g. "UK2018". Optional, default is "default". OTP
+can support multiple routers see advanced vignette for details.}
 
 \item{url}{If a non-standard URL structure is used provide a full url,
 default is NULL}
 
 \item{port}{A positive integer. Optional, default is 8080.}
 
-\item{ssl}{Logical, indicates whether to use https. Optional,
-default is FALSE.}
+\item{ssl}{Logical, indicates whether to use https. Optional, default is
+FALSE.}
 
 \item{check}{Logical. If TRUE connection object is only returned if OTP
 instance and router are confirmed reachable. Optional, default is TRUE.}
 
 \item{timezone}{Character, timezone, defaults to local timezone}
+
+\item{otp_version}{Numeric, OTP Version in use default 1.5, if check is TRUE
+then `otp_check_version()` is called and otp_version is updated}
 }
 \value{
-Returns an S3 object of class otpconnect. If \code{check} is TRUE
-    and the router is not reachable the object is not returned.
+Returns an S3 object of class otpconnect. If \code{check} is TRUE and
+  the router is not reachable the object is not returned.
 }
 \description{
-Defines the parameters required to connect to a router on an OTP
-instance and, if required, confirms that the instance and router
-are query-able.
+Defines the parameters required to connect to a router on an OTP instance
+and, if required, confirms that the instance and router are query-able.
 }
 \details{
 The default URL structure for the OTP API is:
-http://<hostname>:<port>/otp/routers/<router>
-For example: http://localhost:8080/otp/routers/default
+http://<hostname>:<port>/otp/routers/<router> For example:
+http://localhost:8080/otp/routers/default
 
 Functions construct the URL from the parameters provided in otpconnect
-objects. However some websites hosting OTP have modified the default
-URL structure. If this is the case you can use the \code{url} parameter
-to bypass the URL construction and provide a fully formed URL. In this
-case the \code{hostname}, \code{router}, \code{port}, and \code{ssl}
-are ignored.
+objects. However some websites hosting OTP have modified the default URL
+structure. If this is the case you can use the \code{url} parameter to bypass
+the URL construction and provide a fully formed URL. In this case the
+\code{hostname}, \code{router}, \code{port}, and \code{ssl} are ignored.
 }
 \examples{
 \dontrun{

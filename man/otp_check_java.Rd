@@ -4,7 +4,10 @@
 \alias{otp_check_java}
 \title{Check Java version}
 \usage{
-otp_check_java()
+otp_check_java(otp_version = 1.5)
+}
+\arguments{
+\item{otp_version}{numeric, OTP version number default 1.5}
 }
 \description{
 Check if you have the correct version of Java for running OTP locally
@@ -12,6 +15,7 @@ Check if you have the correct version of Java for running OTP locally
 \seealso{
 Other setup: 
 \code{\link{otp_build_graph}()},
+\code{\link{otp_check_version}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_make_config}()},

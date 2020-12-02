@@ -2,6 +2,7 @@
 
 export(otp_build_graph)
 export(otp_check_java)
+export(otp_check_version)
 export(otp_connect)
 export(otp_dl_demo)
 export(otp_dl_jar)
