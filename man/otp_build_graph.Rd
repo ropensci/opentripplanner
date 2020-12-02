@@ -26,7 +26,8 @@ MB, default is 2048}
 \item{router}{A character string for the name of the router, must subfolder
 of  dir/graphs, default "default". See vignettes for details.}
 
-\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions}
+\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions,
+ignored if otp_version >= 2}
 
 \item{quiet}{Logical, if FALSE the Java commands will be printed to console}
 
@@ -77,6 +78,7 @@ log <- otp_build_graph(otp = "C:/otp/otp.jar", dir = "C:/data")
 \seealso{
 Other setup: 
 \code{\link{otp_check_java}()},
+\code{\link{otp_check_version}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_make_config}()},

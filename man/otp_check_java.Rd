@@ -15,6 +15,7 @@ Check if you have the correct version of Java for running OTP locally
 \seealso{
 Other setup: 
 \code{\link{otp_build_graph}()},
+\code{\link{otp_check_version}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_make_config}()},

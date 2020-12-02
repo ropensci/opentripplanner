@@ -13,6 +13,7 @@ otp_setup(
   securePort = 8081,
   analyst = FALSE,
   wait = TRUE,
+  flag64bit = TRUE,
   otp_version = NULL
 )
 }
@@ -38,6 +39,9 @@ Default FALSE}
 
 \item{wait}{Logical, Should R wait until OTP has loaded before
 running next line of code, default TRUE}
+
+\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions,
+ignored if otp_version >= 2}
 
 \item{otp_version}{Numeric, version of OTP to build, default NULL when version
 is auto-detected}
@@ -85,6 +89,7 @@ otp_setup(
 Other setup: 
 \code{\link{otp_build_graph}()},
 \code{\link{otp_check_java}()},
+\code{\link{otp_check_version}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_make_config}()},

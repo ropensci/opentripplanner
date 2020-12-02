@@ -59,6 +59,10 @@ We can download the demo data and build a graph in the usual way.
 
 log1 <- otp_build_graph(otp = path_otp, dir = path_data, otp_version = 2, flag64bit = FALSE)
 log2 <- otp_setup(otp = path_otp, dir = path_data)
+otpcon <- otp_connect()
+route <- otp_plan(otpcon, 
+                  fromPlace = c(-1.17502, 50.64590), 
+                  toPlace = c(-1.15339, 50.72266))
 ```
 
 
