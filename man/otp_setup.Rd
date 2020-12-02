@@ -12,7 +12,8 @@ otp_setup(
   port = 8080,
   securePort = 8081,
   analyst = FALSE,
-  wait = TRUE
+  wait = TRUE,
+  otp_version = NULL
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ Default FALSE}
 
 \item{wait}{Logical, Should R wait until OTP has loaded before
 running next line of code, default TRUE}
+
+\item{otp_version}{Numeric, version of OTP to build, default NULL when version
+is auto-detected}
 }
 \value{
 This function does not return a value to R. If wait is TRUE R

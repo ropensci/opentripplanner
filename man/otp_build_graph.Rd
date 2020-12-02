@@ -10,7 +10,8 @@ otp_build_graph(
   memory = 2048,
   router = "default",
   flag64bit = TRUE,
-  otp_version = NA
+  quiet = TRUE,
+  otp_version = NULL
 )
 }
 \arguments{
@@ -27,7 +28,9 @@ of  dir/graphs, default "default". See vignettes for details.}
 
 \item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions}
 
-\item{otp_version}{Numeric, version of OTP to build, default NA when version
+\item{quiet}{Logical, if FALSE the Java commands will be printed to console}
+
+\item{otp_version}{Numeric, version of OTP to build, default NULL when version
 is auto-detected}
 }
 \value{

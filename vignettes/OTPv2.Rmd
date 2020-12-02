@@ -48,15 +48,16 @@ You can select OTP 2.0 using the `otp_dl_jar` function. Note that until OTP 2.0 
 
 ```{r setup, eval FALSE}
 library(opentripplanner)
-path_otp = otp_dl_jar(version = "2.0.0")
+path_data <- file.path(tempdir(), "OTP")
+dir.create(path_data)
+path_otp = otp_dl_jar(path_data, version = "2.0.0")
+otp_dl_demo(path_data)
 ```
 We can download the demo data and build a graph in the usual way.
 
 ```{r, eval=FALSE}
-path_data <- file.path(tempdir(), "OTP")
-dir.create(path_data)
-otp_dl_demo(path_data)
-log1 <- otp_build_graph(otp = path_otp, dir = path_data)
+
+log1 <- otp_build_graph(otp = path_otp, dir = path_data, otp_version = 2, flag64bit = FALSE)
 log2 <- otp_setup(otp = path_otp, dir = path_data)
 ```
 

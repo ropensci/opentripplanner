@@ -13,9 +13,9 @@
 #' @param router A character string for the name of the router, must subfolder
 #'   of  dir/graphs, default "default". See vignettes for details.
 #' @param flag64bit Logical, if true the -d64 flag is added to Java instructions
-#' @param otp_version Numeric, version of OTP to build, default NA when version
+#' @param quiet Logical, if FALSE the Java commands will be printed to console
+#' @param otp_version Numeric, version of OTP to build, default NULL when version
 #'   is auto-detected
-#' @param
 #' @return Character vector of messages produced by OTP, and will return the
 #'   message "Graph built" if successful
 #' @details The OTP .jar file can be downloaded from
@@ -53,27 +53,19 @@ otp_build_graph <- function(otp = NULL,
                             memory = 2048,
                             router = "default",
                             flag64bit = TRUE,
-                            otp_version = NA) {
+                            quiet = TRUE,
+                            otp_version = NULL) {
 
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
   checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999)
 
-
+  otp <- file.path(otp)
+  dir <- file.path(dir)
 
   # Check OTP version
-  if(is.na(otp_version)){
-    otp_version <- strsplit(otp, "/")[[1]]
-    otp_version <- otp_version[length(otp_version)]
-    otp_version <- gsub("[^[:digit:]., ]","",otp_version)
-    otp_version <- substr(otp_version, 1, 1)
-    if(otp_version == "1"){
-      otp_version <- 1
-    } else if (otp_version == "2"){
-      otp_version <- 2
-    } else {
-      stop("Unable to detect OTP version, please specify using otp_version")
-    }
+  if(is.null(otp_version)){
+    otp_version <- otp_version_check(otp)
   }
 
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = FALSE, otp_version = otp_version)
@@ -87,15 +79,15 @@ otp_build_graph <- function(otp = NULL,
       "java -Xmx", memory, 'M')
 
     if (flag64bit) {
-      text <- paste0(text, ' -d64 ')
+      text <- paste0(text, ' -d64')
     }
 
     text <- paste0(
-      text, " -jar '",
+      text, ' -jar "',
       otp,
-      "'--build --save '",
+      '" --build --save "',
       dir,
-      "/graphs/",
+      '/graphs/',
       router,
       '"'
     )
@@ -105,10 +97,10 @@ otp_build_graph <- function(otp = NULL,
       "java -Xmx", memory, 'M')
 
     if (flag64bit) {
-      text <- paste0(text, ' -d64 ')
+      text <- paste0(text, ' -d64')
     }
 
-    text <- paste0(text, '-jar "',
+    text <- paste0(text, ' -jar "',
                    otp,
                    '" --build "',
                    dir,
@@ -118,29 +110,35 @@ otp_build_graph <- function(otp = NULL,
     )
   }
 
-  if (analyst) {
-    if(otp_version >= 2){
-      message("Analyst is not supported by OTP 2.x")
-    } else {
-      text <- paste0(text, " --analyst")
-    }
-  }
-
-
   message(paste0(
     Sys.time(),
     " Basic checks completed, building graph, this may take a few minutes"
   ))
   message("The graph will be saved to ", dir)
+
+  if(!quiet){
+    message("Command Sent to Java:")
+    message(text)
+  }
+
   set_up <- try(system(text, intern = TRUE))
 
-  # Check for errors
-  if (any(grepl("ERROR", set_up, ignore.case = TRUE)) & length(set_up) < 10) {
-    message(paste0(Sys.time(), " Failed to build graph with message:"))
-    message(set_up)
-  } else {
-    message(paste0(Sys.time(), " Graph built"))
+  if("try-error" %in% class(set_up)){
+    stop(paste0("Graph Build Failed: ", set_up[1]))
   }
+
+  # Check for errors
+  msg <- set_up[grepl("Graph building took", set_up, ignore.case = TRUE)]
+  if(length(msg) == 0){
+    message("Error: OTP did not report a sucessfull graph build")
+    message("Last reported steps:")
+    for(i in seq(length(set_up)-2, length(set_up))){
+      message(set_up[i])
+    }
+  } else{
+    message(substr(msg, 42, nchar(msg)))
+  }
+
   return(set_up)
 }
 
@@ -168,6 +166,8 @@ otp_build_graph <- function(otp = NULL,
 #'     Default FALSE
 #' @param wait Logical, Should R wait until OTP has loaded before
 #'     running next line of code, default TRUE
+#' @param otp_version Numeric, version of OTP to build, default NULL when version
+#'   is auto-detected
 #' @family setup
 #' @return
 #' This function does not return a value to R. If wait is TRUE R
@@ -207,10 +207,16 @@ otp_setup <- function(otp = NULL,
                       port = 8080,
                       securePort = 8081,
                       analyst = FALSE,
-                      wait = TRUE) {
+                      wait = TRUE,
+                      otp_version = NULL) {
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
   memory <- floor(memory)
+
+  # Check OTP version
+  if(is.null(otp_version)){
+    otp_version <- otp_version_check(otp)
+  }
 
   # Setup request
   if(TRUE){
@@ -235,7 +241,11 @@ otp_setup <- function(otp = NULL,
 
 
   if (analyst) {
-    text <- paste0(text, " --analyst")
+    if(otp_version >= 2){
+      message("Analyst is not supported by OTP 2.x")
+    } else {
+      text <- paste0(text, " --analyst")
+    }
   }
 
   # Run extra checks
@@ -361,17 +371,21 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
 #'
 #' Checks to run before setting up the OTP
 #'
+#' @param otp Path to otp.jar
 #' @param dir A character string path to a folder containing the necessary
 #'     files, see details
 #' @param router A character string for the name of the router, must be a
 #'     subfolder of dir/graphs, default "default"
 #' @param graph Logical, check for graph, default = FALSE
-#' @param otp Path to otp.jar
 #' @param otp_version Numeric, OTP version number e.g. 1.5
 #' @family internal
 #' @noRd
 
-otp_checks <- function(otp = NULL, dir = NULL, router = NULL, graph = FALSE, otp_version = NULL) {
+otp_checks <- function(otp = NULL,
+                       dir = NULL,
+                       router = NULL,
+                       graph = FALSE,
+                       otp_version = NULL) {
   # Checks
   checkmate::assertDirectoryExists(dir)
   checkmate::assertDirectoryExists(paste0(dir, "/graphs/", router))
@@ -453,5 +467,25 @@ otp_check_java <- function(otp_version = 1.5) {
 
     warning("OTP requires Java version 1.8 you have version ", java_version)
     return(FALSE)
+  }
+}
+
+#' Check OPT Version from file path
+#'
+#' @param otp character
+#' @family internal
+#' @noRd
+#'
+otp_version_check <- function(otp){
+  otp_version <- strsplit(otp, "/")[[1]]
+  otp_version <- otp_version[length(otp_version)]
+  otp_version <- gsub("[^[:digit:]., ]","",otp_version)
+  otp_version <- substr(otp_version, 1, 1)
+  if(otp_version == "1"){
+    return(1)
+  } else if (otp_version == "2"){
+    return(2)
+  } else {
+    stop("Unable to detect OTP version, please specify using otp_version")
   }
 }
