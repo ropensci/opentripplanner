@@ -12,7 +12,8 @@
 #'   MB, default is 2048
 #' @param router A character string for the name of the router, must subfolder
 #'   of  dir/graphs, default "default". See vignettes for details.
-#' @param flag64bit Logical, if true the -d64 flag is added to Java instructions
+#' @param flag64bit Logical, if true the -d64 flag is added to Java instructions,
+#'   ignored if otp_version >= 2
 #' @param quiet Logical, if FALSE the Java commands will be printed to console
 #' @param otp_version Numeric, version of OTP to build, default NULL when version
 #'   is auto-detected
@@ -77,10 +78,6 @@ otp_build_graph <- function(otp = NULL,
   if(otp_version >= 2){
     text <- paste0(
       "java -Xmx", memory, 'M')
-
-    if (flag64bit) {
-      text <- paste0(text, ' -d64')
-    }
 
     text <- paste0(
       text, ' -jar "',
@@ -166,8 +163,10 @@ otp_build_graph <- function(otp = NULL,
 #'     Default FALSE
 #' @param wait Logical, Should R wait until OTP has loaded before
 #'     running next line of code, default TRUE
+#' @param flag64bit Logical, if true the -d64 flag is added to Java instructions,
+#'     ignored if otp_version >= 2
 #' @param otp_version Numeric, version of OTP to build, default NULL when version
-#'   is auto-detected
+#'     is auto-detected
 #' @family setup
 #' @return
 #' This function does not return a value to R. If wait is TRUE R
@@ -208,6 +207,7 @@ otp_setup <- function(otp = NULL,
                       securePort = 8081,
                       analyst = FALSE,
                       wait = TRUE,
+                      flag64bit = TRUE,
                       otp_version = NULL) {
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
@@ -216,6 +216,10 @@ otp_setup <- function(otp = NULL,
   # Check OTP version
   if(is.null(otp_version)){
     otp_version <- otp_version_check(otp)
+  }
+
+  if(otp_version >= 2){
+    flag64bit <- FALSE
   }
 
   # Setup request
@@ -238,6 +242,39 @@ otp_setup <- function(otp = NULL,
     )
   }
 
+  if(otp_version >= 2){
+    text <- paste0(
+      "java -Xmx", memory, 'M')
+
+    text <- paste0(
+      text, ' -jar "',
+      otp,
+      '" --load "',
+      dir,
+      '/graphs/',
+      router,
+      '"'
+    )
+
+  } else {
+    text <- paste0(
+      "java -Xmx", memory, 'M')
+
+    if (flag64bit) {
+      text <- paste0(text, ' -d64')
+    }
+    text <- paste0(
+      " -jar '",
+      otp,
+      "' --load '",
+      dir,
+      '/graphs/',
+      router,
+      "' --graphs '", dir, "/graphs'",
+      " --server --port ", port,
+      " --securePort ", securePort
+    )
+  }
 
 
   if (analyst) {
