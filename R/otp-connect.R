@@ -207,18 +207,18 @@ check_router.otpconnect <- function(x) {
 #'
 otp_check_version <- function(otpcon, warn = TRUE){
 
-  if (is.null(x$url)) {
+  if (is.null(otpcon$url)) {
     url <- paste0(ifelse(isTRUE(otpcon$ssl), 'https://', 'http://'),
               otpcon$hostname,
               ':',
               otpcon$port,
               '/otp')
   } else {
-    url <- x$url
+    url <- otpcon$url
   }
 
   ver <- try(curl::curl_fetch_memory(url), silent = TRUE)
-  if ("try-error" %in% class(check)) {
+  if ("try-error" %in% class(ver)) {
     return(ver[1])
   }
 

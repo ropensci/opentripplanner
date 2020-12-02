@@ -48,6 +48,10 @@ otp_plan_internal_legacy <- function(otpcon = NA,
   full_elevation <- FALSE
   get_elevation <- FALSE
 
+  if(otpcon$otp_version >= 2){
+    stop("OTP2 is not supported in legacy mode")
+  }
+
   # Construct URL
   routerUrl <- make_url(otpcon)
   routerUrl <- paste0(routerUrl, "/plan")

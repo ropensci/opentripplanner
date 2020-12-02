@@ -509,6 +509,13 @@ otp_plan_internal <- function(otpcon = NA,
     numItineraries = numItineraries
   )
 
+  if(otpcon$otp_version >= 2){
+    # maxWalkDistance causes itinaries to fail
+    if(mode == "CAR"){
+      query$maxWalkDistance <- NULL
+    }
+  }
+
   if (!is.null(routeOptions)) {
     query <- c(query, routeOptions)
   }
@@ -518,7 +525,7 @@ otp_plan_internal <- function(otpcon = NA,
   text <- rawToChar(text$content)
 
   asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
-    silent = TRUE
+                silent = TRUE
   )
 
   # Check for errors - if no error object, continue to process content
