@@ -1,6 +1,6 @@
 ---
 name: Need Help
-about: For peopl who need help getting OTP working on their computer
+about: For people who need help getting OTP working on their computer
 title: "[Need Help] "
 labels: help wanted
 assignees: ''
