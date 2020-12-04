@@ -116,20 +116,24 @@ otp_build_graph <- function(otp = NULL,
   if (!quiet) {
     message("Command Sent to Java:")
     message(text)
+
   }
 
   set_up <- try(system(text, intern = TRUE))
+  message(" ")
+
 
   if ("try-error" %in% class(set_up)) {
     stop(paste0("Graph Build Failed: ", set_up[1]))
   }
+
 
   # Check for errors
   msg <- set_up[grepl("Graph building took", set_up, ignore.case = TRUE)]
   if (length(msg) == 0) {
     message("Error: OTP did not report a sucessfull graph build")
     message("Last reported steps:")
-    for (i in seq(length(set_up) - 2, length(set_up))) {
+    for (i in seq(length(set_up) - 5, length(set_up))) {
       message(set_up[i])
     }
   } else {
@@ -165,6 +169,7 @@ otp_build_graph <- function(otp = NULL,
 #'     running next line of code, default TRUE
 #' @param flag64bit Logical, if true the -d64 flag is added to Java instructions,
 #'     ignored if otp_version >= 2
+#' @param quiet Logical, if FALSE the Java commands will be printed to console
 #' @param otp_version Numeric, version of OTP to build, default NULL when version
 #'     is auto-detected
 #' @family setup
@@ -208,6 +213,7 @@ otp_setup <- function(otp = NULL,
                       analyst = FALSE,
                       wait = TRUE,
                       flag64bit = TRUE,
+                      quiet = TRUE,
                       otp_version = NULL) {
 
   # Run Checks
@@ -246,22 +252,19 @@ otp_setup <- function(otp = NULL,
     )
   } else {
     text <- paste0(
-      "java -Xmx", memory, "M"
+      'java -Xmx', memory, 'M'
     )
 
     if (flag64bit) {
-      text <- paste0(text, " -d64")
+      text <- paste0(text, ' -d64')
     }
-    text <- paste0(
-      " -jar '",
+    text <- paste0(text,
+      ' -jar "',
       otp,
-      "' --load '",
-      dir,
-      "/graphs/",
-      router,
-      "' --graphs '", dir, "/graphs'",
-      " --server --port ", port,
-      " --securePort ", securePort
+      '" --router ', router,
+      ' --graphs "', dir, '/graphs"',
+      ' --server --port ', port,
+      ' --securePort ', securePort
     )
   }
 
@@ -279,6 +282,12 @@ otp_setup <- function(otp = NULL,
   check <- otp_checks(otp = otp, dir = dir, router = router, graph = TRUE, otp_version = otp_version)
   if (!check) {
     stop("Basic checks have failed, please check your inputs")
+  }
+
+  if (!quiet) {
+    message("Command Sent to Java:")
+    message(text)
+
   }
 
   # Set up OTP
@@ -418,13 +427,26 @@ otp_checks <- function(otp = NULL,
   checkmate::assertDirectoryExists(paste0(dir, "/graphs/", router))
   checkmate::assertFileExists(otp, extension = "jar")
 
-  # Check that the graph exists, and is over 5KB
+
   if (graph) {
+    # Check that the graph exists, and is over 5KB
     checkmate::assertFileExists(paste0(dir, "/graphs/", router, "/Graph.obj"))
     size <- file.info(paste0(dir, "/graphs/", router, "/Graph.obj"))
     size <- size$size
     if (size < 5000) {
       warning("Graph.obj exists but is very small, the build process may have failed")
+      return(FALSE)
+    }
+  } else {
+    # Check the data to build a graph exists
+    fls <- list.files(file.path(dir, "/graphs/", router))
+    if(length(fls) == 0){
+      warning(paste0("There are no files in ",file.path(dir, "/graphs/", router)))
+      return(FALSE)
+    }
+    fls <- fls[grepl(".osm.pbf", fls)]
+    if(length(fls) == 0){
+      warning(paste0("There are no osm.pbf files in ",file.path(dir, "/graphs/", router)))
       return(FALSE)
     }
   }

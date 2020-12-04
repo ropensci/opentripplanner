@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The `opentripplanner` package was originally developed to support OpenTripPlanner v1.3, and has been updated to support each subsequent release. OpenTripPlanner v2.0 is currently under development, and this vignette will document the changes within the package to support OpenTripPlanner v2.0. While most changes for v2.0 are improvements some, like the removal of the isochrone featurre are not. So the package will continue to support both versions and this vignette will be updated to help users select the best version for their needs.
+The `opentripplanner` package was originally developed to support OpenTripPlanner v1.3, and has been updated to support each subsequent release. OpenTripPlanner v2.0 is the next major release, and this vignette will document the changes within the package to support OpenTripPlanner v2.0. While most changes for v2.0 are improvements some, like the removal of the isochrone feature are not. So the package will continue to support both version 1.5 (the last v1.x) and subsequent v2.x releases. This vignette will be updated to help users select the best version for their needs.
 
 **Major Changes in 2.0**
 
@@ -24,7 +24,7 @@ The `opentripplanner` package was originally developed to support OpenTripPlanne
 * Support for Netex transit data
 * Support for SIRI transit data
 * Switch from A* routing algorithum to Range Raptor when searching transit routes
-* Removal of Isochrone and other analysis features
+* Removal of Isochrone, Geocode, and other analysis features
 
 ## Getting Java 11
 

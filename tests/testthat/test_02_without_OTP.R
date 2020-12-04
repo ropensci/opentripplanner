@@ -76,10 +76,14 @@ test_that("default object is created and make_url method works", {
   skip_on_cran()
   expect_is(otpcon, "otpconnect")
   expect_match(make_url(otpcon), "http://localhost:8080/otp/routers/default")
+})
+
+
+test_that("make_url and check_router method does not work with erroinous data", {
   # warnings
-  x <- structure(as.list(1:2), class = "myclass")
-  expect_warning(make_url(x))
-  expect_warning(check_router(x))
+  x <- structure(as.list(1:2), class = "not_otpconnect")
+  expect_error(make_url(x))
+  expect_error(check_router(x))
 })
 
 test_that("can't connect to non-existant router", {

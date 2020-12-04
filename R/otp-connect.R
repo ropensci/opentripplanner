@@ -83,8 +83,8 @@ otp_connect <- function(hostname = "localhost",
   )
 
   # Set the name for the class
-  class(otpcon) <- append(class(otpcon), "otpconnect")
-
+  #class(otpcon) <- append(class(otpcon), "otpconnect")
+  class(otpcon) <- c("list","otpconnect")
 
   # If check then confirm router is queryable
 
@@ -103,37 +103,15 @@ otp_connect <- function(hostname = "localhost",
   }
 }
 
-# otpconnect class method to generate baseurl
-
-#' Make URL
+#' Make Url
 #' @param x otpcon
 #' @family internal
 #' @noRd
 #'
 make_url <- function(x) {
-  UseMethod("make_url", x)
-}
-
-#' Make URL.defualt
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-make_url.default <- function(x) {
-  warning(
-    "make_url does not know how to handle objects of class ",
-    class(x),
-    ", and can only be used on the class otpconnect"
-  )
-  return(NULL)
-}
-
-#' Make URL.optcon
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-make_url.otpconnect <- function(x) {
+  if(!"otpconnect" %in% class(x)){
+    stop("Object is not of class otpconnect, class is ", class(x))
+  }
   if (is.null(x$url)) {
     if (x$ssl) {
       url <- paste0(
@@ -161,37 +139,15 @@ make_url.otpconnect <- function(x) {
   return(url)
 }
 
-
-
 #' otpconnect method to check if router exists
 #' @param x otpcon
 #' @family internal
 #' @noRd
 #'
 check_router <- function(x) {
-  UseMethod("check_router", x)
-}
-
-#' otpconnect method to check if router exists (default)
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-check_router.default <- function(x) {
-  warning(
-    "check_router does not know how to handle objects of class ",
-    class(x),
-    ", and can only be used on the class otpconnect"
-  )
-  return(NULL)
-}
-
-#' otpconnect method to check if router exists (otpcon)
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-check_router.otpconnect <- function(x) {
+  if(!"otpconnect" %in% class(x)){
+    stop("Object is not of class otpconnect, class is ", class(x))
+  }
   check <- try(curl::curl_fetch_memory(make_url(x)), silent = TRUE)
   if (class(check) == "try-error") {
     return(check[1])
