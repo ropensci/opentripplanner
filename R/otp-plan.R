@@ -512,7 +512,7 @@ otp_plan_internal <- function(otpcon = NA,
 
   if (otpcon$otp_version >= 2) {
     # maxWalkDistance causes itinaries to fail
-    if (mode == "CAR") {
+    if (mode == "CAR" | grepl("TRANSIT", mode)) {
       query$maxWalkDistance <- NULL
     }
   }

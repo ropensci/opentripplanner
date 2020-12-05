@@ -97,7 +97,7 @@ test_that("correct message when check is TRUE and router exists", {
 test_that("correct error when check is TRUE and router does not exist", {
   skip_on_cran()
   expect_error(
-    otp_connect(router = "not"),
+    otp_connect(router = "notWorkingRouter"),
     "Router http://localhost:8080/otp/routers/not does not exist"
   )
 })
@@ -116,7 +116,7 @@ test_that("basic routing", {
   )
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
-  expect_true(ncol(route) == 33)
+  expect_true(ncol(route) >= 32)
   expect_true(all(names(route) %in%
     c(
       "duration", "startTime", "endTime", "walkTime",
@@ -137,26 +137,29 @@ test_that("transit routing", {
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515),
-    date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")),
-    mode = c("WALK", "TRANSIT")
+    date_time = as.POSIXct(strptime("2020-06-03 13:30", "%Y-%m-%d %H:%M")),
+    mode = c("WALK", "TRANSIT"),
+    numItineraries = 3
   )
   expect_is(route, "sf")
-  expect_true(nrow(route) == 9)
-  expect_true(ncol(route) == 42)
-  expect_true(all(names(route) %in%
-    c(
-      "duration", "startTime", "endTime", "walkTime",
-      "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
-      "elevationLost", "elevationGained", "transfers", "fare",
-      "tooSloped", "fare_currency", "leg_startTime", "leg_endTime",
-      "departureDelay", "arrivalDelay", "realTime", "distance",
-      "pathway", "mode", "route", "agencyTimeZoneOffset",
-      "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
-      "transitLeg", "agencyName", "agencyUrl", "routeType",
-      "routeId", "agencyId", "tripId", "serviceDate",
-      "routeShortName", "routeLongName", "route_option", "fromPlace",
-      "toPlace", "geometry"
-    )))
+  expect_true(nrow(route) >= 7)
+  expect_true(ncol(route) >= 41)
+  col_names <- c(
+    "duration", "startTime", "endTime", "walkTime",
+    "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
+    "elevationLost", "elevationGained", "transfers", "fare",
+    "tooSloped", "fare_currency", "leg_startTime", "leg_endTime",
+    "departureDelay", "arrivalDelay", "realTime", "distance",
+    "pathway", "mode", "route", "agencyTimeZoneOffset",
+    "interlineWithPreviousLeg", "rentedBike", "leg_duration",
+    "transitLeg", "agencyName", "agencyUrl",
+    "routeId", "agencyId", "tripId", "serviceDate",
+    "routeShortName", "routeLongName", "route_option", "fromPlace",
+    "toPlace", "geometry","alerts","intermediateStops",
+    "flexDrtAdvanceBookMin","routeType"
+  )
+
+  expect_true(all(names(route) %in% col_names))
 })
 
 
@@ -166,7 +169,7 @@ test_that("legacy code", {
   route <- otp_plan_internal_legacy(otpcon,
     fromPlace = matrix(c(50.64990, -1.16489), ncol = 2),
     toPlace = matrix(c(50.72515, -1.15803), ncol = 2),
-    date = "2018-06-03",
+    date = "2020-06-03",
     time = "13:30"
   )
 
@@ -184,7 +187,7 @@ test_that("no geometry routing", {
   )
   expect_is(route, "data.frame")
   expect_true(nrow(route) == 1)
-  expect_true(ncol(route) == 32)
+  expect_true(ncol(route) >= 31)
 })
 
 test_that("full elevation routing", {
@@ -199,7 +202,7 @@ test_that("full elevation routing", {
   )
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
-  expect_true(ncol(route) == 34)
+  expect_true(ncol(route) >= 32)
   expect_is(route$elevation, "list")
 })
 
@@ -216,19 +219,19 @@ test_that("batch routing", {
   )
   expect_is(routes, "sf")
   expect_true(nrow(routes) == 9)
-  expect_true(ncol(routes) == 33)
-  expect_true(all(names(routes) %in%
-    c(
-      "duration", "startTime", "endTime", "walkTime",
-      "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
-      "elevationLost", "elevationGained", "transfers", "tooSloped",
-      "fare", "fare_currency", "leg_startTime", "leg_endTime",
-      "departureDelay", "arrivalDelay", "realTime", "distance",
-      "pathway", "mode", "route", "agencyTimeZoneOffset",
-      "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
-      "transitLeg", "route_option", "fromPlace", "toPlace",
-      "geometry"
-    )))
+  expect_true(ncol(routes) >= 32)
+  col_names <- c(
+    "duration", "startTime", "endTime", "walkTime",
+    "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
+    "elevationLost", "elevationGained", "transfers", "tooSloped",
+    "fare", "fare_currency", "leg_startTime", "leg_endTime",
+    "departureDelay", "arrivalDelay", "realTime", "distance",
+    "pathway", "mode", "route", "agencyTimeZoneOffset",
+    "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
+    "transitLeg", "route_option", "fromPlace", "toPlace",
+    "geometry"
+  )
+  expect_true(all(names(routes) %in% col_names))
 })
 
 
@@ -272,7 +275,7 @@ test_that("basic isochrone", {
     fromPlace = c(-1.159494, 50.732429), # lng/lat of Ryde ferry
     mode = c("WALK", "TRANSIT"),
     maxWalkDistance = 2000,
-    date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")),
+    date_time = as.POSIXct(strptime("2020-06-03 13:30", "%Y-%m-%d %H:%M")),
     cutoffSec = c(15, 30, 45, 60, 75, 90) * 60
   ) # Cut offs in seconds
   expect_is(ferry_current, "sf")
@@ -291,7 +294,7 @@ test_that("basic isochrone", {
 #     mode = c("WALK"),
 #     maxWalkDistance = 2000,
 #     ncores = 2,
-#     date_time = as.POSIXct(strptime("2018-06-03 13:30", "%Y-%m-%d %H:%M")),
+#     date_time = as.POSIXct(strptime("2020-06-03 13:30", "%Y-%m-%d %H:%M")),
 #     cutoffSec = c(15, 30, 45, 60, 75, 90) * 60
 #   ) # Cut offs in seconds
 #   expect_is(isobatch, "sf")
