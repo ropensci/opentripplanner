@@ -90,9 +90,8 @@ otp_connect <- function(hostname = "localhost",
 
   if (isTRUE(check)) {
     chk <- check_routers(otpcon)
-    if(!chk){
-      wrn <- names(warnings())
-      stop(wrn)
+    if(!isTRUE(chck)){
+      stop(chk)
     }
     otpcon$otp_version <- otp_check_version(otpcon, warn = FALSE)
 
@@ -178,8 +177,7 @@ check_routers <- function(otpcon) {
 
   check <- try(curl::curl_fetch_memory(url), silent = TRUE)
   if (class(check) == "try-error") {
-    warning("Router ", make_url(otpcon), " does not exist. Error code ", check$status_code)
-    return(FALSE)
+    return(paste0("Router ", make_url(otpcon), " does not exist. Error code ", check$status_code))
   }
 
   check <- rawToChar(check$content)
@@ -190,7 +188,7 @@ check_routers <- function(otpcon) {
     message("Router ", make_url(otpcon), " exists")
     return(TRUE)
   } else {
-    warning("Router ", make_url(otpcon), " does not exist. Valid routers are: ", paste(check, collapse = ", "))
+    return(paste0("Router ", make_url(otpcon), " does not exist. Valid routers are: ", paste(check, collapse = ", ")))
   }
   return(FALSE)
 }
