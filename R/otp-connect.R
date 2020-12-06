@@ -89,7 +89,11 @@ otp_connect <- function(hostname = "localhost",
   # If check then confirm router is queryable
 
   if (isTRUE(check)) {
-    check_routers(otpcon)
+    chk <- check_routers(otpcon)
+    if(!chk){
+      wrn <- names(warnings())
+      stop(wrn)
+    }
     otpcon$otp_version <- otp_check_version(otpcon, warn = FALSE)
 
   }
@@ -150,13 +154,13 @@ check_router <- function(x) {
 }
 
 #' otpconnect method to check if router exists
-#' @param x otpcon
+#' @param otpcon otpcon
 #' @family internal
 #' @noRd
 #'
-check_routers <- function(x) {
-  if(!"otpconnect" %in% class(x)){
-    stop("Object is not of class otpconnect, class is ", class(x))
+check_routers <- function(otpcon) {
+  if(!"otpconnect" %in% class(otpcon)){
+    stop("Object is not of class otpconnect, class is ", class(otpcon))
   }
 
   if (is.null(otpcon$url)) {
@@ -169,23 +173,26 @@ check_routers <- function(x) {
     )
   } else {
     # TODO: Fix this
-    stop("this is not supported yet")
+    warning("this is not supported yet")
   }
 
   check <- try(curl::curl_fetch_memory(url), silent = TRUE)
   if (class(check) == "try-error") {
-    stop("Router ", make_url(otpcon), " does not exist. Error code ", check$status_code)
+    warning("Router ", make_url(otpcon), " does not exist. Error code ", check$status_code)
+    return(FALSE)
   }
+
   check <- rawToChar(check$content)
   check <- rjson::fromJSON(check)
   check <- unlist(lapply(check$routerInfo, function(x){x$routerId}))
 
-  if(x$router %in% check){
+  if(otpcon$router %in% check){
     message("Router ", make_url(otpcon), " exists")
     return(TRUE)
   } else {
-    stop("Router ", make_url(otpcon), " does not exist. Valid routers are: ", paste(check, collapse = ", "))
+    warning("Router ", make_url(otpcon), " does not exist. Valid routers are: ", paste(check, collapse = ", "))
   }
+  return(FALSE)
 }
 
 

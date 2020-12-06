@@ -97,7 +97,7 @@ test_that("correct message when check is TRUE and router exists", {
 test_that("correct error when check is TRUE and router does not exist", {
   skip_on_cran()
   expect_error(
-    otp_connect(router = "notWorkingRouter"),
+    otp_connect(router = "not"),
     "Router http://localhost:8080/otp/routers/not does not exist"
   )
 })
