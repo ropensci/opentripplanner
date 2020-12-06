@@ -90,7 +90,7 @@ otp_connect <- function(hostname = "localhost",
 
   if (isTRUE(check)) {
     chk <- check_routers(otpcon)
-    if(!isTRUE(chck)){
+    if(!isTRUE(chk)){
       stop(chk)
     }
     otpcon$otp_version <- otp_check_version(otpcon, warn = FALSE)
