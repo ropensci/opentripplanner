@@ -11,7 +11,8 @@ has_rcppsimdjson <- function() {
 }
 
 skip_on_j11 <- function() {
-  if (otp_check_java(2)) {
+  suppressWarnings(jv <- otp_check_java(2))
+  if (jv) {
     skip("Skip this test with Java 11")
   }
 }
