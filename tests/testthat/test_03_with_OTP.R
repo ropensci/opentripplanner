@@ -32,18 +32,30 @@ if (!on_cran()) {
     expect_true(nrow(lsoa) == 89)
   })
 
-  context("Check previous tests have left the files we need")
+  context("Purge and redownload files")
 
   path_data <- file.path(tempdir(), "otptests")
+  if(dir.exists(path_data)){
+    unlink(path_data, recursive = TRUE)
+  }
 
-  if (otp_check_java(2)) {
-    path_otp <- file.path(path_data, "otp-2.0.0-shaded.jar")
+  dir.create(path_data)
+
+  otp_dl_demo(path_data)
+
+
+  if (suppressWarnings(otp_check_java(2))) {
+    path_otp <- otp_dl_jar(path_data,
+                           version = "2.0.0",
+                           cache = FALSE)
   } else {
-    path_otp <- file.path(path_data, "otp-1.5.0-shaded.jar")
+    path_otp <- otp_dl_jar(path_data,
+                           version = "1.5.0",
+                           cache = FALSE)
   }
 }
 
-
+context("Check files have downloaded")
 
 
 test_that("path_data is valid", {
@@ -60,7 +72,9 @@ context("Test the otp_build_graph function")
 
 test_that("We can build an otp graph", {
   skip_on_cran()
-  log <- otp_build_graph(otp = path_otp, dir = path_data, router = "default")
+  log <- otp_build_graph(otp = path_otp,
+                         dir = path_data,
+                         router = "default")
   expect_true(file.exists(file.path(
     path_data,
     "graphs",
@@ -73,9 +87,13 @@ context("Test the otp_setup function")
 
 test_that("We can startup OTP", {
   skip_on_cran()
-  expect_message(log <- otp_setup(otp = path_otp, dir = path_data, router = "default"),
-    regexp = "OTP is ready to use"
+  expect_message(log <- otp_setup(otp = path_otp,
+                                  dir = path_data,
+                                  router = "default",
+                                  wait = FALSE),
+    regexp = "OTP is loading"
   )
+  Sys.sleep(60)
 })
 
 context("Test the otp_connect function")

@@ -219,7 +219,8 @@ otp_check_version <- function(otpcon, warn = TRUE) {
   }
 
   ver <- rawToChar(ver$content)
-  ver <- RcppSimdJson::fparse(ver)
+  #ver <- RcppSimdJson::fparse(ver)
+  ver <- rjson::fromJSON(ver)
   ver <- as.numeric(paste0(
     ver$serverVersion$major,
     ".",

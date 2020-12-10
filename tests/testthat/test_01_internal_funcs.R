@@ -179,7 +179,7 @@ test_that("test polyline2linestring", {
 })
 
 test_that("test otp_check_java", {
-  r1 <- otp_check_java()
+  suppressWarnings(r1 <- otp_check_java())
   expect_true(class(r1) == "logical")
 })
 
