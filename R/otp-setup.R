@@ -165,6 +165,8 @@ otp_build_graph <- function(otp = NULL,
 #' @param securePort A positive integer. Optional, default is 8081.
 #' @param analyst Logical. Should the analyst features be loaded?
 #'     Default FALSE
+#' @param pointsets Logical. Should the pointsets be loaded?
+#'     Default FALSE
 #' @param wait Logical, Should R wait until OTP has loaded before
 #'     running next line of code, default TRUE
 #' @param flag64bit Logical, if true the -d64 flag is added to Java instructions,
@@ -211,6 +213,7 @@ otp_setup <- function(otp = NULL,
                       port = 8080,
                       securePort = 8081,
                       analyst = FALSE,
+                      pointsets = FALSE,
                       wait = TRUE,
                       flag64bit = TRUE,
                       quiet = TRUE,
@@ -222,6 +225,7 @@ otp_setup <- function(otp = NULL,
   checkmate::assert_numeric(port)
   checkmate::assert_numeric(securePort)
   checkmate::assert_logical(analyst)
+  checkmate::assert_logical(pointsets)
   checkmate::assert_logical(wait)
   checkmate::assert_logical(flag64bit)
   memory <- floor(memory)
@@ -276,6 +280,17 @@ otp_setup <- function(otp = NULL,
     }
   }
 
+  if (pointsets) {
+    if (otp_version >= 2) {
+      message("Analyst is not supported by OTP 2.x")
+    } else {
+      dir_poinsets <- file.path(path_data,"pointsets")
+      if(!dir.exists(dir_poinsets)){
+        stop("PointSets requested but folder ",dir_poinsets," does not exist")
+      }
+      text <- paste0(text, ' --pointSets "',dir_poinsets,'"')
+    }
+  }
 
 
   # Run extra checks
