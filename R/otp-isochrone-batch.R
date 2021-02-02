@@ -256,6 +256,10 @@ otp_isochrone_internal <- function(otpcon = NA,
       suppressMessages(suppressWarnings(response <- sf::st_buffer(response, 0)))
     }
 
+    response <- response[!sf::st_is_empty(response),]
+    response <- sf::st_cast(response, "MULTIPOLYGON")
+
+
     if (!is.null(fromID)) {
       response$fromPlace <- fromID
     } else {
