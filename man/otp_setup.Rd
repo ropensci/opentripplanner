@@ -14,6 +14,7 @@ otp_setup(
   analyst = FALSE,
   wait = TRUE,
   flag64bit = TRUE,
+  quiet = TRUE,
   otp_version = NULL
 )
 }
@@ -42,6 +43,8 @@ running next line of code, default TRUE}
 
 \item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions,
 ignored if otp_version >= 2}
+
+\item{quiet}{Logical, if FALSE the Java commands will be printed to console}
 
 \item{otp_version}{Numeric, version of OTP to build, default NULL when version
 is auto-detected}

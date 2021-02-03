@@ -34,6 +34,13 @@ otp_geocode <- function(otpcon = NULL,
                         clusters = FALSE,
                         corners = TRUE,
                         type = "SF") {
+  # Check for OTP2
+  if (!is.null(otpcon$otp_version)) {
+    if (otpcon$otp_version >= 2) {
+      stop("Geocoding is not supported by OTP v2.X")
+    }
+  }
+
   # Validate Inputs
   checkmate::assert_class(otpcon, "otpconnect", null.ok = FALSE)
   checkmate::assert_character(query,

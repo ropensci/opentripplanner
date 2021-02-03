@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-The `opentripplanner` package was originally developed to support OpenTripPlanner v1.3, and has been updated to support each subsequent release. OpenTripPlanner v2.0 is currently under development, and this vignette will document the changes within the package to support OpenTripPlanner v2.0. While most changes for v2.0 are improvements some, like the removal of the isochrone featurre are not. So the package will continue to support both versions and this vignette will be updated to help users select the best version for their needs.
+The `opentripplanner` package was originally developed to support OpenTripPlanner v1.3, and has been updated to support each subsequent release. OpenTripPlanner v2.0 is the next major release, and this vignette will document the changes within the package to support OpenTripPlanner v2.0. While most changes for v2.0 are improvements some, like the removal of the isochrone feature are not. So the package will continue to support both version 1.5 (the last v1.x) and subsequent v2.x releases. This vignette will be updated to help users select the best version for their needs.
 
 **Major Changes in 2.0**
 
@@ -24,7 +24,7 @@ The `opentripplanner` package was originally developed to support OpenTripPlanne
 * Support for Netex transit data
 * Support for SIRI transit data
 * Switch from A* routing algorithum to Range Raptor when searching transit routes
-* Removal of Isochrone and other analysis features
+* Removal of Isochrone, Geocode, and other analysis features
 
 ## Getting Java 11
 
@@ -46,26 +46,19 @@ Coming Soon
 
 You can select OTP 2.0 using the `otp_dl_jar` function. Note that until OTP 2.0 is released this will download a beta version used for internal testing.
 
-```{r setup, eval FALSE}
+```{r setup, eval=FALSE}
 library(opentripplanner)
+# Path to a folder containing the OTP.jar file, change to where you saved the file.
 path_data <- file.path(tempdir(), "OTP")
 dir.create(path_data)
-path_otp = otp_dl_jar(path_data, version = "2.0.0")
+path_otp <- otp_dl_jar(version = "2.0.0")
 otp_dl_demo(path_data)
+# Build Graph and start OTP
+log1 <- otp_build_graph(otp = path_otp, dir = path_data)
+log2 <- otp_setup(otp = path_otp, dir = path_data)
+otpcon <- otp_connect(timezone = "Europe/London")
 ```
 We can download the demo data and build a graph in the usual way.
 
-```{r, eval=FALSE}
-
-log1 <- otp_build_graph(otp = path_otp, dir = path_data, otp_version = 2, flag64bit = FALSE)
-log2 <- otp_setup(otp = path_otp, dir = path_data)
-otpcon <- otp_connect()
-route <- otp_plan(otpcon, 
-                  fromPlace = c(-1.17502, 50.64590), 
-                  toPlace = c(-1.15339, 50.72266))
-```
 
 
-```{r setup}
-library(opentripplanner)
-```

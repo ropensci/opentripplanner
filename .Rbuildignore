@@ -16,3 +16,4 @@
 ^tests/testthat/lucene/
 ^lucene/
 ^\.github$
+otp_parallel_log.txt

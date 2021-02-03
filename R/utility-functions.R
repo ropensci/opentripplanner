@@ -102,7 +102,28 @@ parse_elevation <- function(stp) {
     return(NA)
   }
 
-  elev <- data.table::rbindlist(stp$elevation, idcol = "step")
+  # Check for OTP1 or OTP2
+  if(class(stp$elevation) == "character"){
+    elev <- stp$elevation
+    elev <- strsplit(elev,",")
+    elev <- lapply(elev, as.numeric)
+    elev <- lapply(elev, split_alternating)
+    elev <- data.table::rbindlist(elev, idcol = "step")
+  } else {
+    elev <- data.table::rbindlist(stp$elevation, idcol = "step")
+  }
   elev$distance <- correct_distances(elev$first)
   return(as.data.frame(elev))
+}
+
+#' Split vector into two vectors by altnating values
+#' @param x vector
+#' @family internal
+#' @noRd
+split_alternating <- function(x){
+  odd <- seq_along(x) %% 2 == 1
+  distance <- x[odd]
+  elevation <- x[!odd]
+  return(data.frame(first = distance, second = elevation))
+
 }

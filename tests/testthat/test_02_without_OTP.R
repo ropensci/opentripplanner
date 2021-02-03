@@ -1,3 +1,4 @@
+#for(i in list.files("R", full.names = T)){source(i)}
 # This tests will run without OTP setup.
 context("Test function without an OTP connection")
 
@@ -47,7 +48,14 @@ test_that("download example data", {
 })
 
 if (!on_cran()) {
-  path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE)
+  if (suppressWarnings(otp_check_java(1))) {
+    path_otp <- otp_dl_jar(path_data, quiet = TRUE, cache = FALSE)
+  } else {
+    path_otp <- otp_dl_jar(path_data,
+      quiet = TRUE, cache = FALSE,
+      version = "2.0.0"
+    )
+  }
 }
 
 
@@ -64,31 +72,41 @@ test_that("download otp and cache", {
   expect_true(file.exists(file.path(otp_cache)))
 })
 
+context("Testing internal functions")
 
 test_that("default object is created and make_url method works", {
   skip_on_cran()
   expect_is(otpcon, "otpconnect")
   expect_match(make_url(otpcon), "http://localhost:8080/otp/routers/default")
-  # warnings
-  x <- structure(as.list(1:2), class = "myclass")
-  expect_warning(make_url(x))
-  expect_warning(check_router(x))
 })
+
+
+test_that("make_url and check_router method does not work with erroinous data", {
+  # warnings
+  x <- structure(as.list(1:2), class = "not_otpconnect")
+  expect_error(make_url(x))
+  expect_error(check_router(x))
+})
+
+context("Test setup fails without needed inputs")
 
 test_that("can't connect to non-existant router", {
   skip_on_cran()
   expect_error(otp_connect(router = "bananas"))
 })
 
-test_that("can't build graph without opt", {
+test_that("can't build graph without data", {
   skip_on_cran()
-  expect_error(otp_build_graph(otp = path_otp))
+  expect_error(otp_build_graph(otp = path_otp), regexp = "No directory provided")
 })
 
-test_that("can't setup without opt", {
+test_that("can't setup without a graph", {
   skip_on_cran()
-  expect_error(otp_setup(otp = path_otp, dir = path_data))
+  expect_error(otp_setup(otp = path_otp, dir = path_data),
+               regexp = "File does not exist")
 })
+
+context("Test routing does not work without needed inputs")
 
 test_that("otp_plan input validation", {
   skip_on_cran()
@@ -160,6 +178,8 @@ test_that("otp_plan input validation", {
   )
 })
 
+context("Test OTP1 unique features")
+
 test_that("otp_geocode input validation", {
   skip_on_cran()
   expect_error(otp_geocode(otpcon),
@@ -181,6 +201,8 @@ test_that("otp_isochrone input validation", {
     regexp = "Failed to connect to localhost port 8080"
   )
 })
+
+context("Test config functions")
 
 test_that("otp_make_config tests", {
   skip_on_cran()
@@ -214,6 +236,8 @@ test_that("otp_make_config tests", {
   )))
 })
 
+context("Test graph checking")
+
 test_that("otp_build_graph input validation", {
   skip_on_cran()
   expect_error(otp_build_graph(otp = paste0(path_otp, "Z"), dir = path_data),
@@ -227,6 +251,8 @@ test_that("otp_setup input validation", {
     regexp = "File does not exist:"
   )
 })
+
+context("test routing options")
 
 test_that("otp_routing_options creation", {
   skip_on_cran()
@@ -244,3 +270,4 @@ test_that("otp_stop tests", {
   # Don't know how to test this
   expect_true(TRUE)
 })
+

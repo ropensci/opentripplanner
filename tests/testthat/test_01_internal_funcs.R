@@ -121,8 +121,8 @@ test_that("test correct_distances", {
   r1 <- correct_distances(c(0, 1, 2, 3, 0, 1, 2))
   expect_identical(r1, c(0, 1, 2, 3, 3, 4, 5))
 
-  r2 <- correct_distances(c(1,2))
-  expect_identical(r2, c(1,2))
+  r2 <- correct_distances(c(1, 2))
+  expect_identical(r2, c(1, 2))
 
   r3 <- correct_distances(c(0, 1, 2, 3, 4, 5, 6))
   expect_identical(r3, c(0, 1, 2, 3, 4, 5, 6))
@@ -179,7 +179,7 @@ test_that("test polyline2linestring", {
 })
 
 test_that("test otp_check_java", {
-  r1 <- otp_check_java()
+  suppressWarnings(r1 <- otp_check_java())
   expect_true(class(r1) == "logical")
 })
 

@@ -48,6 +48,10 @@ otp_plan_internal_legacy <- function(otpcon = NA,
   full_elevation <- FALSE
   get_elevation <- FALSE
 
+  if (otpcon$otp_version >= 2) {
+    stop("OTP2 is not supported in legacy mode")
+  }
+
   # Construct URL
   routerUrl <- make_url(otpcon)
   routerUrl <- paste0(routerUrl, "/plan")
@@ -125,8 +129,6 @@ otp_plan_internal_legacy <- function(otpcon = NA,
 #' @noRd
 otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
                                    ...) {
-
-
   res <- try(otp_plan_internal_legacy(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
@@ -137,12 +139,14 @@ otp_get_results_legacy <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
   ), silent = TRUE)
 
   if ("try-error" %in% class(res)) {
-    res <- paste0("Try Error occured for ",
-                  paste(fromPlace, collapse = ","),
-                  " ",
-                  paste(toPlace, collapse = ","),
-                  " ",
-                  res[[1]])
+    res <- paste0(
+      "Try Error occured for ",
+      paste(fromPlace, collapse = ","),
+      " ",
+      paste(toPlace, collapse = ","),
+      " ",
+      res[[1]]
+    )
     warning(res)
   }
 

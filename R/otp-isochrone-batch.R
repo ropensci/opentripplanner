@@ -50,8 +50,8 @@ otp_isochrone <- function(otpcon = NA,
                           ncores = 1,
                           timezone = otpcon$timezone) {
   # Check for OTP2
-  if(!is.null(otpcon$otp_version)){
-    if(otpcon$otp_version >= 2){
+  if (!is.null(otpcon$otp_version)) {
+    if (otpcon$otp_version >= 2) {
       stop("Isochrones are not supported by OTP v2.X")
     }
   }
@@ -260,6 +260,13 @@ otp_isochrone_internal <- function(otpcon = NA,
       response$fromPlace <- fromID
     } else {
       response$fromPlace <- fromPlace
+    }
+
+    response <- response[!sf::st_is_empty(response),]
+    if(nrow(response) == 0){
+      return("Isochrone had empty geometry ")
+    } else {
+      response <- sf::st_cast(response, "MULTIPOLYGON")
     }
 
     return(response)

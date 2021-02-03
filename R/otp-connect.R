@@ -68,8 +68,9 @@ otp_connect <- function(hostname = "localhost",
   checkmate::assert_logical(check, add = coll)
   checkmate::reportAssertions(coll)
   checkmate::assert_subset(timezone,
-                           choices = OlsonNames(tzdir = NULL),
-                           add = coll)
+    choices = OlsonNames(tzdir = NULL),
+    add = coll
+  )
 
   otpcon <- list(
     hostname = hostname,
@@ -82,57 +83,31 @@ otp_connect <- function(hostname = "localhost",
   )
 
   # Set the name for the class
-  class(otpcon) <- append(class(otpcon), "otpconnect")
-
+  #class(otpcon) <- append(class(otpcon), "otpconnect")
+  class(otpcon) <- c("list","otpconnect")
 
   # If check then confirm router is queryable
 
   if (isTRUE(check)) {
-    if (check_router(otpcon) == 200) {
-      message("Router ", make_url(otpcon), " exists")
-
-      otpcon$otp_version <- otp_check_version(otpcon, warn = FALSE)
-
-      return(otpcon)
-    } else {
-      stop("Router ", make_url(otpcon), " does not exist. Error code ", check_router(otpcon))
+    chk <- check_routers(otpcon)
+    if(!isTRUE(chk)){
+      stop(chk)
     }
-  } else {
-    return(otpcon)
+    otpcon$otp_version <- otp_check_version(otpcon, warn = FALSE)
+
   }
+  return(otpcon)
 }
 
-# otpconnect class method to generate baseurl
-
-#' Make URL
+#' Make Url
 #' @param x otpcon
 #' @family internal
 #' @noRd
 #'
 make_url <- function(x) {
-  UseMethod("make_url", x)
-}
-
-#' Make URL.defualt
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-make_url.default <- function(x) {
-  warning(
-    "make_url does not know how to handle objects of class ",
-    class(x),
-    ", and can only be used on the class otpconnect"
-  )
-  return(NULL)
-}
-
-#' Make URL.optcon
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-make_url.otpconnect <- function(x) {
+  if(!"otpconnect" %in% class(x)){
+    stop("Object is not of class otpconnect, class is ", class(x))
+  }
   if (is.null(x$url)) {
     if (x$ssl) {
       url <- paste0(
@@ -160,37 +135,15 @@ make_url.otpconnect <- function(x) {
   return(url)
 }
 
-
-
 #' otpconnect method to check if router exists
 #' @param x otpcon
 #' @family internal
 #' @noRd
 #'
 check_router <- function(x) {
-  UseMethod("check_router", x)
-}
-
-#' otpconnect method to check if router exists (default)
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-check_router.default <- function(x) {
-  warning(
-    "check_router does not know how to handle objects of class ",
-    class(x),
-    ", and can only be used on the class otpconnect"
-  )
-  return(NULL)
-}
-
-#' otpconnect method to check if router exists (otpcon)
-#' @param x otpcon
-#' @family internal
-#' @noRd
-#'
-check_router.otpconnect <- function(x) {
+  if(!"otpconnect" %in% class(x)){
+    stop("Object is not of class otpconnect, class is ", class(x))
+  }
   check <- try(curl::curl_fetch_memory(make_url(x)), silent = TRUE)
   if (class(check) == "try-error") {
     return(check[1])
@@ -199,40 +152,85 @@ check_router.otpconnect <- function(x) {
   }
 }
 
+#' otpconnect method to check if router exists
+#' @param otpcon otpcon
+#' @family internal
+#' @noRd
+#'
+check_routers <- function(otpcon) {
+  if(!"otpconnect" %in% class(otpcon)){
+    stop("Object is not of class otpconnect, class is ", class(otpcon))
+  }
+
+  if (is.null(otpcon$url)) {
+    url <- paste0(
+      ifelse(isTRUE(otpcon$ssl), "https://", "http://"),
+      otpcon$hostname,
+      ":",
+      otpcon$port,
+      "/otp/routers"
+    )
+  } else {
+    # TODO: Fix this
+    warning("this is not supported yet")
+  }
+
+  check <- try(curl::curl_fetch_memory(url), silent = TRUE)
+  if (class(check) == "try-error") {
+    return(paste0("Router ", make_url(otpcon), " does not exist. Error code ", check$status_code))
+  }
+
+  check <- rawToChar(check$content)
+  check <- rjson::fromJSON(check)
+  check <- unlist(lapply(check$routerInfo, function(x){x$routerId}))
+
+  if(otpcon$router %in% check){
+    message("Router ", make_url(otpcon), " exists")
+    return(TRUE)
+  } else {
+    return(paste0("Router ", make_url(otpcon), " does not exist. Valid routers are: ", paste(check, collapse = ", ")))
+  }
+  return(FALSE)
+}
+
+
 #' Check the what version of OTP the server is running
 #' @param otpcon otpcon object from otp_connect()
 #' @param warn logical, if TRUE will check that OTP version matches contents of otpcon
 #' @family setup
 #' @export
 #'
-otp_check_version <- function(otpcon, warn = TRUE){
-
-  if (is.null(x$url)) {
-    url <- paste0(ifelse(isTRUE(otpcon$ssl), 'https://', 'http://'),
-              otpcon$hostname,
-              ':',
-              otpcon$port,
-              '/otp')
+otp_check_version <- function(otpcon, warn = TRUE) {
+  if (is.null(otpcon$url)) {
+    url <- paste0(
+      ifelse(isTRUE(otpcon$ssl), "https://", "http://"),
+      otpcon$hostname,
+      ":",
+      otpcon$port,
+      "/otp"
+    )
   } else {
-    url <- x$url
+    url <- otpcon$url
   }
 
   ver <- try(curl::curl_fetch_memory(url), silent = TRUE)
-  if ("try-error" %in% class(check)) {
+  if ("try-error" %in% class(ver)) {
     return(ver[1])
   }
 
   ver <- rawToChar(ver$content)
-  ver <- RcppSimdJson::fparse(ver)
-  ver <- as.numeric(paste0(ver$serverVersion$major,
-                           ".",
-                           ver$serverVersion$minor))
-  if(warn){
-    if(ver != otpcon$otp_version){
+  #ver <- RcppSimdJson::fparse(ver)
+  ver <- rjson::fromJSON(ver)
+  ver <- as.numeric(paste0(
+    ver$serverVersion$major,
+    ".",
+    ver$serverVersion$minor
+  ))
+  if (warn) {
+    if (ver != otpcon$otp_version) {
       warning("The version of OTP running does not match otpcon$otp_version")
     }
   }
 
   return(ver)
 }
-
