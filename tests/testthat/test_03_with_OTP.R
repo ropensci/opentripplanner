@@ -17,6 +17,13 @@ skip_on_j11 <- function() {
   }
 }
 
+# skip rules
+# skip on cran always
+# skip main functions if J11 and no json
+# skip legacy code if have json
+# skip J8 code on J11
+# Skip J11 code on J8
+
 if (!on_cran()) {
   context("Test the download of the LSOA file")
 

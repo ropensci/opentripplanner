@@ -33,8 +33,7 @@ otp_surface <- function(otpcon = NULL,
                         date_time = Sys.time(),
                         maxWalkDistance = 800,
                         arriveBy = FALSE,
-                        timezone = otpcon$timezone,
-                        dir = otpcon$dir) {
+                        timezone = otpcon$timezone,) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
     if (otpcon$otp_version >= 2) {
