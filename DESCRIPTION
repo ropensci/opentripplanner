@@ -36,7 +36,9 @@ Imports:
     sfheaders,
     tibble,
     future.apply,
-    future
+    future,
+    progressr,
+    progress
 RoxygenNote: 7.1.1
 Suggests:
     RcppSimdJson (>= 0.1.2),

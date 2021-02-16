@@ -228,26 +228,32 @@ otp_plan <- function(otpcon = NA,
   if (RcppSimdJsonVersion) {
     if (ncores > 1) {
       future::plan("future::multisession", workers = ncores)
-      results <- future.apply::future_lapply(seq(1, nrow(fromPlace)),
-        otp_get_results,
-        otpcon = otpcon,
-        fromPlace = fromPlace,
-        toPlace = toPlace,
-        fromID = fromID,
-        toID = toID,
-        mode = mode,
-        date = date,
-        time = time,
-        arriveBy = arriveBy,
-        maxWalkDistance = maxWalkDistance,
-        numItineraries = numItineraries,
-        routeOptions = routeOptions,
-        full_elevation = full_elevation,
-        get_geometry = get_geometry,
-        timezone = timezone,
-        get_elevation = get_elevation,
-        cl = cl
-      )
+      progressr::handlers("progress")
+      xs <- seq(1, nrow(fromPlace))
+      progressr::with_progress({
+        p <- progressr::progressor(along = xs)
+        results <- future.apply::future_lapply(xs,
+                                               otp_get_results,
+                                               otpcon = otpcon,
+                                               fromPlace = fromPlace,
+                                               toPlace = toPlace,
+                                               fromID = fromID,
+                                               toID = toID,
+                                               mode = mode,
+                                               date = date,
+                                               time = time,
+                                               arriveBy = arriveBy,
+                                               maxWalkDistance = maxWalkDistance,
+                                               numItineraries = numItineraries,
+                                               routeOptions = routeOptions,
+                                               full_elevation = full_elevation,
+                                               get_geometry = get_geometry,
+                                               timezone = timezone,
+                                               get_elevation = get_elevation,
+                                               cl = cl
+        )
+      })
+
       # cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
       # parallel::clusterExport(
       #   cl = cl,
