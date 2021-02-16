@@ -33,7 +33,7 @@ otp_surface <- function(otpcon = NULL,
                         date_time = Sys.time(),
                         maxWalkDistance = 800,
                         arriveBy = FALSE,
-                        timezone = otpcon$timezone,) {
+                        timezone = otpcon$timezone) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
     if (otpcon$otp_version >= 2) {
@@ -69,7 +69,7 @@ otp_surface <- function(otpcon = NULL,
     dir.create(file.path(dir,"pointsets"))
   }
 
-  write.csv(toPlace,
+  utils::write.csv(toPlace,
             file = file.path(dir,"pointsets","desinations.csv"),
             row.names = FALSE)
 
@@ -137,7 +137,7 @@ otp_pointset <- function(points = NULL,
     dir.create(file.path(dir,"pointsets"))
   }
 
-  write.csv(points,
+  utils::write.csv(points,
             file = file.path(dir,"pointsets",name,".csv"),
             row.names = FALSE)
 

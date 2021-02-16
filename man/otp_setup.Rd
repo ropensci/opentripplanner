@@ -12,6 +12,7 @@ otp_setup(
   port = 8080,
   securePort = 8081,
   analyst = FALSE,
+  pointsets = FALSE,
   wait = TRUE,
   flag64bit = TRUE,
   quiet = TRUE,
@@ -36,6 +37,9 @@ vignettes for details.}
 \item{securePort}{A positive integer. Optional, default is 8081.}
 
 \item{analyst}{Logical. Should the analyst features be loaded?
+Default FALSE}
+
+\item{pointsets}{Logical. Should the pointsets be loaded?
 Default FALSE}
 
 \item{wait}{Logical, Should R wait until OTP has loaded before

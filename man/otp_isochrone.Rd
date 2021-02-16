@@ -76,6 +76,7 @@ isochrone2 <- otp_isochrone(otpcon,
 Other routing: 
 \code{\link{otp_geocode}()},
 \code{\link{otp_plan}()},
+\code{\link{otp_pointset}()},
 \code{\link{otp_routing_options}()},
 \code{\link{otp_validate_routing_options}()}
 }

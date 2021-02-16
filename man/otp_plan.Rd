@@ -142,6 +142,7 @@ otp_plan(otpcon, c(0.1, 55.3), c(0.6, 52.1),
 Other routing: 
 \code{\link{otp_geocode}()},
 \code{\link{otp_isochrone}()},
+\code{\link{otp_pointset}()},
 \code{\link{otp_routing_options}()},
 \code{\link{otp_validate_routing_options}()}
 }

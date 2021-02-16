@@ -249,8 +249,7 @@ otp_plan <- function(otpcon = NA,
                                                full_elevation = full_elevation,
                                                get_geometry = get_geometry,
                                                timezone = timezone,
-                                               get_elevation = get_elevation,
-                                               cl = cl
+                                               get_elevation = get_elevation
         )
       })
 
