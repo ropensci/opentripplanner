@@ -227,17 +227,8 @@ otp_plan <- function(otpcon = NA,
 
   if (RcppSimdJsonVersion) {
     if (ncores > 1) {
-      cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
-      parallel::clusterExport(
-        cl = cl,
-        varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
-        envir = environment()
-      )
-      parallel::clusterEvalQ(cl, {
-        loadNamespace("opentripplanner")
-      })
-      pbapply::pboptions(use_lb = TRUE)
-      results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+      future::plan("future::multisession", workers = ncores)
+      results <- future.apply::future_lapply(seq(1, nrow(fromPlace)),
         otp_get_results,
         otpcon = otpcon,
         fromPlace = fromPlace,
@@ -257,8 +248,39 @@ otp_plan <- function(otpcon = NA,
         get_elevation = get_elevation,
         cl = cl
       )
-      parallel::stopCluster(cl)
-      rm(cl)
+      # cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
+      # parallel::clusterExport(
+      #   cl = cl,
+      #   varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
+      #   envir = environment()
+      # )
+      # parallel::clusterEvalQ(cl, {
+      #   loadNamespace("opentripplanner")
+      # })
+      # pbapply::pboptions(use_lb = TRUE)
+      # results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+      #   otp_get_results,
+      #   otpcon = otpcon,
+      #   fromPlace = fromPlace,
+      #   toPlace = toPlace,
+      #   fromID = fromID,
+      #   toID = toID,
+      #   mode = mode,
+      #   date = date,
+      #   time = time,
+      #   arriveBy = arriveBy,
+      #   maxWalkDistance = maxWalkDistance,
+      #   numItineraries = numItineraries,
+      #   routeOptions = routeOptions,
+      #   full_elevation = full_elevation,
+      #   get_geometry = get_geometry,
+      #   timezone = timezone,
+      #   get_elevation = get_elevation,
+      #   cl = cl
+      # )
+      # parallel::stopCluster(cl)
+      # rm(cl)
+      future::plan("future::sequential")
     } else {
       results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
         otp_get_results,

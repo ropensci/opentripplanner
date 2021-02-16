@@ -34,7 +34,9 @@ Imports:
     lubridate,
     sf (>= 0.9.3),
     sfheaders,
-    tibble
+    tibble,
+    future.apply,
+    future
 RoxygenNote: 7.1.1
 Suggests:
     RcppSimdJson (>= 0.1.2),
