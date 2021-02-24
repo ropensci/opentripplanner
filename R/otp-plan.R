@@ -136,11 +136,11 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_class(otpcon, "otpconnect")
   mode <- toupper(mode)
   checkmate::assert_subset(mode,
-    choices = c(
-      "TRANSIT", "WALK", "BICYCLE",
-      "CAR", "BUS", "RAIL"
-    ),
-    empty.ok = FALSE
+                           choices = c(
+                             "TRANSIT", "WALK", "BICYCLE",
+                             "CAR", "BUS", "RAIL"
+                           ),
+                           empty.ok = FALSE
   )
   mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
@@ -227,108 +227,78 @@ otp_plan <- function(otpcon = NA,
 
   if (RcppSimdJsonVersion) {
     if (ncores > 1) {
-      future::plan("future::multisession", workers = ncores)
-      progressr::handlers(global = TRUE)
-      progressr::handlers("progress")
-      xs <- seq(1, nrow(fromPlace))
-      p <- progressr::progressor(along = xs)
-      results <- future.apply::future_lapply(xs,
-                                             otp_get_results,
-                                             otpcon = otpcon,
-                                             fromPlace = fromPlace,
-                                             toPlace = toPlace,
-                                             fromID = fromID,
-                                             toID = toID,
-                                             p = p,
-                                             mode = mode,
-                                             date = date,
-                                             time = time,
-                                             arriveBy = arriveBy,
-                                             maxWalkDistance = maxWalkDistance,
-                                             numItineraries = numItineraries,
-                                             routeOptions = routeOptions,
-                                             full_elevation = full_elevation,
-                                             get_geometry = get_geometry,
-                                             timezone = timezone,
-                                             get_elevation = get_elevation,
-                                             future.seed = TRUE,
-                                             future.scheduling = TRUE,
-                                             future.chunk.size = NULL)
-
-
-      # cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
-      # parallel::clusterExport(
-      #   cl = cl,
-      #   varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
-      #   envir = environment()
-      # )
-      # parallel::clusterEvalQ(cl, {
-      #   loadNamespace("opentripplanner")
-      # })
-      # pbapply::pboptions(use_lb = TRUE)
-      # results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      #   otp_get_results,
-      #   otpcon = otpcon,
-      #   fromPlace = fromPlace,
-      #   toPlace = toPlace,
-      #   fromID = fromID,
-      #   toID = toID,
-      #   mode = mode,
-      #   date = date,
-      #   time = time,
-      #   arriveBy = arriveBy,
-      #   maxWalkDistance = maxWalkDistance,
-      #   numItineraries = numItineraries,
-      #   routeOptions = routeOptions,
-      #   full_elevation = full_elevation,
-      #   get_geometry = get_geometry,
-      #   timezone = timezone,
-      #   get_elevation = get_elevation,
-      #   cl = cl
-      # )
-      # parallel::stopCluster(cl)
-      # rm(cl)
-      future::plan("future::sequential")
+      cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
+      parallel::clusterExport(
+        cl = cl,
+        varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
+        envir = environment()
+      )
+      parallel::clusterEvalQ(cl, {
+        loadNamespace("opentripplanner")
+      })
+      pbapply::pboptions(use_lb = TRUE)
+      results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+                                   otp_get_results,
+                                   otpcon = otpcon,
+                                   fromPlace = fromPlace,
+                                   toPlace = toPlace,
+                                   fromID = fromID,
+                                   toID = toID,
+                                   mode = mode,
+                                   date = date,
+                                   time = time,
+                                   arriveBy = arriveBy,
+                                   maxWalkDistance = maxWalkDistance,
+                                   numItineraries = numItineraries,
+                                   routeOptions = routeOptions,
+                                   full_elevation = full_elevation,
+                                   get_geometry = get_geometry,
+                                   timezone = timezone,
+                                   get_elevation = get_elevation,
+                                   cl = cl
+      )
+      parallel::stopCluster(cl)
+      rm(cl)
     } else {
       results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-        otp_get_results,
-        otpcon = otpcon,
-        fromPlace = fromPlace,
-        toPlace = toPlace,
-        fromID = fromID,
-        toID = toID,
-        mode = mode,
-        date = date,
-        time = time,
-        arriveBy = arriveBy,
-        maxWalkDistance = maxWalkDistance,
-        numItineraries = numItineraries,
-        routeOptions = routeOptions,
-        full_elevation = full_elevation,
-        get_geometry = get_geometry,
-        get_elevation = get_elevation,
-        timezone = timezone
+                                   otp_get_results,
+                                   otpcon = otpcon,
+                                   fromPlace = fromPlace,
+                                   toPlace = toPlace,
+                                   fromID = fromID,
+                                   toID = toID,
+                                   mode = mode,
+                                   date = date,
+                                   time = time,
+                                   arriveBy = arriveBy,
+                                   maxWalkDistance = maxWalkDistance,
+                                   numItineraries = numItineraries,
+                                   routeOptions = routeOptions,
+                                   full_elevation = full_elevation,
+                                   get_geometry = get_geometry,
+                                   get_elevation = get_elevation,
+                                   timezone = timezone
       )
     }
   } else {
     results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      otp_get_results_legacy,
-      otpcon = otpcon,
-      fromPlace = fromPlace,
-      toPlace = toPlace,
-      fromID = fromID,
-      toID = toID,
-      mode = mode,
-      date = date,
-      time = time,
-      arriveBy = arriveBy,
-      maxWalkDistance = maxWalkDistance,
-      numItineraries = numItineraries,
-      routeOptions = routeOptions,
-      full_elevation = full_elevation,
-      get_geometry = get_geometry,
-      get_elevation = get_elevation,
-      timezone = timezone
+                                 otp_get_results_legacy,
+                                 otpcon = otpcon,
+                                 fromPlace = fromPlace,
+                                 toPlace = toPlace,
+                                 fromID = fromID,
+                                 toID = toID,
+                                 mode = mode,
+                                 date = date,
+                                 time = time,
+                                 arriveBy = arriveBy,
+                                 maxWalkDistance = maxWalkDistance,
+                                 numItineraries = numItineraries,
+                                 routeOptions = routeOptions,
+                                 full_elevation = full_elevation,
+                                 get_geometry = get_geometry,
+                                 get_elevation = get_elevation,
+                                 timezone = timezone
     )
   }
 
@@ -392,7 +362,7 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID, p,
                             ...) {
-  p()
+  #p()
   res <- try(otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
@@ -448,19 +418,19 @@ otp_clean_input <- function(imp, imp_name) {
   # if (all(class(imp) == "matrix")) { # to pass CRAN checks
   if ("matrix" %in% class(imp)) {
     checkmate::assert_matrix(imp,
-      any.missing = FALSE,
-      min.rows = 1,
-      min.cols = 2,
-      max.cols = 2,
-      null.ok = FALSE
+                             any.missing = FALSE,
+                             min.rows = 1,
+                             min.cols = 2,
+                             max.cols = 2,
+                             null.ok = FALSE
     )
     checkmate::assert_numeric(imp[, 1],
-      lower = -180, upper = 180,
-      any.missing = FALSE, .var.name = paste0(imp_name, " Longitude")
+                              lower = -180, upper = 180,
+                              any.missing = FALSE, .var.name = paste0(imp_name, " Longitude")
     )
     checkmate::assert_numeric(imp[, 2],
-      lower = -90, upper = 90,
-      any.missing = FALSE, .var.name = paste0(imp_name, " Latitude")
+                              lower = -90, upper = 90,
+                              any.missing = FALSE, .var.name = paste0(imp_name, " Latitude")
     )
     imp[] <- imp[, 2:1] # Switch round lng/lat to lat/lng for OTP
     colnames(imp) <- c("lat", "lon")
@@ -557,7 +527,7 @@ otp_plan_internal <- function(otpcon = NA,
   text <- rawToChar(text$content)
 
   asjson <- try(RcppSimdJson::fparse(text, query = "/plan/itineraries"),
-    silent = TRUE
+                silent = TRUE
   )
 
   # Check for errors - if no error object, continue to process content
@@ -610,19 +580,19 @@ otp_plan_internal <- function(otpcon = NA,
 otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE,
                         timezone = "", get_elevation = FALSE) {
   itineraries$startTime <- lubridate::as_datetime(itineraries$startTime / 1000,
-    origin = "1970-01-01", tz = timezone
+                                                  origin = "1970-01-01", tz = timezone
   )
 
   itineraries$endTime <- lubridate::as_datetime(itineraries$endTime / 1000,
-    origin = "1970-01-01", tz = timezone
+                                                origin = "1970-01-01", tz = timezone
   )
 
 
   # Loop over itineraries
   legs <- lapply(itineraries$legs, parse_leg,
-    get_geometry = get_geometry,
-    get_elevation = get_elevation,
-    full_elevation = full_elevation
+                 get_geometry = get_geometry,
+                 get_elevation = get_elevation,
+                 full_elevation = full_elevation
   )
 
   names(legs) <- seq_len(length(legs))
@@ -631,10 +601,10 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
   legs$route_option <- as.integer(legs$route_option)
 
   legs$startTime <- lubridate::as_datetime(legs$startTime / 1000,
-    origin = "1970-01-01", tz = timezone
+                                           origin = "1970-01-01", tz = timezone
   )
   legs$endTime <- lubridate::as_datetime(legs$endTime / 1000,
-    origin = "1970-01-01", tz = timezone
+                                         origin = "1970-01-01", tz = timezone
   )
 
   itineraries$legs <- NULL
@@ -756,51 +726,3 @@ polyline2linestring <- function(line, elevation = NULL) {
     return(linestring)
   }
 }
-
-#' Wrapper Fucntion for progress bar
-#'
-#' @param otpcon OTP connection object produced by otp_connect()
-#' @param fromPlace Numeric vector, Latitude/Longitude pair, e.g. `c(51.529258,-0.134649)`
-#' @param toPlace Numeric vector, Latitude/Longitude pair, e.g. `c(51.506383,-0.088780,)`
-#' @param fromID fromID
-#' @param toID toID
-#' @param mode Character vector of modes of travel valid values TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR
-#' @param date date
-#' @param time time
-#' @param arriveBy Logical, Whether the trip should depart or arrive at the specified date and time, default FALSE
-#' @param maxWalkDistance Numeric passed to OTP
-#' @param routeOptions names list passed to OTP
-#' @param numItineraries The maximum number of possible itineraries to return
-#' @param full_elevation Logical, should the full elevation profile be returned, default FALSE
-#' @param get_geometry logical, should geometry be returned
-#' @param timezone timezone to use
-#' @param get_elevation Logical, should you get elevation
-#' @param RcppSimdJsonVersion Logical, is RcppSimdJson Version >= 0.1.2
-#' @family internal
-#' @details
-#' This function returns a SF data.frame with one row for each leg of the journey
-#' (a leg is defined by a change in mode). For transit more than one route option may be returned
-#' and is indicated by the route_option column.
-#'
-#' @noRd
-
-# progressfunc <- function(xs,
-#                          otpcon,
-#                          fromPlace,
-#                          toPlace,
-#                          fromID,
-#                          toID,
-#                          mode,
-#                          date,
-#                          time,
-#                          arriveBy,
-#                          maxWalkDistance,
-#                          numItineraries,
-#                          routeOptions,
-#                          full_elevation,
-#                          get_geometry,
-#                          timezone,
-#                          get_elevation){
-#
-#   return(results)
-# }

@@ -101,22 +101,48 @@ otp_connect <- function(hostname = "localhost",
 
 #' Make Url
 #' @param x otpcon
+#' @param type character
 #' @family internal
 #' @noRd
 #'
-make_url <- function(x) {
+make_url <- function(x, type = "routers") {
   if(!"otpconnect" %in% class(x)){
     stop("Object is not of class otpconnect, class is ", class(x))
   }
-  if (is.null(x$url)) {
+
+  if(type == "routers"){
+    if (is.null(x$url)) {
+      if (x$ssl) {
+        url <- paste0(
+          "https://",
+          x$hostname,
+          ":",
+          x$port,
+          "/otp/routers/",
+          x$router
+        )
+      } else {
+        url <- paste0(
+          "http://",
+          x$hostname,
+          ":",
+          x$port,
+          "/otp/routers/",
+          x$router
+        )
+      }
+    } else {
+      url <- x$url
+    }
+  } else {
     if (x$ssl) {
       url <- paste0(
         "https://",
         x$hostname,
         ":",
         x$port,
-        "/otp/routers/",
-        x$router
+        "/otp/",
+        type
       )
     } else {
       url <- paste0(
@@ -124,13 +150,13 @@ make_url <- function(x) {
         x$hostname,
         ":",
         x$port,
-        "/otp/routers/",
-        x$router
+        "/otp/",
+        type
       )
     }
-  } else {
-    url <- x$url
+
   }
+
 
   return(url)
 }

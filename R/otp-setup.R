@@ -284,7 +284,7 @@ otp_setup <- function(otp = NULL,
     if (otp_version >= 2) {
       message("Analyst is not supported by OTP 2.x")
     } else {
-      dir_poinsets <- file.path(path_data,"pointsets")
+      dir_poinsets <- file.path(dir,"pointsets")
       if(!dir.exists(dir_poinsets)){
         stop("PointSets requested but folder ",dir_poinsets," does not exist")
       }

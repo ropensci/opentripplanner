@@ -39,7 +39,7 @@ Using the same example data from the [Advanced Features Vignette](), the first s
 library(opentripplanner)
 path_data <- file.path(tempdir(), "OTP")
 dir.create(path_data)
-path_otp <- otp_dl_jar(verion = "1.5.0") #Must use OTP 1.x
+path_otp <- otp_dl_jar(version = "1.4.0") #Must use OTP 1.x
 otp_dl_demo(path_data)
 log1 <- otp_build_graph(otp = path_otp, dir = path_data)
 ```
@@ -49,7 +49,7 @@ Before starting OTP we need to create a pointset and put it in the correct locat
 ```{r, eval=FALSE}
 lsoa <- sf::st_read("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", stringsAsFactors = FALSE)
 lsoa$jobs <- sample(100:500, nrow(lsoa))
-otp_pointset(lsoa, "lsoa", path_data)
+otp_pointset(lsoa, "lsoa2", path_data)
 ```
 
 Here the `otp_pointset()` function takes the `lsoa` object and create a PointSet that can be accessed by OTP using the name "lsoa".
@@ -63,6 +63,12 @@ otpcon <- otp_connect(timezone = "Europe/London")
 
 ## Creating a Surface
 
-Now we can create a surface and analyise out 
+Now we can create a surface and analyse travel times.
+
+```{r eval=FALSE}
+surface <- otp_make_surface(otpcon, c(-1.17502, 50.64590))
+times <- otp_surface(otpcon, surface, "lsoa")
+```
+
 
 
