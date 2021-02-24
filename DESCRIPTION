@@ -1,6 +1,6 @@
 Package: opentripplanner
 Title: Setup and connect to 'OpenTripPlanner'
-Version: 0.2.0.6
+Version: 0.3.2
 Authors@R: c(
     person("Malcolm", "Morgan", email = "m.morgan1@leeds.ac.uk", role = c("aut","cre"), 
       comment = c(ORCID = "0000-0002-9488-9183")),
@@ -15,7 +15,7 @@ Maintainer: Malcolm Morgan <m.morgan1@leeds.ac.uk>
 Description: Setup and connect to 'OpenTripPlanner' (OTP) <http://www.opentripplanner.org/>.
     OTP is an open source platform for multi-modal and multi-agency
     journey planning written in 'Java'. The package allows you to manage a local version or 
-    connect to remote OTP server.
+    connect to remote OTP server to find walking, cycling, driving, or transit routes.
     This package has been peer-reviewed by rOpenSci (v. 0.2.0.0).
 Language: EN-GB
 License: GPL-3
@@ -25,17 +25,27 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     checkmate,
-    dplyr,
+    data.table,
     geodist,
     googlePolylines,
-    httr,
-    jsonlite,
+    curl,
+    rjson,
     pbapply,
-    sf
-RoxygenNote: 7.0.2
-Suggests: 
+    lubridate,
+    sf (>= 0.9.3),
+    sfheaders,
+    tibble,
+    future.apply,
+    future,
+    progressr,
+    progress
+RoxygenNote: 7.1.1
+Suggests:
+    RcppSimdJson (>= 0.1.2),
     covr,
     knitr,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
+Depends: 
+    R (>= 3.2)

@@ -20,18 +20,19 @@ For this vignette, we will use the same data as the [Getting Started vignette](h
 ```{r eval =FALSE}
 library(opentripplanner)
 # Path to a folder containing the OTP.jar file, change to where you saved the file.
-path_data <- file.path(tempdir(),"OTP")
-path_otp <- file.path(path_data,"otp.jar")
+path_data <- file.path(tempdir(), "OTP")
+dir.create(path_data)
+path_otp <- otp_dl_jar()
+otp_dl_demo(path_data)
 # Build Graph and start OTP
 log1 <- otp_build_graph(otp = path_otp, dir = path_data)
 log2 <- otp_setup(otp = path_otp, dir = path_data)
-otpcon <- otp_connect()
-
+otpcon <- otp_connect(timezone = "Europe/London")
 ```
 
 ## Batch Routing
 
-The `otp_plan()` function can produce multiple routes at once. In this example, we will gather data on travel times between each of the [LSOAs](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography) on the Isle of White and the [Ryde Ferry](https://www.wightlink.co.uk/go/isle-of-wight-ferry-routes-destinations/).
+The `otp_plan()` function can produce multiple routes at once. In this example, we will gather data on travel times between each of the [LSOAs](https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography) on the Isle of White and the [Ryde Ferry](https://www.wightlink.co.uk/plan-your-journey/routes).
 
 `otp_plan()` accepts three types of input for the `fromPlace` and `toPlace`: a numeric longitude/latitude pair; a 2 x m matrix where each row is a longitude/latitude pair; or an SF data.frame of only POINTS. The number of `fromPlace` and `toPlace` must be the same or equal one (in which case `otp_plan()` will repeat the single location to match the length of the longer locations.
 
@@ -92,8 +93,8 @@ routes <- otp_plan(otpcon = otpcon,
 routes <- routes[,c("fromPlace","toPlace","duration")]
 # Use the tidyr package to go from long to wide format
 routes_matrix <- tidyr::pivot_wider(routes, 
-                               key = "toPlace", 
-                               value = "duration") 
+                               names_from = "toPlace", 
+                               values_from = "duration") 
 ```
 
 Notice the use of `fromID` and `toID` this allows `otp_plan` to return the LSOA `geo_code` with the routes. This can be useful when producing many routes. If no IDs are provided `otp_plan` will return the latitude/longitude of the fromPlace and toPlace.
@@ -108,21 +109,31 @@ This graph demonstrates the reduction in time taken to route between all LSOA pa
 knitr::include_graphics("images/multicore.jpeg")
 ```
 
+### Distance Balancing
+
+When using multicore routing in `otp_plan` you can optionally set `distance_balance = TRUE`. Distance Balancing sorts the routes by decreasing euclidean distance before sending them to OTP to route. This results in more efficient [load balancing](https://en.wikipedia.org/wiki/Load_balancing_(computing)) between the cores and thus a small reduction in routing time (around five percent). As the original order of the inputs is lost `fromID` and `toID` must be specified to use distance balancing.
+
+
+
+
 ## Elevation Profiles
 
-For walking and cycling routes the hilliness of the route matters. If elevation data is available OTP will return the elevation profile of the route. By default, OTP returns the elevation separately from the XY coordinates, but for convenience `otp_plan()` matches the Z coordinates to the XY coordinates. This may result in some minor misalignments. To demonstrate this, let's get a walking route.
+For walking and cycling routes the hilliness of the route matters. If elevation data is available OTP will return the elevation profile of the route. By default, OTP returns the elevation separately from the XY coordinates, but for convenience `otp_plan()` has the argument `get_elevation` which matches the Z coordinates to the XY coordinates. This may result in some minor misalignments. To demonstrate this, let's get a walking route.
 
 ```{r, eval=FALSE}
 route <- otp_plan(otpcon = otpcon,
                     fromPlace = c(-1.18968, 50.60096),
                     toPlace = c(-1.19105, 50.60439),
                     mode = "WALK",
+                    get_elevation = TRUE
                     full_elevation = TRUE)
 ```
 
 Notice the use of `full_elevation = TRUE` this will return the raw elevation profile from OTP.
 
 We can view the raw profile. It is a data.frame of 3 columns, `first` is the distance along a leg of the route, `second` is the elevation, and `distance` is calculated by `otp_plan()` as the cumulative distance along the whole route. 
+
+As of version 0.3.0.0 the `get_elevation` argument in `otp_plan` is set to FALSE by default, this speeds up routing by only returning XY coordinates rather than XYZ coordinates. 
 
 ```{r, eval=FALSE}
 profile_raw <- route$elevation[[1]]

@@ -1,12 +1,12 @@
 #' Write config object as json file
 #'
-#' @description
-#' Takes a config list produced by `otp_make_config()` and saves it as json
-#' file for OTP
+#' @description Takes a config list produced by `otp_make_config()` and saves it
+#' as json file for OTP
 #'
 #' @param config A named list made/modified from `otp_make_config()`
 #' @param dir Path to folder where data for OTP is to be stored
-#' @param router name of the router, default is "default", must be a subfolder of dir/graphs
+#' @param router name of the router, default is "default", must be a subfolder
+#'   of dir/graphs
 #' @family setup
 #' @examples
 #' \dontrun{
@@ -29,18 +29,30 @@ otp_write_config <- function(config,
   )
 
   # Convert to JSON
-  jsonlite::write_json(
-    config,
+  # jsonlite::write_json(
+  #   config,
+  #   file.path(
+  #     dir,
+  #     "graphs",
+  #     router,
+  #     paste0(type, "-config.json")
+  #   ),
+  #   pretty = TRUE,
+  #   auto_unbox = TRUE,
+  #   null = "null",
+  #   na = "null"
+  # )
+
+  exportJson <- rjson::toJSON(config, indent = 4)
+
+  write(
+    exportJson,
     file.path(
       dir,
       "graphs",
       router,
       paste0(type, "-config.json")
-    ),
-    pretty = TRUE,
-    auto_unbox = TRUE,
-    null = "null",
-    na = "null"
+    )
   )
 }
 
@@ -129,9 +141,6 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
       len = 1, null.ok = TRUE
     )
     checkmate::assert_logical(config$routingDefaults$longDistance,
-      len = 1, null.ok = TRUE
-    )
-    checkmate::assert_logical(config$routingDefaults$maxTransfers,
       len = 1, null.ok = TRUE
     )
     checkmate::assert_logical(config$routingDefaults$onlyTransitTrips,
@@ -224,6 +233,9 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
       len = 1, null.ok = TRUE
     )
     checkmate::assert_integer(config$routingDefaults$maxPreTransitTime,
+      len = 1, null.ok = TRUE
+    )
+    checkmate::assert_integer(config$routingDefaults$maxTransfers,
       len = 1, null.ok = TRUE
     )
     checkmate::assert_integer(config$routingDefaults$MIN_SIMILARITY,
@@ -456,7 +468,7 @@ otp_validate_config <- function(config, type = attributes(config)$config_type) {
     # Character
     checkmate::assert_subset(config$osmWayPropertySet,
       empty.ok = TRUE,
-      choices = c("default", "norway")
+      choices = c("default", "norway", "uk")
     )
     checkmate::assert_subset(config$stopClusterMode,
       empty.ok = TRUE,

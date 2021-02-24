@@ -12,7 +12,11 @@ otp_setup(
   port = 8080,
   securePort = 8081,
   analyst = FALSE,
-  wait = TRUE
+  pointsets = FALSE,
+  wait = TRUE,
+  flag64bit = TRUE,
+  quiet = TRUE,
+  otp_version = NULL
 )
 }
 \arguments{
@@ -35,8 +39,19 @@ vignettes for details.}
 \item{analyst}{Logical. Should the analyst features be loaded?
 Default FALSE}
 
+\item{pointsets}{Logical. Should the pointsets be loaded?
+Default FALSE}
+
 \item{wait}{Logical, Should R wait until OTP has loaded before
 running next line of code, default TRUE}
+
+\item{flag64bit}{Logical, if true the -d64 flag is added to Java instructions,
+ignored if otp_version >= 2}
+
+\item{quiet}{Logical, if FALSE the Java commands will be printed to console}
+
+\item{otp_version}{Numeric, version of OTP to build, default NULL when version
+is auto-detected}
 }
 \value{
 This function does not return a value to R. If wait is TRUE R
@@ -80,6 +95,8 @@ otp_setup(
 \seealso{
 Other setup: 
 \code{\link{otp_build_graph}()},
+\code{\link{otp_check_java}()},
+\code{\link{otp_check_version}()},
 \code{\link{otp_dl_demo}()},
 \code{\link{otp_dl_jar}()},
 \code{\link{otp_make_config}()},

@@ -3,17 +3,15 @@
 
 # OpenTripPlanner for R <a href='https://itsleeds.github.io/'><img src='man/figures/logo.png' align="right" height=180/></a>
 
-[![Travis build
-status](https://travis-ci.org/ropensci/opentripplanner.svg?branch=master)](https://travis-ci.org/ropensci/opentripplanner)
+[![R build
+status](https://github.com/ropensci/opentripplanner/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/opentripplanner/actions)
 [![codecov](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/opentripplanner)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/ropensci/opentripplanner?branch=master&svg=true)](https://ci.appveyor.com/project/mem48/opentripplanner)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/onboarding/issues/295)
+[![](https://badges.ropensci.org/295_status.svg)](https://github.com/ropensci/software-review/issues/295)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
-[![status](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736/status.svg)](https://joss.theoj.org/papers/a08bf8a245f529c60daf6c6abfdc0736)
+[![status](https://joss.theoj.org/papers/10.21105/joss.01926/status.svg)](https://joss.theoj.org/papers/10.21105/joss.01926)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
 
@@ -50,15 +48,29 @@ install.packages("opentripplanner") # Install Package
 library(opentripplanner)            # Load Package
 ```
 
-Install the development version using **devtools**:
+Install the development version using **remotes**:
 
 ``` r
-# If you do not already have the devtools package
-install.packages("devtools")
+# If you do not already have the remotes package
+install.packages("remotes")
 # Install the package from GitHub
-devtools::install_github("ropensci/opentripplanner")
+remotes::install_github("ropensci/opentripplanner")
 # Load the package
 library(opentripplanner)
+```
+
+#### RcppSimdJson
+
+From version 0.3.0 of `opentripplanner` the package `RcppSimdJson` is
+used for JSON parsing. This package is not supported on some older
+versions of R (\<= 3.6) and some older Operating Systems. To meet CRAN
+requirements version 0.3.1 added a legacy mode for older versions of R.
+This legacy mode has reduced functionality and users on old systems may
+get better results using version 0.2.3 of the package. You can install
+older versions using **remotes**.
+
+``` r
+remotes::install_version("opentripplanner", "0.2.3")
 ```
 
 ## Usage
@@ -69,11 +81,12 @@ Functions for setting up a local instance of OTP:
 
 1.  `otp_dl_jar()` To download the OTP Jar file;
 2.  `otp_dl_demo()` To download the demo data for the Isle of Wight;
-3.  `otp_build_graph()` To make a OTP graph from raw data;
-4.  `otp_setup()` To start up a local instance of OTP;
-5.  `otp_make_config()` To make a config object;
-6.  `otp_validate_config()` To validate a config object;
-7.  `otp_write_config()` To save a config object as a json file.
+3.  `otp_check_java()` To check you have the correct version of Java;
+4.  `otp_build_graph()` To make a OTP graph from raw data;
+5.  `otp_setup()` To start up a local instance of OTP;
+6.  `otp_make_config()` To make a config object;
+7.  `otp_validate_config()` To validate a config object;
+8.  `otp_write_config()` To save a config object as a json file.
 
 Functions for connecting to a local or remote instance of OTP:
 
@@ -88,17 +101,6 @@ Functions for retrieving data from OTP:
 
 Results are returned as [sf
 objects](https://CRAN.R-project.org/package=sf).
-
-## Tests
-
-As this package does not work without a working connection to OTP, tests
-only run on machines that have the environment variable `I_have_OTP`
-with the value `TRUE`. You can add this with
-`usethis::edit_r_environ()`.
-
-``` r
-Sys.getenv("I_have_OTP")
-```
 
 ## Acknowledgement
 

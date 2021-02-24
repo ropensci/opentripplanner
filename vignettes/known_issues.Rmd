@@ -22,6 +22,26 @@ This vignette highlights some known limitations or bugs with OpenTripPlanner as 
 
 * [OTP GitHub Issues](https://github.com/ropensci/opentripplanner/issues)
 
+## Reasons for Graph building to Fail
+
+The `otp_build_graph()` function returns the log from OTP, so the reasons for failures should be documented in the log. Common problems include.
+
+### Can't allocate memory
+
+If you get the error:
+
+`Invalid maximum heap size: The specified size exceeds the maximum representable size.`
+
+Then the `memory` argument in `otp_build_graph()` is too large. This may be because you have set it to more than the amount of RAM on your computer or because you have the 32 bit version of Java rather than the 64 Bit version installed.
+
+### Ran out of memory
+
+A graph build can fail due to lack of memory. You can increase the memory allocated using the `memory` argument in `otp_build_graph()`.
+
+### Bad input data
+
+If you have multiple input files (e.g. GTFS timetables, elevation, config files) and your graph build is failing, try removing all but the PBF file and seeing if the graph can now successfully build. If it does, add files one at a time until you find the file that is causing the build to fail.
+
 ## Reasons for Routing to Fail
 
 If you find OTP can not find a route here are some common reasons to check:
@@ -41,6 +61,32 @@ By default, OTP caps the maximum walking distance to a transit stop at a low lev
 ### Driving on Roads with cycleway tag
 
 A known bug that stops driving on any road with cycling infrastructure. https://groups.google.com/forum/#!topic/opentripplanner-users/BOv1J32k6Sc 
+
+### Multicore instability
+
+If you get the error:
+
+`Error in unserialize(socklist[[n]]) : error reading from connection`
+
+It means that one of the parallel workers has crashed. Try running your routing in smaller batches like this:
+
+This code will break the routing into 5 batches and put the results into a list called `routes_list` before binding them together into the finished `routes` data frame.
+
+```
+routes_list <- list()
+n <- split(1:nrow(fromPlace), cut(1:nrow(fromPlace), 5))
+
+for(i in 1:5){
+  vals <- n[[i]]
+  routes_sub <- otp_plan(otpcon,
+                        fromPlace = fromPlace[vals,],
+                        toPlace = toPlace[vals,])
+  routes_list[[i]] <- routes_sub
+}
+
+routes <- dplyr::bind_rows(routes_list)
+
+```
 
 ## Speeding up routing
 

@@ -34,6 +34,13 @@ otp_geocode <- function(otpcon = NULL,
                         clusters = FALSE,
                         corners = TRUE,
                         type = "SF") {
+  # Check for OTP2
+  if (!is.null(otpcon$otp_version)) {
+    if (otpcon$otp_version >= 2) {
+      stop("Geocoding is not supported by OTP v2.X")
+    }
+  }
+
   # Validate Inputs
   checkmate::assert_class(otpcon, "otpconnect", null.ok = FALSE)
   checkmate::assert_character(query,
@@ -67,19 +74,20 @@ otp_geocode <- function(otpcon = NULL,
     corners = corners
   )
 
-  req <- httr::GET(routerUrl,
-    query = querylist
-  )
-
   # convert response content into text
-  text <- httr::content(req, as = "text", encoding = "UTF-8")
+  url <- build_url(routerUrl, querylist)
+  text <- curl::curl_fetch_memory(url)
+  text <- rawToChar(text$content)
+
 
   if (nchar(text) == 2) {
     warning(paste0("Failed to find '", query, "'"))
     return(NA)
   } else {
     # parse text to json
-    asjson <- jsonlite::fromJSON(text)
+    # asjson <- jsonlite::fromJSON(text)
+    asjson <- rjson::fromJSON(text)
+    asjson <- data.table::rbindlist(asjson)
     # parse to sf
     if (type %in% c("SF", "Both")) {
       if (type == "SF") {

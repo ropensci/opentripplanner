@@ -10,3 +10,10 @@
 ^codemeta\.json$
 ^paper\.bib$
 ^LICENSE\.md$
+^CRAN-RELEASE$
+^cran-comments\.md$
+^vignettes/lucene/
+^tests/testthat/lucene/
+^lucene/
+^\.github$
+otp_parallel_log.txt

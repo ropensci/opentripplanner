@@ -7,3 +7,7 @@ graphs
 lucene
 vignettes/isle-of-wight-demo.zip
 *.gpkg
+tests/testthat/otp_parallel_log.txt
+otp_parallel_log.txt
+otp_parallel_log.txt
+otp_parallel_log.txt
