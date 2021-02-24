@@ -227,66 +227,66 @@ otp_plan <- function(otpcon = NA,
 
   if (RcppSimdJsonVersion) {
     if (ncores > 1) {
-      # future::plan("future::multisession", workers = ncores)
-      # progressr::handlers("progress")
-      # xs <- seq(1, nrow(fromPlace))
-      # p <- progressr::progressor(along = xs)
-      # results <- future.apply::future_lapply(xs,
-      #                                        otp_get_results,
-      #                                        otpcon = otpcon,
-      #                                        fromPlace = fromPlace,
-      #                                        toPlace = toPlace,
-      #                                        fromID = fromID,
-      #                                        toID = toID,
-      #                                        mode = mode,
-      #                                        date = date,
-      #                                        time = time,
-      #                                        arriveBy = arriveBy,
-      #                                        maxWalkDistance = maxWalkDistance,
-      #                                        numItineraries = numItineraries,
-      #                                        routeOptions = routeOptions,
-      #                                        full_elevation = full_elevation,
-      #                                        get_geometry = get_geometry,
-      #                                        timezone = timezone,
-      #                                        get_elevation = get_elevation,
-      #                                        ... = ... ,
-      #                                        future.seed = TRUE,
+      future::plan("future::multisession", workers = ncores)
+      progressr::handlers(global = TRUE)
+      progressr::handlers("progress")
+      xs <- seq(1, nrow(fromPlace))
+      p <- progressr::progressor(along = xs)
+      results <- future.apply::future_lapply(xs,
+                                             otp_get_results,
+                                             otpcon = otpcon,
+                                             fromPlace = fromPlace,
+                                             toPlace = toPlace,
+                                             fromID = fromID,
+                                             toID = toID,
+                                             p = p,
+                                             mode = mode,
+                                             date = date,
+                                             time = time,
+                                             arriveBy = arriveBy,
+                                             maxWalkDistance = maxWalkDistance,
+                                             numItineraries = numItineraries,
+                                             routeOptions = routeOptions,
+                                             full_elevation = full_elevation,
+                                             get_geometry = get_geometry,
+                                             timezone = timezone,
+                                             get_elevation = get_elevation,
+                                             future.seed = TRUE)
+
+
+      # cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
+      # parallel::clusterExport(
+      #   cl = cl,
+      #   varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
+      #   envir = environment()
       # )
-
-
-      cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
-      parallel::clusterExport(
-        cl = cl,
-        varlist = c("otpcon", "fromPlace", "toPlace", "fromID", "toID"),
-        envir = environment()
-      )
-      parallel::clusterEvalQ(cl, {
-        loadNamespace("opentripplanner")
-      })
-      pbapply::pboptions(use_lb = TRUE)
-      results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-        otp_get_results,
-        otpcon = otpcon,
-        fromPlace = fromPlace,
-        toPlace = toPlace,
-        fromID = fromID,
-        toID = toID,
-        mode = mode,
-        date = date,
-        time = time,
-        arriveBy = arriveBy,
-        maxWalkDistance = maxWalkDistance,
-        numItineraries = numItineraries,
-        routeOptions = routeOptions,
-        full_elevation = full_elevation,
-        get_geometry = get_geometry,
-        timezone = timezone,
-        get_elevation = get_elevation,
-        cl = cl
-      )
-      parallel::stopCluster(cl)
-      rm(cl)
-      #future::plan("future::sequential")
+      # parallel::clusterEvalQ(cl, {
+      #   loadNamespace("opentripplanner")
+      # })
+      # pbapply::pboptions(use_lb = TRUE)
+      # results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
+      #   otp_get_results,
+      #   otpcon = otpcon,
+      #   fromPlace = fromPlace,
+      #   toPlace = toPlace,
+      #   fromID = fromID,
+      #   toID = toID,
+      #   mode = mode,
+      #   date = date,
+      #   time = time,
+      #   arriveBy = arriveBy,
+      #   maxWalkDistance = maxWalkDistance,
+      #   numItineraries = numItineraries,
+      #   routeOptions = routeOptions,
+      #   full_elevation = full_elevation,
+      #   get_geometry = get_geometry,
+      #   timezone = timezone,
+      #   get_elevation = get_elevation,
+      #   cl = cl
+      # )
+      # parallel::stopCluster(cl)
+      # rm(cl)
+      future::plan("future::sequential")
     } else {
       results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
         otp_get_results,
@@ -388,9 +388,9 @@ otp_plan <- function(otpcon = NA,
 #' @param ... all other variaibles
 #'
 #' @noRd
-otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
+otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID, p,
                             ...) {
-  #p()
+  p()
   res <- try(otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
