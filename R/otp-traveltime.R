@@ -154,7 +154,8 @@ otp_traveltime <- function(otpcon = NA,
   cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
   parallel::clusterExport(
     cl = cl,
-    varlist = c("otpcon", "pointsetname"),
+    varlist = c("otpcon", "pointsetname","otp_traveltime_internal","otp_make_surface","otp_surface","otp_clean_input","make_url",
+                "build_url"),
     envir = environment()
   )
   parallel::clusterEvalQ(cl, {
@@ -166,6 +167,8 @@ otp_traveltime <- function(otpcon = NA,
                            otpcon = otpcon,
                            pointsetname = pointsetname,
                            cl = cl)
+  parallel::stopCluster(cl)
+  rm(cl)
 
   names(res) <- fromID
   res <- list2df(res)
