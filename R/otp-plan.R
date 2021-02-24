@@ -239,6 +239,7 @@ otp_plan <- function(otpcon = NA,
                                              toPlace = toPlace,
                                              fromID = fromID,
                                              toID = toID,
+                                             p = p,
                                              mode = mode,
                                              date = date,
                                              time = time,
@@ -250,8 +251,7 @@ otp_plan <- function(otpcon = NA,
                                              get_geometry = get_geometry,
                                              timezone = timezone,
                                              get_elevation = get_elevation,
-                                             future.seed = TRUE,
-      )
+                                             future.seed = TRUE)
 
 
       # cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
