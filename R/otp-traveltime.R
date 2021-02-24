@@ -151,10 +151,21 @@ otp_traveltime <- function(otpcon = NA,
 
   fromPlacelst <- split(fromPlace[,2:1], 1:nrow(fromPlace))
 
+  cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
+  parallel::clusterExport(
+    cl = cl,
+    varlist = c("otpcon", "pointsetname"),
+    envir = environment()
+  )
+  parallel::clusterEvalQ(cl, {
+    loadNamespace("opentripplanner")
+  })
+  pbapply::pboptions(use_lb = TRUE)
   res <- pbapply::pblapply(fromPlacelst,
                            otp_traveltime_internal,
                            otpcon = otpcon,
-                           pointsetname = pointsetname)
+                           pointsetname = pointsetname,
+                           cl = cl)
 
   names(res) <- fromID
   res <- list2df(res)
