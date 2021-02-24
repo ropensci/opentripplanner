@@ -390,7 +390,7 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID, p,
                             ...) {
-  p(sprintf("x=%g", x))
+  p()
   res <- try(otp_plan_internal(
     otpcon = otpcon,
     fromPlace = fromPlace[x, ],
