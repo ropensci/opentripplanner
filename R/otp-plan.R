@@ -250,7 +250,6 @@ otp_plan <- function(otpcon = NA,
                                              get_geometry = get_geometry,
                                              timezone = timezone,
                                              get_elevation = get_elevation,
-                                             ... = ... ,
                                              future.seed = TRUE,
       )
 
@@ -389,7 +388,7 @@ otp_plan <- function(otpcon = NA,
 #' @param ... all other variaibles
 #'
 #' @noRd
-otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID,
+otp_get_results <- function(x, otpcon, fromPlace, toPlace, fromID, toID, p,
                             ...) {
   p(sprintf("x=%g", x))
   res <- try(otp_plan_internal(
