@@ -33,7 +33,6 @@ jobs:
           - {os: macOS-latest,   r: 'release', java: 11}
           - {os: macOS-latest,   r: 'oldrel',  java: 11}
           - {os: windows-latest, r: 'release', java: 11}
-          - {os: windows-latest, r: 'oldrel',  java: 11}
           - {os: ubuntu-18.04,  r: 'devel',   java: 11}
           - {os: ubuntu-18.04,  r: 'release', java: 11}
           - {os: ubuntu-18.04,  r: 'oldrel',  java: 11}
