@@ -17,3 +17,4 @@
 ^lucene/
 ^\.github$
 otp_parallel_log.txt
+^Dockerfile$
