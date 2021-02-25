@@ -55,9 +55,9 @@ otp_surface <- function(otpcon = NULL,
       list(seq(1, length(asjson[["data"]][[i]][2]$counts)))
     df <- data.frame(Reduce(rbind, asjson$data[i]))
     df <- df[, c("minutes", "counts", "sums", "cumsums")]
-    assign(paste0("s", surfaceId, "_", name), df)
-    response[[name]] <-
-      assign(paste0("s", surfaceId, "_", name), df)
+    #assign(paste0("s", surfaceId, "_", name), df)
+    #response[[name]] <-
+    #  assign(paste0("s", surfaceId, "_", name), df)
   }
 
   times <- asjson$times

@@ -87,22 +87,10 @@ otp_traveltime <- function(otpcon = NA,
   time <- tolower(format(date_time, "%I:%M%p", tz = timezone))
   checkmate::assert_numeric(maxWalkDistance, lower = 0, len = 1)
   checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
-  checkmate::assert_character(fromID, null.ok = TRUE)
-  checkmate::assert_character(toID, null.ok = TRUE)
+  checkmate::assert_character(fromID, null.ok = FALSE)
+  checkmate::assert_character(toID, null.ok = FALSE)
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(arriveBy)
-  checkmate::assert_logical(distance_balance, len = 1, null.ok = FALSE)
-  checkmate::assert_logical(get_elevation, len = 1, null.ok = FALSE)
-
-  if (distance_balance & (ncores > 1)) {
-    if (is.null(fromID)) {
-      stop("Distance balancing changes the order of the output, so fromID must not be NULL")
-    }
-    if (is.null(toID)) {
-      stop("Distance balancing changes the order of the output, so toID must not be NULL")
-    }
-  }
-
 
   # Check Route Options
   if (!is.null(routeOptions)) {
@@ -124,26 +112,6 @@ otp_traveltime <- function(otpcon = NA,
     }
   }
 
-  # Make sure number of fromPlace or toPlace match
-  nrfp <- nrow(fromPlace)
-  nrtp <- nrow(toPlace)
-  if (nrfp != nrtp) {
-    if (nrfp > nrtp & nrtp == 1) {
-      toPlace <- toPlace[rep(1, times = nrfp), ]
-      if (!is.null(toID)) {
-        toID <- toID[rep(1, times = nrfp)]
-      }
-      warning("repeating toPlace to match length of fromPlace")
-    } else if (nrtp > nrfp & nrfp == 1) {
-      fromPlace <- fromPlace[rep(1, times = nrtp), ]
-      if (!is.null(fromID)) {
-        fromID <- fromID[rep(1, times = nrtp)]
-      }
-      warning("repeating fromPlace to match length of toPlace")
-    } else {
-      stop("Number of fromPlaces and toPlaces do not match")
-    }
-  }
 
   # Make a pointset for each fromPLACE
   pointsetname <- paste(sample(LETTERS, 6, TRUE), collapse = "")
