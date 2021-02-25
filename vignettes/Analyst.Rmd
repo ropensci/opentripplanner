@@ -28,21 +28,35 @@ The Analys add the following feature to OTP:
 1. **Surfaces** - A efficient way to get travel time from one to many places.
 1. **Isochrones** - An alternative implementation of the Isochrone features.
 
-## Making a PointSet and loading it into OTP
+## Loading OTP with the Analyst
+
+The analyst is an optional feature in OTP 1.x and can be loaded in `otp_setup`.
+
+```{r eval=FALSE}
+# Get OTP and the Demo Data in the normal way
+library(opentripplanner)
+path_data <- file.path(tempdir(), "OTP")
+dir.create(path_data)
+path_otp <- otp_dl_jar(version = "1.5.0") #Must use OTP 1.x
+otp_dl_demo(path_data)
+log1 <- otp_build_graph(otp = path_otp, dir = path_data)
+
+# Setup OTP with the analyst and pointsets enabled
+log2 <- otp_setup(otp = path_otp, dir = path_data, analyst = TRUE, pointsets = TRUE)
+otpcon <- otp_connect(timezone = "Europe/London")
+```
+You can see the analyst is working in the web UI.
+
+```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:analystui}OTP Web Interface" in Analyst Mode}
+knitr::include_graphics("images/analyst.jpg")
+```
+
 
 Any PointSets must be loaded when OTP starts, and so must be created before starting OTP. PointSets can be created from SF objects using the `otp_poinset()` function.
 
 Using the same example data from the [Advanced Features Vignette](), the first steps are the same:
 
-```{r eval=FALSE}
-# Get OTP and the Demo Data
-library(opentripplanner)
-path_data <- file.path(tempdir(), "OTP")
-dir.create(path_data)
-path_otp <- otp_dl_jar(version = "1.4.0") #Must use OTP 1.x
-otp_dl_demo(path_data)
-log1 <- otp_build_graph(otp = path_otp, dir = path_data)
-```
+
 
 Before starting OTP we need to create a pointset and put it in the correct location. We will use the demo LSOA points to create a PointSet. We will also add a column of data called jobs to analyse. For any numerical values in a PointSet OTP can provide the count and sum of that value based on travel criteria. In this case we migh want to know how many jobs can be accessed within a 30 minute drive of a given location.
 
@@ -57,8 +71,7 @@ Here the `otp_pointset()` function takes the `lsoa` object and create a PointSet
 The next step is to start OTP, enable the analyst features, and load in the PointSets.
 
 ```{r eval=FALSE}
-log2 <- otp_setup(otp = path_otp, dir = path_data, analyst = TRUE, pointsets = TRUE)
-otpcon <- otp_connect(timezone = "Europe/London")
+
 ```
 
 ## Creating a Surface

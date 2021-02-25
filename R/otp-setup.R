@@ -286,7 +286,8 @@ otp_setup <- function(otp = NULL,
     } else {
       dir_poinsets <- file.path(dir,"pointsets")
       if(!dir.exists(dir_poinsets)){
-        stop("PointSets requested but folder ",dir_poinsets," does not exist")
+        dir.create(dir_poinsets)
+        #stop("PointSets requested but folder ",dir_poinsets," does not exist")
       }
       text <- paste0(text, ' --pointSets "',dir_poinsets,'"')
     }

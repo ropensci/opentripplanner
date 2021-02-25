@@ -4,38 +4,14 @@
 \alias{otp_surface}
 \title{Use OTP Geo-coder to find a location}
 \usage{
-otp_surface(
-  otpcon = NULL,
-  fromPlace = NULL,
-  pointsset = NULL,
-  mode = "CAR",
-  date_time = Sys.time(),
-  maxWalkDistance = 800,
-  arriveBy = FALSE,
-  timezone = otpcon$timezone
-)
+otp_surface(otpcon = NULL, surface = NULL, pointsset = NULL)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
-\item{fromPlace}{Numeric vector, Longitude/Latitude pair, e.g.
-`c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
-or sf data frame of POINTS with CRS 4326}
+\item{surface}{A suface list from otp_make_surface()}
 
 \item{pointsset}{character, name of pointset}
-
-\item{date_time}{POSIXct, a date and time, defaults to current date and time}
-
-\item{maxWalkDistance}{Numeric passed to OTP in metres}
-
-\item{arriveBy}{Logical, Whether the trip should depart or arrive at the
-specified date and time, default FALSE}
-
-\item{timezone}{Character, what timezone to use, see as.POSIXct, default is
-local timezone}
-
-\item{dir}{A character string, path to a directory containing the necessary
-files, see details}
 }
 \value{
 Returns a data.frame of travel times
@@ -53,4 +29,3 @@ detail see the analyst vignette.
 times <- otp_surface(otpcon, c(-1.17502, 50.64590), "lsoa", path_data)
 }
 }
-\concept{analyst}
