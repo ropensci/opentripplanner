@@ -64,6 +64,9 @@ Returns an  data frame
 \description{
 This function requires OTP 1.x and the analyst
 }
+\details{
+Make a travel time matrix using the analyst features in OPT 1.x
+}
 \examples{
 \dontrun{
 }

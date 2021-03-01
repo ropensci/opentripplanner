@@ -32,6 +32,8 @@
 #' @return Returns an  data frame
 #'
 #' @details
+#'
+#' Make a travel time matrix using the analyst features in OPT 1.x
 #' @examples
 #' \dontrun{
 #' }
