@@ -48,7 +48,6 @@ otp_traveltime <- function(otpcon = NA,
                      maxWalkDistance = 1000,
                      numItineraries = 3,
                      routeOptions = NULL,
-                     full_elevation = FALSE,
                      ncores = 1,
                      timezone = otpcon$timezone) {
   # Check Valid Inputs
@@ -114,6 +113,7 @@ otp_traveltime <- function(otpcon = NA,
 
 
   # Make a pointset for each fromPLACE
+  toPlace <- sf::st_sf(data.frame(geometry = sf::st_geometry(toPlace)))
   pointsetname <- paste(sample(LETTERS, 6, TRUE), collapse = "")
   otp_pointset(toPlace, pointsetname, path_data)
 
@@ -153,8 +153,21 @@ otp_traveltime <- function(otpcon = NA,
 }
 
 
-otp_traveltime_internal <- function(fromPlace, otpcon, pointsetname){
-  surface <- otp_make_surface(otpcon, fromPlace)
-  times <- otp_surface(otpcon, surface, pointsetname)
+otp_traveltime_internal <- function(fromPlace,
+                                    otpcon,
+                                    pointsetname,
+                                    mode,
+                                    date_time,
+                                    arriveBy,
+                                    maxWalkDistance,
+                                    routeOptions){
+  surface <- otp_make_surface(otpcon,
+                              fromPlace,
+                              mode,
+                              date_time,
+                              arriveBy,
+                              maxWalkDistance,
+                              routeOptions)
+  times <- otp_surface(otpcon, surface, pointsetname, get_data = FALSE)
   return(times$times)
 }
