@@ -14,15 +14,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(opentripplanner)
-```
-
 The Analyst is a set of optional features in OTP 1.x used for transport analysis. These features were removed from OTP 2.0.  This Vignette will explain how to enable and use these features.
 
 ## Analyst Features
 
-The Analys add the following feature to OTP:
+The Analyst add the following feature to OTP:
 
 1. **PointSets** - A more efficient way to specify a batch of fromPlace / toPlaces for routing.
 1. **Surfaces** - A efficient way to get travel time from one to many places.
@@ -47,7 +43,7 @@ otpcon <- otp_connect(timezone = "Europe/London")
 ```
 You can see the analyst is working in the web UI.
 
-```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:analystui}OTP Web Interface in Analyst Mode}
+```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:analystui}OTP Web Interface in Analyst Mode"}
 knitr::include_graphics("images/analyst.jpg")
 ```
 ## Creating a Pointset
@@ -94,13 +90,13 @@ tm_shape(lsoa) +
   tm_dots(col = "time")
 ```
 
-```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:ttimes}Travel times to LSOA points}
+```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:ttimes}Travel times to LSOA points"}
 knitr::include_graphics("images/ttimes.jpg")
 ```
 
 ## Producing a travel time matrix
 
-We can use surfaces as a more efficent way to produce a travel time matrix than using `otp_plan`. A special function `otp_traveltime` create batches of surfaces and pointsets an summarises the results as a travel time matrix.
+We can use surfaces as a more efficient way to produce a travel time matrix than using `otp_plan`. A special function `otp_traveltime` create batches of surfaces and pointsets an summarises the results as a travel time matrix.
 
 ```{r eval=FALSE}
 ttmatrix <- otp_traveltime(otpcon, path_data, 
@@ -112,9 +108,3 @@ ttmatrix <- otp_traveltime(otpcon, path_data,
 The function will return the travel times in seconds between the fromPlaces and toPlaces as a data frame. With columns names from `fromID` and row names from `toID`. Any failed routes will return and NA, as will any greater than 120 minutes.
 
 If a whole row of column is NA, it is likely that point is too far from the road network to route, or the `mode` does not allow access (e.g. driving up a pedestrianised road). You could try modifying your point locations slightly to allow OTP to find a valid route. 
-
-
-
-
-
-

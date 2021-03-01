@@ -4,7 +4,7 @@
 \alias{otp_surface}
 \title{Use OTP Geo-coder to find a location}
 \usage{
-otp_surface(otpcon = NULL, surface = NULL, pointsset = NULL)
+otp_surface(otpcon = NULL, surface = NULL, pointsset = NULL, get_data = TRUE)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
@@ -12,6 +12,8 @@ otp_surface(otpcon = NULL, surface = NULL, pointsset = NULL)
 \item{surface}{A suface list from otp_make_surface()}
 
 \item{pointsset}{character, name of pointset}
+
+\item{get_data}{Logical, should data be returned or just travel times.}
 }
 \value{
 Returns a data.frame of travel times

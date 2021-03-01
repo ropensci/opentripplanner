@@ -11,6 +11,7 @@ otp_make_surface(
   date_time = Sys.time(),
   maxWalkDistance = 1000,
   arriveBy = FALSE,
+  routeOptions = NULL,
   timezone = otpcon$timezone
 )
 }
@@ -27,6 +28,8 @@ or sf data frame of POINTS with CRS 4326}
 
 \item{arriveBy}{Logical, Whether the trip should depart or arrive at the
 specified date and time, default FALSE}
+
+\item{routeOptions}{Named list of values passed to OTP use}
 
 \item{timezone}{Character, what timezone to use, see as.POSIXct, default is
 local timezone}

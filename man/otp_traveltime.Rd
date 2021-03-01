@@ -17,7 +17,6 @@ otp_traveltime(
   maxWalkDistance = 1000,
   numItineraries = 3,
   routeOptions = NULL,
-  full_elevation = FALSE,
   ncores = 1,
   timezone = otpcon$timezone
 )

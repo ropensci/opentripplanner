@@ -76,6 +76,7 @@ otp_surface <- function(otpcon = NULL,
 #' @param maxWalkDistance Numeric passed to OTP in metres
 #' @param arriveBy Logical, Whether the trip should depart or arrive at the
 #'   specified date and time, default FALSE
+#' @param routeOptions Named list of values passed to OTP use
 #' @param timezone Character, what timezone to use, see as.POSIXct, default is
 #'   local timezone
 #' @family analyst
@@ -95,6 +96,7 @@ otp_make_surface <- function(otpcon = NULL,
                         date_time = Sys.time(),
                         maxWalkDistance = 1000,
                         arriveBy = FALSE,
+                        routeOptions = NULL,
                         timezone = otpcon$timezone) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
@@ -134,12 +136,21 @@ otp_make_surface <- function(otpcon = NULL,
   querylist <- list(
     batch = "true",
     fromPlace = fromPlace,
-    #date = date,
-    #time = time,
+    date = date,
+    time = time,
     mode = mode,
     maxWalkDistance = maxWalkDistance,
     arriveBy = arriveBy
   )
+
+  # Check Route Options
+  if (!is.null(routeOptions)) {
+    routeOptions <- otp_validate_routing_options(routeOptions)
+  }
+
+  if (!is.null(routeOptions)) {
+    querylist <- c(querylist, routeOptions)
+  }
 
   # convert response content into text
   url <- build_url(surfaceUrl, querylist)

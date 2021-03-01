@@ -144,9 +144,8 @@ otp_traveltime <- function(otpcon = NA,
                              pointsetname = pointsetname)
   }
 
-
-
   names(res) <- fromID
+  res <- res[lengths(res) > 0]
   res <- list2df(res)
   rownames(res) <- toID
   return(res)
@@ -161,13 +160,26 @@ otp_traveltime_internal <- function(fromPlace,
                                     arriveBy,
                                     maxWalkDistance,
                                     routeOptions){
-  surface <- otp_make_surface(otpcon,
+  surface <- try(otp_make_surface(otpcon,
                               fromPlace,
                               mode,
                               date_time,
                               arriveBy,
                               maxWalkDistance,
-                              routeOptions)
-  times <- otp_surface(otpcon, surface, pointsetname, get_data = FALSE)
+                              routeOptions), silent = TRUE)
+
+  if ("try-error" %in% class(surface)) {
+    warning("Failed to create surface for: ",paste(fromPlace, collapse = ", "))
+    return(NULL)
+  }
+
+  times <- try(otp_surface(otpcon, surface, pointsetname, get_data = FALSE),
+               silent = TRUE)
+
+  if ("try-error" %in% class(surface)) {
+    warning("Failed to evaluate surface for: ",paste(fromPlace, collapse = ", "))
+    return(NULL)
+  }
+
   return(times$times)
 }
