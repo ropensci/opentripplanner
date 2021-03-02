@@ -41,7 +41,9 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    raster,
+    rgdal
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.2)

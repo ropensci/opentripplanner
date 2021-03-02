@@ -1,4 +1,4 @@
-#' Use OTP Geo-coder to find a location
+#' Evaluate a surface against a pointset
 #'
 #' Geo-coding converts a named place, such as a street name into a lng/lat pair.
 #'
@@ -62,6 +62,53 @@ otp_surface <- function(otpcon = NULL,
 
   return(response)
 }
+
+#' Make an isochrone from a surface
+#'
+#' Geo-coding converts a named place, such as a street name into a lng/lat pair.
+#'
+#' @param otpcon OTP connection object produced by otp_connect()
+#' @param surface A suface list from otp_make_surface()
+#' @return Returns a data.frame of travel times
+#' @examples
+#' \dontrun{
+#' times <- otp_surface(otpcon, c(-1.17502, 50.64590), "lsoa", path_data)
+#' }
+#' @details THis function requires the analysis and pointset features to be
+#' enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
+#' detail see the analyst vignette.
+#'
+#' @export
+otp_surface_isochrone <- function(otpcon = NULL,
+                        surface = NULL) {
+  # Check for OTP2
+  if (!is.null(otpcon$otp_version)) {
+    if (otpcon$otp_version >= 2) {
+      stop("Surface is not supported by OTP v2.X")
+    }
+  }
+
+  surfaceUrl <- make_url(otpcon, type = "surfaces")
+  surfaceUrl <- paste0(surfaceUrl,
+                       "/",
+                       surface$id,
+                       "/raster")
+
+  # convert response content into text
+  h <- curl::new_handle()
+  #curl::handle_setopt(h, post = TRUE)
+  text <- curl::curl_fetch_disk(surfaceUrl,
+                                path = file.path(tempdir(),"otpIsochrone.tiff"),
+                                handle = h)
+  if(text$status_code == 200){
+    r <- raster::raster(text$content)
+    r[r == 128] <- NA
+  } else {
+    stop("Error getting surface code: ",text$status_code," URL: ",surfaceUrl)
+  }
+  return(r)
+}
+
 
 
 #' Make a Surface

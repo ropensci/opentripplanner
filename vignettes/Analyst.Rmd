@@ -94,6 +94,11 @@ tm_shape(lsoa) +
 knitr::include_graphics("images/ttimes.jpg")
 ```
 
+## Producing an isochrone from a surface
+
+The sufaces can also be used to produce isochrones. 
+
+
 ## Producing a travel time matrix
 
 We can use surfaces as a more efficient way to produce a travel time matrix than using `otp_plan`. A special function `otp_traveltime` create batches of surfaces and pointsets an summarises the results as a travel time matrix.
