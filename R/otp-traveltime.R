@@ -12,9 +12,9 @@
 #'   or sf data frame of POINTS with CRS 4326
 #' @param fromID character vector same length as fromPlace
 #' @param toID character vector same length as toPlace
-#' @param mode character vector of one or more modes of travel valid values
-#'   TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
-#'   are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.
+#' @param mode character vector of one mode of travel valid values TRANSIT,
+#'   WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Note unlike `otp_plan` transit
+#'   routing should use "TRANSIT" rather than c("WALK","TRANSIT")
 #' @param date_time POSIXct, a date and time, defaults to current date and time
 #' @param arriveBy Logical, Whether the trip should depart or arrive at the
 #'   specified date and time, default FALSE
@@ -82,7 +82,8 @@ otp_traveltime <- function(otpcon = NA,
                            ),
                            empty.ok = FALSE
   )
-  mode <- paste(mode, collapse = ",")
+  checkmate::assert_character(mode, len = 1)
+  #mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m-%d-%Y", tz = timezone)
   time <- tolower(format(date_time, "%I:%M%p", tz = timezone))
