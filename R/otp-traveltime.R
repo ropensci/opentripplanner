@@ -145,7 +145,7 @@ otp_traveltime <- function(otpcon = NA,
     parallel::stopCluster(cl)
     rm(cl)
   } else {
-    res <- pbapply::pblapply(fromPlacelst[1:2],
+    res <- pbapply::pblapply(fromPlacelst,
                              otp_traveltime_internal,
                              otpcon = otpcon,
                              pointsetname = pointsetname,
