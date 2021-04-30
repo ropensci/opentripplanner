@@ -32,6 +32,8 @@
 #' @return Returns an  data frame
 #'
 #' @details
+#'
+#' Make a travel time matrix using the analyst features in OPT 1.x
 #' @examples
 #' \dontrun{
 #' }
@@ -48,7 +50,6 @@ otp_traveltime <- function(otpcon = NA,
                      maxWalkDistance = 1000,
                      numItineraries = 3,
                      routeOptions = NULL,
-                     full_elevation = FALSE,
                      ncores = 1,
                      timezone = otpcon$timezone) {
   # Check Valid Inputs
@@ -81,28 +82,17 @@ otp_traveltime <- function(otpcon = NA,
                            ),
                            empty.ok = FALSE
   )
-  mode <- paste(mode, collapse = ",")
+  #checkmate::assert_character(mode, len = 1)
+  #mode <- paste(mode, collapse = ",")
   checkmate::assert_posixct(date_time)
   date <- format(date_time, "%m-%d-%Y", tz = timezone)
   time <- tolower(format(date_time, "%I:%M%p", tz = timezone))
   checkmate::assert_numeric(maxWalkDistance, lower = 0, len = 1)
   checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
-  checkmate::assert_character(fromID, null.ok = TRUE)
-  checkmate::assert_character(toID, null.ok = TRUE)
+  checkmate::assert_character(fromID, null.ok = FALSE)
+  checkmate::assert_character(toID, null.ok = FALSE)
   checkmate::assert_logical(arriveBy)
-  arriveBy <- tolower(arriveBy)
-  checkmate::assert_logical(distance_balance, len = 1, null.ok = FALSE)
-  checkmate::assert_logical(get_elevation, len = 1, null.ok = FALSE)
-
-  if (distance_balance & (ncores > 1)) {
-    if (is.null(fromID)) {
-      stop("Distance balancing changes the order of the output, so fromID must not be NULL")
-    }
-    if (is.null(toID)) {
-      stop("Distance balancing changes the order of the output, so toID must not be NULL")
-    }
-  }
-
+  #arriveBy <- tolower(arriveBy)
 
   # Check Route Options
   if (!is.null(routeOptions)) {
@@ -124,61 +114,85 @@ otp_traveltime <- function(otpcon = NA,
     }
   }
 
-  # Make sure number of fromPlace or toPlace match
-  nrfp <- nrow(fromPlace)
-  nrtp <- nrow(toPlace)
-  if (nrfp != nrtp) {
-    if (nrfp > nrtp & nrtp == 1) {
-      toPlace <- toPlace[rep(1, times = nrfp), ]
-      if (!is.null(toID)) {
-        toID <- toID[rep(1, times = nrfp)]
-      }
-      warning("repeating toPlace to match length of fromPlace")
-    } else if (nrtp > nrfp & nrfp == 1) {
-      fromPlace <- fromPlace[rep(1, times = nrtp), ]
-      if (!is.null(fromID)) {
-        fromID <- fromID[rep(1, times = nrtp)]
-      }
-      warning("repeating fromPlace to match length of toPlace")
-    } else {
-      stop("Number of fromPlaces and toPlaces do not match")
-    }
-  }
 
   # Make a pointset for each fromPLACE
+  toPlace <- sf::st_sf(data.frame(geometry = sf::st_geometry(toPlace)))
   pointsetname <- paste(sample(LETTERS, 6, TRUE), collapse = "")
   otp_pointset(toPlace, pointsetname, path_data)
 
   fromPlacelst <- split(fromPlace[,2:1], 1:nrow(fromPlace))
 
-  cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
-  parallel::clusterExport(
-    cl = cl,
-    varlist = c("otpcon", "pointsetname","otp_traveltime_internal","otp_make_surface","otp_surface","otp_clean_input","make_url",
-                "build_url"),
-    envir = environment()
-  )
-  parallel::clusterEvalQ(cl, {
-    loadNamespace("opentripplanner")
-  })
-  pbapply::pboptions(use_lb = TRUE)
-  res <- pbapply::pblapply(fromPlacelst,
-                           otp_traveltime_internal,
-                           otpcon = otpcon,
-                           pointsetname = pointsetname,
-                           cl = cl)
-  parallel::stopCluster(cl)
-  rm(cl)
+  if(ncores > 1){
+    cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
+    parallel::clusterExport(
+      cl = cl,
+      varlist = c("otpcon", "pointsetname"),
+      envir = environment()
+    )
+    parallel::clusterEvalQ(cl, {
+      loadNamespace("opentripplanner")
+    })
+    pbapply::pboptions(use_lb = TRUE)
+    res <- pbapply::pblapply(fromPlacelst,
+                             otp_traveltime_internal,
+                             otpcon = otpcon,
+                             pointsetname = pointsetname,
+                             mode = mode,
+                             date_time = date_time,
+                             arriveBy = arriveBy,
+                             maxWalkDistance = maxWalkDistance,
+                             routeOptions = routeOptions,
+                             cl = cl)
+    parallel::stopCluster(cl)
+    rm(cl)
+  } else {
+    res <- pbapply::pblapply(fromPlacelst,
+                             otp_traveltime_internal,
+                             otpcon = otpcon,
+                             pointsetname = pointsetname,
+                             mode = mode,
+                             date_time = date_time,
+                             arriveBy = arriveBy,
+                             maxWalkDistance = maxWalkDistance,
+                             routeOptions = routeOptions)
+  }
 
   names(res) <- fromID
+  res <- res[lengths(res) > 0]
   res <- list2df(res)
   rownames(res) <- toID
   return(res)
 }
 
 
-otp_traveltime_internal <- function(fromPlace, otpcon, pointsetname){
-  surface <- otp_make_surface(otpcon, fromPlace)
-  times <- otp_surface(otpcon, surface, pointsetname)
+otp_traveltime_internal <- function(fromPlace,
+                                    otpcon,
+                                    pointsetname,
+                                    mode,
+                                    date_time,
+                                    arriveBy,
+                                    maxWalkDistance,
+                                    routeOptions){
+  surface <- try(otp_make_surface(otpcon = otpcon,
+                              fromPlace = fromPlace,
+                              mode = mode,
+                              date_time = date_time,
+                              arriveBy = arriveBy,
+                              maxWalkDistance = maxWalkDistance,
+                              routeOptions = routeOptions), silent = TRUE)
+
+  if ("try-error" %in% class(surface)) {
+    warning("Failed to create surface for: ",paste(fromPlace, collapse = ", "))
+    return(NULL)
+  }
+
+  times <- try(otp_surface(otpcon, surface, pointsetname, get_data = FALSE),
+               silent = TRUE)
+
+  if ("try-error" %in% class(times)) {
+    warning("Failed to evaluate surface for: ",paste(fromPlace, collapse = ", "))
+    return(NULL)
+  }
+
   return(times$times)
 }

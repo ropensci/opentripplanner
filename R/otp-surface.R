@@ -1,10 +1,11 @@
-#' Use OTP Geo-coder to find a location
+#' Evaluate a surface against a pointset
 #'
 #' Geo-coding converts a named place, such as a street name into a lng/lat pair.
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param surface A suface list from otp_make_surface()
 #' @param pointsset character, name of pointset
+#' @param get_data Logical, should data be returned or just travel times.
 #' @return Returns a data.frame of travel times
 #' @examples
 #' \dontrun{
@@ -17,7 +18,8 @@
 #' @export
 otp_surface <- function(otpcon = NULL,
                         surface = NULL,
-                        pointsset = NULL) {
+                        pointsset = NULL,
+                        get_data = TRUE) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
     if (otpcon$otp_version >= 2) {
@@ -40,33 +42,73 @@ otp_surface <- function(otpcon = NULL,
   if(text$status_code == 200){
     text <- rawToChar(text$content)
   } else {
-    stop("Error getting surface code: ",text$status_code)
+    stop("Error getting surface code: ",text$status_code," URL: ",surfaceUrl)
   }
 
-  asjson <- rjson::fromJSON(text)
-
-  # from otpr
+  asjson <- RcppSimdJson::fparse(text)
   response <- list()
-  for (i in 1:length(asjson[["data"]])) {
-    name <- names(asjson$data[i])
-    asjson[["data"]][[i]]["cumsums"] <-
-      list(cumsum(asjson[["data"]][[i]][["sums"]]))
-    asjson[["data"]][[i]]["minutes"] <-
-      list(seq(1, length(asjson[["data"]][[i]][2]$counts)))
-    df <- data.frame(Reduce(rbind, asjson$data[i]))
-    df <- df[, c("minutes", "counts", "sums", "cumsums")]
-    assign(paste0("s", surfaceId, "_", name), df)
-    response[[name]] <-
-      assign(paste0("s", surfaceId, "_", name), df)
+
+  if(get_data){
+    dat <- asjson$data
+    dat <- unlist(dat, recursive = FALSE)
+    dat <- list2df(dat)
+    dat$minutes <- seq(1, nrow(dat))
+    response$data <- dat
   }
 
   times <- asjson$times
   times[times == 2147483647] <- NA
   response$times <- times
 
-
   return(response)
 }
+
+#' Make an isochrone from a surface
+#'
+#' Geo-coding converts a named place, such as a street name into a lng/lat pair.
+#'
+#' @param otpcon OTP connection object produced by otp_connect()
+#' @param surface A suface list from otp_make_surface()
+#' @return Returns a data.frame of travel times
+#' @examples
+#' \dontrun{
+#' times <- otp_surface(otpcon, c(-1.17502, 50.64590), "lsoa", path_data)
+#' }
+#' @details THis function requires the analysis and pointset features to be
+#' enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
+#' detail see the analyst vignette.
+#'
+#' @export
+otp_surface_isochrone <- function(otpcon = NULL,
+                        surface = NULL) {
+  # Check for OTP2
+  if (!is.null(otpcon$otp_version)) {
+    if (otpcon$otp_version >= 2) {
+      stop("Surface is not supported by OTP v2.X")
+    }
+  }
+
+  surfaceUrl <- make_url(otpcon, type = "surfaces")
+  surfaceUrl <- paste0(surfaceUrl,
+                       "/",
+                       surface$id,
+                       "/raster")
+
+  # convert response content into text
+  h <- curl::new_handle()
+  #curl::handle_setopt(h, post = TRUE)
+  text <- curl::curl_fetch_disk(surfaceUrl,
+                                path = file.path(tempdir(),"otpIsochrone.tiff"),
+                                handle = h)
+  if(text$status_code == 200){
+    r <- raster::raster(text$content)
+    r[r == 128] <- NA
+  } else {
+    stop("Error getting surface code: ",text$status_code," URL: ",surfaceUrl)
+  }
+  return(r)
+}
+
 
 
 #' Make a Surface
@@ -81,6 +123,7 @@ otp_surface <- function(otpcon = NULL,
 #' @param maxWalkDistance Numeric passed to OTP in metres
 #' @param arriveBy Logical, Whether the trip should depart or arrive at the
 #'   specified date and time, default FALSE
+#' @param routeOptions Named list of values passed to OTP use
 #' @param timezone Character, what timezone to use, see as.POSIXct, default is
 #'   local timezone
 #' @family analyst
@@ -100,6 +143,7 @@ otp_make_surface <- function(otpcon = NULL,
                         date_time = Sys.time(),
                         maxWalkDistance = 1000,
                         arriveBy = FALSE,
+                        routeOptions = NULL,
                         timezone = otpcon$timezone) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
@@ -139,12 +183,21 @@ otp_make_surface <- function(otpcon = NULL,
   querylist <- list(
     batch = "true",
     fromPlace = fromPlace,
-    #date = date,
-    #time = time,
+    date = date,
+    time = time,
     mode = mode,
     maxWalkDistance = maxWalkDistance,
     arriveBy = arriveBy
   )
+
+  # Check Route Options
+  if (!is.null(routeOptions)) {
+    routeOptions <- otp_validate_routing_options(routeOptions)
+  }
+
+  if (!is.null(routeOptions)) {
+    querylist <- c(querylist, routeOptions)
+  }
 
   # convert response content into text
   url <- build_url(surfaceUrl, querylist)
@@ -156,7 +209,7 @@ otp_make_surface <- function(otpcon = NULL,
   } else {
     stop("Error making surface code: ",text$status_code)
   }
-  asjson <- rjson::fromJSON(text)
+  asjson <- RcppSimdJson::fparse(text)
 
   return(asjson)
 
@@ -204,6 +257,10 @@ otp_pointset <- function(points = NULL,
   points <- cbind(coords, points)
   cls <- vapply(points, class, FUN.VALUE = "character", USE.NAMES = FALSE)
   points <- points[,cls %in% c("integer","numeric")]
+
+  if(anyNA(points)){
+    stop("NA values are not allowed in pointsets")
+  }
 
 
   if(!dir.exists(file.path(dir,"pointsets"))){

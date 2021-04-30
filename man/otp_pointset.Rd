@@ -7,9 +7,7 @@
 otp_pointset(points = NULL, name = NULL, dir = NULL)
 }
 \arguments{
-\item{points}{Numeric vector, Longitude/Latitude pair, e.g.
-`c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
-or sf data frame of POINTS with CRS 4326}
+\item{points}{sf data frame of POINTS with CRS 4326}
 
 \item{name}{Character, name for pointset}
 

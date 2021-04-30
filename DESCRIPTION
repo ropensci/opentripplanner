@@ -34,18 +34,16 @@ Imports:
     lubridate,
     sf (>= 0.9.3),
     sfheaders,
-    tibble,
-    future.apply,
-    future,
-    progressr,
-    progress
+    tibble
 RoxygenNote: 7.1.1
 Suggests:
     RcppSimdJson (>= 0.1.2),
     covr,
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    raster,
+    rgdal
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.2)
