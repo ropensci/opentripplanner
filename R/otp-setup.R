@@ -446,13 +446,31 @@ otp_checks <- function(otp = NULL,
 
   if (graph) {
     # Check that the graph exists, and is over 5KB
-    checkmate::assertFileExists(paste0(dir, "/graphs/", router, "/Graph.obj"))
-    size <- file.info(paste0(dir, "/graphs/", router, "/Graph.obj"))
-    size <- size$size
-    if (size < 5000) {
-      warning("Graph.obj exists but is very small, the build process may have failed")
-      return(FALSE)
+    chkG <- file.exists(paste0(dir, "/graphs/", router, "/Graph.obj"))
+    chkg <- file.exists(paste0(dir, "/graphs/", router, "/graph.obj"))
+
+    if(!(chkG | chkg)){
+      stop("File does not exist")
     }
+
+    if(chkG){
+      size <- file.info(paste0(dir, "/graphs/", router, "/Graph.obj"))
+      size <- size$size
+      if (size < 5000) {
+        warning("Graph.obj exists but is very small, the build process may have failed")
+        return(FALSE)
+      }
+    }
+
+    if(chkg){
+      size <- file.info(paste0(dir, "/graphs/", router, "/graph.obj"))
+      size <- size$size
+      if (size < 5000) {
+        warning("graph.obj exists but is very small, the build process may have failed")
+        return(FALSE)
+      }
+    }
+
   } else {
     # Check the data to build a graph exists
     fls <- list.files(file.path(dir, "/graphs/", router))

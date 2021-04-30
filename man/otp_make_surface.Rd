@@ -22,6 +22,10 @@ otp_make_surface(
 `c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
 or sf data frame of POINTS with CRS 4326}
 
+\item{mode}{character vector of one or more modes of travel valid values
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
+are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.}
+
 \item{date_time}{POSIXct, a date and time, defaults to current date and time}
 
 \item{maxWalkDistance}{Numeric passed to OTP in metres}

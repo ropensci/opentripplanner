@@ -81,13 +81,21 @@ test_that("We can build an otp graph", {
   skip_on_cran()
   log <- otp_build_graph(otp = path_otp,
                          dir = path_data,
-                         router = "default")
+                         router = "default",
+                         quiet = FALSE)
   expect_true(file.exists(file.path(
     path_data,
     "graphs",
     "default",
     "Graph.obj"
-  )))
+  )) | file.exists(file.path(
+    path_data,
+    "graphs",
+    "default",
+    "graph.obj"
+  ))
+
+  )
 })
 
 context("Test the otp_setup function")
