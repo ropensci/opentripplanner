@@ -119,6 +119,9 @@ otp_surface_isochrone <- function(otpcon = NULL,
 #' @param fromPlace Numeric vector, Longitude/Latitude pair, e.g.
 #'   `c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
 #'   or sf data frame of POINTS with CRS 4326
+#' @param mode character vector of one or more modes of travel valid values
+#'   TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
+#'   are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.
 #' @param date_time POSIXct, a date and time, defaults to current date and time
 #' @param maxWalkDistance Numeric passed to OTP in metres
 #' @param arriveBy Logical, Whether the trip should depart or arrive at the
