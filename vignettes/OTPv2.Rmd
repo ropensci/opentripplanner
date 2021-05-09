@@ -42,9 +42,24 @@ Coming Soon
 
 Coming Soon
 
+## Checking your Java version
+
+You can check the version of Java accessible to R by using `otp_check_java` and specifing the version of OTP you want to use.
+
+For example if you wanted to use OTP 2.0 but have Java 8 installed then you would see:
+
+```{r, eval = FALSE}
+otp_check_java(2)
+[1] FALSE
+Warning message:
+In otp_check_java(2) : You have OTP 2.x but the version of Java for OTP 1.x
+
+```
+
 ## Building a graph and starting up OTP 2
 
-You can select OTP 2.0 using the `otp_dl_jar` function. Note that until OTP 2.0 is released this will download a beta version used for internal testing.
+You can select OTP 2.0 using the `otp_dl_jar` function.
+
 
 ```{r setup, eval=FALSE}
 library(opentripplanner)
