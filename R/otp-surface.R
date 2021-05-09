@@ -58,9 +58,10 @@ otp_surface <- function(otpcon = NULL,
 
   times <- asjson$times
   times[times == 2147483647] <- NA
-  response$times <- times
 
+  response$times <- times
   return(response)
+
 }
 
 #' Make an isochrone from a surface
@@ -86,6 +87,11 @@ otp_surface_isochrone <- function(otpcon = NULL,
     if (otpcon$otp_version >= 2) {
       stop("Surface is not supported by OTP v2.X")
     }
+  }
+
+  # Check for raster package
+  if(!"raster" %in% rownames(installed.packages())){
+    stop("The raster pacakge is not installed, please run install.packages('raster')")
   }
 
   surfaceUrl <- make_url(otpcon, type = "surfaces")
