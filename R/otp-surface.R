@@ -90,7 +90,7 @@ otp_surface_isochrone <- function(otpcon = NULL,
   }
 
   # Check for raster package
-  if(!"raster" %in% rownames(installed.packages())){
+  if(!"raster" %in% rownames(utils::installed.packages())){
     stop("The raster pacakge is not installed, please run install.packages('raster')")
   }
 

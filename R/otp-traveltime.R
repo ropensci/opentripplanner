@@ -4,6 +4,7 @@
 #' @description This function requires OTP 1.x and the analyst
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
+#' @param path_data Path to data used in otp_build_graph()
 #' @param fromPlace Numeric vector, Longitude/Latitude pair, e.g.
 #'   `c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
 #'   or sf data frame of POINTS with CRS 4326

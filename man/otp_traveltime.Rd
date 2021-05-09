@@ -24,6 +24,8 @@ otp_traveltime(
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
+\item{path_data}{Path to data used in otp_build_graph()}
+
 \item{fromPlace}{Numeric vector, Longitude/Latitude pair, e.g.
 `c(-0.134649,51.529258)`, or 2 column matrix of Longitude/Latitude pairs,
 or sf data frame of POINTS with CRS 4326}
