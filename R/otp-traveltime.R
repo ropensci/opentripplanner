@@ -118,7 +118,7 @@ otp_traveltime <- function(otpcon = NA,
 
   # Make a pointset for each fromPLACE
   toPlace <- sf::st_sf(data.frame(geometry = sf::st_geometry(toPlace)))
-  pointsetname <- paste(sample(LETTERS, 6, TRUE), collapse = "")
+  pointsetname <- paste(sample(LETTERS, 10, TRUE), collapse = "")
   otp_pointset(toPlace, pointsetname, path_data)
 
   fromPlacelst <- split(fromPlace[,2:1], 1:nrow(fromPlace))
