@@ -174,7 +174,8 @@ otp_make_surface <- function(otpcon = NULL,
   checkmate::assert_subset(mode,
                            choices = c(
                              "TRANSIT", "WALK", "BICYCLE",
-                             "CAR", "BUS", "RAIL"
+                             "CAR", "BUS", "RAIL", "SUBWAY",
+                             "TRAM", "FERRY"
                            ),
                            empty.ok = FALSE
   )

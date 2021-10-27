@@ -138,7 +138,8 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_subset(mode,
                            choices = c(
                              "TRANSIT", "WALK", "BICYCLE",
-                             "CAR", "BUS", "RAIL", "SUBWAY", "TRAM"
+                             "CAR", "BUS", "RAIL", "SUBWAY",
+                             "TRAM", "FERRY"
                            ),
                            empty.ok = FALSE
   )
