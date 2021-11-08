@@ -63,7 +63,8 @@ otp_isochrone <- function(otpcon = NA,
   checkmate::assert_subset(mode,
     choices = c(
       "TRANSIT", "WALK", "BICYCLE",
-      "CAR", "BUS", "RAIL"
+      "CAR", "BUS", "RAIL", "SUBWAY",
+      "TRAM", "FERRY"
     ),
     empty.ok = FALSE
   )
@@ -253,7 +254,7 @@ otp_isochrone_internal <- function(otpcon = NA,
     response <- sf::st_read(text, quiet = TRUE)
     response$id <- seq(1, nrow(response))
     if (any(!sf::st_is_valid(response))) {
-      suppressMessages(suppressWarnings(response <- sf::st_buffer(response, 0)))
+      suppressMessages(suppressWarnings(response <- sf::st_make_valid(response)))
     }
 
     if (!is.null(fromID)) {

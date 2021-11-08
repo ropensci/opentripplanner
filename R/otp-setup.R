@@ -174,6 +174,7 @@ otp_build_graph <- function(otp = NULL,
 #' @param quiet Logical, if FALSE the Java commands will be printed to console
 #' @param otp_version Numeric, version of OTP to build, default NULL when version
 #'     is auto-detected
+#' @param open_browser Logical, if TRUE web browser is loaded when OTP is ready
 #' @family setup
 #' @return
 #' This function does not return a value to R. If wait is TRUE R
@@ -217,7 +218,8 @@ otp_setup <- function(otp = NULL,
                       wait = TRUE,
                       flag64bit = TRUE,
                       quiet = TRUE,
-                      otp_version = NULL) {
+                      otp_version = NULL,
+                      open_browser = TRUE) {
 
   # Run Checks
   checkmate::assert_numeric(memory, lower = 500)
@@ -347,12 +349,14 @@ otp_setup <- function(otp = NULL,
           port,
           " in your browser to view the OTP"
         ))
-        utils::browseURL(paste0(
-          ifelse(otpcon$ssl,
-            "https://", "http://"
-          ),
-          "localhost:", port
-        ))
+        if(open_browser){
+          utils::browseURL(paste0(
+            ifelse(otpcon$ssl,
+                   "https://", "http://"
+            ),
+            "localhost:", port
+          ))
+        }
         break
       } else {
         if (i < 30) {

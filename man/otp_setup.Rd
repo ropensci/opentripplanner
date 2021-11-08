@@ -16,7 +16,8 @@ otp_setup(
   wait = TRUE,
   flag64bit = TRUE,
   quiet = TRUE,
-  otp_version = NULL
+  otp_version = NULL,
+  open_browser = TRUE
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ ignored if otp_version >= 2}
 
 \item{otp_version}{Numeric, version of OTP to build, default NULL when version
 is auto-detected}
+
+\item{open_browser}{Logical, if TRUE web browser is loaded when OTP is ready}
 }
 \value{
 This function does not return a value to R. If wait is TRUE R
