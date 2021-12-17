@@ -171,7 +171,7 @@ test_that("transit routing", {
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515),
-    date_time = as.POSIXct(strptime("2020-06-03 13:30", "%Y-%m-%d %H:%M")),
+    date_time = as.POSIXct(strptime("2021-06-03 13:30", "%Y-%m-%d %H:%M")),
     mode = c("WALK", "TRANSIT"),
     numItineraries = 3
   )

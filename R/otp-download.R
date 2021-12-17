@@ -49,7 +49,7 @@ otp_dl_jar <- function(path = NULL,
   }
 
   if (version == "2.0.0") {
-    warning("OTP2 support is in beta")
+    warning("OTP2 support is in beta \n")
   }
 
   url <- paste0(url, "/", version, "/otp-", version, "-shaded.jar")

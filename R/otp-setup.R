@@ -254,7 +254,10 @@ otp_setup <- function(otp = NULL,
       dir,
       "/graphs/",
       router,
-      '"'
+      '"',
+      ' --port ', port,
+      ' --securePort ', securePort
+
     )
   } else {
     text <- paste0(
