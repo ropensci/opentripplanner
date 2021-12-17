@@ -269,7 +269,7 @@ test_that("batch routing", {
 })
 
 
-test_that("ditance balancing works", {
+test_that("distance balancing works", {
   skip_on_cran()
   routes <- otp_plan(
     otpcon = otpcon,
