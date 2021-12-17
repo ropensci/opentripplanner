@@ -119,7 +119,7 @@ otp_traveltime <- function(otpcon = NA,
   pointsetname <- paste(sample(LETTERS, 10, TRUE), collapse = "")
   otp_pointset(toPlace, pointsetname, path_data)
 
-  fromPlacelst <- split(fromPlace[,2:1], 1:nrow(fromPlace))
+  fromPlacelst <- split(fromPlace[,2:1], seq_len(nrow(fromPlace)))
 
   if(ncores > 1){
     cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
