@@ -57,18 +57,6 @@ jobs:
         with:
           java-version: ${{ matrix.config.java }}
 
-      - name: Prevent Windows from installing non-binary packages
-        if: ${{ matrix.config.os == 'windows-latest'  }}
-        shell: bash
-        run: |
-          echo 'options(install.packages.check.source = "no")' >>  .Rprofile
-
-      - name: Prevent macOS from installing non-binary packages
-        if: ${{ matrix.config.os == 'macOS-latest'  }}
-        shell: bash
-        run: |
-          echo 'options(install.packages.check.source = "no")' >>  .Rprofile
-
       - name: Query dependencies
         run: |
           install.packages('remotes')
