@@ -14,11 +14,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-The Analyst is a set of optional features in OTP 1.x used for transport analysis. These features were removed from OTP 2.0.  This Vignette will explain how to enable and use these features.
+The Analyst is a set of optional features in OTP 1.x used for transport analysis. These features were removed from OTP 2.0.  This vignette will explain how to enable and use these features.
 
 ## Analyst Features
 
-The Analyst add the following feature to OTP:
+The Analyst adds the following features to OTP:
 
 1. **PointSets** - A more efficient way to specify a batch of fromPlace / toPlaces for routing.
 1. **Surfaces** - A efficient way to get travel time from one to many places.
@@ -48,7 +48,7 @@ knitr::include_graphics("images/analyst.jpg")
 ```
 ## Creating a Pointset
 
-You will have noticed that when we started OTP we also enabled the Pointsets feature. Pointsets are `.csv` files of latitude/longitude coordinate that OTP can route to. PointSets can be created from SF objects using the `otp_poinset()` function.
+You will have noticed that when we started OTP we also enabled the Pointsets feature. Pointsets are `.csv` files of latitude/longitude coordinates that OTP can route to. PointSets can be created from SF objects using the `otp_poinset()` function.
 
 We will use the LSOA points from the [Advanced Features Vignette](https://docs.ropensci.org/opentripplanner/) to create a PointSet. We will also add a column of data called jobs to analyse. For any numerical values in a PointSet OTP can provide the count and sum of that value based on travel criteria. In this case we might want to know how many jobs can be accessed within a 30 minute drive of a given location.
 
@@ -58,11 +58,11 @@ lsoa$jobs <- sample(100:500, nrow(lsoa))
 otp_pointset(lsoa, "lsoa", path_data)
 ```
 
-Here the `otp_pointset()` function takes the `lsoa` object and create a PointSet that can be accessed by OTP using the name "lsoa".
+Here the `otp_pointset()` function takes the `lsoa` object and creates a PointSet that can be accessed by OTP using the name "lsoa".
 
 ## Creating a Surface
 
-A surface evaluate the travel times from a given point to all locations within 120 minutes in one minute increments. So it quite similar to an isochrone.
+A surface evaluates the travel times from a given point to all locations within 120 minutes in one minute increments. So it quite similar to an isochrone.
 
 The fist step is to make a surface from a given location using `otp_make_surface`
 
@@ -104,7 +104,7 @@ Notice that there are a few locations where OTP has failed to find a travel time
 
 ## Producing a travel time matrix
 
-We can use surfaces as a more efficient way to produce a travel time matrix than using `otp_plan`. A special function `otp_traveltime` create batches of surfaces and pointsets an summarises the results as a travel time matrix.
+We can use surfaces as a more efficient way to produce a travel time matrix than using `otp_plan`. A special function `otp_traveltime` creates batches of surfaces and pointsets and summarises the results as a travel time matrix.
 
 ```{r eval=FALSE}
 ttmatrix <- otp_traveltime(otpcon, 

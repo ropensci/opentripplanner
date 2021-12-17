@@ -23,28 +23,17 @@ The `opentripplanner` package was originally developed to support OpenTripPlanne
 * Switch from Java 8 to Java 11
 * Support for Netex transit data
 * Support for SIRI transit data
-* Switch from A* routing algorithum to Range Raptor when searching transit routes
+* Switch from A* routing algorithm to Range Raptor when searching transit routes
 * Removal of Isochrone, Geocode, and other analysis features
 
 ## Getting Java 11
+At the time of writing Java 8 is still the default on may systems. To get Java 11 you must download the Java Development Kit https://www.oracle.com/java/technologies/javase-jdk11-downloads.html this requires a free account with the Oracle website.
 
-### Windows
-
-At the time ow writing Java 8 is still the default on Windows. TO get Java 11 you must download the Java Development Kit https://www.oracle.com/java/technologies/javase-jdk11-downloads.html this requires a free account with the Oracle website.
-
-You will also need to change the PATH variaible in Windows to point to the new version of Java
-
-### Mac
-
-Coming Soon
-
-### Linux
-
-Coming Soon
+On windows you will also need to change the PATH variable to point to the new version of Java
 
 ## Checking your Java version
 
-You can check the version of Java accessible to R by using `otp_check_java` and specifing the version of OTP you want to use.
+You can check the version of Java accessible to R by using `otp_check_java` and specifying the version of OTP you want to use.
 
 For example if you wanted to use OTP 2.0 but have Java 8 installed then you would see:
 
