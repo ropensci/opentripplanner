@@ -404,3 +404,57 @@ test_that("otp_stop", {
     expect_true(TRUE)
   }
 })
+
+context("Test the analyst functions")
+
+test_that("We can startup OTP with the analyst", {
+  skip_on_cran()
+  skip_on_j11()
+  expect_message(log <- otp_setup(otp = path_otp,
+                                  dir = path_data,
+                                  router = "default",
+                                  wait = FALSE,
+                                  analyst = TRUE,
+                                  pointsets = TRUE),
+                 regexp = "OTP is loading"
+  )
+  Sys.sleep(60)
+})
+
+test_that("Can connect to OTP", {
+  skip_on_cran()
+  skip_on_j11()
+  expect_message(
+    otp_connect(router = "default"),
+    "Router http://localhost:8080/otp/routers/default exists"
+  )
+})
+
+if (!on_cran()) {
+  otpcon <- otp_connect(router = "default", check = FALSE)
+}
+
+test_that("Make a tt matrix", {
+  skip_on_cran()
+  skip_on_j11()
+  ttmatrix <- otp_traveltime(otpcon,
+                             path_data,
+                             fromPlace = lsoa[1:5,],
+                             toPlace = lsoa[1:5,],
+                             fromID = lsoa$geo_code[1:5],
+                             toID = lsoa$geo_code[1:5])
+  expect_is(ttmatrix, "data.frame")
+  expect_true(nrow(ttmatrix) == 5)
+  expect_true(ncol(ttmatrix) == 5)
+})
+
+test_that("otp_stop", {
+  skip_on_cran()
+  foo <- otp_stop(FALSE)
+  if (checkmate::test_os("windows")) {
+    expect_true(grepl("SUCCESS", foo))
+  } else {
+    expect_true(TRUE)
+  }
+})
+
