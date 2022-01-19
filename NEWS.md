@@ -1,4 +1,10 @@
-# opentripplanner 0.3.2 (In Development)
+# opentripplanner 0.4.0
+
+* Support for OTP 2.0
+* Support for analyst features in OTP 1.x with new functions
+* Support for `s2` features in the `sf` package
+
+# opentripplanner 0.3.2
 
 * Fix a bug with parsing fare data
 * Fix bug with latest version of Java defaulting to 32Bit even when 64bit is available.
