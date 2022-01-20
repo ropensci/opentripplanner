@@ -455,8 +455,8 @@ test_that("Make a tt raster", {
                              fromPlace = c(-1.17502,50.64590),
                              mode = "CAR")
 
-  raster <- otp_surface_isochrone(otpcon, surface = surface)
-  expect_is(raster, "raster")
+  r <- otp_surface_isochrone(otpcon, surface = surface)
+  expect_is(r, "RasterLayer")
 })
 
 
