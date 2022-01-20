@@ -105,10 +105,10 @@ test_that("We can startup OTP", {
   expect_message(log <- otp_setup(otp = path_otp,
                                   dir = path_data,
                                   router = "default",
-                                  wait = FALSE),
+                                  wait = TRUE),
     regexp = "OTP is loading"
   )
-  Sys.sleep(60)
+  Sys.sleep(60 * 5)
 })
 
 context("Test the otp_connect function")
@@ -413,12 +413,12 @@ test_that("We can startup OTP with the analyst", {
   expect_message(log <- otp_setup(otp = path_otp,
                                   dir = path_data,
                                   router = "default",
-                                  wait = TRUE,
+                                  wait = FALSE,
                                   analyst = TRUE,
                                   pointsets = TRUE),
                  regexp = "OTP is loading"
   )
-  Sys.sleep(60)
+  Sys.sleep(60 * 5)
 })
 
 test_that("Can connect to OTP", {
