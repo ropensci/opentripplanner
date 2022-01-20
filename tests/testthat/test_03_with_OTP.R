@@ -413,7 +413,7 @@ test_that("We can startup OTP with the analyst", {
   expect_message(log <- otp_setup(otp = path_otp,
                                   dir = path_data,
                                   router = "default",
-                                  wait = FALSE,
+                                  wait = TRUE,
                                   analyst = TRUE,
                                   pointsets = TRUE),
                  regexp = "OTP is loading"
