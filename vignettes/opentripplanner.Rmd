@@ -144,36 +144,6 @@ You can also use the `otp_connect()` function to make a connection to OTP on a r
 otpcon <- otp_connect(url = "https://api.digitransit.fi/routing/v1/routers/hsl")
 ```
 
-## Running an OTP instance in Docker
-We have been able to run OTP version 1.5.0 from `https://repo1.maven.org/maven2/org/opentripplanner/otp/` in a Dockerfile and query it via the package. The basic Dockerfile looks like:
-
-```Docker
-
-FROM java:8-alpine
-
-ENV OTP_VERSION=1.5.0
-ENV JAVA_OPTIONS=-Xmx1G
-
-ADD https://repo1.maven.org/maven2/org/opentripplanner/otp/$OTP_VERSION/otp-$OTP_VERSION-shaded.jar /usr/local/share/java/otp.jar
-
-COPY otp /usr/local/bin/
-
-EXPOSE 8080
-
-ENTRYPOINT ["otp"]
-CMD ["--help"]
-```
-And then you can build the image using a default Docker build command like `docker build -t <name> .` where of course "." is your working directory with your Dockerfile in. Then just running the instance like
-
-```sh
-docker run \
-  -p 8080:8080 \
-  -v $PWD/graphs:/var/otp/graphs \
-  -e JAVA_OPTIONS=-Xmx4G \
-  urbica/otp --server --autoScan --verbose
-```
-That of course let us place our graphs in the docker volume `$PWD/graphs`. This is slightly edited version of the work described [here](https://github.com/urbica/docker-otp).
-
 ## Getting a route from the OTP
 
 Now we can use R to get a route from the OTP. OTP accepts pairs of longitude/latitude coordinates for a `fromPlace` (start of the journey) and `toPlace` (end of the journey).
