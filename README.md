@@ -95,9 +95,14 @@ Functions for connecting to a local or remote instance of OTP:
 Functions for retrieving data from OTP:
 
 1.  `otp_plan()` To get routes from A to B;
-2.  `otp_isochrone()` To get isochrone maps;
-3.  `otp_geocode()` To get the locations of named places e.g. road
+2.  `otp_geocode()` To get the locations of named places e.g. road
     names.
+3.  `otp_isochrone()` To get isochrone maps (OTP 1.x only);
+4.  `otp_make_surface()` To make an analyst surface (OTP 1.x only);
+5.  `otp_surface()` To evaluate a analyst surface (OTP 1.x only);
+6.  `otp_traveltime()` To make a travel time matrix (OTP 1.x only);
+7.  `otp_surface_isochrone()` To make a raster isochrone map (OTP 1.x
+    only);
 
 Results are returned as [sf
 objects](https://CRAN.R-project.org/package=sf).
