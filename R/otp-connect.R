@@ -203,7 +203,7 @@ check_routers <- function(otpcon) {
 
   check <- try(curl::curl_fetch_memory(url), silent = TRUE)
   if (class(check) == "try-error") {
-    return(paste0("Router ", make_url(otpcon), " does not exist. Error code ", check$status_code))
+    return(paste0("Router ", make_url(otpcon), " does not exist"))
   }
 
   check <- rawToChar(check$content)
