@@ -215,7 +215,7 @@ You can read more about the different debug layers in the official OTP documenta
 
 ## Analyst
 
-Older versions of OTP has some limited analytical features built-in which needed to be enabled during graph build and startup. These features are accessible via the `analyst = TRUE` arguments of `otp_build_graph()` and `otp_setup()`. For more information see the [OTP documentation](http://docs.opentripplanner.org/en/latest/Analyst/)
+Older versions of OTP has some limited analytical features built-in which needed to be enabled during graph build and startup. These features are accessible via the `analyst = TRUE` arguments of `otp_build_graph()` and `otp_setup()`. For more information see the [OTP documentation](https://docs.ropensci.org/opentripplanner/articles/Analyst.html)
 
 ## Configuring OpenTripPlanner
 

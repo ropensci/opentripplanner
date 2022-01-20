@@ -5,7 +5,7 @@
 
 [![R build
 status](https://github.com/ropensci/opentripplanner/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/opentripplanner/actions)
-[![codecov](https://codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/opentripplanner)
+[![codecov](https://app.codecov.io/gh/ropensci/opentripplanner/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ropensci/opentripplanner)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
