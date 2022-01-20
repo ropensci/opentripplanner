@@ -1,10 +1,7 @@
-# opentripplanner 0.4.1
+# opentripplanner 0.4.0
 
 * Fix broken or moved URLs
 * `tibble` moved from imports to suggests
-
-# opentripplanner 0.4.0
-
 * Support for OTP 2.0
 * Support for analyst features in OTP 1.x with new functions
 * Support for `s2` features in the `sf` package

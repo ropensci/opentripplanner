@@ -1,6 +1,6 @@
 Package: opentripplanner
 Title: Setup and connect to 'OpenTripPlanner'
-Version: 0.4.1
+Version: 0.4.0
 Authors@R: c(
     person("Malcolm", "Morgan", email = "m.morgan1@leeds.ac.uk", role = c("aut","cre"), 
       comment = c(ORCID = "0000-0002-9488-9183")),
