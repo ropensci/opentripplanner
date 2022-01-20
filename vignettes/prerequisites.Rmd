@@ -37,7 +37,7 @@ An R package is a small piece of software that extends the basic capabilities of
 
 ### Help with R
 
-To get started with R, see [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, introductory tutorials such as DataCamp's free [Introduction to R course](https://www.datacamp.com/courses/free-introduction-to-r), or the [R tutor website](http://www.r-tutor.com/r-introduction). The [Geocomputation with R](https://geocompr.robinlovelace.net) book covers the packages and skills required to analyse spatial datasets such as those produced by OpenTripPlanner.
+To get started with R, see [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, introductory tutorials such as DataCamp's free Introduction to R course, or the [R tutor website](http://www.r-tutor.com/r-introduction). The [Geocomputation with R](https://geocompr.robinlovelace.net) book covers the packages and skills required to analyse spatial datasets such as those produced by OpenTripPlanner.
 
 A video tutorial for installing R and RStudio 
 
