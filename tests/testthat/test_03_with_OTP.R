@@ -448,6 +448,19 @@ test_that("Make a tt matrix", {
   expect_true(ncol(ttmatrix) == 5)
 })
 
+test_that("Make a tt raster", {
+  skip_on_cran()
+  skip_on_j11()
+  surface <- otp_make_surface(otpcon = otpcon,
+                             fromPlace = c(-1.17502,50.64590),
+                             mode = "CAR")
+
+  raster <- otp_surface_isochrone(otpcon, surface = surface)
+  expect_is(raster, "raster")
+})
+
+
+
 test_that("otp_stop", {
   skip_on_cran()
   foo <- otp_stop(FALSE)
