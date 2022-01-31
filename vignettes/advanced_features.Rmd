@@ -239,7 +239,19 @@ otp_write_config(router_config,                # Save the config file
 There is much more information about configuring OpenTripPlanner at https://opentripplanner.readthedocs.io/en/latest/Configuration/ 
 
 ## Running an OTP instance in Docker
-We have been able to run OTP version 1.5.0 from `https://repo1.maven.org/maven2/org/opentripplanner/otp/` in a Dockerfile and query it via the package. The basic Dockerfile looks like:
+
+We have been able to run OTP version 1.5.0 from `https://repo1.maven.org/maven2/org/opentripplanner/otp/` in a Dockerfile and query it via the package. 
+
+1. Create a directory called `docker-otp` and `cd docker-opt` 
+2. Copy these two lines into a file called `otp`
+```sh
+#!/bin/sh
+
+exec java $JAVA_OPTIONS -jar /usr/local/share/java/otp.jar $@
+```
+Make sure this is executable: `chmod +x otp`
+
+3. Create `Dockerfile`. The basic Dockerfile looks like:
 
 ```Docker
 
@@ -257,13 +269,16 @@ EXPOSE 8080
 ENTRYPOINT ["otp"]
 CMD ["--help"]
 ```
-And then you can build the image using a default Docker build command like `docker build -t <name> .` where of course "." is your working directory with your Dockerfile in. Then just running the instance like
+
+4. then you can build the image using a default Docker build command like `docker build -t <name> .` where of course "." is your working directory with your Dockerfile in. 
+
+5. just running the instance like:
 
 ```sh
 docker run \
   -p 8080:8080 \
   -v $PWD/graphs:/var/otp/graphs \
   -e JAVA_OPTIONS=-Xmx4G \
-  urbica/otp --server --autoScan --verbose
+  <name_in_build> --server --autoScan --verbose
 ```
 That of course let us place our graphs in the docker volume `$PWD/graphs`. This is slightly edited version of the work described [here](https://github.com/urbica/docker-otp).
