@@ -62,7 +62,7 @@ parse_leg <- function(leg,
   leg$to <- NULL
 
   if (get_elevation | full_elevation) {
-    elevation <- lapply(leg$steps, parse_elevation)
+    elevation <- purrr::map(leg$steps, parse_elevation)
   } else {
     elevation <- NULL
   }
@@ -81,9 +81,16 @@ parse_leg <- function(leg,
     }
 
     leg$geometry <- sf::st_sfc(legGeometry, crs = 4326)
-    leg$legGeometry <- NULL
-    # leg <- sf::st_sf(leg)
-    leg <- df2sf(leg)
+
+
+    # legGeometry <- lapply(leg$legGeometry, `[[`, "points")
+    # legGeometry <- purrr::map2(.x = legGeometry,
+    #                            .y = elevation,
+    #                            .f = polyline2linestring)
+    # leg$geometry <- sf::st_sfc(legGeometry, crs = 4326)
+    # leg$legGeometry <- NULL
+    # leg <- df2sf(leg)
+
   } else {
     leg$legGeometry <- NULL
   }
@@ -106,8 +113,8 @@ parse_elevation <- function(stp) {
   if(class(stp$elevation) == "character"){
     elev <- stp$elevation
     elev <- strsplit(elev,",")
-    elev <- lapply(elev, as.numeric)
-    elev <- lapply(elev, split_alternating)
+    elev <- purrr::map(elev, as.numeric)
+    elev <- purrr::map(elev, split_alternating)
     elev <- data.table::rbindlist(elev, idcol = "step")
   } else {
     elev <- data.table::rbindlist(stp$elevation, idcol = "step")

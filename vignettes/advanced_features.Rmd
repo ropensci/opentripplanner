@@ -89,7 +89,9 @@ routes <- otp_plan(otpcon = otpcon,
                    toPlace = toPlace,
                    fromID = fromPlace$geo_code,
                    toID = toPlace$geo_code,
-                   get_geometry = FALSE)
+                   get_geometry = TRUE,
+                   ncores = 30,
+                   distance_balance = TRUE)
 routes <- routes[,c("fromPlace","toPlace","duration")]
 # Use the tidyr package to go from long to wide format
 routes_matrix <- tidyr::pivot_wider(routes, 

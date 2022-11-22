@@ -18,7 +18,7 @@ otp_plan(
   routeOptions = NULL,
   full_elevation = FALSE,
   get_geometry = TRUE,
-  ncores = 1,
+  ncores = parallel::detectCores() - 1,
   timezone = otpcon$timezone,
   distance_balance = FALSE,
   get_elevation = FALSE
