@@ -545,7 +545,7 @@ otp_make_config <- function(type) {
     # Interger
     config[["maxHtmlAnnotationsPerFile"]] <- 1000L
     config[["maxInterlineDistance"]] <- 200L
-    config[["islandWithStopsMaxSize"]] <- 5L
+    config[["islandWithStopsMaxSize"]] <- 30L
     config[["islandWithoutStopsMaxSize"]] <- 40L
 
     # Numeric

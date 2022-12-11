@@ -279,10 +279,12 @@ otp_plan <- function(otpcon = NA,
   results <- unlist(results, use.names = FALSE)
   results <- RcppSimdJson::fparse(results)
 
-  results_errors <-  purrr::map(results, `[[`, "error")
-  results_errors <- (lengths(results_errors) == 0)
-  results_routes <- results[results_errors]
-  results_errors <- results[!results_errors]
+  results_errors <- purrr::map_lgl(results, function(x){!is.null(x$error)})
+  results_missing <- purrr::map_lgl(results, function(x){is.null(x$plan$itineraries)})
+
+  results_routes <- results[!(results_errors | results_missing)]
+  results_errors <- results[results_errors]
+  results_missing <- results[results_missing]
 
   if(length(results_routes) > 0){
     results_routes <- purrr::map(results_routes,
@@ -324,6 +326,10 @@ otp_plan <- function(otpcon = NA,
 
   }
 
+  if(length(results_missing) > 0){
+    message(length(results_missing)," routes returned no results")
+  }
+
   message(Sys.time()," done")
   return(results_routes)
 }
@@ -339,6 +345,21 @@ otp_parse_errors <- function(x){
       to = x$requestParameters$toPlace,
       msg = x$error$msg
     )
+
+}
+
+
+#' Parse Missing
+#' @param x list
+#' @family internal
+#' @noRd
+otp_parse_missing <- function(x){
+
+  data.frame(id = 0,
+             from = x$requestParameters$fromPlace,
+             to = x$requestParameters$toPlace,
+             msg = "No result was returned"
+  )
 
 }
 

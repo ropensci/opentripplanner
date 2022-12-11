@@ -81,7 +81,7 @@ parse_leg <- function(leg,
     }
 
     leg$geometry <- sf::st_sfc(legGeometry, crs = 4326)
-
+    leg$legGeometry <- NULL
 
     # legGeometry <- lapply(leg$legGeometry, `[[`, "points")
     # legGeometry <- purrr::map2(.x = legGeometry,
