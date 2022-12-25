@@ -89,9 +89,9 @@ otp_surface_isochrone <- function(otpcon = NULL,
     }
   }
 
-  # Check for raster package
-  if(!"raster" %in% rownames(utils::installed.packages())){
-    stop("The raster pacakge is not installed, please run install.packages('raster')")
+  # Check for terra package
+  if(!"terra" %in% rownames(utils::installed.packages())){
+    stop("The terra pacakge is not installed, please run install.packages('terra')")
   }
 
   surfaceUrl <- make_url(otpcon, type = "surfaces")
@@ -107,7 +107,7 @@ otp_surface_isochrone <- function(otpcon = NULL,
                                 path = file.path(tempdir(),"otpIsochrone.tiff"),
                                 handle = h)
   if(text$status_code == 200){
-    r <- raster::raster(text$content)
+    r <- terra::rast(text$content)
     r[r == 128] <- NA
   } else {
     stop("Error getting surface code: ",text$status_code," URL: ",surfaceUrl)

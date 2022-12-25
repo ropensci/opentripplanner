@@ -53,7 +53,9 @@ You will have noticed that when we started OTP we also enabled the Pointsets fea
 We will use the LSOA points from the [Advanced Features Vignette](https://docs.ropensci.org/opentripplanner/) to create a PointSet. We will also add a column of data called jobs to analyse. For any numerical values in a PointSet OTP can provide the count and sum of that value based on travel criteria. In this case we might want to know how many jobs can be accessed within a 30 minute drive of a given location.
 
 ```{r, eval=FALSE}
-lsoa <- sf::st_read("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", stringsAsFactors = FALSE)
+download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg",
+              "centroids.gpkg", mode = "wb")
+lsoa <- sf::st_read("centroids.gpkg", stringsAsFactors = FALSE)
 lsoa$jobs <- sample(100:500, nrow(lsoa))
 otp_pointset(lsoa, "lsoa", path_data)
 ```
@@ -127,7 +129,7 @@ isochone <- otp_surface_isochrone(otpcon, surfaceid)
 The function `otp_surface_isochrone` returns a raster image with the value of the travel time in minutes. You can view the raster using the `raster` package.
 
 ```{r eval=FALSE}
-library(raster)
+library(terra)
 plot(isochone)
 ```
 ```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:ttimes}Isochone Raster"}

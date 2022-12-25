@@ -44,8 +44,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    raster,
-    rgdal,
+    terra,
     tibble
 VignetteBuilder: knitr
 Depends: 
