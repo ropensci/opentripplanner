@@ -12,7 +12,8 @@ otp_make_surface(
   maxWalkDistance = 1000,
   arriveBy = FALSE,
   routeOptions = NULL,
-  timezone = otpcon$timezone
+  timezone = otpcon$timezone,
+  ncores = 1
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ specified date and time, default FALSE}
 
 \item{timezone}{Character, what timezone to use, see as.POSIXct, default is
 local timezone}
+
+\item{ncores}{How many cores to use default = 1}
 }
 \value{
 Returns a list with information about the surface created

@@ -82,146 +82,20 @@ otp_isochrone <- function(otpcon = NA,
     }
   }
 
-  if (ncores > 1) {
-    cl <- parallel::makeCluster(ncores)
-    parallel::clusterExport(
-      cl = cl,
-      varlist = c("otpcon", "fromPlace", "fromID"),
-      envir = environment()
-    )
-    parallel::clusterEvalQ(cl, {
-      loadNamespace("opentripplanner")
-    })
-    pbapply::pboptions(use_lb = TRUE)
-    results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      otp_get_isochrone_results,
-      otpcon = otpcon,
-      fromPlace = fromPlace,
-      fromID = fromID,
-      mode = mode,
-      date = date,
-      time = time,
-      arriveBy = arriveBy,
-      maxWalkDistance = maxWalkDistance,
-      routingOptions = routingOptions,
-      cutoffSec = cutoffSec,
-      cl = cl
-    )
-    parallel::stopCluster(cl)
-    rm(cl)
-  } else {
-    results <- pbapply::pblapply(seq(1, nrow(fromPlace)),
-      otp_get_isochrone_results,
-      otpcon = otpcon,
-      fromPlace = fromPlace,
-      fromID = fromID,
-      mode = mode,
-      date = date,
-      time = time,
-      arriveBy = arriveBy,
-      maxWalkDistance = maxWalkDistance,
-      routingOptions = routingOptions,
-      cutoffSec = cutoffSec
-    )
-  }
-
-
-
-  results_class <- unlist(lapply(results, function(x) {
-    "data.frame" %in% class(x)
-  }), use.names = FALSE)
-  if (all(results_class)) {
-    results_routes <- results[results_class]
-    results_errors <- NA
-  } else if (all(!results_class)) {
-    results_routes <- NA
-    results_errors <- results[!results_class]
-  } else {
-    results_routes <- results[results_class]
-    results_errors <- results[!results_class]
-  }
-
-  # Bind together
-  if (!all(class(results_routes) == "logical")) {
-    if (any(unlist(lapply(results, function(x) {
-      "sf" %in% class(x)
-    }), use.names = FALSE))) {
-      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
-      results_routes <- as.data.frame(results_routes)
-      results_routes$geometry <- sf::st_sfc(results_routes$geometry)
-      results_routes <- sf::st_sf(results_routes, crs = 4326)
-    } else {
-      results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
+  if(!is.null(fromID)){
+    fromID <- data.table::data.table(fromID = fromID,
+                                     fromPlace = gsub("%2C",",",fromPlace))
+    fromID <- unique(fromID)
+    if(any(duplicated(fromID$fromID))){
+      stop("Can't have two fromIDs with the same location, coordinates are rounded to 9 dp")
     }
   }
 
+  fromPlace <- format(fromPlace, scientific = FALSE, digits = 9, trim = TRUE)
+  fromPlace <- paste0(fromPlace[,1],"%2C",fromPlace[,2])
 
-  if (!all(class(results_errors) == "logical")) {
-    results_errors <- unlist(results_errors, use.names = FALSE)
-    warning(results_errors)
-  }
-  return(results_routes)
-}
-
-#' Get isochrone results
-#'
-#' helper function for otp_plan
-#'
-#' @param x numeric
-#' @param otpcon otpcon
-#' @param fromPlace fromplace
-#' @param fromID fromID
-#' @param ... all other variaibles
-#'
-#' @noRd
-otp_get_isochrone_results <- function(x, otpcon, fromPlace, fromID, ...) {
-  res <- otp_isochrone_internal(
-    otpcon = otpcon,
-    fromPlace = fromPlace[x, ],
-    fromID = fromID[x],
-    ...
-  )
-  return(res)
-}
-
-
-#' Internal fucntion for getting isochrones
-#'
-#' @param otpcon OTP connection object produced by otp_connect()
-#' @param fromPlace Numeric vector, Longitude/Latitude pair,
-#'     e.g. `c(-0.134649, 51.529258,)`
-#' @param mode character vector of one or more modes of travel valid values
-#'     TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
-#'     combinations are valid e.g. c("WALK","BUS") is valid but
-#'     c("WALK","CAR") is not.
-#' @param date_time POSIXct, a date and time, defaults to current
-#'     date and time
-#' @param arriveBy Logical, Whether the trip should depart or
-#'     arrive at the specified date and time, default FALSE
-#' @param maxWalkDistance Numeric passed to OTP in metres
-#' @param routingOptions Names list passed to OTP
-#' @param cutoffSec Numeric vector, number of seconds to define
-#'     the break points of each Isochrone
-#' @family internal
-#' @noRd
-
-otp_isochrone_internal <- function(otpcon = NA,
-                                   fromPlace = NA,
-                                   fromID = NULL,
-                                   mode = NULL,
-                                   date = NULL,
-                                   time = NULL,
-                                   arriveBy = NULL,
-                                   maxWalkDistance = NULL,
-                                   routingOptions = NULL,
-                                   cutoffSec = NULL) {
-
-  # Construct URL
   routerUrl <- make_url(otpcon)
   routerUrl <- paste0(routerUrl, "/isochrone")
-
-  fromPlace <- format(fromPlace, scientific = FALSE, digits = 9, trim = TRUE)
-  fromPlace <- paste(fromPlace, collapse = ",")
 
   query <- list(
     fromPlace = fromPlace,
@@ -239,37 +113,45 @@ otp_isochrone_internal <- function(otpcon = NA,
     query <- c(query, routingOptions)
   }
 
-  # convert response content into text
-  url <- build_url(routerUrl, query)
-  h <- curl::new_handle()
-  h <- curl::handle_setheaders(h, "Accept" = "application/json")
-  text <- curl::curl_fetch_memory(url, h)
-  text <- text$content
-  text <- rawToChar(text)
+  # Send Requests
+  urls <- build_urls(routerUrl,fromPlace, toPlace = NULL, query)
+  message(Sys.time()," sending requests using ",ncores," threads")
+  results <- progressr::with_progress(otp_async(urls, ncores, TRUE))
 
-  if (nchar(text) < 200) {
-    return(paste0("Failed to get isochrone with error: ", text))
-  } else {
-    # parse to sf
-    response <- sf::st_read(text, quiet = TRUE)
-    response$id <- seq(1, nrow(response))
-    if (any(!sf::st_is_valid(response))) {
-      suppressMessages(suppressWarnings(response <- sf::st_make_valid(response)))
-    }
-
-    if (!is.null(fromID)) {
-      response$fromPlace <- fromID
-    } else {
-      response$fromPlace <- fromPlace
-    }
-
-    response <- response[!sf::st_is_empty(response),]
-    if(nrow(response) == 0){
-      return("Isochrone had empty geometry ")
-    } else {
-      response <- sf::st_cast(response, "MULTIPOLYGON")
-    }
-
-    return(response)
+  if (!is.null(fromID)) {
+    fromID <- gsub("%2C",",",fromPlace, fixed = TRUE)
   }
+
+  results_sf <- purrr::map2(results, fromID, otp_process_results_iso)
+  results_sf <- data.table::rbindlist(results_sf)
+  results_sf <- sf::st_as_sf(results_sf)
+
+  return(results_sf)
+}
+
+#' Process results
+#'
+#' @param text the text returned by OTP
+#' @param fromID passed from main func
+#' @family internal
+#' @noRd
+
+otp_process_results_iso <- function(text, fromID){
+
+  response <- sf::st_read(text, quiet = TRUE)
+  response$id <- seq(1, nrow(response))
+  if (any(!sf::st_is_valid(response))) {
+    suppressMessages(suppressWarnings(response <- sf::st_make_valid(response)))
+  }
+
+  response <- response[!sf::st_is_empty(response),]
+  if(nrow(response) == 0){
+    warning("Isochrone had empty geometry ")
+  } else {
+    response <- sf::st_cast(response, "MULTIPOLYGON")
+  }
+
+  response$fromPlace <- fromID
+  return(response)
+
 }

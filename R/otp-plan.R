@@ -1,9 +1,3 @@
-# fls <- list.files("R", full.names = TRUE)
-# for(fl in fls){source(fl)}
-
-
-
-
 #' Get get a route or routes from the OTP
 #'
 #' @description This is the main routing function for OTP and can find single or
@@ -19,12 +13,14 @@
 #' @param fromID character vector same length as fromPlace
 #' @param toID character vector same length as toPlace
 #' @param mode character vector of one or more modes of travel valid values
-#'   TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
-#'   are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.
+#'   TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, SUBWAY, TRAM, FERRY, BICYCLE_RENT,
+#'   BICYCLE_PARK, CAR_PARK, CABLE_CAR, GONDOLA, FUNICULAR, AIRPLANE, default
+#'   CAR. Not all combinations are valid e.g. c("WALK","BUS") is valid but
+#'   c("WALK","CAR") is not.
 #' @param date_time POSIXct, a date and time, defaults to current date and time
 #' @param arriveBy Logical, Whether the trip should depart or arrive at the
 #'   specified date and time, default FALSE
-#' @param maxWalkDistance Numeric passed to OTP in metres
+#' @param maxWalkDistance Numeric passed to OTP in meters
 #' @param routeOptions Named list of values passed to OTP use
 #'   `otp_route_options()` to make template object.
 #' @param numItineraries The maximum number of possible itineraries to return
@@ -56,7 +52,8 @@
 #'   When passing a matrix or SF data frame object to fromPlace and toPlace
 #'   `otp_plan` will route in batch mode. In this case the `ncores` variable
 #'   will be used. Increasing `ncores` will enable multicore routing, the max
-#'   `ncores` should be the number of cores on your system - 1.
+#'   `ncores` should be 1.25 times the number of cores on your system. The
+#'   default is 1.25 timees -1 for improved stability.
 #'
 #'   ## Distance Balancing
 #'
@@ -275,6 +272,10 @@ otp_plan <- function(otpcon = NA,
   message(Sys.time()," sending requests using ",ncores," threads")
   results <- progressr::with_progress(otp_async(urls, ncores))
 
+  if(length(results) == 0){
+    stop("No results returned, check your connection")
+  }
+
   message(Sys.time()," processing results")
   results <- unlist(results, use.names = FALSE)
   results <- RcppSimdJson::fparse(results)
@@ -434,26 +435,30 @@ build_urls <- function (routerUrl,fromPlace, toPlace, query){
   secs <- paste0(names(secs), "=", secs)
   secs <- paste(secs, collapse = "&")
   secs <- gsub(",", "%2C", secs)
-  secs <- paste0(routerUrl, "?", "fromPlace=",fromPlace,"&toPlace=",toPlace,"&",secs)
+  if(is.null(toPlace)){
+    secs <- paste0(routerUrl, "?", "fromPlace=",fromPlace,"&",secs)
+  } else {
+    secs <- paste0(routerUrl, "?", "fromPlace=",fromPlace,"&toPlace=",toPlace,"&",secs)
+  }
   secs
 }
-
 
 #' Async Send  Requests
 #'
 #' @param urls vector of URLs for OTP
 #' @param ncores Number of requests to send at once
+#' @param iso_mode logical, use isochrone mode
+#' @param post logical, make a post request
 #' @family internal
 #' @noRd
+otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
 
-otp_async <- function(urls, ncores){
-
-  #' Sucess Function
+  # Success Function
   otp_success <- function(res){
     p()
     data <<- c(data, rawToChar(res$content))
   }
-  #' Fail Function
+  # Fail Function
   otp_failure <- function(msg){
     p()
     cat("Error: ", msg, "\n")
@@ -463,8 +468,20 @@ otp_async <- function(urls, ncores){
 
   pool <- curl::new_pool(host_con = ncores)
   data <- list()
+
   for(i in seq_len(length(urls))){
-    curl::curl_fetch_multi(urls[i], otp_success, otp_failure , pool = pool)
+    h <- curl::new_handle()
+    if(post){
+      curl::handle_setopt(h, post = TRUE)
+    }
+    if(iso_mode){
+      h <- curl::handle_setheaders(h, "Accept" = "application/json")
+    }
+    curl::curl_fetch_multi(urls[i],
+                           otp_success,
+                           otp_failure ,
+                           pool = pool,
+                           handle = h)
   }
   p <- progressr::progressor(length(urls))
   curl::multi_run(timeout = Inf, pool = pool)

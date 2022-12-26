@@ -38,35 +38,24 @@
 #'
 otp_traveltime <- function(otpcon = NA,
                            path_data = NULL,
-                     fromPlace = NA,
-                     toPlace = NA,
-                     fromID = NULL,
-                     toID = NULL,
-                     mode = "CAR",
-                     date_time = Sys.time(),
-                     arriveBy = FALSE,
-                     maxWalkDistance = 1000,
-                     numItineraries = 3,
-                     routeOptions = NULL,
-                     ncores = 1,
-                     timezone = otpcon$timezone) {
+                           fromPlace = NA,
+                           toPlace = NA,
+                           fromID = NULL,
+                           toID = NULL,
+                           mode = "CAR",
+                           date_time = Sys.time(),
+                           arriveBy = FALSE,
+                           maxWalkDistance = 1000,
+                           numItineraries = 3,
+                           routeOptions = NULL,
+                           ncores = 1,
+                           timezone = otpcon$timezone) {
   # Check Valid Inputs
 
   # Back compatibility with 0.2.1
   if (is.null(timezone)) {
     warning("otpcon is missing the timezone variaible, assuming local timezone")
     timezone <- Sys.timezone()
-  }
-
-  # Back compatibility with RcppSimdJson <= 0.1.1
-  RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
-  if (class(RcppSimdJsonVersion) == "try-error") {
-    RcppSimdJsonVersion <- FALSE
-  }
-
-  if (!RcppSimdJsonVersion) {
-    message("NOTE: You do not have 'RcppSimdJson' >= 0.1.2 installed")
-    stop("This feature is not supported")
   }
 
   checkmate::assert_subset(timezone, choices = OlsonNames(tzdir = NULL))
@@ -100,6 +89,7 @@ otp_traveltime <- function(otpcon = NA,
 
   # Special checks for fromPlace and toPlace
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
+  fromPlace <- fromPlace[,2:1]
 
   if (!is.null(fromID)) {
     if (length(fromID) != nrow(fromPlace)) {
@@ -119,48 +109,29 @@ otp_traveltime <- function(otpcon = NA,
   pointsetname <- paste(sample(LETTERS, 10, TRUE), collapse = "")
   otp_pointset(toPlace, pointsetname, path_data)
 
-  fromPlacelst <- split(fromPlace[,2:1], seq_len(nrow(fromPlace)))
+  # Make surfaces
+  surfaces <- otp_make_surface(otpcon = otpcon,
+                               fromPlace = fromPlace,
+                               mode = mode,
+                               date_time = date_time,
+                               arriveBy = arriveBy,
+                               maxWalkDistance = maxWalkDistance,
+                               routeOptions = routeOptions)
 
-  if(ncores > 1){
-    cl <- parallel::makeCluster(ncores, outfile = "otp_parallel_log.txt")
-    parallel::clusterExport(
-      cl = cl,
-      varlist = c("otpcon", "pointsetname"),
-      envir = environment()
-    )
-    parallel::clusterEvalQ(cl, {
-      loadNamespace("opentripplanner")
-    })
-    pbapply::pboptions(use_lb = TRUE)
-    res <- pbapply::pblapply(fromPlacelst,
-                             otp_traveltime_internal,
-                             otpcon = otpcon,
-                             pointsetname = pointsetname,
-                             mode = mode,
-                             date_time = date_time,
-                             arriveBy = arriveBy,
-                             maxWalkDistance = maxWalkDistance,
-                             routeOptions = routeOptions,
-                             cl = cl)
-    parallel::stopCluster(cl)
-    rm(cl)
-  } else {
-    res <- pbapply::pblapply(fromPlacelst,
-                             otp_traveltime_internal,
-                             otpcon = otpcon,
-                             pointsetname = pointsetname,
-                             mode = mode,
-                             date_time = date_time,
-                             arriveBy = arriveBy,
-                             maxWalkDistance = maxWalkDistance,
-                             routeOptions = routeOptions)
-  }
+  times <- otp_surface(otpcon = otpcon,
+                       surface = surfaces,
+                       pointsset = pointsetname,
+                       get_data = FALSE,
+                       ncores = ncores)
 
-  names(res) <- fromID
-  res <- res[lengths(res) > 0]
-  res <- list2df(res)
-  rownames(res) <- toID
-  return(res)
+  names(times) <- fromID
+
+  times <- purrr::map(times, `[[`, "times")
+
+  times <- times[lengths(times) > 0]
+  times <- list2df(times)
+  rownames(times) <- toID
+  return(times)
 }
 
 

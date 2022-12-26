@@ -4,19 +4,27 @@
 \alias{otp_surface}
 \title{Evaluate a surface against a pointset}
 \usage{
-otp_surface(otpcon = NULL, surface = NULL, pointsset = NULL, get_data = TRUE)
+otp_surface(
+  otpcon = NULL,
+  surface = NULL,
+  pointsset = NULL,
+  get_data = TRUE,
+  ncores = 1
+)
 }
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
-\item{surface}{A suface list from otp_make_surface()}
+\item{surface}{A surface list from otp_make_surface()}
 
 \item{pointsset}{character, name of pointset}
 
 \item{get_data}{Logical, should data be returned or just travel times.}
+
+\item{ncores}{Integer, number of cores to use}
 }
 \value{
-Returns a data.frame of travel times
+Returns a list of data.frames of travel times
 }
 \description{
 Geo-coding converts a named place, such as a street name into a lng/lat pair.

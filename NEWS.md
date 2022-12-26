@@ -1,3 +1,19 @@
+# opentripplanner 0.5.0
+
+Breaking Changes
+
+* surfaceID returned from `otp_make_surface` is now a list of lists to allow multiple inputs/outputs
+* removed legacy support for old version of R (<4.0) that don't support `RcppSimdJson` for older versions of R use version 0.2.3
+
+Other Changes
+
+* removed dependency on `raster` and `rgdal` replaced with `terra`
+* replaced multi-core routeing with asynchronous requests using `curl` resulting in faster routing and lower resource usage
+* remove `pbapply` dependency replaced with `progressr`
+* remove dependency on `lubridate`
+* default ncores argument changed from `1` to `round(parallel::detectCores() * 1.25) - 1`
+* Typos fixed in documentation
+
 # opentripplanner 0.4.0
 
 * Fix broken or moved URLs

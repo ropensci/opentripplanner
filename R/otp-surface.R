@@ -3,10 +3,11 @@
 #' Geo-coding converts a named place, such as a street name into a lng/lat pair.
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
-#' @param surface A suface list from otp_make_surface()
+#' @param surface A surface list from otp_make_surface()
 #' @param pointsset character, name of pointset
 #' @param get_data Logical, should data be returned or just travel times.
-#' @return Returns a data.frame of travel times
+#' @param ncores Integer, number of cores to use
+#' @return Returns a list of data.frames of travel times
 #' @examples
 #' \dontrun{
 #' times <- otp_surface(otpcon, c(-1.17502, 50.64590), "lsoa", path_data)
@@ -19,7 +20,8 @@
 otp_surface <- function(otpcon = NULL,
                         surface = NULL,
                         pointsset = NULL,
-                        get_data = TRUE) {
+                        get_data = TRUE,
+                        ncores = 1) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
     if (otpcon$otp_version >= 2) {
@@ -28,40 +30,44 @@ otp_surface <- function(otpcon = NULL,
   }
 
   surfaceUrl <- make_url(otpcon, type = "surfaces")
+  surfaceids <- purrr::map_int(surface, `[[`, "id")
   surfaceUrl <- paste0(surfaceUrl,
                        "/",
-                       surface$id,
+                       surfaceids,
                        "/indicator?targets=",
                        pointsset,
                        "&detail=true")
 
-  # convert response content into text
-  h <- curl::new_handle()
-  #curl::handle_setopt(h, post = TRUE)
-  text <- curl::curl_fetch_memory(surfaceUrl, handle = h)
-  if(text$status_code == 200){
-    text <- rawToChar(text$content)
-  } else {
-    stop("Error getting surface code: ",text$status_code," URL: ",surfaceUrl)
-  }
+  message(Sys.time()," sending requests using ",ncores," threads")
+  results <- progressr::with_progress(otp_async(surfaceUrl, ncores))
 
-  asjson <- RcppSimdJson::fparse(text)
+  asjson <- RcppSimdJson::fparse(unlist(results, use.names = FALSE), parse_error_ok = TRUE)
+
+  res <- purrr::map(asjson, parse_surface, get_data = get_data)
+  return(res)
+
+}
+
+#' Parse Surface resutls
+#' @param x list
+#' @param get_data logical
+#' @family internal
+#' @noRd
+parse_surface <- function(x, get_data){
   response <- list()
-
   if(get_data){
-    dat <- asjson$data
+    dat <- x$data
     dat <- unlist(dat, recursive = FALSE)
     dat <- list2df(dat)
     dat$minutes <- seq(1, nrow(dat))
     response$data <- dat
   }
 
-  times <- asjson$times
+  times <- x$times
   times[times == 2147483647] <- NA
 
   response$times <- times
   return(response)
-
 }
 
 #' Make an isochrone from a surface
@@ -92,6 +98,11 @@ otp_surface_isochrone <- function(otpcon = NULL,
   # Check for terra package
   if(!"terra" %in% rownames(utils::installed.packages())){
     stop("The terra pacakge is not installed, please run install.packages('terra')")
+  }
+
+  # Check for list
+  if(is.null(surface$id)){
+    stop("Can't find surface ID, have you provided a list of surface IDs?")
   }
 
   surfaceUrl <- make_url(otpcon, type = "surfaces")
@@ -136,6 +147,7 @@ otp_surface_isochrone <- function(otpcon = NULL,
 #' @param routeOptions Named list of values passed to OTP use
 #' @param timezone Character, what timezone to use, see as.POSIXct, default is
 #'   local timezone
+#' @param ncores How many cores to use default = 1
 #' @family analyst
 #' @return Returns a list with information about the surface created
 #' @examples
@@ -154,7 +166,8 @@ otp_make_surface <- function(otpcon = NULL,
                         maxWalkDistance = 1000,
                         arriveBy = FALSE,
                         routeOptions = NULL,
-                        timezone = otpcon$timezone) {
+                        timezone = otpcon$timezone,
+                        ncores = 1) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
     if (otpcon$otp_version >= 2) {
@@ -185,15 +198,13 @@ otp_make_surface <- function(otpcon = NULL,
   arriveBy <- tolower(arriveBy)
 
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
-  fromPlace <- as.numeric(fromPlace)
   fromPlace <- format(fromPlace, scientific = FALSE, digits = 9, trim = TRUE)
-  fromPlace <- paste(fromPlace, collapse = ",")
+  fromPlace <- paste0(fromPlace[,1],"%2C",fromPlace[,2])
   # Make POST Request to build surface
 
   surfaceUrl <- make_url(otpcon, type = "surfaces")
   querylist <- list(
     batch = "true",
-    fromPlace = fromPlace,
     date = date,
     time = time,
     mode = mode,
@@ -210,17 +221,13 @@ otp_make_surface <- function(otpcon = NULL,
     querylist <- c(querylist, routeOptions)
   }
 
+  urls <- build_urls(surfaceUrl,fromPlace, toPlace = NULL, querylist)
+  message(Sys.time()," sending requests using ",ncores," threads")
+  results <- progressr::with_progress(otp_async(urls, ncores, post = TRUE))
+
   # convert response content into text
-  url <- build_url(surfaceUrl, querylist)
-  h <- curl::new_handle()
-  curl::handle_setopt(h, post = TRUE)
-  text <- curl::curl_fetch_memory(url, handle = h)
-  if(text$status_code == 200){
-    text <- rawToChar(text$content)
-  } else {
-    stop("Error making surface code: ",text$status_code)
-  }
-  asjson <- RcppSimdJson::fparse(text)
+  asjson <- RcppSimdJson::fparse(unlist(results, use.names = FALSE),
+                                 parse_error_ok = TRUE)
 
   return(asjson)
 

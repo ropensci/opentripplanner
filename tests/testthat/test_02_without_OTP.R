@@ -58,8 +58,6 @@ if (!on_cran()) {
   }
 }
 
-
-
 test_that("download otp", {
   skip_on_cran()
   expect_true(file.exists(file.path(path_otp)))
@@ -153,20 +151,20 @@ test_that("otp_plan input validation", {
     fromPlace = c(1.23, 1.23),
     toPlace = c(1.23, 1.23)
   ),
-  regexp = "Failed to connect to localhost port 8080"
+  regexp = "No results returned, check your connection"
   )
   expect_warning(otp_plan(otpcon,
     toPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     fromPlace = matrix(c(1.23, 1.23), ncol = 2)
   ),
-  regexp = "Failed to connect to localhost port 8080"
+  regexp = "No results returned, check your connection"
   )
 
   expect_warning(otp_plan(otpcon,
     fromPlace = matrix(c(1.23, 1.23, 2.34, 2.34), ncol = 2),
     toPlace = matrix(c(1.23, 1.23), ncol = 2)
   ),
-  regexp = "Failed to connect to localhost port 8080"
+  regexp = "No results returned, check your connection"
   )
   # ncore
   expect_warning(otp_plan(otpcon,
@@ -174,7 +172,7 @@ test_that("otp_plan input validation", {
     toPlace = matrix(c(1.23, 1.23), ncol = 2),
     ncore = 2
   ),
-  regexp = "Failed to connect to localhost port 8080"
+  regexp = "No results returned, check your connection"
   )
 })
 

@@ -1,14 +1,5 @@
 # This tests will run without OTP setup.
 
-# Skip if no rcppsimdjson
-has_rcppsimdjson <- function() {
-  RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
-  if (class(RcppSimdJsonVersion) == "try-error") {
-    RcppSimdJsonVersion <- FALSE
-  }
-  return(RcppSimdJsonVersion)
-}
-
 context("Test internal functions")
 
 # otp-config
@@ -53,13 +44,11 @@ test_that("test otp_clean_input", {
 })
 
 test_that("test otp_json2sf", {
-  if (has_rcppsimdjson()) {
-    r1 <- RcppSimdJson::fparse(json_example_drive,
-      query = "/plan/itineraries"
-    )
-  } else {
-    r1 <- json_parse_legacy(json_example_drive)
-  }
+
+  r1 <- RcppSimdJson::fparse(json_example_drive,
+    query = "/plan/itineraries"
+  )
+
 
 
   r1 <- otp_json2sf(itineraries = r1, get_elevation = FALSE)
@@ -67,13 +56,11 @@ test_that("test otp_json2sf", {
   expect_true(nrow(r1) == 1)
   expect_true("sf" %in% class(r1))
 
-  if (has_rcppsimdjson()) {
-    r2 <- RcppSimdJson::fparse(json_example_drive,
-      query = "/plan/itineraries"
-    )
-  } else {
-    r2 <- json_parse_legacy(json_example_drive)
-  }
+
+  r2 <- RcppSimdJson::fparse(json_example_drive,
+    query = "/plan/itineraries"
+  )
+
 
 
   r2 <- otp_json2sf(r2, get_geometry = FALSE)
@@ -81,13 +68,11 @@ test_that("test otp_json2sf", {
   expect_true(nrow(r2) == 1)
   expect_false("sf" %in% class(r2))
 
-  if (has_rcppsimdjson()) {
-    r4 <- RcppSimdJson::fparse(json_example_transit,
-      query = "/plan/itineraries"
-    )
-  } else {
-    r4 <- json_parse_legacy(json_example_transit)
-  }
+
+  r4 <- RcppSimdJson::fparse(json_example_transit,
+    query = "/plan/itineraries"
+  )
+
 
   r4 <- otp_json2sf(itineraries = r4)
   expect_true("data.frame" %in% class(r4))
@@ -97,10 +82,6 @@ test_that("test otp_json2sf", {
 
 
 test_that("get elevations", {
-  if (!has_rcppsimdjson()) {
-    skip("Skip wihtout RcppSimdJson")
-  }
-
   r3 <- RcppSimdJson::fparse(json_example_drive,
     query = "/plan/itineraries"
   )
@@ -232,22 +213,3 @@ test_that("test otp_checks with graph, missing files", {
 })
 
 
-context("Test legacy mode")
-
-
-test_that("test legacy mode", {
-  if (!has_rcppsimdjson()) {
-    skip("Skip wihtout RcppSimdJson")
-  }
-
-  rnew <- RcppSimdJson::fparse(json_example_drive,
-    query = "/plan/itineraries"
-  )
-  rold <- json_parse_legacy(json_example_drive)
-
-  rnew <- otp_json2sf(rnew)
-  rold <- otp_json2sf(rold)
-  expect_true(identical(nrow(rnew), nrow(rold)))
-  expect_true(identical(names(rnew), names(rold)))
-  expect_true(identical(names(rnew$geometry), names(rold$geometry)))
-})

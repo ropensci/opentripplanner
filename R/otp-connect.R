@@ -171,7 +171,7 @@ check_router <- function(x) {
     stop("Object is not of class otpconnect, class is ", class(x))
   }
   check <- try(curl::curl_fetch_memory(make_url(x)), silent = TRUE)
-  if (class(check) == "try-error") {
+  if (inherits(check, "try-error")) {
     return(check[1])
   } else {
     return(check$status_code)
@@ -202,7 +202,7 @@ check_routers <- function(otpcon) {
   }
 
   check <- try(curl::curl_fetch_memory(url), silent = TRUE)
-  if (class(check) == "try-error") {
+  if (inherits(check, "try-error")) {
     return(paste0("Router ", make_url(otpcon), " does not exist"))
   }
 
@@ -240,7 +240,7 @@ otp_check_version <- function(otpcon, warn = TRUE) {
   }
 
   ver <- try(curl::curl_fetch_memory(url), silent = TRUE)
-  if ("try-error" %in% class(ver)) {
+  if (inherits(ver, "try-error")) {
     return(ver[1])
   }
 

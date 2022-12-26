@@ -110,7 +110,7 @@ parse_elevation <- function(stp) {
   }
 
   # Check for OTP1 or OTP2
-  if(class(stp$elevation) == "character"){
+  if(inherits(stp$elevation, "character")){
     elev <- stp$elevation
     elev <- strsplit(elev,",")
     elev <- purrr::map(elev, as.numeric)

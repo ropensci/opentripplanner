@@ -123,7 +123,7 @@ otp_build_graph <- function(otp = NULL,
   message(" ")
 
 
-  if ("try-error" %in% class(set_up)) {
+  if (inherits(set_up, "try-error")) {
     stop(paste0("Graph Build Failed: ", set_up[1]))
   }
 
@@ -511,7 +511,7 @@ otp_check_java <- function(otp_version = 1.5) {
   checkmate::assert_numeric(otp_version, lower = 1, upper = 2.999)
   # Check we have correct verrsion of Java
   java_version <- try(system2("java", "-version", stdout = TRUE, stderr = TRUE))
-  if (class(java_version) == "try-error") {
+  if (inherits(java_version, "try-error")) {
     warning("R was unable to detect a version of Java")
     return(FALSE)
   } else {
