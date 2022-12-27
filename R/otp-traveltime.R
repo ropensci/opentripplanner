@@ -48,7 +48,7 @@ otp_traveltime <- function(otpcon = NA,
                            maxWalkDistance = 1000,
                            numItineraries = 3,
                            routeOptions = NULL,
-                           ncores = 1,
+                           ncores = round(parallel::detectCores() * 1.25) - 1,
                            timezone = otpcon$timezone) {
   # Check Valid Inputs
 

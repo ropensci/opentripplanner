@@ -7,9 +7,10 @@
 #'     data frame of POINTS
 #' @param fromID character vector same length as fromPlace
 #' @param mode character vector of one or more modes of travel valid values
-#'     TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
-#'     combinations are valid e.g. c("WALK","BUS") is valid but
-#'     c("WALK","CAR") is not.
+#'   TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, SUBWAY, TRAM, FERRY, BICYCLE_RENT,
+#'   BICYCLE_PARK, CAR_PARK, CABLE_CAR, GONDOLA, FUNICULAR, AIRPLANE, default
+#'   CAR. Not all combinations are valid e.g. c("WALK","BUS") is valid but
+#'   c("WALK","CAR") is not.
 #' @param date_time POSIXct, a date and time, defaults to current
 #'     date and time
 #' @param arriveBy Logical, Whether the trip should depart or
@@ -41,13 +42,13 @@
 otp_isochrone <- function(otpcon = NA,
                           fromPlace = NA,
                           fromID = NULL,
-                          mode = "TRANSIT",
+                          mode = "CAR",
                           date_time = Sys.time(),
                           arriveBy = FALSE,
                           maxWalkDistance = 1000,
                           routingOptions = NULL,
                           cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
-                          ncores = 1,
+                          ncores = round(parallel::detectCores() * 1.25) - 1,
                           timezone = otpcon$timezone) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
@@ -61,11 +62,13 @@ otp_isochrone <- function(otpcon = NA,
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
   mode <- toupper(mode)
   checkmate::assert_subset(mode,
-    choices = c(
-      "TRANSIT", "WALK", "BICYCLE",
-      "CAR", "BUS", "RAIL", "SUBWAY",
-      "TRAM", "FERRY"
-    ),
+                           choices = c(
+                             "TRANSIT", "WALK", "BICYCLE",
+                             "CAR", "BUS", "RAIL", "SUBWAY",
+                             "TRAM", "FERRY","BICYCLE_RENT",
+                             "BICYCLE_PARK","CAR_PARK","CABLE_CAR",
+                             "GONDOLA","FUNICULAR","AIRPLANE"
+                           ),
     empty.ok = FALSE
   )
   mode <- paste(mode, collapse = ",")
@@ -115,17 +118,24 @@ otp_isochrone <- function(otpcon = NA,
 
   # Send Requests
   urls <- build_urls(routerUrl,fromPlace, toPlace = NULL, query)
-  message(Sys.time()," sending requests using ",ncores," threads")
+  message(Sys.time()," sending ",length(urls)," isochrone requests using ",ncores," threads")
   results <- progressr::with_progress(otp_async(urls, ncores, TRUE))
 
-  if (!is.null(fromID)) {
+  if(length(results) == 0){
+    stop("No results returned, check your connection")
+  }
+
+  if (is.null(fromID)) {
     fromID <- gsub("%2C",",",fromPlace, fixed = TRUE)
   }
 
   results_sf <- purrr::map2(results, fromID, otp_process_results_iso)
   results_sf <- data.table::rbindlist(results_sf)
-  results_sf <- sf::st_as_sf(results_sf)
-
+  if(nrow(results_sf) > 0){
+    results_sf <- sf::st_as_sf(results_sf)
+  } else {
+    warning("No results returned, check your inputs")
+  }
   return(results_sf)
 }
 
@@ -138,11 +148,19 @@ otp_isochrone <- function(otpcon = NA,
 
 otp_process_results_iso <- function(text, fromID){
 
-  response <- sf::st_read(text, quiet = TRUE)
+  response <- try(sf::st_read(text, quiet = TRUE), silent = TRUE)
+  if(inherits(response, "try-error")){
+    warning("Isochrone failed: ",text)
+    return(NULL)
+  }
+
   response$id <- seq(1, nrow(response))
+  response$fromPlace <- fromID
+
   if (any(!sf::st_is_valid(response))) {
     suppressMessages(suppressWarnings(response <- sf::st_make_valid(response)))
   }
+
 
   response <- response[!sf::st_is_empty(response),]
   if(nrow(response) == 0){
@@ -151,7 +169,7 @@ otp_process_results_iso <- function(text, fromID){
     response <- sf::st_cast(response, "MULTIPOLYGON")
   }
 
-  response$fromPlace <- fromID
+
   return(response)
 
 }

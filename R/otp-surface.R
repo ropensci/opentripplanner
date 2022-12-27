@@ -38,7 +38,7 @@ otp_surface <- function(otpcon = NULL,
                        pointsset,
                        "&detail=true")
 
-  message(Sys.time()," sending requests using ",ncores," threads")
+  message(Sys.time()," evaluating ",length(surfaceUrl)," surfaces using ",ncores," threads")
   results <- progressr::with_progress(otp_async(surfaceUrl, ncores))
 
   asjson <- RcppSimdJson::fparse(unlist(results, use.names = FALSE), parse_error_ok = TRUE)
@@ -222,7 +222,7 @@ otp_make_surface <- function(otpcon = NULL,
   }
 
   urls <- build_urls(surfaceUrl,fromPlace, toPlace = NULL, querylist)
-  message(Sys.time()," sending requests using ",ncores," threads")
+  message(Sys.time()," making ",length(urls)," surfaces using ",ncores," threads")
   results <- progressr::with_progress(otp_async(urls, ncores, post = TRUE))
 
   # convert response content into text

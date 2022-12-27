@@ -1,14 +1,11 @@
 # Check that require OTP to work
 
-on_cran <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
+# library(testthat)
+# fls <- list.files("R", full.names = TRUE)
+# for(fl in fls){source(fl)}
+# Sys.setenv("NOT_CRAN" = "true")
 
-has_rcppsimdjson <- function() {
-  RcppSimdJsonVersion <- try(utils::packageVersion("RcppSimdJson") >= "0.1.2", silent = TRUE)
-  if (class(RcppSimdJsonVersion) == "try-error") {
-    RcppSimdJsonVersion <- FALSE
-  }
-  return(RcppSimdJsonVersion)
-}
+on_cran <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
 
 skip_on_j11 <- function() {
   suppressWarnings(jv <- otp_check_java(2))
@@ -19,8 +16,6 @@ skip_on_j11 <- function() {
 
 # skip rules
 # skip on cran always
-# skip main functions if J11 and no json
-# skip legacy code if have json
 # skip J8 code on J11
 # Skip J11 code on J8
 
@@ -108,7 +103,17 @@ test_that("We can startup OTP", {
                                   wait = TRUE),
     regexp = "OTP is loading"
   )
-  Sys.sleep(60 * 5)
+
+  # Wait to see it OTP has started
+  for(j in 1:6){
+    otpcon <- try(otp_connect(router = "default"), silent = TRUE)
+    if(inherits(otpcon,"try-error")){
+      Sys.sleep(60)
+    } else {
+      break
+    }
+  }
+
 })
 
 context("Test the otp_connect function")
@@ -146,7 +151,8 @@ test_that("basic routing", {
   skip_on_cran()
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
-    toPlace = c(-1.15803, 50.72515)
+    toPlace = c(-1.15803, 50.72515),
+    mode = "CAR"
   )
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
@@ -197,20 +203,6 @@ test_that("transit routing", {
 })
 
 
-test_that("legacy code", {
-  skip_on_cran()
-  skip_on_j11()
-  route <- otp_plan_internal_legacy(otpcon,
-    fromPlace = matrix(c(50.64990, -1.16489), ncol = 2),
-    toPlace = matrix(c(50.72515, -1.15803), ncol = 2),
-    date = "2020-06-03",
-    time = "13:30"
-  )
-
-  expect_is(route, "sf")
-  expect_true(nrow(route) == 1)
-})
-
 
 test_that("no geometry routing", {
   skip_on_cran()
@@ -226,9 +218,6 @@ test_that("no geometry routing", {
 
 test_that("full elevation routing", {
   skip_on_cran()
-  if (!has_rcppsimdjson()) {
-    skip("Skip wihtout RcppSimdJson")
-  }
   route <- otp_plan(otpcon,
     fromPlace = c(-1.16489, 50.64990),
     toPlace = c(-1.15803, 50.72515),
@@ -418,7 +407,15 @@ test_that("We can startup OTP with the analyst", {
                                   pointsets = TRUE),
                  regexp = "OTP is loading"
   )
-  Sys.sleep(60 * 5)
+  # Wait to see it OTP has started
+  for(j in 1:10){
+    otpcon <- try(otp_connect(router = "default"), silent = TRUE)
+    if(inherits(otpcon,"try-error")){
+      Sys.sleep(60)
+    } else {
+      break
+    }
+  }
 })
 
 test_that("Can connect to OTP", {
@@ -456,7 +453,7 @@ test_that("Make a tt raster", {
                              mode = "CAR")
 
   r <- otp_surface_isochrone(otpcon, surface = surface)
-  expect_is(r, "RasterLayer")
+  expect_is(r, "SpatRaster")
 })
 
 

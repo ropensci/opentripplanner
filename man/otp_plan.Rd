@@ -40,15 +40,17 @@ or sf data frame of POINTS with CRS 4326}
 \item{toID}{character vector same length as toPlace}
 
 \item{mode}{character vector of one or more modes of travel valid values
-TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all combinations
-are valid e.g. c("WALK","BUS") is valid but c("WALK","CAR") is not.}
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, SUBWAY, TRAM, FERRY, BICYCLE_RENT,
+BICYCLE_PARK, CAR_PARK, CABLE_CAR, GONDOLA, FUNICULAR, AIRPLANE, default
+CAR. Not all combinations are valid e.g. c("WALK","BUS") is valid but
+c("WALK","CAR") is not.}
 
 \item{date_time}{POSIXct, a date and time, defaults to current date and time}
 
 \item{arriveBy}{Logical, Whether the trip should depart or arrive at the
 specified date and time, default FALSE}
 
-\item{maxWalkDistance}{Numeric passed to OTP in metres}
+\item{maxWalkDistance}{Numeric passed to OTP in meters}
 
 \item{numItineraries}{The maximum number of possible itineraries to return}
 
@@ -92,7 +94,8 @@ This function returns a SF data.frame with one row for each leg of
   When passing a matrix or SF data frame object to fromPlace and toPlace
   `otp_plan` will route in batch mode. In this case the `ncores` variable
   will be used. Increasing `ncores` will enable multicore routing, the max
-  `ncores` should be the number of cores on your system - 1.
+  `ncores` should be 1.25 times the number of cores on your system. The
+  default is 1.25 timees -1 for improved stability.
 
   ## Distance Balancing
 

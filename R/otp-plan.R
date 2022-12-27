@@ -40,6 +40,7 @@
 #' @export
 #' @family routing
 #' @return Returns an SF data frame of LINESTRINGs
+#' @import data.table
 #'
 #' @details This function returns a SF data.frame with one row for each leg of
 #'   the journey (a leg is defined by a change in mode). For transit, more than
@@ -190,13 +191,13 @@ otp_plan <- function(otpcon = NA,
       if (!is.null(toID)) {
         toID <- toID[rep(1, times = nrfp)]
       }
-      warning("repeating toPlace to match length of fromPlace")
+      message("repeating toPlace to match length of fromPlace")
     } else if (nrtp > nrfp & nrfp == 1) {
       fromPlace <- fromPlace[rep(1, times = nrtp), ]
       if (!is.null(fromID)) {
         fromID <- fromID[rep(1, times = nrtp)]
       }
-      warning("repeating fromPlace to match length of toPlace")
+      message("repeating fromPlace to match length of toPlace")
     } else {
       stop("Number of fromPlaces and toPlaces do not match")
     }
@@ -269,7 +270,7 @@ otp_plan <- function(otpcon = NA,
 
   # Send Requests
   urls <- build_urls(routerUrl,fromPlace, toPlace, query)
-  message(Sys.time()," sending requests using ",ncores," threads")
+  message(Sys.time()," sending ",length(urls)," routes requests using ",ncores," threads")
   results <- progressr::with_progress(otp_async(urls, ncores))
 
   if(length(results) == 0){
@@ -279,6 +280,10 @@ otp_plan <- function(otpcon = NA,
   message(Sys.time()," processing results")
   results <- unlist(results, use.names = FALSE)
   results <- RcppSimdJson::fparse(results)
+
+  if(length(urls) == 1){
+    results <- list(results)
+  }
 
   results_errors <- purrr::map_lgl(results, function(x){!is.null(x$error)})
   results_missing <- purrr::map_lgl(results, function(x){is.null(x$plan$itineraries)})
@@ -310,14 +315,22 @@ otp_plan <- function(otpcon = NA,
     # fix for bbox error from data.table
     results_routes <- results_routes[seq_len(nrow(results_routes)), ]
     results_routes <- as.data.frame(results_routes)
-    results_routes <- df2sf(results_routes)
-    colnms <- names(results_routes)
-    colnms <- colnms[!colnms %in% c("fromPlace", "toPlace", "geometry")]
-    results_routes <- results_routes[c("fromPlace", "toPlace", colnms, "geometry")]
+    if(get_geometry){
+      results_routes <- df2sf(results_routes)
+      colnms <- names(results_routes)
+      colnms <- colnms[!colnms %in% c("fromPlace", "toPlace", "geometry")]
+      results_routes <- results_routes[c("fromPlace", "toPlace", colnms, "geometry")]
+    } else {
+      colnms <- names(results_routes)
+      colnms <- colnms[!colnms %in% c("fromPlace", "toPlace")]
+      results_routes <- results_routes[c("fromPlace", "toPlace", colnms)]
+    }
+
   }
 
   if(length(results_errors) > 0){
-    results_errors = purrr::map_dfr(results_errors, otp_parse_errors)
+    results_errors = purrr::map(results_errors, otp_parse_errors)
+    results_errors = data.table::rbindlist(results_errors, use.names = FALSE)
     message(nrow(results_errors)," routes returned errors. Unique error messages are:\n")
     results_errors = as.data.frame(table(results_errors$msg))
     results_errors = results_errors[order(results_errors$Freq, decreasing = TRUE),]

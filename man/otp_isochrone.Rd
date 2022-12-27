@@ -8,13 +8,13 @@ otp_isochrone(
   otpcon = NA,
   fromPlace = NA,
   fromID = NULL,
-  mode = "TRANSIT",
+  mode = "CAR",
   date_time = Sys.time(),
   arriveBy = FALSE,
   maxWalkDistance = 1000,
   routingOptions = NULL,
   cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
-  ncores = 1,
+  ncores = round(parallel::detectCores() * 1.25) - 1,
   timezone = otpcon$timezone
 )
 }
@@ -29,8 +29,9 @@ or 2 column matrix of Longitude/Latitude pairs, or sf
 \item{fromID}{character vector same length as fromPlace}
 
 \item{mode}{character vector of one or more modes of travel valid values
-TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, default CAR. Not all
-combinations are valid e.g. c("WALK","BUS") is valid but
+TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, SUBWAY, TRAM, FERRY, BICYCLE_RENT,
+BICYCLE_PARK, CAR_PARK, CABLE_CAR, GONDOLA, FUNICULAR, AIRPLANE, default
+CAR. Not all combinations are valid e.g. c("WALK","BUS") is valid but
 c("WALK","CAR") is not.}
 
 \item{date_time}{POSIXct, a date and time, defaults to current
