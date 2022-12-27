@@ -4,10 +4,12 @@
 \alias{otp_make_config}
 \title{Make Config Object}
 \usage{
-otp_make_config(type)
+otp_make_config(type, version = 1)
 }
 \arguments{
 \item{type}{Which type of config file to create, "otp", "build", "router"}
+
+\item{version}{version of OPT e.g. 1 or 2}
 }
 \description{
 OTP can be configured using three json files `otp-config.json`,

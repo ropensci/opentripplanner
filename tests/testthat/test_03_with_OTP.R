@@ -48,7 +48,7 @@ if (!on_cran()) {
 
   if (suppressWarnings(otp_check_java(2))) {
     path_otp <- otp_dl_jar(path_data,
-                           version = "2.0.0",
+                           version = "2.2.0",
                            cache = FALSE)
   } else {
     path_otp <- otp_dl_jar(path_data,

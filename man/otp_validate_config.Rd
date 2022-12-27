@@ -4,12 +4,14 @@
 \alias{otp_validate_config}
 \title{Validate Config Object}
 \usage{
-otp_validate_config(config, type = attributes(config)$config_type)
+otp_validate_config(config, type = attributes(config)$config_type, version = 1)
 }
 \arguments{
 \item{config}{A named list made/modified from `otp_make_config()`}
 
 \item{type}{type of config file}
+
+\item{verion}{version of OPT e.g. 1 or 2}
 }
 \description{
 Checks if the list of OTP configuration options is valid

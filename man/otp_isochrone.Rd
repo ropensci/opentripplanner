@@ -14,7 +14,7 @@ otp_isochrone(
   maxWalkDistance = 1000,
   routingOptions = NULL,
   cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
-  ncores = round(parallel::detectCores() * 1.25) - 1,
+  ncores = max(round(parallel::detectCores() * 1.25) - 1, 1),
   timezone = otpcon$timezone
 )
 }

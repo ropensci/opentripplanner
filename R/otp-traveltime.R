@@ -135,35 +135,3 @@ otp_traveltime <- function(otpcon = NA,
   return(times)
 }
 
-
-otp_traveltime_internal <- function(fromPlace,
-                                    otpcon,
-                                    pointsetname,
-                                    mode,
-                                    date_time,
-                                    arriveBy,
-                                    maxWalkDistance,
-                                    routeOptions){
-  surface <- try(otp_make_surface(otpcon = otpcon,
-                              fromPlace = fromPlace,
-                              mode = mode,
-                              date_time = date_time,
-                              arriveBy = arriveBy,
-                              maxWalkDistance = maxWalkDistance,
-                              routeOptions = routeOptions), silent = TRUE)
-
-  if ("try-error" %in% class(surface)) {
-    warning("Failed to create surface for: ",paste(fromPlace, collapse = ", "))
-    return(NULL)
-  }
-
-  times <- try(otp_surface(otpcon, surface, pointsetname, get_data = FALSE),
-               silent = TRUE)
-
-  if ("try-error" %in% class(times)) {
-    warning("Failed to evaluate surface for: ",paste(fromPlace, collapse = ", "))
-    return(NULL)
-  }
-
-  return(times$times)
-}

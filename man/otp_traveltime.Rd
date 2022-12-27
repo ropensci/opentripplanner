@@ -17,7 +17,7 @@ otp_traveltime(
   maxWalkDistance = 1000,
   numItineraries = 3,
   routeOptions = NULL,
-  ncores = round(parallel::detectCores() * 1.25) - 1,
+  ncores = max(round(parallel::detectCores() * 1.25) - 1, 1),
   timezone = otpcon$timezone
 )
 }
