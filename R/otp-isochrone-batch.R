@@ -58,7 +58,7 @@ otp_isochrone <- function(otpcon = NA,
   }
 
   # Check Valid Inputs
-  checkmate::assert_numeric(ncores, lower = 1, len = 1, upper = max(c(round(parallel::detectCores() * 1.25 ) - 1,1)))
+  checkmate::assert_numeric(ncores, lower = 1, len = 1, upper = max(c(round(parallel::detectCores() * 1.25 ) - 1,2)))
   checkmate::assert_class(otpcon, "otpconnect")
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
   mode <- toupper(mode)

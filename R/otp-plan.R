@@ -143,7 +143,7 @@ otp_plan <- function(otpcon = NA,
   time <- tolower(format(date_time, "%I:%M%p", tz = timezone))
   checkmate::assert_numeric(maxWalkDistance, lower = 0, len = 1)
   checkmate::assert_numeric(numItineraries, lower = 1, len = 1)
-  checkmate::assert_numeric(ncores, lower = 1, len = 1, upper = max(c(round(parallel::detectCores() * 1.25 ) - 1,1)))
+  checkmate::assert_numeric(ncores, lower = 1, len = 1, upper = max(c(round(parallel::detectCores() * 1.25 ) - 1,2)))
   checkmate::assert_character(fromID, null.ok = TRUE)
   checkmate::assert_character(toID, null.ok = TRUE)
   checkmate::assert_logical(arriveBy)

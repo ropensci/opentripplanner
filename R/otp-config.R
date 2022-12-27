@@ -28,21 +28,6 @@ otp_write_config <- function(config,
     file.path(dir, "graphs", router)
   )
 
-  # Convert to JSON
-  # jsonlite::write_json(
-  #   config,
-  #   file.path(
-  #     dir,
-  #     "graphs",
-  #     router,
-  #     paste0(type, "-config.json")
-  #   ),
-  #   pretty = TRUE,
-  #   auto_unbox = TRUE,
-  #   null = "null",
-  #   na = "null"
-  # )
-
   exportJson <- rjson::toJSON(config, indent = 4)
 
   write(
