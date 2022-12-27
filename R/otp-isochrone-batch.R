@@ -48,7 +48,7 @@ otp_isochrone <- function(otpcon = NA,
                           maxWalkDistance = 1000,
                           routingOptions = NULL,
                           cutoffSec = c(600, 1200, 1800, 2400, 3000, 3600),
-                          ncores = round(parallel::detectCores() * 1.25) - 1,
+                          ncores = max(round(parallel::detectCores() * 1.25) - 1,1),
                           timezone = otpcon$timezone) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
@@ -58,6 +58,7 @@ otp_isochrone <- function(otpcon = NA,
   }
 
   # Check Valid Inputs
+  checkmate::assert_numeric(ncores, lower = 1, len = 1, upper = max(c(round(parallel::detectCores() * 1.25 ) - 1,1)))
   checkmate::assert_class(otpcon, "otpconnect")
   fromPlace <- otp_clean_input(fromPlace, "fromPlace")
   mode <- toupper(mode)

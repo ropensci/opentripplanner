@@ -48,7 +48,7 @@ otp_traveltime <- function(otpcon = NA,
                            maxWalkDistance = 1000,
                            numItineraries = 3,
                            routeOptions = NULL,
-                           ncores = round(parallel::detectCores() * 1.25) - 1,
+                           ncores = max(round(parallel::detectCores() * 1.25) - 1,1),
                            timezone = otpcon$timezone) {
   # Check Valid Inputs
 
@@ -80,6 +80,7 @@ otp_traveltime <- function(otpcon = NA,
   checkmate::assert_character(fromID, null.ok = FALSE)
   checkmate::assert_character(toID, null.ok = FALSE)
   checkmate::assert_logical(arriveBy)
+  checkmate::assert_numeric(ncores, lower = 1, len = 1, upper = max(c(round(parallel::detectCores() * 1.25 ) - 1,1)))
   #arriveBy <- tolower(arriveBy)
 
   # Check Route Options

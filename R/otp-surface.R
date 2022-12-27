@@ -189,7 +189,9 @@ otp_make_surface <- function(otpcon = NULL,
                            choices = c(
                              "TRANSIT", "WALK", "BICYCLE",
                              "CAR", "BUS", "RAIL", "SUBWAY",
-                             "TRAM", "FERRY"
+                             "TRAM", "FERRY","BICYCLE_RENT",
+                             "BICYCLE_PARK","CAR_PARK","CABLE_CAR",
+                             "GONDOLA","FUNICULAR","AIRPLANE"
                            ),
                            empty.ok = FALSE
   )
