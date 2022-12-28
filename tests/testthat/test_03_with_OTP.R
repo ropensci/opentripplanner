@@ -14,6 +14,13 @@ skip_on_j11 <- function() {
   }
 }
 
+skip_on_j17 <- function() {
+  suppressWarnings(jv <- otp_check_java(2.2))
+  if (jv) {
+    skip("Skip this test with Java 17")
+  }
+}
+
 # skip rules
 # skip on cran always
 # skip J8 code on J11
@@ -295,6 +302,7 @@ context("Test the otp_isochone function")
 test_that("basic isochrone", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   ferry_current <- otp_isochrone(
     otpcon = otpcon,
     fromPlace = c(-1.159494, 50.732429), # lng/lat of Ryde ferry
@@ -333,6 +341,7 @@ test_that("basic isochrone", {
 test_that("nonsence isochrone", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   expect_warning(otp_isochrone(
     otpcon = otpcon,
     fromPlace = c(-5, 5)
@@ -344,6 +353,7 @@ context("Test the otp_geocode function")
 test_that("basic geocode", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station"
@@ -357,6 +367,7 @@ test_that("basic geocode", {
 test_that("geocode coords", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station", type = "Coordinates"
@@ -368,6 +379,7 @@ test_that("geocode coords", {
 test_that("geocode both", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   stations <- otp_geocode(
     otpcon = otpcon,
     query = "station", type = "Both"
@@ -379,6 +391,7 @@ test_that("geocode both", {
 test_that("geocode nonsence", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   expect_warning(otp_geocode(
     otpcon = otpcon,
     query = "jhgfdhgdcmhxgfxgfx"
@@ -401,6 +414,7 @@ context("Test the analyst functions")
 test_that("We can startup OTP with the analyst", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   expect_message(log <- otp_setup(otp = path_otp,
                                   dir = path_data,
                                   router = "default",
@@ -423,6 +437,7 @@ test_that("We can startup OTP with the analyst", {
 test_that("Can connect to OTP", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   expect_message(
     otp_connect(router = "default"),
     "Router http://localhost:8080/otp/routers/default exists"
@@ -436,6 +451,7 @@ if (!on_cran()) {
 test_that("Make a tt matrix", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   ttmatrix <- otp_traveltime(otpcon,
                              path_data,
                              fromPlace = lsoa[1:5,],
@@ -450,6 +466,7 @@ test_that("Make a tt matrix", {
 test_that("Make a tt raster", {
   skip_on_cran()
   skip_on_j11()
+  skip_on_j17()
   surface <- otp_make_surface(otpcon = otpcon,
                              fromPlace = c(-1.17502,50.64590),
                              mode = "CAR")
