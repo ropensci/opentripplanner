@@ -1,5 +1,5 @@
 ---
-title: "OTP OpenTripPlanner Version 2.0"
+title: "OpenTripPlanner Version 2"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{OTPv2}
@@ -18,18 +18,38 @@ knitr::opts_chunk$set(
 
 The `opentripplanner` package was originally developed to support OpenTripPlanner v1.3, and has been updated to support each subsequent release. OpenTripPlanner v2.0 is the next major release, and this vignette will document the changes within the package to support OpenTripPlanner v2.0. While most changes for v2.0 are improvements some, like the removal of the isochrone feature are not. So the package will continue to support both version 1.5 (the last v1.x) and subsequent v2.x releases. This vignette will be updated to help users select the best version for their needs.
 
-**Major Changes in 2.0**
+**Note** OpenTripPlanner is undergoing some significant changes at the moment with features being added and removed. To avoid constant updates to the R package we are currently targeting support at v1.5 and v2.2. Other versions may work but are not officially supported.
 
-* Switch from Java 8 to Java 11
+## Major Changes from v1.5
+
+* Switch from Java 8 to Java 11/17
 * Support for Netex transit data
 * Support for SIRI transit data
 * Switch from A* routing algorithm to Range Raptor when searching transit routes
 * Removal of Isochrone, Geocode, and other analysis features
 
-## Getting Java 11
-At the time of writing Java 8 is still the default on may systems. To get Java 11 you must download the Java Development Kit https://www.oracle.com/java/technologies/javase-jdk11-downloads.html this requires a free account with the Oracle website.
+## Correct version of Java
 
-On windows you will also need to change the PATH variable to point to the new version of Java
+Different versions of OpenTripPlanner require different version of Java
+
+* OTP 1.x  - Java 8
+* OTP 2.0 & 2.1  - Java 11
+* OTP 2.2 - Java 17
+
+It is possible to install multiple version of Java on the same computer:
+
+**Download Links**
+
+* [Java 8](https://www.java.com/en/download/manual.jsp)
+* [Java 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+* [Java 17](https://www.oracle.com/java/technologies/downloads/#java17)
+
+If you have multiple version of Java installed you will also need to change the PATH variable to point to the correct version of Java. You can check your current default version of Java in the terminal using
+
+```{bash, eval = FALSE}
+java -version
+```
+
 
 ## Checking your Java version
 
@@ -41,13 +61,13 @@ For example if you wanted to use OTP 2.0 but have Java 8 installed then you woul
 otp_check_java(2)
 [1] FALSE
 Warning message:
-In otp_check_java(2) : You have OTP 2.x but the version of Java for OTP 1.x
+In otp_check_java(2) : You have OTP 2.0 or 2.1 but the version of Java for OTP 1.x
 
 ```
 
-## Building a graph and starting up OTP 2
+## Building a graph and starting up OTP 2.2
 
-You can select OTP 2.0 using the `otp_dl_jar` function.
+You can select OTP 2.2 using the `otp_dl_jar` function.
 
 
 ```{r setup, eval=FALSE}

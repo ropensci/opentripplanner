@@ -72,7 +72,7 @@ otp_list_clean <- function(.data, fun = function(x) {
 #'
 #' @param config A named list made/modified from `otp_make_config()`
 #' @param type type of config file
-#' @param verion version of OPT e.g. 1 or 2
+#' @param version version of OPT e.g. 1 or 2
 #' @family setup
 #' @details
 #'

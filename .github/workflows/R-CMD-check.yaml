@@ -30,12 +30,12 @@ jobs:
           - {os: ubuntu-latest,   r: 'devel',   java: 8}
           - {os: ubuntu-latest,   r: 'release', java: 8}
           - {os: ubuntu-latest,   r: 'oldrel',  java: 8}
-          - {os: macOS-latest,   r: 'release', java: 11}
-          - {os: macOS-latest,   r: 'oldrel',  java: 11}
-          - {os: windows-latest, r: 'release', java: 11}
-          - {os: ubuntu-latest,   r: 'devel',   java: 11}
-          - {os: ubuntu-latest,   r: 'release', java: 11}
-          - {os: ubuntu-latest,   r: 'oldrel',  java: 11}
+          - {os: macOS-latest,   r: 'release', java: 17}
+          - {os: macOS-latest,   r: 'oldrel',  java: 17}
+          - {os: windows-latest, r: 'release', java: 17}
+          - {os: ubuntu-latest,   r: 'devel',   java: 17}
+          - {os: ubuntu-latest,   r: 'release', java: 17}
+          - {os: ubuntu-latest,   r: 'oldrel',  java: 17}
 
 
     env:
