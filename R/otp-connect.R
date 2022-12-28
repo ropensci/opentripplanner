@@ -245,18 +245,27 @@ otp_check_version <- function(otpcon, warn = TRUE) {
   }
 
   ver <- rawToChar(ver$content)
-  #ver <- RcppSimdJson::fparse(ver)
-  ver <- rjson::fromJSON(ver)
-  ver <- as.numeric(paste0(
+  ver <- RcppSimdJson::fparse(ver)
+  ver_res <- suppressWarnings(as.numeric(paste0(
     ver$serverVersion$major,
     ".",
     ver$serverVersion$minor
-  ))
+  )))
+  if(is.na(ver_res)){
+    # Fix for 2.2
+    ver_res <- as.numeric(paste0(
+      ver$version$major,
+      ".",
+      ver$version$minor
+    ))
+  }
+
+
   if (warn) {
-    if (ver != otpcon$otp_version) {
+    if (ver_res != otpcon$otp_version) {
       warning("The version of OTP running does not match otpcon$otp_version")
     }
   }
 
-  return(ver)
+  return(ver_res)
 }

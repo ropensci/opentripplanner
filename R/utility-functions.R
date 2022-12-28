@@ -72,6 +72,7 @@ parse_leg <- function(leg,
   }
 
   leg$steps <- NULL
+  leg$legElevation <- NULL #2.2 Only
 
   if (get_geometry) {
     # Extract geometry

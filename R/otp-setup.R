@@ -599,12 +599,10 @@ otp_version_check <- function(otp) {
   otp_version <- strsplit(otp, "/")[[1]]
   otp_version <- otp_version[length(otp_version)]
   otp_version <- gsub("[^[:digit:]., ]", "", otp_version)
-  otp_version <- substr(otp_version, 1, 1)
-  if (otp_version == "1") {
-    return(1)
-  } else if (otp_version == "2") {
-    return(2)
-  } else {
+  otp_version <- substr(otp_version, 1, 3)
+  otp_version <- as.numeric(otp_version)
+  if(is.na(otp_version)){
     stop("Unable to detect OTP version, please specify using otp_version")
   }
+  return(otp_version)
 }
