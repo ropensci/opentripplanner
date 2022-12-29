@@ -191,7 +191,7 @@ test_that("transit routing", {
     numItineraries = 3
   )
   expect_is(route, "sf")
-  expect_true(nrow(route) >= 7)
+  expect_true(nrow(route) >= 6)
   expect_true(ncol(route) >= 41)
   col_names <- c(
     "duration", "startTime", "endTime", "walkTime",
@@ -205,7 +205,9 @@ test_that("transit routing", {
     "routeId", "agencyId", "tripId", "serviceDate",
     "routeShortName", "routeLongName", "route_option", "fromPlace",
     "toPlace", "geometry","alerts","intermediateStops",
-    "flexDrtAdvanceBookMin","routeType"
+    "flexDrtAdvanceBookMin","routeType",
+    "generalizedCost","arrivedAtDestinationWithRentedBicycle",
+    "generalizedCost.1","walkingBike"
   )
 
   expect_true(all(names(route) %in% col_names))
