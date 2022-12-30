@@ -263,6 +263,8 @@ test_that("batch routing", {
     "pathway", "mode", "route", "agencyTimeZoneOffset",
     "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
     "transitLeg", "route_option", "fromPlace", "toPlace",
+    "generalizedCost","arrivedAtDestinationWithRentedBicycle",
+    "generalizedCost.1","walkingBike",
     "geometry"
   )
   expect_true(all(names(routes) %in% col_names))
