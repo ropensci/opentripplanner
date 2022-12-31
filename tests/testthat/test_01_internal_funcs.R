@@ -51,10 +51,9 @@ test_that("test otp_json2sf", {
 
 
 
-  r1 <- otp_json2sf(itineraries = r1, get_elevation = FALSE)
+  r1 <- otp_json2sf(itineraries = r1, fp = "", tp = "", get_elevation = FALSE)
   expect_true("data.frame" %in% class(r1))
   expect_true(nrow(r1) == 1)
-  expect_true("sf" %in% class(r1))
 
 
   r2 <- RcppSimdJson::fparse(json_example_drive,
@@ -63,10 +62,9 @@ test_that("test otp_json2sf", {
 
 
 
-  r2 <- otp_json2sf(r2, get_geometry = FALSE)
+  r2 <- otp_json2sf(r2, fp = "", tp = "", get_geometry = FALSE)
   expect_true("data.frame" %in% class(r2))
   expect_true(nrow(r2) == 1)
-  expect_false("sf" %in% class(r2))
 
 
   r4 <- RcppSimdJson::fparse(json_example_transit,
@@ -74,10 +72,9 @@ test_that("test otp_json2sf", {
   )
 
 
-  r4 <- otp_json2sf(itineraries = r4)
+  r4 <- otp_json2sf(itineraries = r4, fp = "", tp = "")
   expect_true("data.frame" %in% class(r4))
   expect_true(nrow(r4) == 9)
-  expect_true("sf" %in% class(r4))
 })
 
 
@@ -87,14 +84,14 @@ test_that("get elevations", {
   )
 
   r3 <- otp_json2sf(r3,
+    fp = "", tp = "",
     get_geometry = TRUE,
     full_elevation = TRUE
   )
   expect_true("data.frame" %in% class(r3))
   expect_true(nrow(r3) == 1)
-  expect_true("sf" %in% class(r3))
-  expect_true("elevation" %in% names(r3))
-  expect_true(class(r3$elevation) == "list")
+  expect_true("leg_elevation" %in% names(r3))
+  expect_true(class(r3$leg_elevation) == "list")
 })
 
 
@@ -110,7 +107,8 @@ test_that("test correct_distances", {
 })
 
 test_that("test polyline2linestring", {
-  r1 <- polyline2linestring("_p~iF~ps|U_ulLnnqC_mqNvxq`@")
+  r1 <- list(points = "_p~iF~ps|U_ulLnnqC_mqNvxq`@")
+  r1 <- polyline2linestring(r1)
   t1 <- sf::st_linestring(matrix(c(
     -120.2, 38.5,
     -120.95, 40.7,
@@ -131,8 +129,8 @@ test_that("test polyline2linestring", {
   expect_identical(r1, t1)
 
   # Check with Geometries
-  r2 <- polyline2linestring(
-    "_p~iF~ps|U_ulLnnqC_mqNvxq`@",
+  r2 <- polyline2linestring(list(points =
+    "_p~iF~ps|U_ulLnnqC_mqNvxq`@"),
     data.frame(
       first = c(0, 5, 8),
       second = c(3, 7, 10),
