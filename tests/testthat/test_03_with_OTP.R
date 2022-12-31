@@ -154,6 +154,31 @@ if (!on_cran()) {
 
 context("Test the otp_plan function")
 
+col_names <- c(
+  "fromPlace","toPlace",
+  "duration","startTime",
+  "endTime","walkTime",
+  "transitTime","waitingTime",
+  "walkDistance","walkLimitExceeded",
+  "generalizedCost","elevationLost",
+  "elevationGained","transfers",
+  "fare","tooSloped",
+  "arrivedAtDestinationWithRentedBicycle", "fare_currency",
+  "route_option","leg_startTime",
+  "leg_endTime","leg_departureDelay",
+  "leg_arrivalDelay","leg_realTime",
+  "leg_distance","leg_generalizedCost",
+  "leg_pathway","leg_mode",
+  "leg_transitLeg","leg_route",
+  "leg_agencyTimeZoneOffset","leg_interlineWithPreviousLeg",
+  "leg_rentedBike","leg_walkingBike",
+  "leg_duration",
+  "leg_agencyName","leg_agencyUrl","leg_routeType","leg_routeId",
+  "leg_agencyId","leg_tripId","leg_serviceDate","leg_routeShortName",
+  "leg_routeLongName",
+  "geometry"
+)
+
 test_that("basic routing", {
   skip_on_cran()
   route <- otp_plan(otpcon,
@@ -164,20 +189,7 @@ test_that("basic routing", {
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
   expect_true(ncol(route) >= 32)
-  expect_true(all(names(route) %in%
-    c(
-      "duration", "startTime", "endTime", "walkTime",
-      "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
-      "elevationLost", "elevationGained", "transfers", "tooSloped",
-      "fare", "fare_currency", "leg_startTime", "leg_endTime",
-      "departureDelay", "arrivalDelay", "realTime", "distance",
-      "pathway", "mode", "route", "agencyTimeZoneOffset",
-      "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
-      "transitLeg", "route_option", "fromPlace", "toPlace",
-      "generalizedCost","arrivedAtDestinationWithRentedBicycle",
-      "generalizedCost.1","walkingBike",
-      "geometry"
-    )))
+  expect_true(all(names(route) %in% col_names))
 })
 
 
@@ -193,23 +205,6 @@ test_that("transit routing", {
   expect_is(route, "sf")
   expect_true(nrow(route) >= 6)
   expect_true(ncol(route) >= 41)
-  col_names <- c(
-    "duration", "startTime", "endTime", "walkTime",
-    "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
-    "elevationLost", "elevationGained", "transfers", "fare",
-    "tooSloped", "fare_currency", "leg_startTime", "leg_endTime",
-    "departureDelay", "arrivalDelay", "realTime", "distance",
-    "pathway", "mode", "route", "agencyTimeZoneOffset",
-    "interlineWithPreviousLeg", "rentedBike", "leg_duration",
-    "transitLeg", "agencyName", "agencyUrl",
-    "routeId", "agencyId", "tripId", "serviceDate",
-    "routeShortName", "routeLongName", "route_option", "fromPlace",
-    "toPlace", "geometry","alerts","intermediateStops",
-    "flexDrtAdvanceBookMin","routeType",
-    "generalizedCost","arrivedAtDestinationWithRentedBicycle",
-    "generalizedCost.1","walkingBike"
-  )
-
   expect_true(all(names(route) %in% col_names))
 })
 
@@ -237,7 +232,7 @@ test_that("full elevation routing", {
   expect_is(route, "sf")
   expect_true(nrow(route) == 1)
   expect_true(ncol(route) >= 32)
-  expect_is(route$elevation, "list")
+  expect_is(route$leg_elevation, "list")
 })
 
 
@@ -254,19 +249,6 @@ test_that("batch routing", {
   expect_is(routes, "sf")
   expect_true(nrow(routes) == 9)
   expect_true(ncol(routes) >= 32)
-  col_names <- c(
-    "duration", "startTime", "endTime", "walkTime",
-    "transitTime", "waitingTime", "walkDistance", "walkLimitExceeded",
-    "elevationLost", "elevationGained", "transfers", "tooSloped",
-    "fare", "fare_currency", "leg_startTime", "leg_endTime",
-    "departureDelay", "arrivalDelay", "realTime", "distance",
-    "pathway", "mode", "route", "agencyTimeZoneOffset",
-    "interlineWithPreviousLeg", "rentedBike", "flexDrtAdvanceBookMin", "leg_duration",
-    "transitLeg", "route_option", "fromPlace", "toPlace",
-    "generalizedCost","arrivedAtDestinationWithRentedBicycle",
-    "generalizedCost.1","walkingBike",
-    "geometry"
-  )
   expect_true(all(names(routes) %in% col_names))
 })
 
@@ -480,9 +462,10 @@ test_that("Make a tt raster", {
 })
 
 
-
 test_that("otp_stop", {
   skip_on_cran()
+  skip_on_j11()
+  skip_on_j17()
   foo <- otp_stop(FALSE)
   if (checkmate::test_os("windows")) {
     expect_true(grepl("SUCCESS", foo))

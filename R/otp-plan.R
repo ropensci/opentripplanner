@@ -279,53 +279,63 @@ otp_plan <- function(otpcon = NA,
 
   message(Sys.time()," processing results")
   results <- unlist(results, use.names = FALSE)
-  results <- RcppSimdJson::fparse(results)
+  results_routes <- RcppSimdJson::fparse(results, query = "/plan/itineraries", query_error_ok = TRUE, always_list = TRUE)
+  fp <- unlist(RcppSimdJson::fparse(results, query = "/requestParameters/fromPlace", query_error_ok = TRUE), use.names = FALSE)
+  tp <- unlist(RcppSimdJson::fparse(results, query = "/requestParameters/toPlace", query_error_ok = TRUE), use.names = FALSE)
 
-  if(length(urls) == 1){
-    results <- list(results)
+  results_errors <- RcppSimdJson::fparse(results, query = "/error", query_error_ok = TRUE, always_list = TRUE)
+  results_errors <- results_errors[lengths(results_errors) > 0]
+
+  results_routes <- purrr::pmap(.l = list(itineraries = results_routes,
+                                          fp = fp,
+                                          tp = tp),
+                                .f = otp_json2sf,
+                                full_elevation = full_elevation,
+                                get_geometry = get_geometry,
+                                timezone = timezone,
+                                get_elevation = get_elevation,
+                                .progress = TRUE)
+
+
+  results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
+
+  origin <- .POSIXct(0, tz = "GMT")
+  results_routes$startTime <- as.POSIXct.numeric(results_routes$startTime / 1000,
+                                                 origin = origin, tz = timezone
+  )
+
+  results_routes$endTime <- as.POSIXct.numeric(results_routes$endTime / 1000,
+                                               origin = origin, tz = timezone
+  )
+
+  results_routes$leg_startTime <- as.POSIXct.numeric(results_routes$leg_startTime / 1000,
+                                                     origin = origin, tz = timezone
+  )
+
+  results_routes$leg_endTime <- as.POSIXct.numeric(results_routes$leg_endTime / 1000,
+                                                   origin = origin, tz = timezone
+  )
+
+  # fix for bbox error from data.table
+  results_routes <- results_routes[seq_len(nrow(results_routes)), ]
+  results_routes <- as.data.frame(results_routes)
+
+  if(!is.null(fromID)){
+    results_routes$fromPlace <- fromID$fromID[match(results_routes$fromPlace, fromID$fromPlace)]
+  }
+  if(!is.null(toID)){
+    results_routes$toPlace <- toID$toID[match(results_routes$toPlace, toID$Place)]
   }
 
-  results_errors <- purrr::map_lgl(results, function(x){!is.null(x$error)})
-  results_missing <- purrr::map_lgl(results, function(x){is.null(x$plan$itineraries)})
-
-  results_routes <- results[!(results_errors | results_missing)]
-  results_errors <- results[results_errors]
-  results_missing <- results[results_missing]
-
-  if(length(results_routes) > 0){
-    results_routes <- purrr::map(results_routes,
-                                 otp_process_results,
-                                 full_elevation = full_elevation,
-                                 get_geometry = get_geometry,
-                                 timezone = timezone,
-                                 get_elevation = get_elevation)
-    results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
-
-    if(!is.null(fromID)){
-      results_routes <- fromID[results_routes, on='fromPlace']
-      results_routes$fromPlace <- NULL
-      names(results_routes)[names(results_routes) == "fromID"] <- "fromPlace"
-    }
-    if(!is.null(toID)){
-      results_routes <- toID[results_routes, on='toPlace']
-      results_routes$toPlace <- NULL
-      names(results_routes)[names(results_routes) == "toID"] <- "toPlace"
-    }
-
-    # fix for bbox error from data.table
-    results_routes <- results_routes[seq_len(nrow(results_routes)), ]
-    results_routes <- as.data.frame(results_routes)
-    if(get_geometry){
-      results_routes <- df2sf(results_routes)
-      colnms <- names(results_routes)
-      colnms <- colnms[!colnms %in% c("fromPlace", "toPlace", "geometry")]
-      results_routes <- results_routes[c("fromPlace", "toPlace", colnms, "geometry")]
-    } else {
-      colnms <- names(results_routes)
-      colnms <- colnms[!colnms %in% c("fromPlace", "toPlace")]
-      results_routes <- results_routes[c("fromPlace", "toPlace", colnms)]
-    }
-
+  if(get_geometry){
+    results_routes <- df2sf(results_routes)
+    colnms <- names(results_routes)
+    colnms <- colnms[!colnms %in% c("fromPlace", "toPlace", "geometry")]
+    results_routes <- results_routes[c("fromPlace", "toPlace", colnms, "geometry")]
+  } else {
+    colnms <- names(results_routes)
+    colnms <- colnms[!colnms %in% c("fromPlace", "toPlace")]
+    results_routes <- results_routes[c("fromPlace", "toPlace", colnms)]
   }
 
   if(length(results_errors) > 0){
@@ -340,10 +350,6 @@ otp_plan <- function(otpcon = NA,
 
   }
 
-  if(length(results_missing) > 0){
-    message(length(results_missing)," routes returned no results")
-  }
-
   message(Sys.time()," done")
   return(results_routes)
 }
@@ -354,10 +360,8 @@ otp_plan <- function(otpcon = NA,
 #' @noRd
 otp_parse_errors <- function(x){
 
-    data.frame(id = x$error$id,
-      from = x$requestParameters$fromPlace,
-      to = x$requestParameters$toPlace,
-      msg = x$error$msg
+    data.frame(id = x$id,
+      msg = x$msg
     )
 
 }
@@ -503,67 +507,40 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
   return(data)
 }
 
-#' Process results
-#'
-#' @param text the text returned by OTP
-#' @param full_elevation passed from main func
-#' @param get_geometry passed from main func
-#' @param timezone passed from main func
-#' @param get_elevation passed from main func
-#' @family internal
-#' @noRd
-
-otp_process_results <- function(text, full_elevation, get_geometry, timezone, get_elevation){
-
-    response <- otp_json2sf(text$plan$itineraries, full_elevation, get_geometry, timezone, get_elevation)
-    response$fromPlace <- text$requestParameters$fromPlace
-    response$toPlace <- text$requestParameters$toPlace
-    return(response)
-
-}
-
-
-
 #' Convert output from OpenTripPlanner into sf object
 #'
 #' @param itineraries Object from the OTP API to process
+#' @param fp fromPlace
+#' @param tp toPlace
 #' @param full_elevation logical should the full elevation profile be returned (if available)
 #' @param get_geometry logical, should geometry be returned
 #' @param timezone character, which timezone to use, default "" means local time
 #' @param get_elevation, logical, should xyz coordinate be returned
 #' @family internal
 #' @noRd
+otp_json2sf <- function(itineraries, fp, tp,
+                        full_elevation = FALSE,
+                        get_geometry = TRUE,
+                         timezone = "", get_elevation = FALSE) {
 
-otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE,
-                        timezone = "", get_elevation = FALSE) {
-
-  origin <- .POSIXct(0, tz = "GMT")
-  itineraries$startTime <- as.POSIXct.numeric(itineraries$startTime / 1000,
-                                                  origin = origin, tz = timezone
-  )
-
-  itineraries$endTime <- as.POSIXct.numeric(itineraries$endTime / 1000,
-                                                origin = origin, tz = timezone
-  )
+  if(is.null(itineraries)){
+    return(NULL)
+  }
 
   # Loop over itineraries
   legs <- purrr::map(itineraries$legs, parse_leg,
-                 get_geometry = get_geometry,
-                 get_elevation = get_elevation,
-                 full_elevation = full_elevation
+                     get_geometry = get_geometry,
+                     get_elevation = get_elevation,
+                     full_elevation = full_elevation
   )
 
   names(legs) <- seq_len(length(legs))
   legs <- legs[!is.na(legs)]
   legs <- data.table::rbindlist(legs, fill = TRUE, idcol = "route_option")
+  names(legs) <- paste0("leg_",names(legs))
+  names(legs)[names(legs) == "leg_route_option"] <- "route_option"
+  names(legs)[names(legs) == "leg_geometry"] <- "geometry"
   legs$route_option <- as.integer(legs$route_option)
-
-  legs$startTime <- as.POSIXct.numeric(legs$startTime / 1000,
-                                           origin = origin, tz = timezone
-  )
-  legs$endTime <- as.POSIXct.numeric(legs$endTime / 1000,
-                                         origin = origin, tz = timezone
-  )
 
   itineraries$legs <- NULL
 
@@ -596,20 +573,15 @@ otp_json2sf <- function(itineraries, full_elevation = FALSE, get_geometry = TRUE
     itineraries$fare_currency <- NA
   }
 
-  names(legs)[names(legs) == "startTime"] <- "leg_startTime"
-  names(legs)[names(legs) == "endTime"] <- "leg_endTime"
-  names(legs)[names(legs) == "duration"] <- "leg_duration"
 
   itineraries <- itineraries[legs$route_option, ]
   itineraries <- cbind(itineraries, legs)
-
-
-  if (get_geometry) {
-    itineraries <- df2sf(itineraries)
-  }
+  itineraries$fromPlace <- fp
+  itineraries$toPlace <- tp
 
   return(itineraries)
 }
+
 
 
 #' Correct the elevation distances
@@ -659,7 +631,7 @@ correct_distances <- function(dists, err = 1) {
 #' @noRd
 
 polyline2linestring <- function(line, elevation = NULL) {
-  line <- googlePolylines::decode(line)[[1]]
+  line <- googlePolylines::decode(line$points)[[1]]
   line <- matrix(c(line$lon, line$lat), ncol = 2, dimnames = list(NULL, c("lon", "lat")))
   # line <- as.matrix(line[, 2:1])
   if (!is.null(elevation)) {

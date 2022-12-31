@@ -64,34 +64,23 @@ parse_leg <- function(leg,
   if (get_elevation | full_elevation) {
     elevation <- purrr::map(leg$steps, parse_elevation)
   } else {
-    elevation <- NULL
-  }
-
-  if (full_elevation) {
-    leg$elevation <- elevation
+    elevation <- list(NULL)
   }
 
   leg$steps <- NULL
   leg$legElevation <- NULL #2.2 Only
 
+  if (full_elevation) {
+    leg$elevation <- elevation
+  }
+
   if (get_geometry) {
     # Extract geometry
-    legGeometry <- list()
-    for (i in seq_len(nrow(leg))) {
-      legGeometry[[i]] <- polyline2linestring(line = leg$legGeometry[[i]]$points, elevation = elevation[[i]])
-    }
-
+    legGeometry <- purrr::map2(.x = leg$legGeometry,
+                               .y = elevation,
+                               .f = polyline2linestring)
     leg$geometry <- sf::st_sfc(legGeometry, crs = 4326)
     leg$legGeometry <- NULL
-
-    # legGeometry <- lapply(leg$legGeometry, `[[`, "points")
-    # legGeometry <- purrr::map2(.x = legGeometry,
-    #                            .y = elevation,
-    #                            .f = polyline2linestring)
-    # leg$geometry <- sf::st_sfc(legGeometry, crs = 4326)
-    # leg$legGeometry <- NULL
-    # leg <- df2sf(leg)
-
   } else {
     leg$legGeometry <- NULL
   }
@@ -129,9 +118,11 @@ parse_elevation <- function(stp) {
 #' @family internal
 #' @noRd
 split_alternating <- function(x){
-  odd <- seq_along(x) %% 2 == 1
+  odd <- rep(c(TRUE,FALSE), length(x)/2)
   distance <- x[odd]
   elevation <- x[!odd]
-  return(data.frame(first = distance, second = elevation))
-
+  return(data.frame(first = distance,
+                    second = elevation,
+                    check.names = FALSE,
+                    check.rows = FALSE))
 }

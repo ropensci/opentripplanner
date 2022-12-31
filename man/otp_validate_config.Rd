@@ -11,7 +11,7 @@ otp_validate_config(config, type = attributes(config)$config_type, version = 1)
 
 \item{type}{type of config file}
 
-\item{verion}{version of OPT e.g. 1 or 2}
+\item{version}{version of OPT e.g. 1 or 2}
 }
 \description{
 Checks if the list of OTP configuration options is valid

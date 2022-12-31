@@ -4,7 +4,8 @@ Breaking Changes
 
 * surfaceID returned from `otp_make_surface` is now a list of lists to allow multiple inputs/outputs
 * removed legacy support for old version of R (<4.0) that don't support `RcppSimdJson` for older versions of R use version 0.2.3
-
+* Some columns returned by `otp_plan` have changed names. The names now start with "leg_" to show they are leg specific variables e.g. "mode" has become "leg_mode" 
+ 
 Other Changes
 
 * removed dependency on `raster` and `rgdal` replaced with `terra`

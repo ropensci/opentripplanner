@@ -39,8 +39,8 @@ The `otp_plan()` function can produce multiple routes at once. In this example, 
 We'll start by importing the locations of the LSOA points.
 
 ```{r, eval=FALSE}
-lsoa <- sf::st_read("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg",
-                    stringsAsFactors = FALSE)
+download.file("https://github.com/ropensci/opentripplanner/releases/download/0.1/centroids.gpkg", "centroids.gpkg", mode = "wb")
+lsoa <- sf::st_read("centroids.gpkg", stringsAsFactors = FALSE)
 head(lsoa)
 ```
 
@@ -77,7 +77,7 @@ toPlace   = lsoa[rep(seq(1, nrow(lsoa)), times = nrow(lsoa)),]
 fromPlace = lsoa[rep(seq(1, nrow(lsoa)), each  = nrow(lsoa)),]
 ```
 
-**Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case, 89 points results in 89 x 89 = 7921 routes, this will take a while.
+**Warning** routing from all points to all other point increases the total number of routes to calculate exponentially. In this case, 89 points results in 89 x 89 = 7921 routes, on large datasets this will take a while.
 
 For an OD matrix, you may only be interested in the total travel time and not require the route geometry. By setting `get_geometry = FALSE` in `otp_plan()` R will just return the meta-data and discard the geometry. This is slightly faster than when using `get_geometry = TRUE` and uses less memory.
 
@@ -90,7 +90,6 @@ routes <- otp_plan(otpcon = otpcon,
                    fromID = fromPlace$geo_code,
                    toID = toPlace$geo_code,
                    get_geometry = TRUE,
-                   ncores = 30,
                    distance_balance = TRUE)
 routes <- routes[,c("fromPlace","toPlace","duration")]
 # Use the tidyr package to go from long to wide format
@@ -103,7 +102,7 @@ Notice the use of `fromID` and `toID` this allows `otp_plan` to return the LSOA 
 
 ### Multicore Support
 
-OTP supports multicore routing out of the box. This is based on one core per route, so is only suited to finding a large number of routes. The `otp_plan()` function has the argument `ncores = 1` this can be changed to any positive integer to enable multicore processing e.g. `ncores = 4`. It is recommended that the maximum value for `ncores` is one less than the number of cores on your system. This allows one core to be left for the operating system and any other tasks. 
+OTP supports multicore routing out of the box. This is based on one core per route, so is only suited to finding a large number of routes. The `otp_plan()` function has the argument `ncores` this can be changed to any positive integer to enable multicore processing e.g. `ncores = 4`. It is recommended that the maximum value for `ncores` is one less than 1.25x number of cores on your system. This allows one core to be left for the operating system and any other tasks. 
 
 This graph demonstrates the reduction in time taken to route between all LSOA pairs on the Isle of Wight demo, using one to six cores.
 
@@ -138,7 +137,7 @@ We can view the raw profile. It is a data.frame of 3 columns, `first` is the dis
 As of version 0.3.0.0 the `get_elevation` argument in `otp_plan` is set to FALSE by default, this speeds up routing by only returning XY coordinates rather than XYZ coordinates. 
 
 ```{r, eval=FALSE}
-profile_raw <- route$elevation[[1]]
+profile_raw <- route$leg_elevation[[1]]
 plot(profile_raw$distance, profile_raw$second, type = "p",
      xlab = "distance along route", ylab = "elevation")
 ```
