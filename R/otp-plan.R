@@ -40,7 +40,6 @@
 #' @export
 #' @family routing
 #' @return Returns an SF data frame of LINESTRINGs
-#' @import data.table
 #'
 #' @details This function returns a SF data.frame with one row for each leg of
 #'   the journey (a leg is defined by a change in mode). For transit, more than

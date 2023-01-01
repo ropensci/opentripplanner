@@ -113,7 +113,7 @@ log2 <- otp_setup(otp = path_otp, dir = path_data, port = 8801, securePort = 880
 
 It should only take a minute or two for OTP to load the graph and start the Grizzly server. If it has worked, you should see the message: `OTP is ready to use`, and R will open your web browser at the OTP.
 
-You can also access the web interface using the URL: `http://localhost:8080`. You can now zoom into the Isle of Wight area and request a route by setting an origin and a destination directly on the map (by right-clicking your mouse). You can specify travel dates, times and modes using the 'Trip Options' window (see Figure \ref{fig:otpgui}). You can change the background map from the layer stack icon at the top right.
+You can also access the web interface using the URL: `http://localhost:8080`. You can now zoom into the Isle of Wight area and request a route by setting an origin and a destination directly on the map (by right-clicking your mouse). You can specify travel dates, times and modes using the 'Trip Options' window (see Figure). You can change the background map from the layer stack icon at the top right.
 
 ```{r, echo = FALSE, fig.align='center', fig.cap="\\label{fig:otpgui}OTP Web Interface"}
 knitr::include_graphics("images/otpwebgui.jpg")
@@ -138,7 +138,7 @@ otpcon <- otp_connect(hostname =  "localhost",
                       port = 8801)
 ```
 
-You can also use the `otp_connect()` function to make a connection to OTP on a remote server, for example [digitransit](https://digitransit.fi/en/) run an OTP server for Finland. See their [documentation](https://digitransit.fi/en/developers/) for more details. Digitransit use a non-standard URL structure for their API, so we provide the full URL directly to `otp_connect()`. See the `otp_connect()` help for more details.
+You can also use the `otp_connect()` function to make a connection to OTP on a remote server. If the server uses a non-standard structure for the API, you can provide the full URL directly to `otp_connect()`. See the `otp_connect()` help for more details.
 
 ```{r, eval = FALSE}
 otpcon <- otp_connect(url = "https://api.digitransit.fi/routing/v1/routers/hsl")
@@ -160,7 +160,7 @@ If you have the `tmap` package installed, you can view the route using.
 # install.packages("tmap") # Only needed if you don't have tmap
 library(tmap)              # Load the tmap package
 tmap_mode("view")          # Set tmap to interactive viewing
-qtm(route)      # Plot the route on a map
+qtm(route)                 # Plot the route on a map
 ```
 
 

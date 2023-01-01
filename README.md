@@ -13,7 +13,7 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3558311.svg)](https://doi.org/10.5281/zenodo.3558311)
 [![status](https://joss.theoj.org/papers/10.21105/joss.01926/status.svg)](https://joss.theoj.org/papers/10.21105/joss.01926)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/opentripplanner)](https://cran.r-project.org/package=opentripplanner)
 
 **opentripplanner** is an R package that provides a simple yet flexible
 interface to [OpenTripPlanner (OTP)](https://www.opentripplanner.org/).
@@ -63,11 +63,9 @@ library(opentripplanner)
 
 From version 0.3.0 of `opentripplanner` the package `RcppSimdJson` is
 used for JSON parsing. This package is not supported on some older
-versions of R (\<= 3.6) and some older Operating Systems. To meet CRAN
-requirements version 0.3.1 added a legacy mode for older versions of R.
-This legacy mode has reduced functionality and users on old systems may
-get better results using version 0.2.3 of the package. You can install
-older versions using **remotes**.
+versions of R (\<= 3.6) and some older Operating Systems. Users on old
+systems should use version 0.2.3 of the package. You can install older
+versions using **remotes**.
 
 ``` r
 remotes::install_version("opentripplanner", "0.2.3")
@@ -130,4 +128,4 @@ Please cite the JOSS paper in publications:
 Morgan et al., (2019). OpenTripPlanner for R. Journal of Open Source
 Software, 4(44), 1926, <https://doi.org/10.21105/joss.01926>
 
-[![ropensci\_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
+[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)
