@@ -14,6 +14,7 @@ Other Changes
 * remove dependency on `lubridate`
 * default ncores argument changed from `1` to `round(parallel::detectCores() * 1.25) - 1`
 * Typos fixed in documentation
+* Support for OTP 2.2 and Java 17
 
 # opentripplanner 0.4.0
 

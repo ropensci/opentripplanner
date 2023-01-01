@@ -1,6 +1,8 @@
 #' Evaluate a surface against a pointset
 #'
-#' Geo-coding converts a named place, such as a street name into a lng/lat pair.
+#' Evaluate a surface created with `otp_make_surface` against a pointset made
+#' with `otp_pointset` to get travel times and statitics from the analysit in
+#' OTP 1.x
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param surface A surface list from otp_make_surface()
@@ -13,8 +15,8 @@
 #' times <- otp_surface(otpcon, c(-1.17502, 50.64590), "lsoa", path_data)
 #' }
 #' @details THis function requires the analysis and pointset features to be
-#' enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
-#' detail see the analyst vignette.
+#'   enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
+#'   detail see the analyst vignette.
 #'
 #' @export
 otp_surface <- function(otpcon = NULL,
@@ -72,7 +74,8 @@ parse_surface <- function(x, get_data){
 
 #' Make an isochrone from a surface
 #'
-#' Geo-coding converts a named place, such as a street name into a lng/lat pair.
+#' Make a raster image (picture) of travel time using the surface features in
+#' OTP 1.x
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
 #' @param surface A suface list from otp_make_surface()
@@ -82,8 +85,8 @@ parse_surface <- function(x, get_data){
 #' times <- otp_surface(otpcon, c(-1.17502, 50.64590), "lsoa", path_data)
 #' }
 #' @details THis function requires the analysis and pointset features to be
-#' enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
-#' detail see the analyst vignette.
+#'   enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
+#'   detail see the analyst vignette.
 #'
 #' @export
 otp_surface_isochrone <- function(otpcon = NULL,
@@ -235,7 +238,9 @@ otp_make_surface <- function(otpcon = NULL,
 
 }
 
-#'  Create a pointset
+#' Create a pointset
+#'
+#' Pointsets are text files tha can be used by the Analyist feature in OTP 1.5
 #'
 #' @param points sf data frame of POINTS with CRS 4326
 #' @param name Character, name for pointset

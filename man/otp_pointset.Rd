@@ -19,7 +19,7 @@ Returns a data.frame of SF POINTS or Coordinates of all
     the locations that match `query`
 }
 \description{
-Create a pointset
+Pointsets are text files tha can be used by the Analyist feature in OTP 1.5
 }
 \details{
 OTP will return a maximum of 10 results

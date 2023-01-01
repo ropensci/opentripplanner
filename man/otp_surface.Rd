@@ -27,12 +27,14 @@ otp_surface(
 Returns a list of data.frames of travel times
 }
 \description{
-Geo-coding converts a named place, such as a street name into a lng/lat pair.
+Evaluate a surface created with `otp_make_surface` against a pointset made
+with `otp_pointset` to get travel times and statitics from the analysit in
+OTP 1.x
 }
 \details{
 THis function requires the analysis and pointset features to be
-enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
-detail see the analyst vignette.
+  enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
+  detail see the analyst vignette.
 }
 \examples{
 \dontrun{

@@ -15,12 +15,13 @@ otp_surface_isochrone(otpcon = NULL, surface = NULL)
 Returns a data.frame of travel times
 }
 \description{
-Geo-coding converts a named place, such as a street name into a lng/lat pair.
+Make a raster image (picture) of travel time using the surface features in
+OTP 1.x
 }
 \details{
 THis function requires the analysis and pointset features to be
-enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
-detail see the analyst vignette.
+  enabled during `otp_setup()`. Thus it will only work with OTP 1.x. For more
+  detail see the analyst vignette.
 }
 \examples{
 \dontrun{
