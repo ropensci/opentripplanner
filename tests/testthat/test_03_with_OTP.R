@@ -176,6 +176,7 @@ col_names <- c(
   "leg_agencyName","leg_agencyUrl","leg_routeType","leg_routeId",
   "leg_agencyId","leg_tripId","leg_serviceDate","leg_routeShortName",
   "leg_routeLongName",
+  "leg_flexDrtAdvanceBookMin",
   "geometry"
 )
 
