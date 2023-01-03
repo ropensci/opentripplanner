@@ -327,10 +327,12 @@ otp_plan <- function(otpcon = NA,
   }
 
   if(get_geometry){
+    results_routes$geometry <- sf::st_as_sfc(results_routes$geometry, crs = 4326)
     results_routes <- df2sf(results_routes)
     colnms <- names(results_routes)
     colnms <- colnms[!colnms %in% c("fromPlace", "toPlace", "geometry")]
     results_routes <- results_routes[c("fromPlace", "toPlace", colnms, "geometry")]
+
   } else {
     colnms <- names(results_routes)
     colnms <- colnms[!colnms %in% c("fromPlace", "toPlace")]
@@ -520,7 +522,7 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
 otp_json2sf <- function(itineraries, fp, tp,
                         full_elevation = FALSE,
                         get_geometry = TRUE,
-                         timezone = "", get_elevation = FALSE) {
+                        timezone = "", get_elevation = FALSE) {
 
   if(is.null(itineraries)){
     return(NULL)
@@ -547,23 +549,9 @@ otp_json2sf <- function(itineraries, fp, tp,
   fare <- itineraries$fare
   if (!is.null(fare)) {
     if (length(fare) == nrow(itineraries)) {
-      itineraries$fare <- vapply(fare, function(x) {
-        x <- x$fare$regular$cents
-        if (length(x) == 0) {
-          x <- as.numeric(NA)
-        } else {
-          x / 100
-        }
-      }, 1)
-      itineraries$fare_currency <- vapply(fare, function(x) {
-        x <- x$fare$regular$currency$currency
-        if (length(x) == 0) {
-          x <- as.character(NA)
-        }
-        x
-      }, "char")
+      itineraries$fare <- vapply(fare, fare_func, 1)
+      itineraries$fare_currency <- vapply(fare,fare_currency_func, "c")
     } else {
-      # warning("Unstructured fare data has been discarded")
       itineraries$fare <- NA
       itineraries$fare_currency <- NA
     }
@@ -572,13 +560,35 @@ otp_json2sf <- function(itineraries, fp, tp,
     itineraries$fare_currency <- NA
   }
 
-
   itineraries <- itineraries[legs$route_option, ]
   itineraries <- cbind(itineraries, legs)
   itineraries$fromPlace <- fp
   itineraries$toPlace <- tp
 
   return(itineraries)
+}
+
+#' fare parse
+#' @param x fare
+#' @noRd
+fare_func <- function(x) {
+  x <- x$fare$regular$cents
+  if (length(x) == 0) {
+    x <- NA_real_
+  } else {
+    x / 100
+  }
+}
+
+#' fare currency parse
+#' @param x fare
+#' @noRd
+fare_currency_func <- function(x) {
+  x <- x$fare$regular$currency$currency
+  if (length(x) == 0) {
+    x <- NA_character_
+  }
+  x
 }
 
 
@@ -594,7 +604,7 @@ otp_json2sf <- function(itineraries, fp, tp,
 #' small drops.
 #'
 #' @param dists numeric from the elevation first column
-#' @param err a tollerance for errors in otp results
+#' @param err a tolerance for errors in otp results
 #' @family internal
 #' @noRd
 
@@ -608,14 +618,11 @@ correct_distances <- function(dists, err = 1) {
   if (length(brks) == 0) {
     return(dists) # No places the length decreased
   }
-  mxs <- dists[brks]
-  mxs <- cumsum(mxs)
-  mxs <- c(0, mxs)
+  mxs <- c(0, cumsum(dists[brks]))
   reps <- c(0, brks, lth)
   reps <- reps[seq(2, length(reps))] - reps[seq(1, length(reps) - 1)]
   csum <- rep(mxs, times = reps)
-  res <- dists + csum
-  return(res)
+  return(dists + csum)
 }
 
 #' Convert Google Encoded Polyline and elevation data into sf object
@@ -632,7 +639,6 @@ correct_distances <- function(dists, err = 1) {
 polyline2linestring <- function(line, elevation = NULL) {
   line <- googlePolylines::decode(line$points)[[1]]
   line <- matrix(c(line$lon, line$lat), ncol = 2, dimnames = list(NULL, c("lon", "lat")))
-  # line <- as.matrix(line[, 2:1])
   if (!is.null(elevation)) {
     # Some modes don't have elevation e.g TRANSIT, check for this
     if (all(is.na(elevation))) {
@@ -647,11 +653,8 @@ polyline2linestring <- function(line, elevation = NULL) {
       vals[vals == 0] <- 1L
       ele <- elevation$second[c(1, vals)]
     }
-    linestring3D <- cbind(line, ele)
-    linestring3D <- sfheaders::sfg_linestring(linestring3D)
-    return(linestring3D)
+    return(sfheaders::sfg_linestring(cbind(line, ele)))
   } else {
-    linestring <- sfheaders::sfg_linestring(line)
-    return(linestring)
+    return(sfheaders::sfg_linestring(line))
   }
 }

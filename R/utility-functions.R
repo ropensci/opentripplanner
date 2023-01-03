@@ -79,7 +79,7 @@ parse_leg <- function(leg,
     legGeometry <- purrr::map2(.x = leg$legGeometry,
                                .y = elevation,
                                .f = polyline2linestring)
-    leg$geometry <- sf::st_sfc(legGeometry, crs = 4326)
+    leg$geometry <- legGeometry
     leg$legGeometry <- NULL
   } else {
     leg$legGeometry <- NULL
@@ -98,11 +98,9 @@ parse_elevation <- function(stp) {
   if (is.null(stp)) {
     return(NA)
   }
-
   # Check for OTP1 or OTP2
   if(inherits(stp$elevation, "character")){
-    elev <- stp$elevation
-    elev <- strsplit(elev,",")
+    elev <- strsplit(stp$elevation,",")
     elev <- purrr::map(elev, as.numeric)
     elev <- purrr::map(elev, split_alternating)
     elev <- data.table::rbindlist(elev, idcol = "step")
@@ -113,16 +111,14 @@ parse_elevation <- function(stp) {
   return(as.data.frame(elev))
 }
 
-#' Split vector into two vectors by altnating values
+#' Split vector into two vectors by alternating values
 #' @param x vector
 #' @family internal
 #' @noRd
 split_alternating <- function(x){
   odd <- rep(c(TRUE,FALSE), length(x)/2)
-  distance <- x[odd]
-  elevation <- x[!odd]
-  return(data.frame(first = distance,
-                    second = elevation,
+  return(data.frame(first = x[odd],
+                    second = x[!odd],
                     check.names = FALSE,
                     check.rows = FALSE))
 }
