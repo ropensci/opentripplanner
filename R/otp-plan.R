@@ -270,6 +270,7 @@ otp_plan <- function(otpcon = NA,
   # Send Requests
   urls <- build_urls(routerUrl,fromPlace, toPlace, query)
   message(Sys.time()," sending ",length(urls)," routes requests using ",ncores," threads")
+  progressr::handlers("cli")
   results <- progressr::with_progress(otp_async(urls, ncores))
 
   if(length(results) == 0){
@@ -277,7 +278,6 @@ otp_plan <- function(otpcon = NA,
   }
 
   message(Sys.time()," processing results")
-  results <- unlist(results, use.names = FALSE)
   results_routes <- RcppSimdJson::fparse(results, query = "/plan/itineraries", query_error_ok = TRUE, always_list = TRUE)
   fp <- unlist(RcppSimdJson::fparse(results, query = "/requestParameters/fromPlace", query_error_ok = TRUE), use.names = FALSE)
   tp <- unlist(RcppSimdJson::fparse(results, query = "/requestParameters/toPlace", query_error_ok = TRUE), use.names = FALSE)
@@ -471,6 +471,7 @@ build_urls <- function (routerUrl,fromPlace, toPlace, query){
 #' @noRd
 otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
 
+
   # Success Function
   otp_success <- function(res){
     p()
@@ -505,7 +506,7 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
   curl::multi_run(timeout = Inf, pool = pool)
   t2 <- Sys.time()
   message("Done in ",round(difftime(t2,t1, units = "mins"),1)," mins")
-  return(data)
+  return(unlist(data, use.names = FALSE))
 }
 
 #' Convert output from OpenTripPlanner into sf object

@@ -89,7 +89,7 @@ routes <- otp_plan(otpcon = otpcon,
                    toPlace = toPlace,
                    fromID = fromPlace$geo_code,
                    toID = toPlace$geo_code,
-                   get_geometry = TRUE,
+                   get_geometry = FALSE,
                    distance_balance = TRUE)
 routes <- routes[,c("fromPlace","toPlace","duration")]
 # Use the tidyr package to go from long to wide format
