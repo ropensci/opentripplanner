@@ -1,5 +1,9 @@
 # opentripplanner 0.5.0
 
+Version 0.5.0 is a significant rewrite of the package focusing on substantially faster routing. The package has moved from using multiple R workers requesting and parsing results from OTP to a two stage process. Stage 1 uses `curl` to send asynchronous requests to OTP. This stage should be as fast as OTP, and supports OTP's limit of 1.25x the number of cores. Stage 2 parses the JSON and converts it into a form usable in R. The parsing currently uses a single thread, but has been optimised and can now parse around 700-800 routes/second which is faster than OTP at around 40-50 routes/second/core. 
+
+Overall the new process is 3-4 times faster than v0.4.0 and uses less memory. Future development may add mulitcore support to the parsing stage for further speed improvements.
+
 Breaking Changes
 
 * surfaceID returned from `otp_make_surface` is now a list of lists to allow multiple inputs/outputs

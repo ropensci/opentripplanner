@@ -30,6 +30,15 @@ while advanced functionality such as batch routing, isochrones, and
 customised setup is described in the [advanced features
 vignette](https://docs.ropensci.org/opentripplanner/articles/advanced_features.html).
 
+## What’s New
+
+The newest version of the package 0.5.0 (Jan 2023) focuses on increased
+routing speeds (3-4x faster) and expanding support for OTP v2.2. The new
+version also drops legacy support for R 3.6, and so now requires R 4.0
+or later. See
+[news](https://docs.ropensci.org/opentripplanner/news/index.html) for
+more details.
+
 ## Installation
 
 ### OpenTripPlanner
@@ -57,18 +66,6 @@ install.packages("remotes")
 remotes::install_github("ropensci/opentripplanner")
 # Load the package
 library(opentripplanner)
-```
-
-#### RcppSimdJson
-
-From version 0.3.0 of `opentripplanner` the package `RcppSimdJson` is
-used for JSON parsing. This package is not supported on some older
-versions of R (\<= 3.6) and some older Operating Systems. Users on old
-systems should use version 0.2.3 of the package. You can install older
-versions using **remotes**.
-
-``` r
-remotes::install_version("opentripplanner", "0.2.3")
 ```
 
 ## Usage
