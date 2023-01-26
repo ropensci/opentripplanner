@@ -30,7 +30,7 @@ Imports:
     googlePolylines,
     curl,
     rjson,
-    purrr,
+    purrr (>= 1.0.0),
     RcppSimdJson (>= 0.1.2),
     progressr,
     sf (>= 0.9.3),
