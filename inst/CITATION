@@ -1,6 +1,6 @@
 bibentry(
   header   = "To cite opentripplanner package in publications use:",
-  entry    = "Article",
+  bibtype  = "Article",
   title    = "OpenTripPlanner for R",
   author = c(
   person("Malcolm Morgan"),
