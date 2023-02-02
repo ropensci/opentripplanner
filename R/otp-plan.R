@@ -323,7 +323,7 @@ otp_plan <- function(otpcon = NA,
     results_routes$fromPlace <- fromID$fromID[match(results_routes$fromPlace, fromID$fromPlace)]
   }
   if(!is.null(toID)){
-    results_routes$toPlace <- toID$toID[match(results_routes$toPlace, toID$Place)]
+    results_routes$toPlace <- toID$toID[match(results_routes$toPlace, toID$toPlace)]
   }
 
   if(get_geometry){
