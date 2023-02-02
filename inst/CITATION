@@ -1,5 +1,5 @@
 bibentry(
-  header   = "To cite opentripplanner package in publications use:"
+  header   = "To cite opentripplanner package in publications use:",
   entry    = "Article",
   title    = "OpenTripPlanner for R",
   author = c(
