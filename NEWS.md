@@ -1,6 +1,7 @@
-# opentripplanner 0.5.1.999999
+# opentripplanner 0.5.1
 
 * Updated dependency on purrr to require >= 1.0.0
+* Fixed bug in otp_plan wne using toID with thanks to @temporalista
 
 
 # opentripplanner 0.5.0
