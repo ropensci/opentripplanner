@@ -491,7 +491,7 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
   }
 
   for(i in seq_len(length(urls))){
-    h <- make_handle(i)
+    h <- curl::new_handle()
     if(post){
       curl::handle_setopt(h, post = TRUE)
     }
