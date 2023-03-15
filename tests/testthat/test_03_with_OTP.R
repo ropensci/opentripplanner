@@ -311,7 +311,7 @@ test_that("batch isochrone", {
   isobatch <- otp_isochrone(
     otpcon = otpcon,
     fromPlace = lsoa[1:3, ], # lng/lat of Ryde ferry
-    fromID = as.character(1:9),
+    fromID = as.character(1:3),
     mode = c("WALK"),
     maxWalkDistance = 2000,
     ncores = 1,
