@@ -473,6 +473,10 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
 
   t1 <- Sys.time()
 
+  pool <- curl::new_pool(host_con = ncores)
+  data <- vector('list', length(urls))
+  urls2 <- vector('list', length(urls))
+
   # Success Function
   otp_success <- function(res){
     p()
@@ -483,15 +487,11 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
   otp_failure <- function(msg){
     p()
     cat("Error: ", msg, "\n")
-    urls2 <<- c(urls2, res$url)
+    urls2 <<- c(urls2, msg$url)
   }
 
-  pool <- curl::new_pool(host_con = ncores)
-  data <- vector('list', length(urls))
-  urls2 <- vector('list', length(urls))
-
   for(i in seq_len(length(urls))){
-    h <- curl::new_handle()
+    h <- make_handle(i)
     if(post){
       curl::handle_setopt(h, post = TRUE)
     }
@@ -512,6 +512,14 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
   message("Done in ",round(difftime(t2,t1, units = "mins"),1)," mins")
   return(unlist(data, use.names = FALSE))
 }
+
+make_handle <- function(x){
+  handle <- curl::new_handle()
+  curl::handle_setopt(handle, copypostfields = paste0("routeid=", x))
+  return(handle)
+}
+
+
 
 #' Convert output from OpenTripPlanner into sf object
 #'
