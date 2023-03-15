@@ -102,7 +102,6 @@ otp_isochrone <- function(otpcon = NA,
   routerUrl <- paste0(routerUrl, "/isochrone")
 
   query <- list(
-    fromPlace = fromPlace,
     mode = mode,
     date = date,
     time = time,
