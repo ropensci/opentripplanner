@@ -202,7 +202,7 @@ test_that("otp_isochrone input validation", {
 
 context("Test config functions")
 
-test_that("otp_make_config tests", {
+test_that("otp_make_config tests v1", {
   skip_on_cran()
   config_router <- otp_make_config("router")
   config_build <- otp_make_config("build")
@@ -231,6 +231,38 @@ test_that("otp_make_config tests", {
   )))
   expect_true(file.exists(file.path(
     tempdir(), "otptests", "graphs", "configtests", "otp-config.json"
+  )))
+})
+
+test_that("otp_make_config tests v2", {
+  skip_on_cran()
+  config_router <- otp_make_config("router", 2)
+  config_build <- otp_make_config("build", 2)
+  config_otp <- otp_make_config("otp", 2)
+
+  expect_is(config_router, "list")
+  expect_is(config_build, "list")
+  expect_is(config_otp, "list")
+
+  expect_true(otp_validate_config(config_router, 2))
+  expect_true(otp_validate_config(config_build, 2))
+  expect_true(otp_validate_config(config_otp, 2))
+
+  dir.create(file.path(tempdir(), "otptests2", "graphs"))
+  dir.create(file.path(tempdir(), "otptests2", "graphs", "configtests"))
+
+  otp_write_config(config_router, dir = file.path(tempdir(), "otptests"), router = "configtests")
+  otp_write_config(config_build, dir = file.path(tempdir(), "otptests"), router = "configtests")
+  otp_write_config(config_otp, dir = file.path(tempdir(), "otptests"), router = "configtests")
+
+  expect_true(file.exists(file.path(
+    tempdir(), "otptests2", "graphs", "configtests", "router-config.json"
+  )))
+  expect_true(file.exists(file.path(
+    tempdir(), "otptests2", "graphs", "configtests", "build-config.json"
+  )))
+  expect_true(file.exists(file.path(
+    tempdir(), "otptests2", "graphs", "configtests", "otp-config.json"
   )))
 })
 

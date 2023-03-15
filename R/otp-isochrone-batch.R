@@ -80,6 +80,9 @@ otp_isochrone <- function(otpcon = NA,
   checkmate::assert_logical(arriveBy)
   arriveBy <- tolower(as.character(arriveBy))
 
+  fromPlace <- format(fromPlace, scientific = FALSE, digits = 9, trim = TRUE)
+  fromPlace <- paste0(fromPlace[,1],"%2C",fromPlace[,2])
+
   if (!is.null(fromID)) {
     if (length(fromID) != nrow(fromPlace)) {
       stop("The length of fromID and fromPlace are not the same")
@@ -94,9 +97,6 @@ otp_isochrone <- function(otpcon = NA,
       stop("Can't have two fromIDs with the same location, coordinates are rounded to 9 dp")
     }
   }
-
-  fromPlace <- format(fromPlace, scientific = FALSE, digits = 9, trim = TRUE)
-  fromPlace <- paste0(fromPlace[,1],"%2C",fromPlace[,2])
 
   routerUrl <- make_url(otpcon)
   routerUrl <- paste0(routerUrl, "/isochrone")

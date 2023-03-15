@@ -1,3 +1,7 @@
+# opentripplanner 0.5.2
+
+* Fixed bug in `otp_isochrone` when using `fromID`
+
 # opentripplanner 0.5.1
 
 * Updated dependency on purrr to require >= 1.0.0

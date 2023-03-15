@@ -306,24 +306,25 @@ test_that("basic isochrone", {
   expect_true(all(ferry_current$time == c(90, 75, 60, 45, 30, 15) * 60))
 })
 
-# test_that("multicore isochrone", {
-#   skip_on_cran()
-#   isobatch <- otp_isochrone(
-#     otpcon = otpcon,
-#     fromPlace = lsoa[1:3, ], # lng/lat of Ryde ferry
-#     mode = c("WALK"),
-#     maxWalkDistance = 2000,
-#     ncores = 2,
-#     date_time = as.POSIXct(strptime("2020-06-03 13:30", "%Y-%m-%d %H:%M")),
-#     cutoffSec = c(15, 30, 45, 60, 75, 90) * 60
-#   ) # Cut offs in seconds
-#   expect_is(isobatch, "sf")
-#   expect_true(nrow(isobatch) == 18)
-#   expect_true(ncol(isobatch) == 4)
-#   expect_true(all(names(isobatch) %in%
-#     c("id", "time", "fromPlace", "geometry")))
-#   expect_true(all(isobatch$time %in% c(90, 75, 60, 45, 30, 15) * 60))
-# })
+test_that("batch isochrone", {
+  skip_on_cran()
+  isobatch <- otp_isochrone(
+    otpcon = otpcon,
+    fromPlace = lsoa[1:3, ], # lng/lat of Ryde ferry
+    fromID = as.character(1:9),
+    mode = c("WALK"),
+    maxWalkDistance = 2000,
+    ncores = 1,
+    date_time = as.POSIXct(strptime("2020-06-03 13:30", "%Y-%m-%d %H:%M")),
+    cutoffSec = c(15, 30, 45, 60, 75, 90) * 60
+  ) # Cut offs in seconds
+  expect_is(isobatch, "sf")
+  expect_true(nrow(isobatch) == 18)
+  expect_true(ncol(isobatch) == 4)
+  expect_true(all(names(isobatch) %in%
+    c("id", "time", "fromPlace", "geometry")))
+  expect_true(all(isobatch$time %in% c(90, 75, 60, 45, 30, 15) * 60))
+})
 
 test_that("nonsence isochrone", {
   skip_on_cran()
