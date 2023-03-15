@@ -296,7 +296,7 @@ otp_plan <- function(otpcon = NA,
                                 .progress = TRUE)
 
 
-  results_routes <- data.table::rbindlist(results_routes, fill = TRUE)
+  results_routes <- data.table::rbindlist(results_routes, fill = TRUE, use.names=TRUE)
 
   origin <- .POSIXct(0, tz = "GMT")
   results_routes$startTime <- as.POSIXct.numeric(results_routes$startTime / 1000,
@@ -341,7 +341,7 @@ otp_plan <- function(otpcon = NA,
 
   if(length(results_errors) > 0){
     results_errors = purrr::map(results_errors, otp_parse_errors)
-    results_errors = data.table::rbindlist(results_errors, use.names = FALSE)
+    results_errors = data.table::rbindlist(results_errors, use.names = FALSE, use.names=TRUE)
     message(nrow(results_errors)," routes returned errors. Unique error messages are:\n")
     results_errors = as.data.frame(table(results_errors$msg))
     results_errors = results_errors[order(results_errors$Freq, decreasing = TRUE),]
@@ -538,7 +538,7 @@ otp_json2sf <- function(itineraries, fp, tp,
 
   names(legs) <- seq_len(length(legs))
   legs <- legs[!is.na(legs)]
-  legs <- data.table::rbindlist(legs, fill = TRUE, idcol = "route_option")
+  legs <- data.table::rbindlist(legs, fill = TRUE, idcol = "route_option", use.names=TRUE)
   names(legs) <- paste0("leg_",names(legs))
   names(legs)[names(legs) == "leg_route_option"] <- "route_option"
   names(legs)[names(legs) == "leg_geometry"] <- "geometry"
