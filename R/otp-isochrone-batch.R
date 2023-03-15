@@ -120,6 +120,7 @@ otp_isochrone <- function(otpcon = NA,
   # Send Requests
   urls <- build_urls(routerUrl,fromPlace, toPlace = NULL, query)
   message(Sys.time()," sending ",length(urls)," isochrone requests using ",ncores," threads")
+  progressr::handlers("cli")
   results <- progressr::with_progress(otp_async(urls, ncores, TRUE))
 
   if(length(results) == 0){
