@@ -473,23 +473,25 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
 
   t1 <- Sys.time()
 
+  # Success Function
+  otp_success <- function(res){
+    p()
+    data <<- c(data, rawToChar(res$content))
+    urls2 <<- c(urls2, res$url)
+  }
+  # Fail Function
+  otp_failure <- function(msg){
+    p()
+    cat("Error: ", msg, "\n")
+    urls2 <<- c(urls2, res$url)
+  }
+
   pool <- curl::new_pool(host_con = ncores)
   data <- vector('list', length(urls))
+  urls2 <- vector('list', length(urls))
 
   for(i in seq_len(length(urls))){
     h <- curl::new_handle()
-
-    # Success Function
-    otp_success <- function(res){
-      p()
-      data <<- c(data, rawToChar(res$content))
-    }
-    # Fail Function
-    otp_failure <- function(msg){
-      p()
-      cat("Error: ", msg, "\n")
-    }
-
     if(post){
       curl::handle_setopt(h, post = TRUE)
     }
@@ -504,6 +506,8 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
   }
   p <- progressr::progressor(length(urls))
   curl::multi_run(timeout = Inf, pool = pool)
+  urls2 <- unlist(urls2)
+  data <- data[match(urls, urls2)]
   t2 <- Sys.time()
   message("Done in ",round(difftime(t2,t1, units = "mins"),1)," mins")
   return(unlist(data, use.names = FALSE))
