@@ -474,8 +474,8 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
   t1 <- Sys.time()
 
   pool <- curl::new_pool(host_con = ncores)
-  data <- vector('list', length(urls))
-  urls2 <- vector('list', length(urls))
+  data <- list()
+  urls2 <- list()
 
   # Success Function
   otp_success <- function(res){
