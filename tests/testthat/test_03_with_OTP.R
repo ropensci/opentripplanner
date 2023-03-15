@@ -310,14 +310,14 @@ test_that("batch isochrone", {
   skip_on_cran()
   isobatch <- otp_isochrone(
     otpcon = otpcon,
-    fromPlace = lsoa[1:3, ], # lng/lat of Ryde ferry
+    fromPlace = lsoa[1:3, ],
     fromID = as.character(1:3),
     mode = c("WALK"),
     maxWalkDistance = 2000,
     ncores = 1,
     date_time = as.POSIXct(strptime("2020-06-03 13:30", "%Y-%m-%d %H:%M")),
     cutoffSec = c(15, 30, 45, 60, 75, 90) * 60
-  ) # Cut offs in seconds
+  )
   expect_is(isobatch, "sf")
   expect_true(nrow(isobatch) == 18)
   expect_true(ncol(isobatch) == 4)

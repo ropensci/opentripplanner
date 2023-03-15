@@ -89,14 +89,14 @@ otp_isochrone <- function(otpcon = NA,
     }
   }
 
-  if(!is.null(fromID)){
-    fromID <- data.table::data.table(fromID = fromID,
-                                     fromPlace = gsub("%2C",",",fromPlace))
-    fromID <- unique(fromID)
-    if(any(duplicated(fromID$fromID))){
-      stop("Can't have two fromIDs with the same location, coordinates are rounded to 9 dp")
-    }
-  }
+  # if(!is.null(fromID)){
+  #   fromID <- data.table::data.table(fromID = fromID,
+  #                                    fromPlace = gsub("%2C",",",fromPlace))
+  #   fromID <- unique(fromID)
+  #   if(any(duplicated(fromID$fromID))){
+  #     stop("Can't have two fromIDs with the same location, coordinates are rounded to 9 dp")
+  #   }
+  # }
 
   routerUrl <- make_url(otpcon)
   routerUrl <- paste0(routerUrl, "/isochrone")

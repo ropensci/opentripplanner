@@ -471,25 +471,25 @@ build_urls <- function (routerUrl,fromPlace, toPlace, query){
 #' @noRd
 otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
 
-
-  # Success Function
-  otp_success <- function(res){
-    p()
-    data <<- c(data, rawToChar(res$content))
-  }
-  # Fail Function
-  otp_failure <- function(msg){
-    p()
-    cat("Error: ", msg, "\n")
-  }
-
   t1 <- Sys.time()
 
   pool <- curl::new_pool(host_con = ncores)
-  data <- list()
+  data <- vector('list', length(urls))
 
   for(i in seq_len(length(urls))){
     h <- curl::new_handle()
+
+    # Success Function
+    otp_success <- function(res){
+      p()
+      data <<- c(data, rawToChar(res$content))
+    }
+    # Fail Function
+    otp_failure <- function(msg){
+      p()
+      cat("Error: ", msg, "\n")
+    }
+
     if(post){
       curl::handle_setopt(h, post = TRUE)
     }
