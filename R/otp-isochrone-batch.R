@@ -166,6 +166,7 @@ otp_process_results_iso <- function(text, fromID){
   response <- response[!sf::st_is_empty(response),]
   if(nrow(response) == 0){
     warning("Isochrone had empty geometry ")
+    return(NULL)
   } else {
     response <- sf::st_cast(response, "MULTIPOLYGON")
   }
