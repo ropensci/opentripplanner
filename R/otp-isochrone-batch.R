@@ -84,7 +84,7 @@ otp_isochrone <- function(otpcon = NA,
   fromPlace <- paste0(fromPlace[,1],"%2C",fromPlace[,2])
 
   if (!is.null(fromID)) {
-    if (length(fromID) != nrow(fromPlace)) {
+    if (length(fromID) != length(fromPlace)) {
       stop("The length of fromID and fromPlace are not the same")
     }
   }
