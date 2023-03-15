@@ -26,7 +26,6 @@ jobs:
           - {os: macOS-latest,   r: 'release', java: 8}
           - {os: macOS-latest,   r: 'oldrel',  java: 8}
           - {os: windows-latest, r: 'release', java: 8}
-          - {os: windows-latest, r: 'oldrel',  java: 8}
           - {os: ubuntu-latest,   r: 'devel',   java: 8}
           - {os: ubuntu-latest,   r: 'release', java: 8}
           - {os: ubuntu-latest,   r: 'oldrel',  java: 8}
