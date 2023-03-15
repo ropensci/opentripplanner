@@ -133,9 +133,8 @@ otp_isochrone <- function(otpcon = NA,
   results_sf <- purrr::map2(results, fromID, otp_process_results_iso)
   results_sf <- data.table::rbindlist(results_sf, use.names=TRUE)
   if(nrow(results_sf) > 0){
-    results_sf <- sf::st_as_sf(results_sf)
     results_sf$geometry <- sf::st_sfc(results_sf$geometry, recompute_bbox = TRUE)
-
+    results_sf <- sf::st_as_sf(results_sf)
   } else {
     warning("No results returned, check your inputs")
   }
