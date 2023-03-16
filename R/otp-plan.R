@@ -368,7 +368,7 @@ otp_plan <- function(otpcon = NA,
 
   if(length(results_errors) > 0){
     results_errors = purrr::map(results_errors, otp_parse_errors)
-    results_errors = data.table::rbindlist(results_errors, use.names = FALSE, use.names=TRUE)
+    results_errors = data.table::rbindlist(results_errors, use.names = FALSE)
     message(nrow(results_errors)," routes returned errors. Unique error messages are:\n")
     results_errors = as.data.frame(table(results_errors$msg))
     results_errors = results_errors[order(results_errors$Freq, decreasing = TRUE),]
