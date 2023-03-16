@@ -250,22 +250,22 @@ otp_plan <- function(otpcon = NA,
     query <- c(query, routeOptions)
   }
 
-  if(!is.null(fromID)){
-    fromID <- data.table::data.table(fromID = fromID,
-                                     fromPlace = gsub("%2C",",",fromPlace))
-    fromID <- unique(fromID)
-    if(any(duplicated(fromID$fromID))){
-      stop("Can't have two fromIDs with the same location, coordinates are rounded to 9 dp")
-    }
-  }
-  if(!is.null(toID)){
-    toID <- data.table::data.table(toID = toID,
-                                     toPlace = gsub("%2C",",",toPlace))
-    toID <- unique(toID)
-    if(any(duplicated(toID$toID))){
-      stop("Can't have two toIDs with the same location, coordinates are rounded to 9 dp")
-    }
-  }
+  # if(!is.null(fromID)){
+  #   fromID <- data.table::data.table(fromID = fromID,
+  #                                    fromPlace = gsub("%2C",",",fromPlace))
+  #   fromID <- unique(fromID)
+  #   if(any(duplicated(fromID$fromID))){
+  #     stop("Can't have two fromIDs with the same location, coordinates are rounded to 9 dp")
+  #   }
+  # }
+  # if(!is.null(toID)){
+  #   toID <- data.table::data.table(toID = toID,
+  #                                    toPlace = gsub("%2C",",",toPlace))
+  #   toID <- unique(toID)
+  #   if(any(duplicated(toID$toID))){
+  #     stop("Can't have two toIDs with the same location, coordinates are rounded to 9 dp")
+  #   }
+  # }
 
   # Send Requests
   urls <- build_urls(routerUrl,fromPlace, toPlace, query)
@@ -273,21 +273,48 @@ otp_plan <- function(otpcon = NA,
   progressr::handlers("cli")
   results <- progressr::with_progress(otp_async(urls, ncores))
 
-  if(length(results) == 0){
+
+  message(Sys.time()," processing results")
+  results_routes <- RcppSimdJson::fparse(results,
+                                         query = "/plan/itineraries",
+                                         query_error_ok = TRUE,
+                                         parse_error_ok = TRUE,
+                                         always_list = TRUE)
+
+
+  if(is.null(fromID)){
+    fromID <- unlist(RcppSimdJson::fparse(results,
+                                          query = "/requestParameters/fromPlace",
+                                          query_error_ok = TRUE,
+                                          parse_error_ok = TRUE), use.names = FALSE)
+  }
+
+  if(is.null(toID)){
+    toID <- unlist(RcppSimdJson::fparse(results,
+                                        query = "/requestParameters/fromPlace",
+                                        parse_error_ok = TRUE,
+                                        query_error_ok = TRUE), use.names = FALSE)
+
+  }
+
+
+
+
+  results_errors <- RcppSimdJson::fparse(results, query = "/error",
+                                         query_error_ok = TRUE,
+                                         parse_error_ok = TRUE,
+                                         always_list = TRUE)
+  results_errors <- results_errors[lengths(results_errors) > 0]
+
+
+  if(sum(lengths(results_routes)) == 0){
     stop("No results returned, check your connection")
   }
 
-  message(Sys.time()," processing results")
-  results_routes <- RcppSimdJson::fparse(results, query = "/plan/itineraries", query_error_ok = TRUE, always_list = TRUE)
-  fp <- unlist(RcppSimdJson::fparse(results, query = "/requestParameters/fromPlace", query_error_ok = TRUE), use.names = FALSE)
-  tp <- unlist(RcppSimdJson::fparse(results, query = "/requestParameters/toPlace", query_error_ok = TRUE), use.names = FALSE)
-
-  results_errors <- RcppSimdJson::fparse(results, query = "/error", query_error_ok = TRUE, always_list = TRUE)
-  results_errors <- results_errors[lengths(results_errors) > 0]
-
   results_routes <- purrr::pmap(.l = list(itineraries = results_routes,
-                                          fp = fp,
-                                          tp = tp),
+                                          fp = fromID,
+                                          tp = toID
+                                          ),
                                 .f = otp_json2sf,
                                 full_elevation = full_elevation,
                                 get_geometry = get_geometry,
@@ -319,12 +346,12 @@ otp_plan <- function(otpcon = NA,
   results_routes <- results_routes[seq_len(nrow(results_routes)), ]
   results_routes <- as.data.frame(results_routes)
 
-  if(!is.null(fromID)){
-    results_routes$fromPlace <- fromID$fromID[match(results_routes$fromPlace, fromID$fromPlace)]
-  }
-  if(!is.null(toID)){
-    results_routes$toPlace <- toID$toID[match(results_routes$toPlace, toID$toPlace)]
-  }
+  # if(!is.null(fromID)){
+  #   results_routes$fromPlace <- fromID$fromID[match(results_routes$fromPlace, fromID$fromPlace)]
+  # }
+  # if(!is.null(toID)){
+  #   results_routes$toPlace <- toID$toID[match(results_routes$toPlace, toID$toPlace)]
+  # }
 
   if(get_geometry){
     results_routes$geometry <- sf::st_as_sfc(results_routes$geometry, crs = 4326)
@@ -472,25 +499,10 @@ build_urls <- function (routerUrl,fromPlace, toPlace, query){
 otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
 
   t1 <- Sys.time()
-
+  p <- progressr::progressor(length(urls))
+  out <- vector('list', length(urls))
   pool <- curl::new_pool(host_con = ncores)
-  data <- list()
-  urls2 <- list()
-
-  # Success Function
-  otp_success <- function(res){
-    p()
-    data <<- c(data, rawToChar(res$content))
-    urls2 <<- c(urls2, res$url)
-  }
-  # Fail Function
-  otp_failure <- function(msg){
-    p()
-    cat("Error: ", msg, "\n")
-    urls2 <<- c(urls2, msg$url)
-  }
-
-  for(i in seq_len(length(urls))){
+  lapply( seq_along(urls), function(i){
     h <- curl::new_handle()
     if(post){
       curl::handle_setopt(h, post = TRUE)
@@ -498,28 +510,26 @@ otp_async <- function(urls, ncores, iso_mode = FALSE, post = FALSE){
     if(iso_mode){
       h <- curl::handle_setheaders(h, "Accept" = "application/json")
     }
+    success <- function(res){
+      p()
+      out[[i]] <<- rawToChar(res$content)
+    }
+    failure <- function(res){
+      p()
+      cat("Error: ", res, "\n")
+      out[[i]] <<- paste0("Error: ", res)
+    }
     curl::curl_fetch_multi(urls[i],
-                           otp_success,
-                           otp_failure ,
+                           done = success,
+                           fail = failure,
                            pool = pool,
                            handle = h)
-  }
-  p <- progressr::progressor(length(urls))
+  })
   curl::multi_run(timeout = Inf, pool = pool)
-  urls2 <- unlist(urls2)
-  data <- data[match(urls, urls2)]
   t2 <- Sys.time()
   message("Done in ",round(difftime(t2,t1, units = "mins"),1)," mins")
-  return(unlist(data, use.names = FALSE))
+  return(unlist(out, use.names = FALSE))
 }
-
-make_handle <- function(x){
-  handle <- curl::new_handle()
-  curl::handle_setopt(handle, copypostfields = paste0("routeid=", x))
-  return(handle)
-}
-
-
 
 #' Convert output from OpenTripPlanner into sf object
 #'

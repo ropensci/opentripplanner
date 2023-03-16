@@ -323,14 +323,14 @@ test_that("batch isochrone", {
   expect_true(ncol(isobatch) == 4)
   expect_true(all(names(isobatch) %in%
     c("id", "time", "fromPlace", "geometry")))
-  expect_true(all(isobatch$time %in% c(90, 75, 60, 45, 30, 15) * 60))
+  expect_true(all(isobatch$time %in% (c(90, 75, 60, 45, 30, 15) * 60)))
 })
 
 test_that("nonsence isochrone", {
   skip_on_cran()
   skip_on_j11()
   skip_on_j17()
-  expect_warning(otp_isochrone(
+  expect_error(otp_isochrone(
     otpcon = otpcon,
     fromPlace = c(-5, 5)
   ))

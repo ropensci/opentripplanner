@@ -122,10 +122,6 @@ otp_isochrone <- function(otpcon = NA,
   progressr::handlers("cli")
   results <- progressr::with_progress(otp_async(urls, ncores, TRUE))
 
-  if(length(results) == 0){
-    stop("No results returned, check your connection")
-  }
-
   if (is.null(fromID)) {
     fromID <- gsub("%2C",",",fromPlace, fixed = TRUE)
   }
@@ -136,7 +132,7 @@ otp_isochrone <- function(otpcon = NA,
     results_sf$geometry <- sf::st_sfc(results_sf$geometry, recompute_bbox = TRUE)
     results_sf <- sf::st_as_sf(results_sf)
   } else {
-    warning("No results returned, check your inputs")
+    stop("No results returned, check your connection")
   }
   return(results_sf)
 }
