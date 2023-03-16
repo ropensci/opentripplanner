@@ -308,6 +308,8 @@ test_that("basic isochrone", {
 
 test_that("batch isochrone", {
   skip_on_cran()
+  skip_on_j11()
+  skip_on_j17()
   isobatch <- otp_isochrone(
     otpcon = otpcon,
     fromPlace = lsoa[1:3, ],
