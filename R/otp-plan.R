@@ -132,7 +132,7 @@ otp_plan <- function(otpcon = NA,
                              "TRANSIT","BUS", "RAIL", "SUBWAY","TRAM", "FERRY",
                              "GONDOLA","FUNICULAR","AIRPLANE","CABLE_CAR",
                              "WALK",
-                             "BICYCLE","BICYCLE_RENT","BICYCLE_PARK"
+                             "BICYCLE","BICYCLE_RENT","BICYCLE_PARK",
                              "CAR","CAR_PARK",
                              "CAR_HAIL","CARPOOL","CAR_DROPOFF","CAR_PICKUP"
                            ),

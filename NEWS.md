@@ -2,6 +2,7 @@
 
 * Fixed bug in `otp_isochrone` when using `fromID`
 * Slightly faster routing with large batches
+* More mode choices in `otp_plan`
 
 # opentripplanner 0.5.1
 
