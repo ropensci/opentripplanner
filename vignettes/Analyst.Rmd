@@ -120,7 +120,7 @@ The function will return the travel times in seconds between the fromPlaces and 
 
 ## Producing an isochrone from a surface
 
-The surfaces can also be used to produce isochrones from a surface.
+The surfaces can also be used to produce isochrones from a surface. Only one raster can be produced at a time. If you provide a list of surfaces only the first will be used.
 
 ```{r eval=FALSE}
 isochone <- otp_surface_isochrone(otpcon, surfaceid)

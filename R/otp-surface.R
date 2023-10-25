@@ -80,7 +80,7 @@ parse_surface <- function(x, get_data){
 #' OTP 1.x
 #'
 #' @param otpcon OTP connection object produced by otp_connect()
-#' @param surface A suface list from otp_make_surface()
+#' @param surface A surface list from otp_make_surface()
 #' @return Returns a data.frame of travel times
 #' @examples
 #' \dontrun{
@@ -106,14 +106,14 @@ otp_surface_isochrone <- function(otpcon = NULL,
   }
 
   # Check for list
-  if(is.null(surface$id)){
-    stop("Can't find surface ID, have you provided a list of surface IDs?")
+  if(is.null(surface[[1]]$id)){
+    stop("Can't find surface ID")
   }
 
   surfaceUrl <- make_url(otpcon, type = "surfaces")
   surfaceUrl <- paste0(surfaceUrl,
                        "/",
-                       surface$id,
+                       surface[[1]]$id,
                        "/raster")
 
   # convert response content into text
