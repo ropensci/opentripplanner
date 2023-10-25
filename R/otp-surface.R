@@ -43,10 +43,12 @@ otp_surface <- function(otpcon = NULL,
   message(Sys.time()," evaluating ",length(surfaceUrl)," surfaces using ",ncores," threads")
   results <- progressr::with_progress(otp_async(surfaceUrl, ncores))
 
-  asjson <- RcppSimdJson::fparse(unlist(results, use.names = FALSE), parse_error_ok = TRUE)
+  asjson <- RcppSimdJson::fparse(unlist(results, use.names = FALSE),
+                                 parse_error_ok = TRUE,
+                                 always_list = TRUE)
 
   res <- purrr::map(asjson, parse_surface, get_data = get_data)
-  return(res)
+  x = return(res)
 
 }
 
@@ -232,7 +234,8 @@ otp_make_surface <- function(otpcon = NULL,
 
   # convert response content into text
   asjson <- RcppSimdJson::fparse(unlist(results, use.names = FALSE),
-                                 parse_error_ok = TRUE)
+                                 parse_error_ok = TRUE,
+                                 always_list = TRUE)
 
   return(asjson)
 

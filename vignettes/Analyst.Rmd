@@ -91,7 +91,7 @@ ttimes <- otp_surface(otpcon, surfaceid, "lsoa", get_data = FALSE)
 We can visualise the travel times using the `tmap` package.
 
 ```{r eval=FALSE}
-lsoa$time <- ttimes$times / 60
+lsoa$time <- ttimes[[1]]$times / 60
 library(tmap)
 tmap_mode("view")
 tm_shape(lsoa) +
