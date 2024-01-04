@@ -52,8 +52,10 @@ otp_isochrone <- function(otpcon = NA,
                           timezone = otpcon$timezone) {
   # Check for OTP2
   if (!is.null(otpcon$otp_version)) {
-    if (otpcon$otp_version >= 2) {
-      stop("Isochrones are not supported by OTP v2.X")
+    if (otpcon$otp_version >= 2.0 & otpcon$otp_version <= 2.1) {
+      stop("Isochrones are not supported by OTP v2.0-2.1. Consider using v1.5 or v2.2+.")
+    } else if (otpcon$otp_version >= 2.2) {
+      message("OTP v2.2+ experimentaly supports isochrones, see https://docs.opentripplanner.org/en/v2.4.0/sandbox/TravelTime/")
     }
   }
 
@@ -99,15 +101,38 @@ otp_isochrone <- function(otpcon = NA,
   # }
 
   routerUrl <- make_url(otpcon)
-  routerUrl <- paste0(routerUrl, "/isochrone")
+  if (otpcon$otp_version <= 1.9) {
+    routerUrl <- paste0(routerUrl, "/isochrone")
+  } else if (otpcon$otp_version >= 2.2) {
+    routerUrl <- paste0(sub("/otp.*", "/", routerUrl), "otp/traveltime/isochrone")
+  }
 
-  query <- list(
-    mode = mode,
-    date = date,
-    time = time,
-    maxWalkDistance = maxWalkDistance,
-    arriveBy = arriveBy
-  )
+  if (otpcon$otp_version <= 1.9) {
+    query <- list(
+      mode = mode,
+      date = date,
+      time = time,
+      maxWalkDistance = maxWalkDistance,
+      arriveBy = arriveBy
+    )
+  } else if (otpcon$otp_version >= 2.2) {
+    format_ISO8601 <- function(date) {
+      # Format date and time
+      formatted <- format(date, "%Y-%m-%dT%H:%M:%S")
+
+      # Format timezone and insert colon
+      tz_formatted <- format(date, "%z")
+      tz_with_colon <- paste0(substr(tz_formatted, 1, 3), ":", substr(tz_formatted, 4, 5))
+
+      # Combine date and modified timezone
+      paste0(formatted, tz_with_colon)
+    }
+    query <- list(
+      mode = mode,
+      time = format_ISO8601(date_time),
+      arriveBy = arriveBy
+    )
+  }
   cutoffSec <- as.list(cutoffSec)
   names(cutoffSec) <- rep("cutoffSec", length(cutoffSec))
   query <- c(query, cutoffSec)
@@ -118,8 +143,19 @@ otp_isochrone <- function(otpcon = NA,
 
   # Send Requests
   urls <- build_urls(routerUrl,fromPlace, toPlace = NULL, query)
+  if (otpcon$otp_version >= 2.2) {
+    urls <- gsub("fromPlace", "location", urls)
+  }
   message(Sys.time()," sending ",length(urls)," isochrone requests using ",ncores," threads")
   progressr::handlers("cli")
+  if (otpcon$otp_version >= 2.2) {
+    urls <- paste0(
+      sub("(https?://[^?]+\\?)(.*)", "\\1", urls),
+      gsub("\\+", "%2B",
+           gsub(":", "%3A",
+                sub("(https?://[^?]+\\?)(.*)", "\\2", urls))))
+
+  }
   results <- progressr::with_progress(otp_async(urls, ncores, TRUE))
 
   if (is.null(fromID)) {
