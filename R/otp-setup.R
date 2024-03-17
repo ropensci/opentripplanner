@@ -402,7 +402,7 @@ otp_stop <- function(warn = TRUE, kill_all = TRUE) {
     )
   }
 
-  if (checkmate::testOS("linux") | checkmate::testOS("mac")) {
+  if (checkmate::testOS("linux") || checkmate::testOS("mac")) {
     message("The following Java instances have been found:")
     system("ps -A |grep java")
     if (!kill_all) {
@@ -456,7 +456,7 @@ otp_checks <- function(otp = NULL,
     chkG <- file.exists(paste0(dir, "/graphs/", router, "/Graph.obj"))
     chkg <- file.exists(paste0(dir, "/graphs/", router, "/graph.obj"))
 
-    if(!(chkG | chkg)){
+    if(!(chkG || chkg)){
       stop("File does not exist")
     }
 
@@ -525,7 +525,7 @@ otp_check_java <- function(otp_version = 1.5) {
     }
 
     if (otp_version < 2) {
-      if (java_version >= 1.8 & java_version < 1.9) {
+      if (java_version >= 1.8 && java_version < 1.9) {
         message("You have the correct version of Java for OTP 1.x")
         return(TRUE)
       }
@@ -544,8 +544,8 @@ otp_check_java <- function(otp_version = 1.5) {
       return(FALSE)
     }
 
-    if (otp_version >= 2 & otp_version <= 2.1) {
-      if (java_version >= 1.8 & java_version < 1.9) {
+    if (otp_version >= 2 && otp_version <= 2.1) {
+      if (java_version >= 1.8 && java_version < 1.9) {
         warning("You have OTP 2.0 or 2.1 but the version of Java for OTP 1.x")
         return(FALSE)
       }
@@ -565,7 +565,7 @@ otp_check_java <- function(otp_version = 1.5) {
     }
 
     if (otp_version >= 2.2) {
-      if (java_version >= 1.8 & java_version < 1.9) {
+      if (java_version >= 1.8 && java_version < 1.9) {
         warning("You have OTP 2.2+ but the version of Java for OTP 1.x")
         return(FALSE)
       }

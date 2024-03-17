@@ -155,7 +155,7 @@ otp_process_results_iso <- function(text, fromID){
   response$id <- seq(1, nrow(response))
   response$fromPlace <- fromID
 
-  if (any(!sf::st_is_valid(response))) {
+  if (!all(sf::st_is_valid(response))) {
     suppressMessages(suppressWarnings(response <- sf::st_make_valid(response)))
   }
 
