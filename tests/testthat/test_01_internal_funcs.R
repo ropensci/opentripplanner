@@ -52,7 +52,7 @@ test_that("test otp_json2sf", {
 
 
   r1 <- otp_json2sf(itineraries = r1, fp = "", tp = "", get_elevation = FALSE)
-  expect_true("data.frame" %in% class(r1))
+  expect_s3_class(r1, "data.frame")
   expect_true(nrow(r1) == 1)
 
 
@@ -63,7 +63,7 @@ test_that("test otp_json2sf", {
 
 
   r2 <- otp_json2sf(r2, fp = "", tp = "", get_geometry = FALSE)
-  expect_true("data.frame" %in% class(r2))
+  expect_s3_class(r2, "data.frame")
   expect_true(nrow(r2) == 1)
 
 
@@ -73,7 +73,7 @@ test_that("test otp_json2sf", {
 
 
   r4 <- otp_json2sf(itineraries = r4, fp = "", tp = "")
-  expect_true("data.frame" %in% class(r4))
+  expect_s3_class(r4, "data.frame")
   expect_true(nrow(r4) == 9)
 })
 
@@ -88,10 +88,10 @@ test_that("get elevations", {
     get_geometry = TRUE,
     full_elevation = TRUE
   )
-  expect_true("data.frame" %in% class(r3))
+  expect_s3_class(r3, "data.frame")
   expect_true(nrow(r3) == 1)
   expect_true("leg_elevation" %in% names(r3))
-  expect_true(class(r3$leg_elevation) == "list")
+  expect_true(is.list(r3$leg_elevation))
 })
 
 
@@ -159,7 +159,7 @@ test_that("test polyline2linestring", {
 
 test_that("test otp_check_java", {
   suppressWarnings(r1 <- otp_check_java())
-  expect_true(class(r1) == "logical")
+  expect_type(r1, "logical")
 })
 
 

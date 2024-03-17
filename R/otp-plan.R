@@ -424,12 +424,12 @@ otp_parse_missing <- function(x){
 
 otp_clean_input <- function(imp, imp_name) {
   # For single point inputs
-  if (all(class(imp) == "numeric")) {
+  if (!is.matrix(imp) && is.double(imp)) {
     checkmate::assert_numeric(imp, len = 2)
     imp <- matrix(imp, nrow = 1, byrow = TRUE)
   }
   # For SF inputs
-  if ("sf" %in% class(imp)) {
+  if (inherits(imp, "sf")) {
     if (all(sf::st_geometry_type(imp) == "POINT")) {
       imp <- sf::st_coordinates(imp)
       imp[] <- imp[, c(1, 2)]
@@ -440,7 +440,7 @@ otp_clean_input <- function(imp, imp_name) {
 
   # For matrix inputs
   # if (all(class(imp) == "matrix")) { # to pass CRAN checks
-  if ("matrix" %in% class(imp)) {
+  if (is.matrix(imp)) {
     checkmate::assert_matrix(imp,
                              any.missing = FALSE,
                              min.rows = 1,

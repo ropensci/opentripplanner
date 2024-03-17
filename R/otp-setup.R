@@ -345,7 +345,7 @@ otp_setup <- function(otp = NULL,
         check = TRUE
       ), silent = TRUE)
 
-      if ("otpconnect" %in% class(otpcon)) {
+      if (is_otpconnect(otpcon)) {
         message(paste0(
           Sys.time(),
           " OTP is ready to use Go to localhost:",

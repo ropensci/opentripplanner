@@ -287,10 +287,10 @@ context("test routing options")
 test_that("otp_routing_options creation", {
   skip_on_cran()
   routingOptions <- otp_routing_options()
-  expect_true(class(routingOptions) == "list")
+  expect_true(is.list(routingOptions))
   routingOptions$walkSpeed <- 999
   routingOptions <- otp_validate_routing_options(routingOptions)
-  expect_true(class(routingOptions) == "list")
+  expect_true(is.list(routingOptions))
   expect_true(length(routingOptions) == 1)
 })
 
