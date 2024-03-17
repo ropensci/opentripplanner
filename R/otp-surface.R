@@ -266,7 +266,7 @@ otp_pointset <- function(points = NULL,
                         name = NULL,
                         dir = NULL) {
 
-  if(!"sf" %in% class(points)){
+  if (!inherits(point, "sf")) {
     stop("points is not an sf object")
   }
 

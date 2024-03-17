@@ -106,8 +106,8 @@ otp_connect <- function(hostname = "localhost",
 #' @noRd
 #'
 make_url <- function(x, type = "routers") {
-  if(!"otpconnect" %in% class(x)){
-    stop("Object is not of class otpconnect, class is ", class(x))
+  if (!is_otpconnect(x)) {
+    stop("Object is not of class otpconnect, class is ", toString(class(x)))
   }
 
   if(type == "routers"){
@@ -167,8 +167,8 @@ make_url <- function(x, type = "routers") {
 #' @noRd
 #'
 check_router <- function(x) {
-  if(!"otpconnect" %in% class(x)){
-    stop("Object is not of class otpconnect, class is ", class(x))
+  if (!is_otpconnect(x)) {
+    stop("Object is not of class otpconnect, class is ", toString(class(x)))
   }
   check <- try(curl::curl_fetch_memory(make_url(x)), silent = TRUE)
   if (inherits(check, "try-error")) {
@@ -184,8 +184,8 @@ check_router <- function(x) {
 #' @noRd
 #'
 check_routers <- function(otpcon) {
-  if(!"otpconnect" %in% class(otpcon)){
-    stop("Object is not of class otpconnect, class is ", class(otpcon))
+  if (!is_otpconnect(otpcon)) {
+    stop("Object is not of class otpconnect, class is ", toString(class(otpcon)))
   }
 
   if (is.null(otpcon$url)) {
