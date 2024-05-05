@@ -7,8 +7,9 @@
 #'     data frame of POINTS
 #' @param fromID character vector same length as fromPlace
 #' @param mode character vector of one or more modes of travel valid values
-#'   TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, SUBWAY, TRAM, FERRY, BICYCLE_RENT,
-#'   BICYCLE_PARK, CAR_PARK, CABLE_CAR, GONDOLA, FUNICULAR, AIRPLANE, default
+#'   "TRANSIT","BUS", "RAIL", "SUBWAY","TRAM", "FERRY", "GONDOLA", "FUNICULAR",
+#'   "AIRPLANE", "CABLE_CAR", "WALK", "BICYCLE", "BICYCLE_RENT", "BICYCLE_PARK",
+#'   "CAR", "CAR_PARK", "CAR_HAIL", "CARPOOL", "CAR_DROPOFF", "CAR_PICKUP", default
 #'   CAR. Not all combinations are valid e.g. c("WALK","BUS") is valid but
 #'   c("WALK","CAR") is not.
 #' @param date_time POSIXct, a date and time, defaults to current
@@ -64,11 +65,12 @@ otp_isochrone <- function(otpcon = NA,
   mode <- toupper(mode)
   checkmate::assert_subset(mode,
                            choices = c(
-                             "TRANSIT", "WALK", "BICYCLE",
-                             "CAR", "BUS", "RAIL", "SUBWAY",
-                             "TRAM", "FERRY","BICYCLE_RENT",
-                             "BICYCLE_PARK","CAR_PARK","CABLE_CAR",
-                             "GONDOLA","FUNICULAR","AIRPLANE"
+                             "TRANSIT","BUS", "RAIL", "SUBWAY","TRAM", "FERRY",
+                             "GONDOLA","FUNICULAR","AIRPLANE","CABLE_CAR",
+                             "WALK",
+                             "BICYCLE","BICYCLE_RENT","BICYCLE_PARK",
+                             "CAR","CAR_PARK",
+                             "CAR_HAIL","CARPOOL","CAR_DROPOFF","CAR_PICKUP"
                            ),
     empty.ok = FALSE
   )

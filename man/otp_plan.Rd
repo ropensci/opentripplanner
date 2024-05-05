@@ -40,9 +40,10 @@ or sf data frame of POINTS with CRS 4326}
 \item{toID}{character vector same length as toPlace}
 
 \item{mode}{character vector of one or more modes of travel valid values
-TRANSIT, WALK, BICYCLE, CAR, BUS, RAIL, SUBWAY, TRAM, FERRY, BICYCLE_RENT,
-BICYCLE_PARK, CAR_PARK, CABLE_CAR, GONDOLA, FUNICULAR, AIRPLANE, default
-CAR. Not all combinations are valid e.g. c("WALK","BUS") is valid but
+"TRANSIT","BUS", "RAIL", "SUBWAY","TRAM", "FERRY", "GONDOLA", "FUNICULAR",
+"AIRPLANE", "CABLE_CAR", "WALK", "BICYCLE", "BICYCLE_RENT", "BICYCLE_PARK",
+"CAR", "CAR_PARK", "CAR_HAIL", "CARPOOL", "CAR_DROPOFF", "CAR_PICKUP",
+default "CAR". Not all combinations are valid e.g. c("WALK","BUS") is valid but
 c("WALK","CAR") is not.}
 
 \item{date_time}{POSIXct, a date and time, defaults to current date and time}
