@@ -233,7 +233,7 @@ OTP can use public transport timetable data in the [GTFS format](https://develop
 
 #### Elevation Data
 
-You can add terrain information to your routes, especially useful for walking and cycling, using [GeoTIFF images](https://trac.osgeo.org/geotiff). You can find worldwide elevation data from [NASA](https://www2.jpl.nasa.gov/srtm/).
+You can add terrain information to your routes, especially useful for walking and cycling, using [GeoTIFF images](https://trac.osgeo.org/geotiff). You can find worldwide elevation data from [NASA](https://www.usgs.gov/centers/eros/science/usgs-eros-archive-digital-elevation-shuttle-radar-topography-mission-srtm-non#overview).
 
 **Warning** It is common for GeoTIFF to have a no data value often the maximum possible value. OTP can misinterpret this as an elevation value. So set your no data values in your elevation data to something more plausible like 0.
 

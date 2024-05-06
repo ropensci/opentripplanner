@@ -40,9 +40,9 @@ It is possible to install multiple version of Java on the same computer:
 
 **Download Links**
 
-* [Java 8](https://www.java.com/en/download/manual.jsp)
-* [Java 11](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-* [Java 17](https://www.oracle.com/java/technologies/downloads/#java17)
+* [Java 8](https://www.java.com/en/download/)
+* [Java 11](https://www.oracle.com/uk/java/technologies/javase/jdk11-archive-downloads.html)
+* [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 
 If you have multiple version of Java installed you will also need to change the PATH variable to point to the correct version of Java. You can check your current default version of Java in the terminal using
 
