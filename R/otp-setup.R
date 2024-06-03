@@ -497,6 +497,18 @@ otp_checks <- function(otp = NULL,
   } else {
     return(FALSE)
   }
+
+  if(otp_version >= 2){
+    fls_zip <- list.files(file.path(dir, "/graphs/", router), pattern = ".zip")
+    if(length(fls_zip) > 0){
+      if(any(!grepl("gtfs",fls_zip))){
+        warning(".zip files detected that are not .gtfs.zip, OTP 2.X will ignore these files")
+      }
+    }
+  }
+
+
+
 }
 
 

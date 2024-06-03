@@ -25,7 +25,7 @@ This package allows you to use the trip planning power of OTP with the analytica
 
 The `opentripplanner` R package makes it easier for R and OpenTripPlanner to communicate.
 Specifically, it allows you to do use R to control OTP and use it as a local routing service.
-For more on local versus remote routing services, see the Transportation chapter in [Geocomputation with R](https://geocompr.robinlovelace.net/transport.html).
+For more on local versus remote routing services, see the Transportation chapter in [Geocomputation with R](https://r.geocompx.org/transport.html).
 
 ### What are R and RStudio?
 
@@ -37,7 +37,7 @@ An R package is a small piece of software that extends the basic capabilities of
 
 ### Help with R
 
-To get started with R, see [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, introductory tutorials such as DataCamp's free Introduction to R course, or the [R tutor website](https://www.r-tutor.com/r-introduction). The [Geocomputation with R](https://geocompr.robinlovelace.net) book covers the packages and skills required to analyse spatial datasets such as those produced by OpenTripPlanner.
+To get started with R, see [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf) or from within R by running `help.start()`, introductory tutorials such as DataCamp's free Introduction to R course, or the [R tutor website](https://www.r-tutor.com/r-introduction). The [Geocomputation with R](https://r.geocompx.org/) book covers the packages and skills required to analyse spatial datasets such as those produced by OpenTripPlanner.
 
 A video tutorial for installing R and RStudio 
 
@@ -103,7 +103,7 @@ The package includes a simple function for checking if you have the correct vers
 
 To get Java:
 
-* **Windows/Mac** https://www.java.com/en/download/ This link defaults to the 32 Bit version, so also check https://java.com/en/download/manual.jsp.
+* **Windows/Mac** https://www.java.com/en/download/ This link defaults to the 32 Bit version, so also check https://www.java.com/en/download/help/java_win64bit.html.
 
 * **Linux**  we recommend instructions at [StackOverflow](https://askubuntu.com/questions/740757/switch-between-multiple-java-versions).
 

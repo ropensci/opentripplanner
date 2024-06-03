@@ -9,7 +9,7 @@ otp_surface_isochrone(otpcon = NULL, surface = NULL)
 \arguments{
 \item{otpcon}{OTP connection object produced by otp_connect()}
 
-\item{surface}{A suface list from otp_make_surface()}
+\item{surface}{A surface list from otp_make_surface()}
 }
 \value{
 Returns a data.frame of travel times

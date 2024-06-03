@@ -196,7 +196,7 @@ test_that("otp_isochrone input validation", {
   )
   skip_on_cran()
   expect_error(otp_isochrone(otpcon, fromPlace = c(1, 1)),
-    regexp = "No results returned, check your connection"
+    regexp = "No results returned, check your connection|Failed to connect to localhost"
   )
 })
 
