@@ -52,7 +52,7 @@ otp_dl_jar <- function(path = NULL,
     warning("OTP2 support is in beta \n")
   }
 
-  url <- paste0(url, "/", version, "/otp-", version, "-shaded.jar")
+  url <- paste0(url, "/", version, "/", file_name)
 
   message("The OTP will be saved to ", destfile)
   utils::download.file(url = url, destfile = destfile, mode = "wb", quiet = quiet)
