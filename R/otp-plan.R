@@ -152,7 +152,7 @@ otp_plan <- function(otpcon = NA,
   checkmate::assert_logical(distance_balance, len = 1, null.ok = FALSE)
   checkmate::assert_logical(get_elevation, len = 1, null.ok = FALSE)
 
-  if (distance_balance & (ncores > 1)) {
+  if (distance_balance && (ncores > 1)) {
     if (is.null(fromID)) {
       stop("Distance balancing changes the order of the output, so fromID must not be NULL")
     }
@@ -187,13 +187,13 @@ otp_plan <- function(otpcon = NA,
   nrfp <- nrow(fromPlace)
   nrtp <- nrow(toPlace)
   if (nrfp != nrtp) {
-    if (nrfp > nrtp & nrtp == 1) {
+    if (nrfp > nrtp && nrtp == 1) {
       toPlace <- toPlace[rep(1, times = nrfp), ]
       if (!is.null(toID)) {
         toID <- toID[rep(1, times = nrfp)]
       }
       message("repeating toPlace to match length of fromPlace")
-    } else if (nrtp > nrfp & nrfp == 1) {
+    } else if (nrtp > nrfp && nrfp == 1) {
       fromPlace <- fromPlace[rep(1, times = nrtp), ]
       if (!is.null(fromID)) {
         fromID <- fromID[rep(1, times = nrtp)]
@@ -204,7 +204,7 @@ otp_plan <- function(otpcon = NA,
     }
   }
 
-  if (distance_balance & (ncores > 1)) {
+  if (distance_balance && (ncores > 1)) {
     dists <- geodist::geodist(fromPlace, toPlace, paired = TRUE)
 
     # Remove 0m pairs as OTP will fail on them anyway
@@ -243,7 +243,7 @@ otp_plan <- function(otpcon = NA,
 
   if (otpcon$otp_version >= 2) {
     # maxWalkDistance causes itinaries to fail
-    if (mode == "CAR" | grepl("TRANSIT", mode)) {
+    if (mode == "CAR" || grepl("TRANSIT", mode)) {
       query$maxWalkDistance <- NULL
     }
   }
