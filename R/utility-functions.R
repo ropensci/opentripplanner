@@ -122,3 +122,9 @@ split_alternating <- function(x){
                     check.names = FALSE,
                     check.rows = FALSE))
 }
+
+#' Check for 'otpconnect' class
+#' @param x An object.
+#' @family internal
+#' @noRd
+is_otpconnect <- function(x) inherits(x, "otpconnect")
